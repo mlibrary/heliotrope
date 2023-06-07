@@ -30,6 +30,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    Ascii85 (1.1.0)
     actioncable (5.2.8.1)
       actionpack (= 5.2.8.1)
       nio4r (~> 2.0)
@@ -97,6 +98,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.8.4)
       public_suffix (>= 2.0.2, < 6.0)
+    afm (0.2.2)
     almond-rails (0.3.0)
       rails (>= 4.2)
     arel (9.0.0)
@@ -382,6 +384,7 @@ GEM
       thor
       tilt
     hana (1.3.6)
+    hashery (2.1.2)
     hashie (5.0.0)
     hiredis (0.6.3)
     htmlentities (4.3.4)
@@ -726,6 +729,12 @@ GEM
     pathutil (0.16.2)
       forwardable-extended (~> 2.6)
     pdf-core (0.7.0)
+    pdf-reader (2.11.0)
+      Ascii85 (~> 1.0)
+      afm (~> 0.2.1)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
     posix-spawn (0.3.15)
     power_converter (0.1.2)
     pragmatic_segmenter (0.3.19)
@@ -976,6 +985,7 @@ GEM
       multipart-post
       oauth2
     ruby-progressbar (1.13.0)
+    ruby-rc4 (0.1.5)
     ruby2_keywords (0.0.5)
     rubyzip (1.3.0)
     ruumba (0.1.2)
@@ -1233,6 +1243,7 @@ DEPENDENCIES
   oauth2 (~> 1.2)
   okcomputer (~> 1.18.4)
   origami
+  pdf-reader (~> 2.11)
   pragmatic_segmenter (~> 0.3)
   prawn (~> 2.2)
   pry-rails (~> 0.3.4)

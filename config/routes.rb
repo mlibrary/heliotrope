@@ -197,6 +197,9 @@ Rails.application.routes.draw do
   get 'whoami', controller: :utilities, action: :whoami, as: :whoami_utility
   get 'status', controller: :utilities, action: :status, as: :status_utility
 
+  # HELIO-4460 "hits" from a fulltext search
+  get 'book_search_hits', controller: :book_search_hits, action: :hits, as: :hits
+
   mount Blacklight::Engine => '/'
   mount Riiif::Engine => '/image-service', as: 'riiif'
 

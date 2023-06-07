@@ -1,5 +1,39 @@
 <% provide :page_title, @search_ongoing ? "#{@press.name} results - page #{@response.current_page} of #{@response.total_pages}" : @press.name %>
 <% provide :page_class, 'press' %>
+
+<% if params[:q].present? %>
+<script>
+$(document).ready(function() { 
+  $(".solr-hit-count").each(async function(index, el) {
+    const q = el.attributes["data-q"].value;
+    const press = el.attributes["data-press"].value;
+    const file_set_id = el.attributes["data-file-set-id"].value;
+
+    try {
+      const url = "/book_search_hits?q=" + q + ";press=" + press + ";file_set_id=" + file_set_id
+      const response = await fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+
+      console.log(data.solr_hits)
+
+      el.append(data.solr_hits + " hits for '" + q + "' found in the book.");
+      el.removeAttribute("visibility");
+    } catch (error) {
+      console.log(error);
+    }
+  });
+});
+
+</script>
+<% end %>
+
+
 <div id="maincontent">
   <% if has_facet_values?  %>
   <div class="row">

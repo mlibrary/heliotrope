@@ -20,3 +20,7 @@
     <% end %>
   </div>
 <% end %>
+
+<% if params[:q].present? && presenter.pdf_ebook? %>
+<span visibility="hidden" class="solr-hit-count" data-q="<%= params[:q] %>" data-press="<%= press.subdomain %>" data-file-set-id="<%= presenter.pdf_ebook_id %>"></span>
+<% end %>

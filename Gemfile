@@ -159,6 +159,8 @@ gem "okcomputer", "~> 1.18.4"
 # Read PDF ToC
 gem 'origami'
 
+gem "pdf-reader", "~> 2.11"
+
 # Force epub search results to be sentences
 gem 'pragmatic_segmenter', '~> 0.3'
 
