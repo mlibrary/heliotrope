@@ -15,7 +15,14 @@ module StatusPageService
 
   def redis
     # Storing/retrieving an actual value might be better. This is good enough for now.
-    `redis-cli ping` == "PONG\n" ? 'UP' : 'DOWN'
+    redis = if Settings.host == "www.fulcrum.org" # # HELIO-4477
+              Redis.new(host: "redis", port: 6379)
+            else
+              Redis.new(host: "localhost", port: 6379)
+            end
+    result = redis.ping == "PONG\n" ? 'UP' : 'DOWN'
+    redis.quit
+    result
   end
 
   # this is listed as a "MySQL" check in the output, which I think is fair enough
