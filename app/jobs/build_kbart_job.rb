@@ -5,11 +5,16 @@
 ########################################
 
 # see HELIO-4408
+
+require 'net/sftp'
+
 class BuildKbartJob < ApplicationJob
   def perform
     Greensub::Product.where(needs_kbart: true).each do |product|
       next if product.group_key.nil?
       next if product.components.count == 0
+      Rails.logger.error("No mapping avilable for group_key: #{product.group_key} KBART WILL NOT BE CREATED") unless group_key_ftp_dir_map.key?(product.group_key)
+      next unless group_key_ftp_dir_map.key?(product.group_key)
 
       new_kbart_csv = make_kbart_csv(published_sorted_monographs(product))
 
@@ -32,14 +37,66 @@ class BuildKbartJob < ApplicationJob
       # Both the csv
       today = Time.zone.now.strftime "%Y-%m-%d"
       new_kbart_name = File.join(kbart_root_dir, "#{file_root}_#{today}")
-      File.write(new_kbart_name.to_s + ".csv", new_kbart_csv)
+
+      Rails.logger.info("Creating new KBART #{new_kbart_name}")
+      File.write(new_kbart_name + ".csv", new_kbart_csv)
 
       # And the tsv (but with the .txt extension)
       tabs = CSV.generate(col_sep: "\t", force_quotes: true) do |t|
         CSV.parse(new_kbart_csv).each { |row| t << row }
       end
-      File.write(new_kbart_name.to_s + ".txt", tabs)
+      File.write(new_kbart_name + ".txt", tabs)
+
+      # FTP the files to ftp.fulcrum.org
+      sftp_kbart(new_kbart_name, product.group_key)
     end
+  end
+
+  # I don't see a way around having a map due to the unpredictablity of the
+  # naming of the ftp directories, they're not consistant.
+  # Right now it's easiest to just put this map here, but it could be in a config file.
+  # Unfortunatly it means if we get a new group_key we need to add it here.
+  def group_key_ftp_dir_map
+    {
+      "amherst" => "/home/fulcrum_ftp/ftp.fulcrum.org/Amherst_College_Press/KBART",
+      "bar" => "/home/fulcrum_ftp/ftp.fulcrum.org/BAR/KBART",
+      "bigten" => "/home/fulcrum_ftp/ftp.fulcrum.org/bigten/KBART",
+      "bridwell" => "/home/fulcrum_ftp/ftp.fulcrum.org/bridwell/KBART",
+      "heb" => "/home/fulcrum_ftp/ftp.fulcrum.org/HEB/KBART",
+      "leverpress" => "/home/fulcrum_ftp/ftp.fulcrum.org/Lever_Press/KBART",
+      "michelt" => "/home/fulcrum_ftp/ftp.fulcrum.org/michelt/KBART",
+      "test_product" => "/home/fulcrum_ftp/heliotropium/publishing/Testing/KBART",
+      "umpebc" => "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART",
+    }
+  end
+
+  def sftp_kbart(kbart, group_key)
+    config = yaml_config
+    if config.present?
+      fulcrum_sftp = config['fulcrum_sftp_credentials']
+      begin
+        Net::SFTP.start(fulcrum_sftp["sftp"], fulcrum_sftp["user"], password: fulcrum_sftp["password"]) do |sftp|
+          Rails.logger.info("Uploading #{kbart + ".csv"} to #{remote_file(kbart, group_key, ".csv")}")
+          sftp.upload!(kbart + ".csv", remote_file(kbart, group_key, ".csv"))
+          Rails.logger.info("Uploading #{kbart + ".csv"} to #{remote_file(kbart, group_key, ".txt")}")
+          sftp.upload!(kbart + ".txt", remote_file(kbart, group_key, ".txt"))
+        end
+      rescue RuntimeError, Net::SFTP::StatusException => e
+        Rails.logger.error("SFTP ERROR: #{e}")
+      end
+    else
+      Rails.logger.error("No SFTP configuration file found, '#{kbart}' will not be sent!")
+    end
+  end
+
+  def remote_file(kbart, group_key, ext)
+    File.join(group_key_ftp_dir_map[group_key], File.basename(kbart) + ext)
+  end
+
+  def yaml_config
+    config = Rails.root.join('config', 'fulcrum_sftp.yml')
+    yaml = YAML.safe_load(File.read(config)) if File.exist? config
+    yaml || nil
   end
 
   def published_sorted_monographs(product)
