@@ -259,7 +259,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
         end
 
         context 'ebc backlist' do
-          let(:product) { create(:product, identifier: 'ebc_backlist') }
+          let(:product) { create(:product, identifier: 'ebc_complete') }
           let(:component) { create(:component, noid: monograph.id) }
           let(:component_oa) { create(:component, noid: monograph_oa.id) }
 
@@ -405,7 +405,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
       let(:epub_oa) { create(:public_file_set) }
       let(:fr_oa) { create(:featured_representative, work_id: monograph_oa.id, file_set_id: epub_oa.id, kind: 'epub') }
 
-      let(:product_backlist) { create(:product, identifier: 'ebc_backlist') }
+      let(:product_backlist) { create(:product, identifier: 'ebc_complete') }
       let(:product_2020) { create(:product, identifier: 'ebc_2020') }
       let(:product_2022) { create(:product, identifier: 'ebc_2022') }
 
@@ -453,7 +453,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
         product_2022.components << component_2022
 
-        # The institution is only subscribed to ebc_2020, not ebc_2022 or ebc_backlist
+        # The institution is only subscribed to ebc_2020, not ebc_2022 or ebc_complete
         institution.create_product_license(product_2020)
       end
 

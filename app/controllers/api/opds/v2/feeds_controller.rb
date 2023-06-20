@@ -255,7 +255,7 @@ module API
           def umpebc_oa_publications
             rvalue = []
 
-            ebc_backlist = Greensub::Product.find_by(identifier: 'ebc_backlist')
+            ebc_backlist = Greensub::Product.find_by(identifier: 'ebc_complete')
             return rvalue if ebc_backlist.blank?
 
             monograph_noids = ebc_backlist.components.pluck(:noid)
@@ -275,7 +275,7 @@ module API
           def umpebc_publications
             rvalue = []
 
-            ebc_backlist = Greensub::Product.find_by(identifier: 'ebc_backlist')
+            ebc_backlist = Greensub::Product.find_by(identifier: 'ebc_complete')
             return rvalue if ebc_backlist.blank?
 
             monograph_noids = ebc_backlist.components.pluck(:noid)

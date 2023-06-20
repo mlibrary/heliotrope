@@ -123,7 +123,7 @@ module Opds
       end
 
       def at_type
-        'http:://schema.org/EBook'
+        'http://schema.org/EBook'
       end
 
       def collection

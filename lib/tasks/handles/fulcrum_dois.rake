@@ -27,18 +27,19 @@ namespace :heliotrope do
     # You can put child presses here, or not.
     # If you don't it will automatically pick up the children of a press.
     subdomains = [
-      'michigan',
-      'leverpress',
-      'amherst',
-      'mps',
-      'atg',
-      'cv',
-      'cb',
-      'barpublishing',
-      'lrcss',
-      'cjs',
-      'csas',
-      'cseas'
+      "amherst", 
+      "atg", 
+      "barpublishing", 
+      "cb", 
+      "cjs", 
+      "csas", 
+      "cseas", 
+      "cv", 
+      "leverpress", 
+      "lrcss", 
+      "michelt", 
+      "michigan", 
+      "mps"
     ]
 
     children = []
