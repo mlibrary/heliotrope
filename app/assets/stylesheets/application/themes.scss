@@ -2388,6 +2388,11 @@ $bigten-black: #000;
     @include pt-sans;
   }
 
+  // hide login prompt
+  .brand-auth {
+    display: none;
+  }
+
   // press catalog
 
   .press .document {
