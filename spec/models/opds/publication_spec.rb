@@ -95,7 +95,7 @@ RSpec.describe Opds::Publication, type: [:model, :json_schema] do
 
         # Metadata (required keys + description citable link)
         it { expect(subject[:metadata].keys.count).to eq(5) }
-        it { expect(subject[:metadata]).to include("@type": 'http:://schema.org/EBook') }
+        it { expect(subject[:metadata]).to include("@type": 'http://schema.org/EBook') }
         it { expect(subject[:metadata]).to include(title: 'Title') }
         it { expect(subject[:metadata]).to include(language: 'eng') }
         it { expect(subject[:metadata]).to include(modified: time_now.utc.iso8601) }
