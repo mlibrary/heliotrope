@@ -1,8 +1,8 @@
 <%# heliotrope: pulled from https://github.com/samvera/hyrax/blob/51e68aa734bc5efea52f5fc83141647c820db3a8/app/views/hyrax/base/_form_permission.html.erb#L1 %>
 <% # This is used by works and by FileSet and the layout (col-6 vs col-12) is different for both %>
-<% if f.object.embargo_release_date %>
+<% if f.object.embargo_release_date && !f.object.embargo_release_date.empty? %>
   <%= render 'form_permission_under_embargo', f: f %>
-<% elsif f.object.lease_expiration_date %>
+<% elsif f.object.lease_expiration_date && !f.object.lease_expiration_date.empty? %>
   <%= render 'form_permission_under_lease', f: f %>
 <% else %>
   <fieldset class="set-access-controls">

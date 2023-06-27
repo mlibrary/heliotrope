@@ -118,7 +118,7 @@ gem 'font-awesome-sass', '>= 6.0'
 # # Use gem version of handle_rest
 gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: 'baed402b5a530eb57e838443ce292ec3f46cd5e6'
 
-gem 'hyrax', '3.4.1'
+gem 'hyrax', '3.5.0'
 
 # pinned for Jekyll
 gem 'i18n', '~> 0.7'

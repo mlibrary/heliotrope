@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe BreadcrumbsHelper, type: :helper do
-  describe "#breadcrumbs" do
+  describe "#heloitrope_breadcrumbs" do
     let(:press) { create(:press, subdomain: "blue", name: "Blue Press") }
     let(:mono_doc) do
       SolrDocument.new(id: 1,
@@ -32,12 +32,12 @@ describe BreadcrumbsHelper, type: :helper do
       context "with no parent press" do
         it "returns the right breadcrumbs" do
           @presenter = monograph_presenter
-          expect(breadcrumbs).to match_array([{ href: "/blue",
-                                                text: "Home",
-                                                class: "" },
-                                              { href: "",
-                                                text: "Monograph Title",
-                                                class: "active" }])
+          expect(heliotrope_breadcrumbs).to match_array([{ href: "/blue",
+                                                           text: "Home",
+                                                           class: "" },
+                                                         { href: "",
+                                                           text: "Monograph Title",
+                                                           class: "active" }])
         end
       end
 
@@ -48,15 +48,15 @@ describe BreadcrumbsHelper, type: :helper do
           @presenter = monograph_presenter
           press.parent_id = parent.id
           press.save!
-          expect(breadcrumbs).to match_array([{ href: "/maize",
-                                                text: "Home",
-                                                class: "" },
-                                              { href: "/blue",
-                                                text: "Blue Press",
-                                                class: "" },
-                                              { href: "",
-                                                text: "Monograph Title",
-                                                class: "active" }])
+          expect(heliotrope_breadcrumbs).to match_array([{ href: "/maize",
+                                                            text: "Home",
+                                                            class: "" },
+                                                         { href: "/blue",
+                                                           text: "Blue Press",
+                                                           class: "" },
+                                                         { href: "",
+                                                           text: "Monograph Title",
+                                                           class: "active" }])
         end
       end
     end
@@ -67,15 +67,15 @@ describe BreadcrumbsHelper, type: :helper do
       context "with no parent press" do
         it "returns the right breadcrumbs" do
           @presenter = monograph_presenter
-          expect(breadcrumbs).to match_array([{ href: "/blue",
-                                                text: "Home",
-                                                class: "" },
-                                              { href: "/concern/monographs/1",
-                                                text: "Monograph Title",
-                                                class: "" },
-                                              { href: "",
-                                                text: "Show",
-                                                class: "active" }])
+          expect(heliotrope_breadcrumbs).to match_array([{ href: "/blue",
+                                                           text: "Home",
+                                                           class: "" },
+                                                         { href: "/concern/monographs/1",
+                                                           text: "Monograph Title",
+                                                           class: "" },
+                                                         { href: "",
+                                                           text: "Show",
+                                                           class: "active" }])
         end
       end
 
@@ -86,18 +86,18 @@ describe BreadcrumbsHelper, type: :helper do
           @presenter = monograph_presenter
           press.parent_id = parent.id
           press.save!
-          expect(breadcrumbs).to match_array([{ href: "/maize",
-                                                text: "Home",
-                                                class: "" },
-                                              { href: "/blue",
-                                                text: "Blue Press",
-                                                class: "" },
-                                              { href: "/concern/monographs/1",
-                                                text: "Monograph Title",
-                                                class: "" },
-                                              { href: "",
-                                                text: "Show",
-                                                class: "active" }])
+          expect(heliotrope_breadcrumbs).to match_array([{ href: "/maize",
+                                                           text: "Home",
+                                                           class: "" },
+                                                         { href: "/blue",
+                                                           text: "Blue Press",
+                                                           class: "" },
+                                                         { href: "/concern/monographs/1",
+                                                           text: "Monograph Title",
+                                                           class: "" },
+                                                         { href: "",
+                                                           text: "Show",
+                                                           class: "active" }])
         end
       end
     end
@@ -108,15 +108,15 @@ describe BreadcrumbsHelper, type: :helper do
       context "with no parent press" do
         it "returns the right breadcrumbs" do
           @presenter = file_set_presenter
-          expect(breadcrumbs).to match_array([{ href: "/blue",
-                                                text: "Home",
-                                                class: "" },
-                                              { href: "/concern/monographs/1",
-                                                text: "Monograph Title",
-                                                class: "" },
-                                              { href: "",
-                                                text: "FileSet Title",
-                                                class: "active" }])
+          expect(heliotrope_breadcrumbs).to match_array([{ href: "/blue",
+                                                           text: "Home",
+                                                           class: "" },
+                                                         { href: "/concern/monographs/1",
+                                                           text: "Monograph Title",
+                                                           class: "" },
+                                                         { href: "",
+                                                           text: "FileSet Title",
+                                                           class: "active" }])
         end
 
         context "with aboutware" do
@@ -126,18 +126,18 @@ describe BreadcrumbsHelper, type: :helper do
             press.aboutware = true
             press.save!
             @presenter = file_set_presenter
-            expect(breadcrumbs).to match_array([{ href: press.press_url,
-                                                  text: "Home",
-                                                  class: "" },
-                                                { href: "/blue",
-                                                  text: "Books",
-                                                  class: "" },
-                                                { href: "/concern/monographs/1",
-                                                  text: "Monograph Title",
-                                                  class: "" },
-                                                { href: "",
-                                                  text: "FileSet Title",
-                                                  class: "active" }])
+            expect(heliotrope_breadcrumbs).to match_array([{ href: press.press_url,
+                                                             text: "Home",
+                                                             class: "" },
+                                                           { href: "/blue",
+                                                             text: "Books",
+                                                             class: "" },
+                                                           { href: "/concern/monographs/1",
+                                                             text: "Monograph Title",
+                                                             class: "" },
+                                                           { href: "",
+                                                             text: "FileSet Title",
+                                                             class: "active" }])
           end
         end
       end
@@ -149,18 +149,18 @@ describe BreadcrumbsHelper, type: :helper do
           @presenter = file_set_presenter
           press.parent_id = parent.id
           press.save!
-          expect(breadcrumbs).to match_array([{ href: "/maize",
-                                                text: "Home",
-                                                class: "" },
-                                              { href: "/blue",
-                                                text: "Blue Press",
-                                                class: "" },
-                                              { href: "/concern/monographs/1",
-                                                text: "Monograph Title",
-                                                class: "" },
-                                              { href: "",
-                                                text: "FileSet Title",
-                                                class: "active" }])
+          expect(heliotrope_breadcrumbs).to match_array([{ href: "/maize",
+                                                           text: "Home",
+                                                           class: "" },
+                                                         { href: "/blue",
+                                                           text: "Blue Press",
+                                                           class: "" },
+                                                         { href: "/concern/monographs/1",
+                                                           text: "Monograph Title",
+                                                           class: "" },
+                                                         { href: "",
+                                                           text: "FileSet Title",
+                                                           class: "active" }])
         end
 
         context "with aboutware" do
@@ -173,21 +173,21 @@ describe BreadcrumbsHelper, type: :helper do
             press.navigation_block = '<nav><a href="stuff">stuff</a><a href="things">things</a></nav>'
             press.aboutware = true
             press.save!
-            expect(breadcrumbs).to match_array([{ href: press.press_url,
-                                                  text: "Home",
-                                                  class: "" },
-                                                { href: "/maize",
-                                                  text: "Books",
-                                                  class: "" },
-                                                { href: "/blue",
-                                                  text: "Blue Press",
-                                                  class: "" },
-                                                { href: "/concern/monographs/1",
-                                                  text: "Monograph Title",
-                                                  class: "" },
-                                                { href: "",
-                                                  text: "FileSet Title",
-                                                  class: "active" }])
+            expect(heliotrope_breadcrumbs).to match_array([{ href: press.press_url,
+                                                             text: "Home",
+                                                             class: "" },
+                                                           { href: "/maize",
+                                                             text: "Books",
+                                                             class: "" },
+                                                           { href: "/blue",
+                                                             text: "Blue Press",
+                                                             class: "" },
+                                                           { href: "/concern/monographs/1",
+                                                             text: "Monograph Title",
+                                                             class: "" },
+                                                           { href: "",
+                                                             text: "FileSet Title",
+                                                             class: "active" }])
           end
         end
       end
