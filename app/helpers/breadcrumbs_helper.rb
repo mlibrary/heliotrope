@@ -3,7 +3,7 @@
 module BreadcrumbsHelper
   mattr_accessor :crumbs
 
-  def breadcrumbs # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def heliotrope_breadcrumbs # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return [] if @presenter.nil?
     return [] if press.blank?
     @crumbs = []
