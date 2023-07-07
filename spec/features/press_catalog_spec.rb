@@ -24,14 +24,14 @@ describe 'Press Catalog' do
         expect(page).to_not have_content("Your search has returned")
 
         # I should see only the public monographs for this press
-        expect(page).to have_selector('#documents .document', count: 2)
+        expect(page).to have_selector('#documents .document .document', count: 2)
         expect(page).to     have_link red.title.first
         expect(page).to     have_link blue.title.first
         expect(page).not_to have_link invisible.title.first
         expect(page).not_to have_link colors.title.first
 
         # Press catalog defaults to gallery view
-        expect(page).to have_selector('#documents.row.gallery')
+        expect(page).to have_selector('#documents.row.documents-gallery')
         expect(page).to have_css(".view-type-group.btn-group[role=tablist]")
         expect(page).to have_css("a.btn.btn-default.view-type-list[href*='view=list'][role=tab][aria-selected=false]")
         expect(page).to have_css("a.btn.btn-default.view-type-gallery.active[href*='view=gallery'][role=tab][aria-selected=true]")
@@ -80,7 +80,7 @@ describe 'Press Catalog' do
       it 'visits the catalog page for a press with the press name capitalized' do
         visit "/#{umich.subdomain.upcase}"
         # I should see only the public monographs for this press
-        expect(page).to have_selector('#documents .document', count: 2)
+        expect(page).to have_selector('#documents .document .document', count: 2)
         expect(page).to_not have_content("Your search has returned")
         expect(page).to     have_link red.title.first
         expect(page).to     have_link blue.title.first
@@ -99,7 +99,7 @@ describe 'Press Catalog' do
         it 'visits the catalog page for a press' do
           visit "/#{umich.subdomain}"
           # I should see only the public monographs for umich press and its children
-          expect(page).to have_selector('#documents .document', count: 4)
+          expect(page).to have_selector('#documents .document .document', count: 4)
           expect(page).to_not have_content("Your search has returned")
           expect(page).to     have_link red.title.first
           expect(page).to     have_link blue.title.first
@@ -181,16 +181,16 @@ describe 'Press Catalog' do
         # use "fake facet" Access (user_access) instead of OA, # HELIO-3347
         expect(page).to have_selector('#facet-user_access')
 
-        expect(page).to have_selector('#facet-creator_sim a.facet_select', count: 5) # 5 is limit in facet widget
+        expect(page).to have_selector('#facet-creator_sim a.facet-select', count: 5) # 5 is limit in facet widget
 
         # dedicated facet modal shows up to 20 values, we expect 13 creator names
         find("a[href='/#{heb.subdomain}/facet?id=creator_sim&locale=en']").click
         # save_and_open_page
-        expect(page).to have_selector('a.facet-anchor.facet_select', count: 13)
+        expect(page).to have_selector('a.facet-select', count: 13)
 
-        find('a.facet-anchor.facet_select', match: :first).click
+        find('a.facet-select', match: :first).click
         expect(page.title).to eq "#{heb.name} results - page 1 of 1"
-        expect(page).to have_selector('#documents .document', count: 1)
+        expect(page).to have_selector('#documents .document .document', count: 1)
         expect(page).to have_content("Your search has returned 1 book from #{heb.name}")
       end
     end

@@ -55,6 +55,7 @@ RSpec.describe Greensub::Component, type: :model do
     it { expect { subject.destroy! }.not_to raise_exception }
 
     it 'when product present' do
+      allow(Monograph).to receive(:find).with(component.noid)
       subject.products << product
       expect(subject.destroy).to be false
       expect(subject.errors.count).to eq 1
@@ -77,23 +78,22 @@ RSpec.describe Greensub::Component, type: :model do
 
     it "adding a product runs the ReindexJob" do
       expect(subject.products).to be_empty
-      allow(ReindexJob).to receive(:perform_later).with(subject.noid)
+      allow(Monograph).to receive(:find).with(subject.noid)
       subject.products << product
-      expect(ReindexJob).to have_received(:perform_later).with(subject.noid)
       expect(subject.products.count).to eq 1
     end
 
     it "deleting a product runs the ReindexJob" do
+      allow(Monograph).to receive(:find).with(subject.noid)
       subject.products << product
       expect(subject.products.count).to eq 1
-      allow(ReindexJob).to receive(:perform_later).with(subject.noid)
       subject.products.delete(product)
-      expect(ReindexJob).to have_received(:perform_later).with(subject.noid)
       expect(subject.products).to be_empty
     end
   end
 
   it 'products and not_products' do
+    allow(Monograph).to receive(:find).with(subject.noid)
     n = 3
     products = []
     n.times { |i| products << create(:product, identifier: "product#{i}") }

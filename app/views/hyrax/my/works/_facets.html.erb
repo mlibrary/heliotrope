@@ -1,0 +1,13 @@
+<% # main container for facets/limits menu -%>
+<% facets = capture do %>
+  <%# hyrax 4, blacklight 7.33 %>
+  <%# heliotrope change: needed namespace blacklight_config with CatalogController. %>
+  <%= render Blacklight::FacetComponent.with_collection(CatalogController.blacklight_config.facet_fields_in_group(nil), response: @response, component: Hyrax::DropdownFacetFieldComponent)%>
+<% end %>
+
+<% if facets.present? %>
+  <div class="list-filters" role="group">
+    <span class="list-filters-label"><%= t("hyrax.dashboard.my.facet_label.works") %></span>
+    <%= facets %>
+  </div>
+<% end %>

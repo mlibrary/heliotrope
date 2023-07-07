@@ -23,8 +23,8 @@
       <div class="col-md-2"><%= aptrust_deposit.verified %></div>
     </div>
     <div class="col-md-2">
-      <%= link_to(aptrust_deposit_path(aptrust_deposit.id), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
-        <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
+      <%= link_to(aptrust_deposit_path(aptrust_deposit.id), method: :delete, class: "btn btn-primary", data: { confirm: 'Are you sure?' }) do %>
+        <span class="fa fa-minus" aria-hidden="true"></span> Destroy
       <% end %>
     </div>
   <% end %>

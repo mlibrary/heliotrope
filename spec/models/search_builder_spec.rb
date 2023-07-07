@@ -22,7 +22,7 @@ describe SearchBuilder do
 
   describe "searching" do
     subject do
-      search_builder.where('fish').query
+      search_builder.where(q: 'fish').query
     end
 
     it "searches the required fields" do

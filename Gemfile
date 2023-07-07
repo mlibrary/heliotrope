@@ -7,22 +7,22 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.8.1'
+gem 'railties', '> 3', '< 7'
+gem 'rails', '~> 6.0.5'
 
-gem 'rails-html-sanitizer', '~> 1.4.4'
+gem 'rails-html-sanitizer'
 
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
 gem 'puma', '~> 5.6.7'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 6.0'
 # Use Uglifier as compressor for JavaScript assets
 # gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.2'
+gem 'coffee-rails', '~> 5.0'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -35,7 +35,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-gem 'rack', '~> 2.2.6'
+gem 'rack', '> 1', '< 3'
 
 # HELIO-2404 APTRUST PRESERVATION
 gem 'bagit'
@@ -72,16 +72,21 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 #
 ##############################################################################
 
-gem 'blacklight_oai_provider', "~> 6.1.1"
+gem 'blacklight_oai_provider', "~> 7.0.2"
 
 # HELIO-2531
-gem "sassc", ">= 2.0.0"
-gem "bootstrap-sass", ">= 3.4.1"
+#gem "sassc", ">= 2.0.0"
+#gem "bootstrap-sass", ">= 3.4.1"
 
 # A rails 5.2 thing. Might make startup faster. Not sure if it really matters though.
 # I guess we'll see.
 # https://github.com/Shopify/bootsnap
 gem 'bootsnap', '~> 1.4.6'
+
+# This is installed via yarn instead for heliotrope so it's in package.json
+# But there's *something* in the stack that needs it here.
+# I suspect it's related to resque-web
+gem 'bootstrap', '~> 4.0'
 
 # Canister provides containers
 gem 'canister', '~> 0.9.0'
@@ -107,26 +112,23 @@ gem 'devise-guests', '~> 0.7'
 #     hyrax (= 2.9.5) was resolved to 2.9.5, which depends on
 #       signet was resolved to 0.12.0, which depends on
 #         faraday (~> 0.9)
-gem 'faraday', '~> 0.9'
+gem 'faraday', '~> 1.0'
 # NOTE: This is the last minor release in the v0.x series, next release will be 1.0 to match Faraday v1.0 release and from then on only fixes will be applied to v0.14.x!
-gem 'faraday_middleware', '~> 0.14.0'
+gem 'faraday_middleware', '~> 1.0'
 
 # needed by resque-web
 gem 'font-awesome-sass', '>= 6.0'
 
 #
 # # Use gem version of handle_rest
-gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: 'baed402b5a530eb57e838443ce292ec3f46cd5e6'
+gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: '28b82c3ee2f54a62fcd63765aa4ac383121b6c9e'
 
-gem 'hyrax', '3.5.0'
-
-# pinned for Jekyll
-gem 'i18n', '~> 0.7'
+gem 'hyrax', '4.0'
 
 gem 'irus_analytics', git: 'https://github.com/mlibrary/irus_analytics', ref: '0de9a17b2f764a0ce7bdd1d0221c60b88c2643e7'
 
 # Use Jekyll for blog and informational pages
-gem 'jekyll', '~> 3.9.0'
+gem 'jekyll', '~> 3.9.3'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
@@ -170,13 +172,13 @@ gem 'redcarpet', '~> 3.5.1'
 # see HELIO-4484 and https://github.com/samvera/hyrax/pull/5961
 gem 'redlock', '>= 0.1.2', '< 2.0'
 
-gem 'resque', '~> 2.4.0'
+gem 'resque', '>= 1.22', '< 3'
 gem 'resque-pool'
 gem 'resque-web', '~> 0.0.12', require: 'resque_web'
 
-gem 'riiif', '1.4.1'
+gem 'riiif', git: 'https://github.com/mlibrary/riiif', tag: '1.4.1-railties-6'
 
-gem 'rsolr', '~> 2.0.1'
+gem 'rsolr', '>= 1.1.2', '< 3'
 
 # Use Zip to extract EPubs
 gem "rubyzip", ">= 1.3.0"
@@ -186,9 +188,9 @@ gem 'net-sftp', '~> 4.0'
 
 gem 'sitemap_generator', '~> 6.1.2'
 
-gem 'sinatra', '~> 2.2.3'
-# CVE-2018-3760
-gem 'sprockets', '~> 3.7.2'
+gem 'sinatra', '>= 0.9.2'
+
+gem 'sprockets', '~> 3.7'
 
 # sqlite for epub indexing
 gem 'sqlite3'
@@ -231,20 +233,20 @@ group :development, :test do
   gem "faker"
   gem 'fcrepo_wrapper', '0.5.2'
   gem 'json_schemer'
-  gem 'rails-controller-testing'
+  gem 'rails-controller-testing', '~> 1.0.5'
   gem 'rspec-context-private'
   gem 'rspec-html-matchers'
   # This formatter enables the use of "--format RspecJunitFormatter" when running
   # rspec. Specifically used with circleci so we can get timings for parallelism
   gem 'rspec_junit_formatter'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 5.0'
   gem 'rspec-repeat', '~> 1.0.2'
   gem 'rubocop', '~> 1.22'
   gem 'rubocop-rails', '~> 2.11', '>= 2.11.3'
   gem 'rubocop-rails_config', '~> 1.7', '>= 1.7.1'
   gem 'rubocop-rspec', '~> 2.5'
   gem 'ruumba', '0.1.2'
-  gem 'simple_solr_client'
+  gem 'simple_solr_client', '0.2.0'
   gem 'solr_wrapper', '>= 1.1', '< 3.0'
 end
 
@@ -252,7 +254,7 @@ group :development do
   # Capybara save_and_open_page thingy
   gem 'launchy', '~> 2.4.3'
   # Debugger
-  gem 'pry-rails', '~> 0.3.4'
+  gem 'pry-rails'
   # Yay! A Ruby Documentation Tool
   gem 'yard', '>= 0.9.20'
 end

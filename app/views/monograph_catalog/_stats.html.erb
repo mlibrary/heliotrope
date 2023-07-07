@@ -6,8 +6,8 @@
 <div class="row">
   <div class="col-sm-12">
     <div class="alert alert-info">
-      <i class="glyphicon glyphicon-signal large-icon"></i>
-      <%= t('pageviews_html', count: number_with_delimiter(@pageviews), date: @presenter.date_uploaded.strftime("%B %d, %Y")) %>
+      <i class="fa fa-signal"></i>
+      <%= t('pageviews_html', count: number_with_delimiter(@pageviews), date: @monograph_presenter.date_uploaded.strftime("%B %d, %Y")) %>
     </div>
     <div class="stats-container usage">
       <div id="usage-stats" class="stats-placeholder"></div>

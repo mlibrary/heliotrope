@@ -8,7 +8,7 @@ class User < ApplicationRecord
   scope :name_like, ->(like) { where("display_name like ?", "%#{like}%") }
   scope :email_like, ->(like) { where("email like ?", "%#{like}%") }
 
-  validates :email, presence: true, allow_blank: false, uniqueness: true
+  validates :email, presence: true, allow_blank: false, uniqueness: { case_sensitive: true }
 
   # Connects this user object to Hydra behaviors.
   include Hydra::User

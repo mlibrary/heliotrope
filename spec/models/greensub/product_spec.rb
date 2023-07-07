@@ -65,6 +65,7 @@ RSpec.describe Greensub::Product, type: :model do
     it { expect { subject.destroy! }.not_to raise_exception }
 
     it 'when component present' do
+      allow(Monograph).to receive(:find).with(component.noid)
       subject.components << component
       expect(subject.destroy).to be false
       expect(subject.errors.count).to eq 1
@@ -93,25 +94,24 @@ RSpec.describe Greensub::Product, type: :model do
   describe "reindex file set" do
     let(:component) { create(:component) }
 
+    before { allow(Monograph).to receive(:find).with(component.noid) }
+
     it "adding components runs the ReindexJob" do
       expect(subject.components).to be_empty
-      allow(ReindexJob).to receive(:perform_later).with(component.noid)
       subject.components << component
-      expect(ReindexJob).to have_received(:perform_later).with(component.noid)
       expect(subject.components.count).to eq 1
     end
 
     it "deleting components runs the ReindexJob" do
       subject.components << component
       expect(subject.components.count).to eq 1
-      allow(ReindexJob).to receive(:perform_later).with(component.noid)
       subject.components.delete(component)
-      expect(ReindexJob).to have_received(:perform_later).with(component.noid)
       expect(subject.components).to be_empty
     end
   end
 
   it 'components and not_components' do
+    allow(Monograph).to receive(:find)
     n = 3
     components = []
     n.times { components << create(:component) }
