@@ -200,7 +200,7 @@ jobs:
           command: bin/setup_ci
       - run:
           name: Install yarn dependencies
-          command: yarn install --ignore-engines --frozen-lockfile
+          command: yarn install --ignore-engines --frozen-lockfile --production
       - run:
           name: Precompile assets
           command: RAILS_ENV=test bundle exec rails webpacker:compile

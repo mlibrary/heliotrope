@@ -8,16 +8,16 @@
   <% placeholder = t('hyrax.search.form.q.placeholder') %>
 <% end %>
 
-<%= form_tag catalog_url, method: :get, class: "search-form navbar-left navbar-form" do %>
+<%= form_tag catalog_url, method: :get, class: "form-inline my-2 my-lg-0" do %>
   <fieldset>
     <%= render_hash_as_hidden_fields(search_state.params_for_search.except(:q, :search_field, :qt, :page, :utf8, :partial)) %>
     <div class="input-group">
       <%= label_tag :catalog_search, search_label, class: "sr-only" %>
       <%= text_field_tag(:q, params[:q], class: "q search-query form-control", id: "catalog_search",
                          placeholder: placeholder, tabindex: "0", type: "search") %>
-      <div class="input-group-btn">
+      <div class="input-group-append">
         <button type="submit" class="search-submit btn btn-primary" id="keyword-search-submit" tabindex="0">
-          <i class="glyphicon glyphicon-search"></i><span class="sr-only">Search</span>
+          <i class="fa fa-search"></i><span class="sr-only">Search</span>
         </button>
       </div>
     </div>

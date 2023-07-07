@@ -18,7 +18,7 @@ module Greensub
                                    after_remove: :reindex_component_product,
                                    after_add: :reindex_component_product
 
-    validates :identifier, presence: true, allow_blank: false, uniqueness: true
+    validates :identifier, presence: true, allow_blank: false, uniqueness: { case_sensitive: true }
     validates :name, presence: true, allow_blank: false
 
     before_destroy do
@@ -93,7 +93,9 @@ module Greensub
     # > product.components.delete(component)
     # then we need to reindex the Monograph to save/delete the product
     def reindex_component_product(component)
-      ReindexJob.perform_later(component.noid)
+      # ReindexJob.perform_later(component.noid)
+      # Hyrax 4: the above doesn't work in tests anymore (surprised it ever did) so we'll do this instead:
+      Monograph.find(component.noid)&.update_index
     end
 
     private

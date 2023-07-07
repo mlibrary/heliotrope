@@ -80,7 +80,7 @@ describe 'Create a monograph' do
       expect(page.title).to eq '#hashtag Test Monograph Title with MD Italics and HTML Italics'
       expect(page).to have_content '#hashtag Test Monograph Title with MD Italics and HTML Italics'
       # get text inside <em> tags
-      italicized_text = page.first('.col-sm-8.col-sm-push-4.monograph-metadata h1 em').text
+      italicized_text = page.first('#work-title em').text
       expect(italicized_text).to eq 'MD Italics'
       expect(page).to have_content press.name
       expect(page).to have_content 'Blahdy blah description works'

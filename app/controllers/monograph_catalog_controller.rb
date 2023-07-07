@@ -4,7 +4,7 @@ class MonographCatalogController < ::CatalogController
   include IrusAnalytics::Controller::AnalyticsBehaviour
 
   before_action :load_presenter, only: %i[index facet purchase]
-  before_action :load_press_presenter, only: %i[purchase]
+  before_action :load_press_presenter, only: %i[index purchase]
   before_action :wayfless_redirect_to_shib_login, only: %i[index]
   after_action :add_counter_stat, only: %i[index]
   # after_action :send_irus_analytics_investigation, only: %i[index]
@@ -15,7 +15,7 @@ class MonographCatalogController < ::CatalogController
   configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     config.search_builder_class = MonographSearchBuilder
     config.index.partials = %i[thumbnail index_header index]
-    config.view.gallery.partials = %i[index_header index]
+    config.view.gallery.partials = %i[index]
 
     config.default_per_page = 20
     config.add_sort_field 'relevance', sort: "score desc, monograph_position_isi asc", label: "First Appearance"
@@ -70,6 +70,9 @@ class MonographCatalogController < ::CatalogController
   end
 
   def facet
+    # Related to helpers/facets_helper#facet_url_helper
+    # and views/catalog/_facet_limit.html.erb
+    # For the monograph_catalog we need the monograph_id to run through blacklight
     super
   end
 
@@ -86,7 +89,7 @@ class MonographCatalogController < ::CatalogController
 
   def default_url_options
     # HELIO-4332
-    @except_locale = true if @presenter.present? && @presenter&.subdomain == "barpublishing"
+    @except_locale = true if @monograph_presenter.present? && @monograph_presenter&.subdomain == "barpublishing"
     super
   end
 
@@ -99,17 +102,18 @@ class MonographCatalogController < ::CatalogController
     def load_presenter
       retries ||= 0
       monograph_id = params[:monograph_id] || params[:id]
-      raise CanCan::AccessDenied unless current_ability&.can?(:read, monograph_id)
-      @presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
-      auth_for(Sighrax.from_presenter(@presenter))
-      @ebook_download_presenter = EBookDownloadPresenter.new(@presenter, current_ability, current_actor)
+      @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
+      raise PageNotFoundError if @monograph_presenter.nil?
+      raise CanCan::AccessDenied unless current_ability&.can?(:read, @monograph_presenter)
+      auth_for(Sighrax.from_presenter(@monograph_presenter))
+      @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
       # For Access Icons HELIO-3346
       @actor_product_ids = current_actor.products.pluck(:id)
       @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
 
       # The monograph catalog page is completely user-facing, apart from a small admin menu. The "Read" button should...
       # never show up if there is no published ebook for CSB to use! This is important for the "Forthcoming" workflow.
-      @show_read_button = @presenter.reader_ebook? && @presenter&.reader_ebook['visibility_ssi'] == 'open'
+      @show_read_button = @monograph_presenter.reader_ebook? && @monograph_presenter&.reader_ebook['visibility_ssi'] == 'open'
       @disable_read_button = disable_read_button?
     rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http => e
       Rails.logger.error(%Q|[RSOLR ERROR TRY:#{retries}] #{e} #{e.backtrace.join("\n")}|)
@@ -118,18 +122,18 @@ class MonographCatalogController < ::CatalogController
     end
 
     def load_press_presenter
-      @press_presenter = PressPresenter.for(@presenter.subdomain)
+      @press_presenter = PressPresenter.for(@monograph_presenter.subdomain)
     end
 
     def disable_read_button?
-      return true if @presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? && @presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :restricted
+      return true if @monograph_presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? && @monograph_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :restricted
       false
     end
 
     def add_counter_stat
       # HELIO-2292
-      return unless @presenter.epub? || @presenter.pdf_ebook? || @presenter.mobi?
-      CounterService.from(self, @presenter).count
+      return unless @monograph_presenter.epub? || @monograph_presenter.pdf_ebook? || @monograph_presenter.mobi?
+      CounterService.from(self, @monograph_presenter).count
       send_irus_analytics_investigation
     end
 end

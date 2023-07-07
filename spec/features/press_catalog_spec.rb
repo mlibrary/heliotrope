@@ -31,7 +31,7 @@ describe 'Press Catalog' do
         expect(page).not_to have_link colors.title.first
 
         # Press catalog defaults to gallery view
-        expect(page).to have_selector('#documents.row.gallery')
+        expect(page).to have_selector('#documents.row.documents-gallery')
         expect(page).to have_css(".view-type-group.btn-group[role=tablist]")
         expect(page).to have_css("a.btn.btn-default.view-type-list[href*='view=list'][role=tab][aria-selected=false]")
         expect(page).to have_css("a.btn.btn-default.view-type-gallery.active[href*='view=gallery'][role=tab][aria-selected=true]")
@@ -143,7 +143,7 @@ describe 'Press Catalog' do
             creators = name1
           end
 
-          date = Faker::Time.between(DateTime.now - 9999, DateTime.now)
+          date = Faker::Time.between(from: DateTime.now - 9999, to: DateTime.now)
           doc = ::SolrDocument.new(
             id: Random.rand(999_999_999),
             has_model_ssim: 'Monograph',
@@ -156,7 +156,7 @@ describe 'Press Catalog' do
             creator_full_name_si: name1,
             date_created_si: date.year,
             date_uploaded_dtsi: date,
-            subject_sim: Faker::Pokemon.name,
+            subject_sim: Faker::Job.field,
             publisher_sim: Faker::Book.publisher,
             open_access_sim: open_access, # facetable
             suppressed_bsi: false,
@@ -177,18 +177,17 @@ describe 'Press Catalog' do
 
         expect(page).to have_link "Publisher"
         expect(page).to have_selector("#facet-publisher_sim")
-        # expect(page).to have_selector("#facet-open_access_sim")
-        # use "fake facet" Access (user_access) instead of OA, # HELIO-3347
-        expect(page).to have_selector('#facet-user_access')
+        # use "fake facet" Access (user_access) even though it's named after open_access_sim, HELIO-3347, HELIO-4517
+        expect(page).to have_selector('#facet-open_access_sim')
 
-        expect(page).to have_selector('#facet-creator_sim a.facet_select', count: 5) # 5 is limit in facet widget
+        expect(page).to have_selector('#facet-creator_sim a.facet-select', count: 5) # 5 is limit in facet widget
 
         # dedicated facet modal shows up to 20 values, we expect 13 creator names
         find("a[href='/#{heb.subdomain}/facet?id=creator_sim&locale=en']").click
         # save_and_open_page
-        expect(page).to have_selector('a.facet-anchor.facet_select', count: 13)
+        expect(page).to have_selector('a.facet-select', count: 13)
 
-        find('a.facet-anchor.facet_select', match: :first).click
+        find('a.facet-select', match: :first).click
         expect(page.title).to eq "#{heb.name} results - page 1 of 1"
         expect(page).to have_selector('#documents .document', count: 1)
         expect(page).to have_content("Your search has returned 1 book from #{heb.name}")
