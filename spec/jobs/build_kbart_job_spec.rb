@@ -108,6 +108,7 @@ RSpec.describe BuildKbartJob, type: :job do
 
         before do
           FileUtils.rm_rf(test_root)
+          allow(Monograph).to receive(:find)
 
           product.components = [
             create(:component, noid: doc_c.id),
@@ -141,6 +142,7 @@ RSpec.describe BuildKbartJob, type: :job do
       context "with a known product group key" do
         before do
           FileUtils.rm_rf(test_root)
+          allow(Monograph).to receive(:find)
 
           product.components = [
             create(:component, noid: doc_c.id),
@@ -191,6 +193,7 @@ RSpec.describe BuildKbartJob, type: :job do
           let(:remote_tsv) { "/home/fulcrum_ftp/heliotropium/publishing/Testing/KBART/test_product_2022-02-02.txt" }
 
           before do
+            allow(Monograph).to receive(:find)
             product.components << create(:component, noid: doc_e.id)
 
             ActiveFedora::SolrService.add([doc_e.to_h])
@@ -296,6 +299,8 @@ RSpec.describe BuildKbartJob, type: :job do
     let(:product) { create(:product, identifier: 'test_product', needs_kbart: true, group_key: 'test_product') }
 
     before do
+      allow(Monograph).to receive(:find)
+
       product.components = [
         create(:component, noid: doc_c.id),
         create(:component, noid: doc_b.id),

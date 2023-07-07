@@ -2,9 +2,18 @@
 .nav-sidebar {
   background-color: #f5f5f5;
 }
-.nav-sidebar > li > a {
-}
+
 .nav-sidebar > .active > a {
+  color: #fff;
+  background-color: #428bca;
+}
+
+
+.navbar-nav {
+  background-color: #f5f5f5;
+}
+
+.navbar-nav > .active > a {
   color: #fff;
   background-color: #428bca;
 }

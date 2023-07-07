@@ -88,10 +88,12 @@ RSpec.describe "Products", type: :request do
     describe "GET /api/v1/component/:component_id/products" do # index
       let(:component) { create(:component) }
       let(:new_product) { create(:product) }
+      let(:monograph) { double('monograph', id: component.noid, update_index: true) }
 
       before do
         product
         new_product
+        allow(Monograph).to receive(:find).with(component.noid).and_return(monograph)
       end
 
       it 'not_found' do
@@ -318,6 +320,9 @@ RSpec.describe "Products", type: :request do
 
     describe "DELETE /api/v1/products/:id" do # destroy
       let(:component) { create(:component) }
+      let(:monograph) { double('monograph', id: component.noid, update_index: true) }
+
+      before { allow(Monograph).to receive(:find).with(component.noid).and_return(monograph) }
 
       it 'non existing not_found' do
         delete api_product_path(product.id + 1), headers: headers

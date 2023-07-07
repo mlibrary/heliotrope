@@ -6,7 +6,7 @@
       <%= link_to "New", main_app.tokenize_user_path(current_user.id),
                   method: :put, title: "New token",
                   data: { confirm: "Generate new token?" },
-                  class: "btn btn-default" %>
+                  class: "btn btn-primary" %>
     </th>
     <th><%= text_field(:user, :token, size: size * 4, value: current_user.token, disabled: true) %></th>
   </tr>
@@ -36,7 +36,7 @@
         <%= link_to "New", main_app.tokenize_user_path(user.id),
                     method: :put, title: "New token",
                     data: { confirm: "Generate new token?" },
-                    class: "btn btn-default" %>
+                    class: "btn btn-primary" %>
       </td>
       <td><%= user.email %></td>
       <td><%= user.display_name %></td>

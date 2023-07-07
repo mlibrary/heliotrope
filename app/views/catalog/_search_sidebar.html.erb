@@ -1,6 +1,6 @@
 <% if params[:id].present? && params['controller'] == 'monograph_catalog' %>
   <% catalog_url = main_app.monograph_catalog_path(params[:id]) %>
-  <% search_label = t('monograph_catalog.search.form.q.label', monograph_name: @presenter.page_title) %>
+  <% search_label = t('monograph_catalog.search.form.q.label', monograph_name: @monograph_presenter.page_title) %>
   <% placeholder = t('monograph_catalog.search.form.q.placeholder') %>
   <div class="facets sidenav">
     <h3 class="panel-heading facets-heading">
@@ -15,7 +15,7 @@
                              placeholder: placeholder, tabindex: "0", type: "search", "data-hj-allow": true) %>
           <div class="input-group-btn">
             <button type="submit" class="search-submit btn btn-primary" id="resources-search-submit" tabindex="0">
-              <i class="glyphicon glyphicon-search"></i><span class="sr-only">Search resources</span>
+              <i class="fa fa-search"></i><span class="sr-only">Search resources</span>
             </button>
           </div>
         </div>
@@ -23,4 +23,5 @@
     <% end %>
   </div>
 <% end %>
+
 <%= render 'facets' %>
