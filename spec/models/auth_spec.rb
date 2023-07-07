@@ -235,9 +235,43 @@ RSpec.describe Auth, type: :model do
       end
 
       context 'component' do
-        before { Greensub::Component.create!(identifier: entity.resource_token, name: entity.title, noid: entity.noid) }
+        let!(:component) { create(:component, identifier: entity.resource_token, name: entity.title, noid: entity.noid) }
 
-        it { expect(auth.publisher_restricted_content?).to be true }
+        # Just having components does not mean a Product has restricted content
+        # Some Products are all OA
+        it { expect(auth.publisher_restricted_content?).to be false }
+
+        context "if the component is in a product and an instituion has a license to the product" do
+          let(:product) { create(:product) }
+          let(:institution) { create(:institution) }
+
+          before do
+            product.components << component
+            product.save!
+            institution.create_product_license(product, affiliation: 'member')
+          end
+
+          it { expect(auth.publisher_restricted_content?).to be true }
+        end
+
+        context "if the only license for the product is a license for the World" do
+          # This can happen. An OA product can have a license for the World (everybody)
+          # I'm not clear on the details as to why, but it's happened.
+          let(:product) { create(:product) }
+          let(:institution) { create(:institution, identifier: "0", name: "Unknown Institution") }
+
+          before do
+            product.components << component
+            product.save!
+            institution.create_product_license(product, affiliation: 'member')
+
+            allow(Settings).to receive(:world_institution_identifier).and_return(institution.identifier)
+          end
+
+          it do
+            expect(auth.publisher_restricted_content?).to be false
+          end
+        end
       end
     end
 
