@@ -587,7 +587,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(assigns(:entity))
             expect(response).to have_http_status(:ok)
             expect(response.headers['Content-Type']).to eq 'application/pdf'
-            expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
+            expect(response.headers['Content-Disposition']).to eq %|inline; filename="0_This_is_Chapter_One_s_Title.pdf"; filename*=UTF-8''0_This_is_Chapter_One_s_Title.pdf|
             expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
             # watermarking will change the file content and add fonts
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
@@ -606,7 +606,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(assigns(:entity))
             expect(response).to have_http_status(:ok)
             expect(response.headers['Content-Type']).to eq 'application/pdf'
-            expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
+            expect(response.headers['Content-Disposition']).to eq %|inline; filename="0_This_is_Chapter_One_s_Title.pdf"; filename*=UTF-8''0_This_is_Chapter_One_s_Title.pdf|
             expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
             # watermarking will change the file content and add fonts
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
@@ -632,7 +632,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(assigns(:entity))
             expect(response).to have_http_status(:ok)
             expect(response.headers['Content-Type']).to eq 'application/pdf'
-            expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
+            expect(response.headers['Content-Disposition']).to eq %|inline; filename="0_This_is_Chapter_One_s_Title.pdf"; filename*=UTF-8''0_This_is_Chapter_One_s_Title.pdf|
             expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
             # watermarking will change the file content and add fonts
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
@@ -651,7 +651,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(assigns(:entity))
             expect(response).to have_http_status(:ok)
             expect(response.headers['Content-Type']).to eq 'application/pdf'
-            expect(response.headers['Content-Disposition']).to eq 'inline; filename="0_This_is_Chapter_One_s_Title.pdf"'
+            expect(response.headers['Content-Disposition']).to eq %|inline; filename="0_This_is_Chapter_One_s_Title.pdf"; filename*=UTF-8''0_This_is_Chapter_One_s_Title.pdf|
             expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
             # watermarking will change the file content and add fonts
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))

@@ -19,7 +19,7 @@ module Greensub
     validates :licensee_type, presence: true, inclusion: { in: %w[Greensub::Individual Greensub::Institution] }
     validates :licensee_id, presence: true
     validates :product_id, presence: true
-    validates :type, uniqueness: { scope: [:licensee_type, :licensee_id, :product_id] }
+    validates :type, uniqueness: { scope: [:licensee_type, :licensee_id, :product_id], case_sensitive: true }
 
     has_many :license_affiliations, dependent: :restrict_with_error
     alias_attribute :affiliations, :license_affiliations
