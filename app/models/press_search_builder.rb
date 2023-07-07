@@ -88,8 +88,8 @@ class PressSearchBuilder < ::SearchBuilder
     end
 
     def press_admin_role_override?
-      return true if current_user&.platform_admin?
-      admin_roles = Role.where(user: current_user, resource_type: 'Press', resource_id: url_press.id, role: ['admin', 'editor']).map(&:role) & ['admin', 'editor']
+      return true if current_ability.current_user&.platform_admin?
+      admin_roles = Role.where(user: current_ability.current_user, resource_type: 'Press', resource_id: url_press.id, role: ['admin', 'editor']).map(&:role) & ['admin', 'editor']
       admin_roles.present?
     end
 

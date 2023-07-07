@@ -1,4 +1,8 @@
 <% # container for document in index gallery view -%>
+<% presenter = Hyrax::MonographPresenter.new(document, current_ability) %>
+<% counter = document_counter_with_offset(document_counter) %>
+
+<% # container for document in index gallery view -%>
 <div class="document col-xs-6 col-md-4">
   <%= link_to(url_for_document(document), document_link_params(document, counter: counter)) do %>
     <div class="thumbnail">

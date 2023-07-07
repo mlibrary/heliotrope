@@ -123,8 +123,8 @@ describe 'Monograph Catalog Search' do
     expect(page).to have_css("a.btn.btn-default.view-type-list[href*='view=list'][role=tab][aria-selected=false]")
     expect(page).to have_css("a.btn.btn-default.view-type-gallery.active[href*='view=gallery'][role=tab][aria-selected=true]")
 
-    expect(page).to have_selector("#documents.row.gallery")
-    expect(page).to have_selector(".gallery .document .thumbnail .caption")
+    expect(page).to have_selector("#documents.row.documents-gallery")
+    expect(page).to have_selector(".documents-gallery .document .thumbnail .caption")
     expect(page).to have_content("Unruly Puddles")
     expect(page).to_not have_content("Your search has returned")
   end

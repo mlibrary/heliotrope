@@ -10,7 +10,7 @@ RSpec.describe "ShareLinkLogs", type: :request do
 
     it do
       expect { subject }.not_to raise_error
-      expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+      expect(response.body).to match(/404 - The page you were looking for doesn&#39;t exist/)
       expect(response).to have_http_status(:not_found)
     end
 
@@ -19,7 +19,7 @@ RSpec.describe "ShareLinkLogs", type: :request do
 
       it do
         expect { subject }.not_to raise_error
-        expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+        expect(response.body).to match(/404 - The page you were looking for doesn&#39;t exist/)
         expect(response).to have_http_status(:not_found)
       end
 
@@ -28,7 +28,7 @@ RSpec.describe "ShareLinkLogs", type: :request do
 
         it do
           expect { subject }.not_to raise_error
-          expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+          expect(response.body).to match(/404 - The page you were looking for doesn&#39;t exist/)
           expect(response).to have_http_status(:not_found)
         end
 

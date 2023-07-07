@@ -42,7 +42,7 @@ describe 'Press Catalog' do
   it 'shows expected edition info on press page' do
     visit "/michigan"
 
-    expect(page).to have_selector('#documents .document', count: 3)
+    expect(page).to have_selector('#documents .document .document', count: 3)
 
     expect(page).to have_link 'The First Edition Title'
     expect(page).to have_text '2000, First Edition Name'

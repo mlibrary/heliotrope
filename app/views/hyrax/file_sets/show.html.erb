@@ -6,7 +6,7 @@
   <%# render 'shared/survey' %>
   <!-- breadcrumbs. No breadcrumbs for articles, no previous/next links, HELIO-4392-->
   <% unless @presenter.article_title.present? %>
-    <%= render 'shared/breadcrumbs' %>
+    <%= render 'shared/breadcrumbs', presenter: @presenter %>
 
     <!-- asset navigation -->
     <div class="row">
@@ -14,12 +14,12 @@
         <ul class="pager">
             <li class="previous">
             <% if @presenter.previous_id? %>
-              <a href="<%= @presenter.previous_id %>" class="previous" data-turbolinks="false"><span class="glyphicon glyphicon-triangle-left" aria-hidden="true"></span> Previous</a>
+              <a href="<%= @presenter.previous_id %>" class="previous" data-turbolinks="false"><span class="fa fa-chevron-left" aria-hidden="true"></span> Previous</a>
             <% end %>
             </li>
             <li class="next">
             <% if @presenter.next_id? %>
-              <a href="<%= @presenter.next_id %>" class="next" data-turbolinks="false">Next <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span></a>
+              <a href="<%= @presenter.next_id %>" class="next" data-turbolinks="false">Next <span class="fa fa-chevron-right" aria-hidden="true"></span></a>
             <% end %>
             </li>
         </ul>

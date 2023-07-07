@@ -21,8 +21,8 @@ RSpec.describe PressCatalogController, type: :controller do
     let(:press) { create :press }
 
     it "returns http 'not found' when press param is not a known Press subdomain" do
-      get :index, params: { press: "press" }
-      expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+      get :index, params: { press: "unknown" }
+      expect(response.body).to match(/404 - The page you were looking for doesn&#39;t exist/)
       expect(response).to have_http_status(:not_found)
     end
     it "returns http 'success' when press param is a known Press subdomain" do
