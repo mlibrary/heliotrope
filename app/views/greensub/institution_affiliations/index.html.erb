@@ -1,4 +1,4 @@
-<div id="maincontent">
+<div class="container" id="maincontent">
   <% filter = false %>
   <% if @institution.present? %>
     <h1><%= link_to " #{@institution.identifier} - #{@institution.name}", greensub_institution_path(@institution) %> Institution Affiliations</h1>

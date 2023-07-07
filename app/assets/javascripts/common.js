@@ -1,7 +1,7 @@
 // Scripts common to app and embed views
 //
 //= require jquery3
-//= require jquery_ujs
+//= require rails-ujs
 //= require turbolinks
 //= require leaflet_1.4.0
 //= require leaflet-iiif_1.2.1_best_fit

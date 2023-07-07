@@ -21,7 +21,7 @@ describe 'shared/_metadata.html.erb' do
     }
 
     it 'has the correct metadata' do
-      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
 
@@ -43,7 +43,7 @@ describe 'shared/_metadata.html.erb' do
     }
 
     it 'has no citation_publication_date' do
-      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
       expect(rendered).not_to match('citation_publication_date')
@@ -60,7 +60,7 @@ describe 'shared/_metadata.html.erb' do
     }
 
     it 'escapes the characters correctly for use in meta tag parameter values' do
-      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
       expect(rendered).to match('Bob&#39;s Red &quot;Appleish&quot; Flavour Ketchup is &gt; Heinz Ketchup')
@@ -78,7 +78,7 @@ describe 'shared/_metadata.html.erb' do
     }
 
     it 'renders the characters correctly' do
-      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
       expect(rendered).to match('Bob&#39;s “Smart” Dog’s &quot;Rött&quot; Äpple')
@@ -97,7 +97,7 @@ describe 'shared/_metadata.html.erb' do
     }
 
     it 'renders the description correctly' do
-      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
       expect(rendered).to match('A book about Italics and Bold text. Great Read! 5 Stars.')
@@ -116,7 +116,7 @@ describe 'shared/_metadata.html.erb' do
     }
 
     it 'creators are cited but contributors are not' do
-      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
       expect(rendered).to match 'Blug Shoeman'
@@ -134,7 +134,7 @@ describe 'shared/_metadata.html.erb' do
     end
 
     it 'renders the thumbnail url' do
-      @presenter = Hyrax::MonographPresenter.new(solr_document, nil)
+      @monograph_presenter = Hyrax::MonographPresenter.new(solr_document, nil)
       allow(controller).to receive(:controller_name).and_return("monograph_catalog")
       render
       expect(rendered).to match '/image-service/999999999/full/225,/0/default.jpg'
@@ -159,7 +159,7 @@ describe 'shared/_metadata.html.erb' do
       let(:ebook_download_presenter) { double("pdf_ebook", downloadable?: true, present?: true, pdf_ebook: Hyrax::FileSetPresenter.new(file_set, nil)) }
 
       it 'renders the pdf_ebook download url' do
-        @presenter = Hyrax::MonographPresenter.new(monograph, nil)
+        @monograph_presenter = Hyrax::MonographPresenter.new(monograph, nil)
         @ebook_download_presenter = ebook_download_presenter
         allow(controller).to receive(:controller_name).and_return("monograph_catalog")
         render
@@ -172,7 +172,7 @@ describe 'shared/_metadata.html.erb' do
       let(:ebook_download_presenter) { double("pdf_ebook", downloadable?: false, present?: true, pdf_ebook: Hyrax::FileSetPresenter.new(file_set, nil)) }
 
       it 'does not render the pdf_ebook download url' do
-        @presenter = Hyrax::MonographPresenter.new(monograph, nil)
+        @monograph_presenter = Hyrax::MonographPresenter.new(monograph, nil)
         @ebook_download_presenter = ebook_download_presenter
         allow(controller).to receive(:controller_name).and_return("monograph_catalog")
         render

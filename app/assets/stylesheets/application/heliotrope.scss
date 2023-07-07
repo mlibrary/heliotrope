@@ -112,6 +112,12 @@ $base-color-footer-link-hover: #73d2f4;
 ///////////////////////////////////
 $gray-60: #686868;
 ///////////////////////////////////
+// BODY
+///////////////////////////////////
+body  {
+  margin-bottom: 0 !important;
+}
+///////////////////////////////////
 // NAVIGATION MENU
 ///////////////////////////////////
 .navbar {
@@ -120,6 +126,21 @@ $gray-60: #686868;
 
 .input-group {
   margin-bottom: 0 !important;
+}
+
+.navbar-light .navbar-nav {
+  .dropdown {
+    .nav-link {
+      color: $base-color-color;
+    }
+  }
+}
+
+.navbar-nav {
+  background-color: transparent;
+  .nav-link {
+    padding-bottom: 0;
+  }
 }
 
 // skip links
@@ -205,6 +226,7 @@ div.skip {
 .breadcrumbs {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+  font-size: .9rem;
   .active {
     color: $gray-60 !important;
   }
@@ -224,10 +246,6 @@ div.skip {
     transform: rotate(15deg);
   }
 
-  .breadcrumb li {
-    margin-left: -.6em;
-  }
-
   .breadcrumb li:first-child {
     margin-left: 0;
   }
@@ -236,7 +254,16 @@ div.skip {
     text-decoration: underline !important;
   }
 }
-
+//////////////////////////////////
+// PAGINATION
+///////////////////////////////////
+.pagination {
+  .page-item {
+    a {
+      text-decoration: none;
+    }
+  }
+}
 //////////////////////////////////
 // SURVEY
 ///////////////////////////////////
@@ -371,6 +398,7 @@ footer.press {
   .platform {
     padding-top: 30px;
     color: #FFFFFF;
+    font-size: .9rem;
   }
 
   .press-block-c {
@@ -415,6 +443,28 @@ footer.press {
 
 }
 .press {
+
+  // reduce standard button size for dropdowns/sorts
+  .search-widgets {
+    font-size: 14px;
+
+    .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      border-radius: 0.2rem;
+    }
+
+    .dropdown-menu {
+      font-size: 14px;
+    }
+
+  }
+
+  .page_links {
+    font-size: 14px;
+  }
+
   p.authors {
     margin-bottom: 2px;
   }
@@ -431,14 +481,16 @@ footer.press {
     .document {
       border-bottom: none;
       padding-top: 2em;
+      padding-bottom: 1.5em;
 
       a {
-        display: block;
-        overflow: auto;
+        display: flex;
+        justify-content: flex-start;
+        flex-grow: 1;
       }
 
       .thumbnail {
-        text-align: left;
+        display: flex;
         border: none;
         border-radius: 0px;
         padding: 0px;
@@ -453,10 +505,11 @@ footer.press {
       .caption {
         h3.index_title {
           font-size: 16px;
+          font-weight: 600;
         }
 
         .authors {
-          font-size: 13px;
+          font-size: 14px;
         }
       }
     }
@@ -475,7 +528,8 @@ footer.press {
 
   }
 
-  #documents.gallery {
+  #documents.documents-gallery {
+    justify-content: space-between;
 
     .document {
       border-top: none;
@@ -483,6 +537,11 @@ footer.press {
       margin-top: 0px;
       padding-top: 0px;
       padding-bottom: 3em;
+
+      a {
+        display: flex;
+        flex-direction: column;
+      }
 
       .thumbnail {
         text-align: left;
@@ -503,10 +562,11 @@ footer.press {
 
         h3.index_title {
           font-size: 16px;
+          font-weight: 600;
         }
 
         .authors {
-          font-size: 13px;
+          font-size: 14px;
         }
 
         .col-sm-12 {
@@ -520,39 +580,82 @@ footer.press {
 ///////////////////////////////////
 // PRESS AND MONOGRAPH FILTERS
 ///////////////////////////////////
-.col-sm-3.facets-container,
-#facet-panel-collapse {
-  padding-left: 0px;
-}
 
-.facet-anchor {
-  display: flex;
-  justify-content: space-between;
-}
-
+// press catalog
 .facets-container {
-  .panel-group {
-    padding-left: 0px;
-  }
+  padding-top: 15px;
 
-  .panel-group .panel {
-    border-radius: 0px;
+  .facets .facets-header {
+    // this comes from blacklight and we don't use it.
+    display: none;
   }
+  .card {
+    margin-bottom: 0px;
+    border-radius: 0;
 
-  .panel-heading {
-    padding-top: 15px;
-  }
-
-  .panel-group .panel + .panel {
-    margin-top: 0px;
-  }
-
-  #facet-panel-collapse {
-    padding-left: 0;
+    .card-header {
+      margin-top: 0px;
+      .btn {
+        font-weight: 700;
+        border-radius: 0;
+        background-color: rgba(0, 0, 0, 0.03);
+        color: rgb(33, 37, 41);
+        border-color: rgba(0, 0, 0, 0.125);
+      }
+    }
   }
 
   .access-legend {
-    padding-right: 15px;
+    margin-top: 1rem;
+
+    .card-header {
+      font-size: 1.2rem;
+
+      h3 {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+
+    .list-group {
+      font-size: .9rem;
+      
+      img {
+        vertical-align: sub;
+      }
+    }
+  }
+}
+
+// monograph catalog
+.fulcrum_sidebar {
+  .facets .facets-header {
+    // this comes from blacklight and we don't use it.
+    display: none;
+  }
+
+  .facets .facets-panel-collapse {
+    margin-top: 0px;
+  }
+
+  .facets .facets-heading {
+    margin-top: 6px;
+  }
+
+  #facets {
+    margin-top: 1rem;
+  }
+
+  .card {
+    margin-bottom: 0px;
+    .card-header {
+      margin-top: 0px;
+      .btn {
+        font-weight: 700;
+        margin-top: .5em;
+        margin-bottom: .5em;
+      }
+    }
   }
 }
 
@@ -560,7 +663,7 @@ footer.press {
 // FACET BOOTSTRAP MODALS
 ///////////////////////////////////
 
-#ajax-modal {
+#blacklight-modal {
   button.close {
     margin: 10px 10px 5px 10px;
   }
@@ -641,6 +744,7 @@ footer.press {
 
     .btn {
       padding: 0;
+      border: 0;
     }
 
     .modal {
@@ -659,6 +763,7 @@ footer.press {
 
   .monograph-metadata-additional {
 
+    font-size: .9rem;
     line-height: 24px;
 
     .peer-review {
@@ -720,6 +825,7 @@ footer.press {
 
       input#permalink {
         max-width: 296px;
+        font-size: .9rem;
       }
     }
 
@@ -788,6 +894,9 @@ footer.press {
     // BUY/READ/DOWNLOAD BUTTONS
     .btn-toolbar {
       margin: 2em 0 1em 0;
+      .btn {
+        font-size: 1.15rem;
+      }
     }
 
     .oa-registration-required {
@@ -881,9 +990,16 @@ footer.press {
 
       .nav-tabs h2 {
         padding: 8px 0;
+        font-size: .9rem;
       }
     }
 
+  }
+
+  // DOWNLOAD dropdown
+  #monograph-download-btn + .dropdown-menu {
+    border-radius: 0;
+    padding-left: 10px;
   }
 
   // PURCHASE
@@ -1932,28 +2048,28 @@ footer.press {
       font-size: .9em;
     }
 
-.cozy-container i[class^='icon-'] {
+    .cozy-container i[class^='icon-'] {
+      font-size: 1.25rem !important;
+  }
+
+.cozy-container i[class^='icon-chevron-'] {
     font-size: 2rem !important;
 }
 
-.cozy-container i[class^='icon-chevron-'] {
-    font-size: 2em !important;
-}
-
 .cozy-container i.icon-comment-square {
-  font-size: 1.7rem !important;
+  font-size: 1rem !important;
 }
 
 .cozy-preferences-modal .button--sm {
-  font-size: 1em !important;
+  font-size: 1rem !important;
 }
 
 .cozy-control button.button--sm.cozy-citation {
-    font-size: .9em !important;
+    font-size: 1rem !important;
 }
 
 .cozy-control button.button--sm.annotation i {
-  font-size: 1.1em !important;
+  font-size: 1rem !important;
   margin-top: 1px;
 }
 
@@ -1966,7 +2082,7 @@ footer.press {
   width: 20px;
   border-radius: 50%;
   display: block;
-  font-size: .7em;
+  font-size: .7rem;
 }
 
 .cozy-container input[type="radio"] {
