@@ -9,15 +9,12 @@
  * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
- *
+ 
  *= require common
  *= require_tree ./application
  *= require_tree ./common
- *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
- *= require jquery-ui/datepicker
+ *= require dataTables.bootstrap4
+ *= require jquery-ui
  *= require idpselect
- * rails new <app> defaults...
- * require_tree .
- * require_self
  */
  

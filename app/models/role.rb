@@ -33,7 +33,7 @@ class Role < ApplicationRecord
     end
 
     # This is just like
-    #    validates :user, uniqueness: { scope: :press}
+    #    validates :user, uniqueness: { scope: :press, case_sensitive: true }
     # but it puts the error message on the user_key instead of user so that the form will render correctly
     def user_must_be_unique
       errors.add(:user_key, 'already a member of this press') if Role.where(resource: resource, user_id: user.id).where.not(id: id).any?

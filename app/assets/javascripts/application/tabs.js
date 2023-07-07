@@ -80,6 +80,8 @@ $(document).on('turbolinks:load', function() {
       tab.closest('li').setAttribute('class', 'active');
       var index = Array.prototype.indexOf.call(tabs, tab);
       panels[index].setAttribute('aria-hidden', 'false');
+      panels[index].classList.add('active');
+      panels[index].classList.add('show');
       // HELIO-3093
       googleMapRefresh(tab);
       drawStats(tab);
@@ -91,6 +93,8 @@ $(document).on('turbolinks:load', function() {
       tab.setAttribute('aria-expanded', 'false');
       tab.closest('li').removeAttribute('class', 'active');
       panels[index].setAttribute('aria-hidden', 'true');
+      panels[index].classList.remove('active');
+      panels[index].classList.remove('show');
     };
 
     var unselectTabs = function unselectTabs() {
@@ -149,6 +153,7 @@ $(document).on('turbolinks:load', function() {
 
     // set tab using a11y-compatible method up top
     var tab = $('a[href="' + activeTab + '"]')[0];
+    unselectTabs();
     selectTab(tab);
   }
 });

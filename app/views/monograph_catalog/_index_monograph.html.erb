@@ -1,76 +1,76 @@
-<% princess_de_cleves = @presenter.subdomain == 'leverpress' && (@presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }) %>
-<% oa_registration_required = @presenter.subdomain == 'ee' %>
+<% princess_de_cleves = @monograph_presenter.subdomain == 'leverpress' && (@monograph_presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }) %>
+<% oa_registration_required = @monograph_presenter.subdomain == 'ee' %>
 
 <div id="maincontent" class="row monograph-info-epub">
   <!-- ADMIN TOOLS -->
   <div class="platform-admin">
-    <% if can? :edit, @presenter %>
-      <a href="<%= main_app.edit_hyrax_monograph_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
-      <a href="<%= main_app.monograph_show_path(@presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
-      <% if @presenter.reader_ebook? %>
-        <a href="<%= princess_de_cleves ? epub_ebook_path(@presenter.reader_ebook) : epub_path(@presenter.reader_ebook) %>" title="<%= t('monograph_catalog.index.read_book') %>" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
+    <% if can? :edit, @monograph_presenter %>
+      <a href="<%= main_app.edit_hyrax_monograph_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
+      <a href="<%= main_app.monograph_show_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
+      <% if @monograph_presenter.reader_ebook? %>
+        <a href="<%= princess_de_cleves ? epub_ebook_path(@monograph_presenter.reader_ebook) : epub_path(@monograph_presenter.reader_ebook) %>" title="<%= t('monograph_catalog.index.read_book') %>" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
       <% end %>
-      <%= @presenter.permission_badge %>
+      <%= @monograph_presenter.permission_badge %>
     <% end %>
     </div>
-  <% if @presenter.monograph_coins_title? %>
+  <% if @monograph_presenter.monograph_coins_title? %>
     <!-- COinS for Zotero, etc -->
-    <span class="Z3988" title="<%= @presenter.monograph_coins_title %>" aria-hidden="true"></span>
+    <span class="Z3988" title="<%= @monograph_presenter.monograph_coins_title %>" aria-hidden="true"></span>
   <% end %>
-  <% if @presenter.tombstone? %>
+  <% if @monograph_presenter.tombstone? %>
     <div class="alert alert-danger alert-message">
-      <%= render_markdown @presenter.monograph_tombstone_message %>
+      <%= render_markdown @monograph_presenter.monograph_tombstone_message %>
     </div>
   <% end %>
   <!-- BOOK TITLE AND PRIMARY METADATA -->
   <div class="col-sm-8 col-sm-push-4 monograph-metadata">
     <!-- TITLE -->
-    <h1 id="work-title"><%= @presenter.title %></h1>
+    <h1 id="work-title"><%= @monograph_presenter.title %></h1>
     <!-- VOLUME -->
-    <% if @presenter.volume.present? %><span class="volume">Volume <%= @presenter.volume %></span><% end %>
+    <% if @monograph_presenter.volume.present? %><span class="volume">Volume <%= @monograph_presenter.volume %></span><% end %>
     <!-- EDITION -->
-    <% if @presenter.edition_name.present? %><span><%= @presenter.date_created.first %><%= sanitize @presenter.edition_name %></span><% end %>
+    <% if @monograph_presenter.edition_name.present? %><span><%= @monograph_presenter.date_created.first %><%= sanitize @monograph_presenter.edition_name %></span><% end %>
     <!-- AUTHOR/EDITOR -->
-    <% authorship_display = @presenter.authors(contributors: true, orcids: true) %>
+    <% authorship_display = @monograph_presenter.authors(contributors: true, orcids: true) %>
     <% if authorship_display.present? %>
       <span class="authors"><%= render_markdown authorship_display %></span>
     <% end %>
     <!-- ACCESS INDICATORS and OPTIONS -->
-    <%= render partial: 'access_options.html.erb', locals: { auth: @auth, presenter: @presenter } if @auth.present? %>
+    <%= render partial: 'access_options.html.erb', locals: { auth: @auth, presenter: @monograph_presenter } if @auth.present? %>
     <!-- PREVIOUS/NEXT EDITION MESSAGE -->
-    <% if @presenter.previous_edition_url.present? || @presenter.next_edition_url.present? %>
+    <% if @monograph_presenter.previous_edition_url.present? || @monograph_presenter.next_edition_url.present? %>
       <div class="edition-links">
-      <% if @presenter.previous_edition_url.present? %>
+      <% if @monograph_presenter.previous_edition_url.present? %>
         <div class="edition-link">
-          <a href="<%= @presenter.previous_edition_url %>" title="<%= t('monograph_catalog.index.previous_edition', title: @presenter.title) %>" aria-label="<%= t('monograph_catalog.index.previous_edition', title: @presenter.title) %>" data-turbolinks="false"><%= t('monograph_catalog.index.previous_edition_html', title: @presenter.title) %></a>
+          <a href="<%= @monograph_presenter.previous_edition_url %>" title="<%= t('monograph_catalog.index.previous_edition', title: @monograph_presenter.title) %>" aria-label="<%= t('monograph_catalog.index.previous_edition', title: @monograph_presenter.title) %>" data-turbolinks="false"><%= t('monograph_catalog.index.previous_edition_html', title: @monograph_presenter.title) %></a>
         </div>
       <% end %>
-      <% if @presenter.next_edition_url.present? %>
+      <% if @monograph_presenter.next_edition_url.present? %>
         <div class="edition-link">
-          <a href="<%= @presenter.next_edition_url %>" title="<%= t('monograph_catalog.index.next_edition', title: @presenter.title) %>" aria-label="<%= t('monograph_catalog.index.next_edition', title: @presenter.title) %>" data-turbolinks="false"><%= t('monograph_catalog.index.next_edition_html', title: @presenter.title) %></a>
+          <a href="<%= @monograph_presenter.next_edition_url %>" title="<%= t('monograph_catalog.index.next_edition', title: @monograph_presenter.title) %>" aria-label="<%= t('monograph_catalog.index.next_edition', title: @monograph_presenter.title) %>" data-turbolinks="false"><%= t('monograph_catalog.index.next_edition_html', title: @monograph_presenter.title) %></a>
         </div>
       <% end %>
       </div>
     <% end %>
     <!-- WEBGL COMPATIBILITY MESSAGE -->
-    <% if @presenter.webgl? %>
+    <% if @monograph_presenter.webgl? %>
       <div id="webgl-message"></div>
     <% end %>
     <!-- READ, DOWNLOAD, BUY BUTTONS -->
     <%# ensure all of the toolbar's internal components' conditionals are present here to control the toolbar's appearance %>
-    <% if @presenter.reader_ebook? || (@ebook_download_presenter.downloadable_ebooks? && !@presenter.tombstone?) || @presenter.buy_url? %>
+    <% if @monograph_presenter.reader_ebook? || (@ebook_download_presenter.downloadable_ebooks? && !@monograph_presenter.tombstone?) || @monograph_presenter.buy_url? %>
       <% if oa_registration_required %>
         <%= render 'read_download_buy_registration_required' %>
       <% else %>
         <%= render "read_download_buy", princess_de_cleves: princess_de_cleves %>
       <% end %>
-      <% if @presenter.content_warning.present? %>
-        <% content_warning_information = @presenter.content_warning_information || press_presenter.content_warning_information %>
+      <% if @monograph_presenter.content_warning.present? %>
+        <% content_warning_information = @monograph_presenter.content_warning_information || press_presenter.content_warning_information %>
         <div id="content-warning-ebook" aria-label="Ebook Content Warning">
           <div id="content-warning-icon">
             <%= image_tag "exclamation-triangle-fill.svg", alt: "Warning Icon", 'aria-hidden': "true" %>
           </div>
-          <div id="content-warning-text"><%= @presenter.content_warning %>
+          <div id="content-warning-text"><%= @monograph_presenter.content_warning %>
           <% if content_warning_information.present? %>
             <a id="warning-button" role="button" data-toggle="collapse" href="#content-warning-information" aria-expanded="false" aria-controls="content-warning-information">
               <span class="text-collapsed">Expand to read full warning statement...</span>
@@ -89,49 +89,49 @@
     <!-- See app/assets/javascripts/application/tabs.js -->
     <div id="tabs">
       <ul class="nav nav-tabs" role="tablist">
-        <% if @presenter.description? %>
+        <% if @monograph_presenter.description? %>
           <li role="presentation">
             <h2>
               <a id="tab-description" href="#description" aria-controls="description" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Overview</a>
             </h2>
           </li>
         <% end %>
-        <% if @presenter.toc? %>
+        <% if @monograph_presenter.toc? %>
           <li role="presentation">
             <h2>
               <a id="tab-toc" href="#toc" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Contents</a>
             </h2>
           </li>
         <% end %>
-        <% if @presenter.funder_display? %>
+        <% if @monograph_presenter.funder_display? %>
           <li role="presentation">
             <h2>
               <a id="tab-funder" href="#funder" aria-controls="funder" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Funder Information</a>
             </h2>
           </li>
         <% end %>
-        <% if @presenter.awards.present? %>
+        <% if @monograph_presenter.awards.present? %>
           <li role="presentation">
             <h2>
               <a id="tab-award" href="#award" aria-controls="award" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Awards</a>
             </h2>
           </li>
         <% end %>
-        <% if @presenter.reviews? %>
+        <% if @monograph_presenter.reviews? %>
           <li role="presentation">
             <h2>
               <a id="tab-reviews" href="#reviews" aria-controls="reviews" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Reviews</a>
             </h2>
           </li>
         <% end %>
-        <% if @presenter.related? %>
+        <% if @monograph_presenter.related? %>
           <li role="presentation">
             <h2>
               <a id="tab-related" href="#related" aria-controls="related" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Related Titles</a>
             </h2>
           </li>
         <% end %>
-        <% if @presenter.aboutware? %>
+        <% if @monograph_presenter.aboutware? %>
           <li role="presentation">
             <h2>
               <a id="tab-aboutware" href="#aboutware" aria-controls="aboutware" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">About</a>
@@ -150,17 +150,17 @@
       <!-- BOOK INFORMATION TABS - CONTENT -->
       <div id="tabs-content" class="tab-content monograph-info-content" aria-live="polite">
         <!-- OVERVIEW/BOOK DESCRIPTION -->
-        <% if @presenter.description? %>
+        <% if @monograph_presenter.description? %>
           <section id="description" class="tab-pane fade description row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-description" tabindex="0">
             <div class="col-sm-12">
-              <div class="description<%= " display-in-full" if %w[mw22v7671 8623j115w].include? @presenter.id %>">
-                <%= render_markdown @presenter.description.first || '' %>
+              <div class="description<%= " display-in-full" if %w[mw22v7671 8623j115w].include? @monograph_presenter.id %>">
+                <%= render_markdown @monograph_presenter.description.first || '' %>
               </div>
             </div>
           </section>
         <% end %>
         <!-- TABLE OF CONTENTS -->
-        <% if @presenter.toc? %>
+        <% if @monograph_presenter.toc? %>
           <section id="toc" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-toc" tabindex="0">
             <div class="col-sm-12">
               <%= render 'index_epub_toc', oa_registration_required: oa_registration_required, princess_de_cleves: princess_de_cleves %>
@@ -168,45 +168,45 @@
           </section>
         <% end %>
         <!-- FUNDER INFORMATION -->
-        <% if @presenter.funder_display? %>
+        <% if @monograph_presenter.funder_display? %>
           <section id="funder" class="tab-pane fade funder row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-funder" tabindex="0">
             <div class="col-sm-12">
-              <div aria-label="funder display" class="funder_display"><%= @presenter.funder_display %></div>
+              <div aria-label="funder display" class="funder_display"><%= @monograph_presenter.funder_display %></div>
             </div>
           </section>
         <% end %>
         <!-- ABOUTWARE FEATURED REPRESENTATIVE -->
-        <% if @presenter.aboutware? %>
+        <% if @monograph_presenter.aboutware? %>
           <section id="aboutware" class="tab-pane fade aboutware row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-aboutware" tabindex="0">
             <div class="col-sm-12">
               <%# this assumes that the "aboutware" FileSet is an html doc %>
-              <%= @presenter.aboutware.file.content.force_encoding("UTF-8").html_safe %>
+              <%= @monograph_presenter.aboutware.file.content.force_encoding("UTF-8").html_safe %>
             </div>
           </section>
         <% end %>
         <!-- AWARDS -->
-        <% if @presenter.awards.present? %>
+        <% if @monograph_presenter.awards.present? %>
           <section id="award" class="tab-pane fade award row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-funder" tabindex="0">
             <div class="col-sm-12">
-              <div aria-label="award" class="award"><%= render_markdown @presenter.awards %></div>
+              <div aria-label="award" class="award"><%= render_markdown @monograph_presenter.awards %></div>
             </div>
           </section>
         <% end %>
         <!-- REVIEWS FEATURED REPRESENTATIVE -->
-        <% if @presenter.reviews? %>
+        <% if @monograph_presenter.reviews? %>
           <section id="reviews" class="tab-pane fade reviews row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-reviews" tabindex="0">
             <div class="col-sm-12">
               <%# this assumes that the "reviews" FileSet is an html doc %>
-              <%= auto_link(@presenter.reviews.file.content.force_encoding("UTF-8"), html: { target: '_blank' }, sanitize: false).html_safe %>
+              <%= auto_link(@monograph_presenter.reviews.file.content.force_encoding("UTF-8"), html: { target: '_blank' }, sanitize: false).html_safe %>
             </div>
           </section>
         <% end %>
         <!-- RELATED TITLES FEATURED REPRESENTATIVE -->
-        <% if @presenter.related? %>
+        <% if @monograph_presenter.related? %>
           <section id="related" class="tab-pane fade related row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-related" tabindex="0">
             <div class="col-sm-12">
               <%# this assumes that the "related" FileSet is an html doc %>
-              <%= @presenter.related.file.content.force_encoding("UTF-8").html_safe %>
+              <%= @monograph_presenter.related.file.content.force_encoding("UTF-8").html_safe %>
             </div>
           </section>
         <% end %>
@@ -223,22 +223,22 @@
   <!-- BOOK COVER AND ADDITIONAL METADATA -->
   <div class="col-sm-4 col-sm-pull-8 monograph-metadata-additional">
     <!-- BOOK COVER -->
-    <% if @presenter.tombstone_thumbnail? %>
+    <% if @monograph_presenter.tombstone_thumbnail? %>
       <div class="monograph-cover">
-        <%= @presenter.tombstone_thumbnail_tag(286) %>
+        <%= @monograph_presenter.tombstone_thumbnail_tag(286) %>
       </div>
     <% else %>
-      <% if @presenter.representative_id.present? %>
+      <% if @monograph_presenter.representative_id.present? %>
       <div class="monograph-cover">
         <!-- Image trigger modal -->
         <button type="button" class="btn btn-link" aria-label="Select to enlarge cover" data-toggle="modal" data-target="#modalImage">
-          <%= @presenter.thumbnail_tag(286, class: "img-responsive", alt: "Cover image for #{@presenter.title}") %>
+          <%= @monograph_presenter.thumbnail_tag(286, class: "img-responsive", alt: "Cover image for #{@monograph_presenter.title}") %>
         </button>
 
         <!-- Modal image -->
         <div class="modal" id="modalImage" tabindex="-1" role="dialog" aria-label="Select the escape key to close the modal window">
           <button type="button" class="close btn btn-default" id="modalClose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <%= @presenter.poster_tag(tabindex: "-1", alt: '') %>
+          <%= @monograph_presenter.poster_tag(tabindex: "-1", alt: '') %>
         </div>
 
         <script type="text/javascript">
@@ -251,68 +251,68 @@
       </div>
       <% else %>
       <div class="monograph-cover">
-        <%= @presenter.thumbnail_tag(286) %>
+        <%= @monograph_presenter.thumbnail_tag(286) %>
       </div>
       <% end %>
     <% end %>
     <!-- ALTMETRIC & DIMENSIONS BADGES -->
-    <%= render 'shared/altmetric_dimensions' %>
+    <%= render 'shared/altmetric_dimensions', presenter: @monograph_presenter %>
     <!-- PEER REVIEW -->
-    <% if @presenter.peer_review? %>
-      <div class="peer-review"><%= @presenter.peer_review.file.content.force_encoding("UTF-8").html_safe %></div>
+    <% if @monograph_presenter.peer_review? %>
+      <div class="peer-review"><%= @monograph_presenter.peer_review.file.content.force_encoding("UTF-8").html_safe %></div>
     <% end %>
     <div class="monograph-metadata-additional">
       <!-- CITABLE LINK -->
-      <% unless @presenter.tombstone? %>
+      <% unless @monograph_presenter.tombstone? %>
           <div class="citable-link">
             <span class="meta-label" id="citable_link"><%= t('citable_link') %></span>
             <form>
               <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
-              <input aria-labelledby="citable_link" type="text" class="form-control" id="permalink" aria-label="Citable link for <%= @presenter.title %>" value="<%= @presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
+              <input aria-labelledby="citable_link" type="text" class="form-control" id="permalink" aria-label="Citable link for <%= @monograph_presenter.title %>" value="<%= @monograph_presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
             </form>
           </div>
       <% end %>
       <!-- PUBLICATION DATE -->
-      <% if @presenter.date_created.present? %>
+      <% if @monograph_presenter.date_created.present? %>
         <div class="publication-date">
-          <span class="meta-label">Published:</span> <%= @presenter.date_created.first %>
+          <span class="meta-label">Published:</span> <%= @monograph_presenter.date_created.first %>
         </div>
       <% end %>
       <!-- PUBLISHER -->
-      <% if @presenter.publisher.present? %>
+      <% if @monograph_presenter.publisher.present? %>
         <div class="publisher">
-          <span class="meta-label">Publisher:</span> <%= @presenter.publisher.first %>
+          <span class="meta-label">Publisher:</span> <%= @monograph_presenter.publisher.first %>
         </div>
       <% end %>
       <!-- COPYRIGHT YEAR -->
-      <% if @presenter.copyright_year.present? %>
+      <% if @monograph_presenter.copyright_year.present? %>
         <div class="copyright-year">
-          <span class="meta-label">Copyright:</span> <%= @presenter.copyright_year %>
+          <span class="meta-label">Copyright:</span> <%= @monograph_presenter.copyright_year %>
         </div>
       <% end %>
       <!-- LICENSE -->
-      <% if @presenter.license? %>
+      <% if @monograph_presenter.license? %>
       <div class="license">
-        <span class="meta-label">License:</span> <a aria-label="<%= @presenter.license_alt_text %>" rel="license" href="<%= @presenter.license.first %>" target="_blank"><%= @presenter.license_link_content %></a></span>
+        <span class="meta-label">License:</span> <a aria-label="<%= @monograph_presenter.license_alt_text %>" rel="license" href="<%= @monograph_presenter.license.first %>" target="_blank"><%= @monograph_presenter.license_link_content %></a></span>
       </div>
       <% end %>
       <!-- ISBN -->
-      <% if @presenter.isbn.present? %>
+      <% if @monograph_presenter.isbn.present? %>
         <div class="isbns">
-          <%= @presenter.attribute_to_html(:isbn, label: t('isbn'), html_p: true) %>
+          <%= @monograph_presenter.attribute_to_html(:isbn, label: t('isbn'), html_p: true) %>
         </div>
       <% end %>
       <!-- BAR NUMBER -->
-      <% if @presenter.bar_number.present? %>
+      <% if @monograph_presenter.bar_number.present? %>
         <div class="number">
-          <span class="meta-label">BAR Number:</span> <%= @presenter.bar_number %>
+          <span class="meta-label">BAR Number:</span> <%= @monograph_presenter.bar_number %>
         </div>
       <% end %>
       <!-- SUBJECT/SERIES -->
-      <% if @presenter.series.present? || @presenter.subject.present? %>
+      <% if @monograph_presenter.series.present? || @monograph_presenter.subject.present? %>
         <div class="subject-series">
-            <%= @presenter.attribute_to_html(:series, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>
-            <%= @presenter.attribute_to_html(:subject, render_as: :catalog_facet_attribute, subdomain: @presenter.subdomain) %>
+            <%= @monograph_presenter.attribute_to_html(:series, render_as: :catalog_facet_attribute, subdomain: @monograph_presenter.subdomain) %>
+            <%= @monograph_presenter.attribute_to_html(:subject, render_as: :catalog_facet_attribute, subdomain: @monograph_presenter.subdomain) %>
         </div>
       <% end %>
     </div>
@@ -321,7 +321,7 @@
 </div><!-- /.monograph-info-epub -->
 
 <!-- RESOURCES -->
-<% if @presenter.assets? %>
+<% if @monograph_presenter.assets? %>
   <div class="row monograph-assets">
     <div class="col-sm-12">
       <h2>Resources</h2>
@@ -331,7 +331,7 @@
         </div>
         <div class="col-sm-9">
           <div class="content">
-            <%= render 'catalog/search_results' %>
+            <%= render 'catalog/search_results', press_presenter: @press_presenter %>
           </div><!-- /.content -->
         </div>
       </section>

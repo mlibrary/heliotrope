@@ -1,7 +1,10 @@
 @import 'bootstrap';
 
+// bootstrap 4 needs:
+$padding-base-vertical: ($spacer * .5);
+
 #documents .document {
-  border-top: 1px solid $gray-lighter;
+  border-top: 1px solid $gray-400;
   margin-top: $padding-base-vertical;
   padding-top: $padding-base-vertical;
 
@@ -21,12 +24,14 @@
   }
 
   .document-thumbnail {
-    @include make-xs-column(4);
-    @include make-sm-column(2);
+    //@include make-xs-column(4);
+    //@include make-sm-column(2);
+    @include make-col(4)
   }
 
   .document-metadata {
-    @include make-xs-column(8);
+    //@include make-xs-column(8);
+    @include make-col(8)
   }
 
   .canonical-image {

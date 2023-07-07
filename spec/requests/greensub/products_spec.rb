@@ -271,6 +271,11 @@ RSpec.describe "Greensub::Products", type: :request do
 
         context 'platform administrator' do
           let(:current_user) { create(:platform_admin) }
+          let(:monograph) { double('monograph', id: component.noid, update_index: true) }
+
+          before do
+            allow(Monograph).to receive(:find).with(component.noid).and_return(monograph)
+          end
 
           it do
             expect { post_product }.not_to raise_error

@@ -64,6 +64,7 @@ en:
           resource_type_sim: Format
         show:
           contributor: Contributor(s)
+      search_results_header: "This is the en.blacklight.search.search_results_header"
   breadcumbs:
     home: "Home"
   buy_url: "Buy Book URL"

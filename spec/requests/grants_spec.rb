@@ -9,7 +9,7 @@ RSpec.describe "Grants", type: :request do
     describe "GET /grants" do
       it do
         get grants_path
-        expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+        expect(response.body).to match(/404 - The page you were looking for doesn&#39;t exist/)
         expect(response).to have_http_status(:not_found)
       end
     end
@@ -24,7 +24,7 @@ RSpec.describe "Grants", type: :request do
       describe "GET /grants" do
         it do
           get grants_path
-          expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+          expect(response.body).to match(/404 - The page you were looking for doesn&#39;t exist/)
           expect(response).to have_http_status(:not_found)
         end
       end

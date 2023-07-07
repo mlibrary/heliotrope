@@ -131,7 +131,7 @@ class FileSet < ActiveFedora::Base
   # Cast to a SolrDocument by querying from Solr
   # Hyrax Heliotrope override: cast to an actual presenter, not just a solr_doc
   def to_presenter
-    ::Hyrax::FileSetPresenter.new(CatalogController.new.fetch(id).last, nil)
+    ::Hyrax::FileSetPresenter.new(SolrDocument.new(ActiveFedora::SolrService.query("id:#{id}", rows: 1).first.to_h), nil)
   end
 
   # see https://github.com/samvera/hyrax/issues/5900 and https://mlit.atlassian.net/browse/HELIO-4358

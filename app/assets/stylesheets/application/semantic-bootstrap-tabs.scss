@@ -1,5 +1,14 @@
-@import 'bootstrap-sprockets';
 @import 'bootstrap';
+
+// We no longer use bootstrap-sass in hyrax 4
+// so these definition have been copied out of bootstrap-sass 3.4.1
+// or otherwise made to work with bootstrap 4
+$border-radius-base: 4px !default;
+$nav-link-padding: 10px 15px !default;
+$nav-tabs-active-link-hover-color: $gray-600 !default;
+$nav-tabs-active-link-hover-bg: $body-bg !default;
+$nav-tabs-active-link-hover-border-color: #ddd !default;
+
 
 // Give the tabs something to sit on
 .nav-tabs {
@@ -52,6 +61,6 @@
   // pulling this in mainly for less shorthand
   &.nav-justified {
     @extend .nav-justified;
-    @extend .nav-tabs-justified;
+    @extend .nav-tabs-justified !optional;
   }
 }

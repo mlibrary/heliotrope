@@ -11,7 +11,7 @@
                      '9781607854876' => '1FAIpQLScRSK1-A5ZNGAezmNZCbDnehA2h03JphmmJTePN9Lz0_nu7ng'  # Signals & Systems: Theory and Applications
                    } %>
 
-<% isbns = @presenter.isbn.map { |isbn| isbn.delete("^0-9") } %>
+<% isbns = @monograph_presenter.isbn.map { |isbn| isbn.delete("^0-9") } %>
 <% form_link_isbn = (form_link_ids.keys & isbns).first %>
 <% form_link = form_link_isbn.present? ? 'https://docs.google.com/forms/d/e/' + form_link_ids[form_link_isbn] + '/viewform' : '' %>
 
@@ -20,7 +20,7 @@
     <%# For `oa_registration_required` Monographs, both read and download are controlled by an external "registration" Google Form %>
     <%# which will assume that the book is _both_ readable and downloadable, per the current use case.
     <%# One button for both Read _and_ Download, essentially %>
-    <% if !(@disable_read_button || @presenter.tombstone?) && (@presenter.reader_ebook? && @ebook_download_presenter.downloadable_ebooks?) %>
+    <% if !(@disable_read_button || @monograph_presenter.tombstone?) && (@monograph_presenter.reader_ebook? && @ebook_download_presenter.downloadable_ebooks?) %>
       <a id="monograph-read-btn"
          <%= "href=\"#{form_link}\"".html_safe if form_link.present? %>
          class="btn btn-default btn-oa-registration-required"
@@ -29,12 +29,12 @@
         <%= image_tag "box-arrow-up-right.svg", alt: "External Site Link", 'aria-hidden': "true" %>
       </a>
     <% end %>
-    <% if @presenter.buy_url? %>
+    <% if @monograph_presenter.buy_url? %>
       <a id="monograph-buy-btn"
-         href="<%= @presenter.buy_url %>"
+         href="<%= @monograph_presenter.buy_url %>"
          target="_blank"
-         title="<%= t('monograph_catalog.index.buy_hardcover_button_title', title: @presenter.title) %>"
-         aria-label="<%= t('monograph_catalog.index.buy_hardcover_button_title', title: @presenter.title) %>"
+         title="<%= t('monograph_catalog.index.buy_hardcover_button_title', title: @monograph_presenter.title) %>"
+         aria-label="<%= t('monograph_catalog.index.buy_hardcover_button_title', title: @monograph_presenter.title) %>"
          class="btn btn-default" data-turbolinks="false"><%= t('monograph_catalog.index.buy_hardcover') %>
       </a>
     <% end %>

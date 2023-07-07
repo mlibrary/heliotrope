@@ -63,7 +63,7 @@ RSpec.describe "Epub Ebooks", type: :request do
             expect { subject }.not_to raise_error
             expect(counter_service).not_to have_received(:count).with(request: 1)
             expect(response).to have_http_status(:not_found)
-            expect(response).to render_template(file: Rails.root.join('public', '404.html').to_s)
+            expect(response.body).to match(/404 - The page you were looking for doesn&#39;t exist/)
           end
         end
       end

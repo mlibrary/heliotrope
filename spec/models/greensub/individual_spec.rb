@@ -83,6 +83,12 @@ RSpec.describe Greensub::Individual, type: :model do
       let(:product_2) { create(:product, identifier: 'product_2') }
       let(:component_b) { create(:component, identifier: 'component_b') }
 
+      before do
+        # For indexing products in Monographs in solr
+        allow(Monograph).to receive(:find).with(component_a.noid)
+        allow(Monograph).to receive(:find).with(component_b.noid)
+      end
+
       it do
         expect(subject.products.count).to be_zero
 

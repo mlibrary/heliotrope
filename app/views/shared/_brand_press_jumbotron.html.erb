@@ -12,7 +12,7 @@
     <% if press_presenter.location.present? || press_presenter.twitter.present? %>
     <p class="publisher-info">
       <% if press_presenter.location.present? %>
-        <span class="location"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> <%= press_presenter.location %></span>
+        <span class="location"><span class="fa fa-map-marker" aria-hidden="true"></span> <%= press_presenter.location %></span>
       <% end %>
       <% if press_presenter.twitter.present? %>
         <span class="twitter"><a href="https://twitter.com/<%= press_presenter.twitter %>">@<%= press_presenter.twitter %></a></span>

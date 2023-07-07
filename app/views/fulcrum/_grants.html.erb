@@ -17,7 +17,7 @@
     <tr>
       <th>
         <%= link_to(new_grant_path) do %>
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+          <span class="fa fa-plus" aria-hidden="true"></span> New
         <% end %>
       </th>
       <th><label for="agent_type_like">Agent Type</label></th>
@@ -39,8 +39,8 @@
     <% grants.each do |grant| %>
       <tr>
         <td>
-          <%= link_to(grant_path(grant.id), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
-            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Destroy
+          <%= link_to(grant_path(grant.id), method: :delete, class: "btn btn-primary", data: { confirm: 'Are you sure?' }) do %>
+            <span class="fa fa-minus" aria-hidden="true"></span> Destroy
           <% end %>
         </td>
         <td><%= grant.agent_type %></td>

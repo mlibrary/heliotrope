@@ -102,7 +102,7 @@ describe "Monograph Catalog Sections Facets", type: :feature do
     it "shows italics (emphasis) in section facet links" do
       visit monograph_catalog_path(id: monograph.id)
       # get text inside <em> tags
-      italicized_text = page.first('#facet-section_title_sim li .facet_select em').text
+      italicized_text = page.first('#facet-section_title_sim li .facet-select em').text
       expect(italicized_text).to eq 'Italicized Title'
 
       # the facet breadcrumb does not show the markdown underscores

@@ -1,7 +1,7 @@
-<% provide :page_title, 'Purchase ' + @presenter.page_title %>
+<% provide :page_title, 'Purchase ' + @monograph_presenter.page_title %>
 <div id="maincontent" class="monograph-purchase">
   <div class="back-link">
-    <%= link_to "<< Go back to previous page", monograph_catalog_path(@presenter.id) %>
+    <%= link_to "<< Go back to previous page", monograph_catalog_path(@monograph_presenter.id) %>
   </div>
 
   <div class="row">
@@ -18,14 +18,14 @@
       <h2>The book you're looking for:</h2>
       <div class="row">
         <div class="col-sm-3">
-          <% if @presenter.representative_id.present? %>
-            <%= @presenter.thumbnail_tag(225, class: "img-responsive") %>
+          <% if @monograph_presenter.representative_id.present? %>
+            <%= @monograph_presenter.thumbnail_tag(225, class: "img-responsive") %>
           <% else %>
-            <%= @presenter.thumbnail_tag(225) %>
+            <%= @monograph_presenter.thumbnail_tag(225) %>
           <% end %>
         </div>
         <div class="col-sm-9">
-          <%= @presenter.title %>
+          <%= @monograph_presenter.title %>
         </div>
       </div>
     </div>

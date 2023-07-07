@@ -47,22 +47,22 @@ describe "Monograph Catalog Facets" do
 
       expect(page).to_not have_content("Your search has returned")
 
-      expect(page).to have_selector('#facet-section_title_sim a.facet_select')
+      expect(page).to have_selector('#facet-section_title_sim a.facet-select')
 
-      expect(page).to have_selector('#facet-creator_sim a.facet_select', count: 3)
-      expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'McTesterson, Testy')
-      expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'Coauthorson, Timmy')
-      expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'Bloggs, Joe')
+      expect(page).to have_selector('#facet-creator_sim a.facet-select', count: 3)
+      expect(page).to have_selector('#facet-creator_sim a.facet-select', text: 'McTesterson, Testy')
+      expect(page).to have_selector('#facet-creator_sim a.facet-select', text: 'Coauthorson, Timmy')
+      expect(page).to have_selector('#facet-creator_sim a.facet-select', text: 'Bloggs, Joe')
 
-      expect(page).to have_selector('#facet-resource_type_sim a.facet_select', text: 'image')
-      expect(page).to have_selector('#facet-resource_type_sim a.facet_select', text: 'video')
+      expect(page).to have_selector('#facet-resource_type_sim a.facet-select', text: 'image')
+      expect(page).to have_selector('#facet-resource_type_sim a.facet-select', text: 'video')
 
-      expect(page).to have_selector('#facet-search_year_sim a.facet_select', count: 2)
-      expect(page).to have_selector('#facet-exclusive_to_platform_sim a.facet_select')
+      expect(page).to have_selector('#facet-search_year_sim a.facet-select', count: 2)
+      expect(page).to have_selector('#facet-exclusive_to_platform_sim a.facet-select')
 
-      keyword_facet_labels = page.all('#facet-keyword_sim a.facet_select .facet-label')
+      keyword_facet_labels = page.all('#facet-keyword_sim a.facet-select')
       expect(keyword_facet_labels.count).to eq 5 # facet limit is 5
-      keyword_facet_counts = page.all('#facet-keyword_sim a.facet_select > span:nth-of-type(2)')
+      keyword_facet_counts = page.all('#facet-keyword_sim .facet-count')
       expect(keyword_facet_counts.count).to eq 5 # facet limit is 5
 
       # default 'count' sort with fall back to case-insensitive alphabetic 'index' sort
@@ -83,9 +83,9 @@ describe "Monograph Catalog Facets" do
       find("a[href='#{monograph_catalog_facet_path(id: 'keyword_sim', monograph_id: monograph.id, locale: 'en')}']")
           .click
 
-      keyword_facet_labels = page.all('a.facet_select .facet-label')
+      keyword_facet_labels = page.all('.facet-select')
       expect(keyword_facet_labels.count).to eq 6
-      keyword_facet_counts = page.all('a.facet_select > span:nth-of-type(2)')
+      keyword_facet_counts = page.all('.facet-count')
       expect(keyword_facet_counts.count).to eq 6
 
       expect(keyword_facet_labels[0]).to have_content 'stuff'
@@ -110,9 +110,9 @@ describe "Monograph Catalog Facets" do
       # of sort buttons, with the upper ones hidden in the modal
       find('.facet_pagination.bottom .sort_options a.sort_change.az.btn.btn-default').click
 
-      keyword_facet_labels = page.all('a.facet_select .facet-label')
+      keyword_facet_labels = page.all('.facet-select')
       expect(keyword_facet_labels.count).to eq 6
-      keyword_facet_counts = page.all('a.facet_select > span:nth-of-type(2)')
+      keyword_facet_counts = page.all('.facet-count')
       expect(keyword_facet_counts.count).to eq 6
 
       expect(keyword_facet_labels[0]).to have_content 'aardvark'

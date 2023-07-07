@@ -9,9 +9,9 @@ module Greensub
     scope :name_like, ->(like) { where("identifier like ?", "%#{like}%") }
     scope :email_like, ->(like) { where("identifier like ?", "%#{like}%") }
 
-    validates :identifier, presence: true, allow_blank: false, uniqueness: true
+    validates :identifier, presence: true, allow_blank: false, uniqueness: { case_sensitive: true }
     validates :name, presence: true, allow_blank: false
-    validates :email, presence: true, allow_blank: false, uniqueness: true
+    validates :email, presence: true, allow_blank: false, uniqueness: { case_sensitive: true }
 
     has_many :licenses, as: :licensee, dependent: :restrict_with_error
 

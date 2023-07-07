@@ -13,7 +13,10 @@ RSpec.describe Greensub do
     let(:entity) { double('entity', noid: noid) }
     let(:noid) { 'validnoid' }
 
-    before { product.components << component }
+    before do
+      allow(Monograph).to receive(:find)
+      product.components << component
+    end
 
     it { is_expected.to be false }
 

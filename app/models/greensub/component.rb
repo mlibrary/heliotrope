@@ -15,7 +15,7 @@ module Greensub
                                  after_remove: :reindex_component_product,
                                  after_add: :reindex_component_product
 
-    validates :identifier, presence: true, allow_blank: false, uniqueness: true
+    validates :identifier, presence: true, allow_blank: false, uniqueness: { case_sensitive: true }
     validates :noid, presence: true, allow_blank: false
 
     before_destroy do
@@ -75,7 +75,9 @@ module Greensub
     # > component.products << product
     # then the product gets passed as a param, which we don't actually use.
     def reindex_component_product(_product)
-      ReindexJob.perform_later(noid)
+      # ReindexJob.perform_later(noid)
+      # Hyrax 4: the above doesn't work in tests anymore (surprised it ever did) so we'll do this instead:
+      Monograph.find(noid)&.update_index
     end
 
     private

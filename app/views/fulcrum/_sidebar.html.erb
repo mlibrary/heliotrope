@@ -1,26 +1,112 @@
-<ul class="nav nav-sidebar" role="navigation">
-  <li <%= "class=active" if partials.to_s == :dashboard.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :dashboard) %>"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span> Dashboard</a></li>
-  <li <%= "class=active" if partials.to_s == :products.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :products) %>"><span class="glyphicon glyphicon-king" aria-hidden="true"></span> Products</a></li>
-  <li <%= "class=active" if partials.to_s == :components.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :components) %>"><span class="glyphicon glyphicon-queen" aria-hidden="true"></span> Components</a></li>
-  <li <%= "class=active" if partials.to_s == :individuals.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :individuals) %>"><span class="glyphicon glyphicon-pawn" aria-hidden="true"></span> Individuals</a></li>
-  <li <%= "class=active" if partials.to_s == :institutions.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :institutions) %>"><span class="glyphicon glyphicon-registration-mark" aria-hidden="true"></span> Institutions</a></li>
-  <li <%= "class=active" if partials.to_s == :institution_affiliations.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :institution_affiliations) %>"><span class="glyphicon glyphicon-education" aria-hidden="true"></span> Affiliations</a></li>
-  <li <%= "class=active" if partials.to_s == :licenses.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :licenses) %>"><span class="glyphicon glyphicon-knight" aria-hidden="true"></span> Licenses</a></li>
-  <li <%= "class=active" if partials.to_s == :publishers.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :publishers) %>"><span class="glyphicon glyphicon-tower" aria-hidden="true"></span> Publishers</a></li>
-  <li <%= "class=active" if partials.to_s == :users.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :users) %>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Users</a></li>
-  <li <%= "class=active" if partials.to_s == :tokens.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :tokens) %>"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> Tokens</a></li>
-  <li <%= "class=active" if partials.to_s == :grants.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :grants) %>"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Grants</a></li>
-  <li <%= "class=active" if partials.to_s == :books.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :monographs) %>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Monographs</a></li>
-  <li <%= "class=active" if partials.to_s == :items.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :resources) %>"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span> Resources</a></li>
-  <li <%= "class=active" if partials.to_s == :pages.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :pages) %>"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> Pages</a></li>
-  <li <%= "class=active" if partials.to_s == :reports.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :reports) %>"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Reports</a></li>
-  <li <%= "class=active" if partials.to_s == :csv.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :csv) %>"><span class="glyphicon glyphicon-file" aria-hidden="true"></span> CSV</a></li>
-  <li <%= "class=active" if partials.to_s == :jobs.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :jobs) %>"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Jobs</a></li>
-  <li <%= "class=active" if partials.to_s == :logs.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :logs) %>"><span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span> Logs</a></li>
+<nav class="navbar bg-light navbar-light">
+<ul class="navbar-nav mr-auto">
+  <li <%= active?(partials.to_s, :dashboard.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :dashboard) %>">
+      <span class="fa fa-bell" aria-hidden="true"></span>
+      Dashboard
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :products.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :products) %>">
+      <span class="fa fa-product-hunt " aria-hidden="true"></span>
+      Products
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :components.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :components) %>">
+      <span class="fa fa-cog" aria-hidden="true"></span> 
+      Components
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :individuals.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :individuals) %>">
+      <span class="fa fa-user" aria-hidden="true"></span> 
+      Individuals
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :institutions.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :institutions) %>">
+      <span class="fa fa-registered" aria-hidden="true"></span> 
+      Institutions
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :institution_affiliations.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :institution_affiliations) %>">
+      <span class="fa fa-graduation-cap" aria-hidden="true"></span> 
+      Affiliations
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :licenses.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :licenses) %>">
+      <span class="fa fa-id-card" aria-hidden="true"></span> 
+      Licenses
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :publishers.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :publishers) %>">
+      <span class="fa fa-circle" aria-hidden="true"></span> 
+      Publishers
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :users.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :users) %>">
+      <span class="fa fa-user" aria-hidden="true"></span> 
+      Users
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :tokens.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :tokens) %>">
+      <span class="fa fa-star" aria-hidden="true"></span> 
+      Tokens
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :grants.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :grants) %>">
+      <span class="fa fa-check" aria-hidden="true"></span> 
+      Grants
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :monographs.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :monographs) %>">
+      <span class="fa fa-book" aria-hidden="true"></span> 
+      Books
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :items.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :resources) %>">
+      <span class="fa fa-tags" aria-hidden="true"></span> 
+      Items
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :pages.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :pages) %>">
+      <span class="fa fa-file" aria-hidden="true"></span> 
+      Pages
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :reports.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :reports) %>">
+      <span class="fa fa-line-chart" aria-hidden="true"></span> 
+      Reports
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :csv.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :csv) %>">
+      <span class="fa fa-table" aria-hidden="true"></span> 
+      CSV
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :jobs.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :jobs) %>">
+      <span class="fa fa-wrench" aria-hidden="true"></span> 
+      Jobs
+    </a>
+  </li>
+  <li <%= active?(partials.to_s, :logs.to_s) %>>
+    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :logs) %>">
+      <span class="fa fa-archive" aria-hidden="true"></span> 
+      Logs
+    </a>
+  </li>
 </ul>
-  <p class="nav nav-sidebar"><br/><br/><br/></p>
-<ul class="nav nav-sidebar" role="navigation">
-  <li <%= "class=active" if partials.to_s == :customize.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :customize) %>"><span class="glyphicon glyphicon-tint" aria-hidden="true"></span> Customize</a></li>
-  <li <%= "class=active" if partials.to_s == :settings.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :settings) %>"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings</a></li>
-  <li <%= "class=active" if partials.to_s == :help.to_s %>><a href="<%= main_app.fulcrum_partials_path(partials: :help) %>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Help</a></li>
-</ul>
+</nav>

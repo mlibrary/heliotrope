@@ -106,7 +106,7 @@ RSpec.describe MonographCatalogController, type: :controller do
           expect(response).not_to render_template('monograph_catalog/index')
         end
         it 'shows 404 page' do
-          expect(response.status).to equal 404
+          expect(response.status).to be 404
           expect(response.body).to have_title("404 - The page you were looking for doesn't exist")
         end
       end
@@ -128,7 +128,7 @@ RSpec.describe MonographCatalogController, type: :controller do
           expect(response).not_to render_template('monograph_catalog/index')
         end
         it 'shows 404 page' do
-          expect(response.status).to equal 404
+          expect(response.status).to be 404
           expect(response.body).to have_title("404 - The page you were looking for doesn't exist")
         end
       end
@@ -147,10 +147,10 @@ RSpec.describe MonographCatalogController, type: :controller do
           expect(response).to render_template('monograph_catalog/index')
         end
         it 'monograph presenter is a monograph presenter class' do
-          expect(controller.instance_variable_get(:@presenter).class).to eq Hyrax::MonographPresenter
+          expect(controller.instance_variable_get(:@monograph_presenter).class).to eq Hyrax::MonographPresenter
         end
         it 'mongraph presenter has the monograph' do
-          expect(controller.instance_variable_get(:@presenter).solr_document.id).to eq monograph.id
+          expect(controller.instance_variable_get(:@monograph_presenter).solr_document.id).to eq monograph.id
         end
         it 'sets search_ongoing to false' do
           expect(assigns(:search_ongoing)).to eq false
@@ -190,10 +190,10 @@ RSpec.describe MonographCatalogController, type: :controller do
             expect(controller.instance_variable_get(:@auth).return_location).to eq Rails.application.routes.url_helpers.monograph_catalog_path(monograph.id)
           end
           it 'monograph presenter is a monograph presenter class' do
-            expect(controller.instance_variable_get(:@presenter).class).to eq Hyrax::MonographPresenter
+            expect(controller.instance_variable_get(:@monograph_presenter).class).to eq Hyrax::MonographPresenter
           end
           it 'mongraph presenter has the monograph' do
-            expect(controller.instance_variable_get(:@presenter).solr_document.id).to eq monograph.id
+            expect(controller.instance_variable_get(:@monograph_presenter).solr_document.id).to eq monograph.id
           end
           it 'sets search_ongoing to false' do
             expect(assigns(:search_ongoing)).to eq false

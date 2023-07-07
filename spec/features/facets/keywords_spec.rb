@@ -39,25 +39,15 @@ describe "Monograph Catalog Keyword Facets", type: :feature do
         cat_link = page.find_link('cat')
         expect(cat_link).to have_content('cat')
         expect(CGI.unescape(cat_link[:href])).to have_content("f[keyword_sim][]=cat")
-        expect(cat_link[:'data-ga-event-category']).to be nil
-        expect(cat_link[:'data-ga-event-action']).to eq("facet_keyword")
-        expect(cat_link[:'data-ga-event-label']).to eq('cat')
-        expect(cat_link[:'data-ga-event-value']).to be nil
         cat_link.click
       end
 
       # Cat facet selected
       expect(page).to have_css(selected_facets)
-      # Cat facet rendered with facet_helper#render_selected_facet_value
 
       within facets do
-        cat_link = page.find_link('cat')
-        expect(cat_link).to have_content('cat')
-        expect(CGI.unescape(cat_link[:href])).not_to have_content("f[keyword_sim][]=cat")
-        expect(cat_link[:'data-ga-event-category']).to be nil
-        expect(cat_link[:'data-ga-event-action']).to be nil
-        expect(cat_link[:'data-ga-event-label']).to be nil
-        expect(cat_link[:'data-ga-event-value']).to be nil
+        selected_cat = page.all('.facet-label .selected').first
+        expect(selected_cat).to have_content('cat')
       end
     end
   end

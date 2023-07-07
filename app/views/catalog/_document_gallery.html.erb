@@ -1,4 +1,8 @@
-<% # container for all documents in index gallery view -%>
-<div id="documents" class="row gallery">
-  <%= render_gallery_collection documents %>
+<%# container for all documents in index gallery view %>
+<%# Hyrax 4: do we even need this anymore? It's just copied straight from blacklight-gallery 4.02 which is in hyrax's gemfile %>
+<% view_config = local_assigns[:view_config] || blacklight_config&.view_config(document_index_view_type) %>
+<div class="container">
+  <div id="documents" class="<%= (Array(view_config.classes || 'row-cols-2 row-cols-md-3') + ["row documents-#{view_config.key}"]).join(' ') %>">
+    <%= render documents, as: :document, view_config: view_config %>
+  </div>
 </div>
