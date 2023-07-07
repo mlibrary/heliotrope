@@ -61,11 +61,12 @@ describe PressSearchBuilder do
 
     context "for a subscriber with access to OA, default, free, and purchased" do
       let(:current_user) { create(:user) }
+      let(:current_ability) { Ability.new(current_user) }
       let(:free_results) { instance_double(ActiveRecord::Result, 'free_results') }
       let(:purchased_results) { instance_double(ActiveRecord::Result, 'purchased_results') }
 
       before do
-        allow(context).to receive(:current_actor).and_return(current_user)
+        allow(context).to receive(:current_ability).and_return(current_ability)
         search_builder.blacklight_params['press'] = press.subdomain
         search_builder.blacklight_params['user_access'] = 'true' # the string 'true'
         allow(Sighrax).to receive(:allow_read_products).and_return(free_results)

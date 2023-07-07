@@ -3,7 +3,7 @@
   <tr>
     <th>
       <%= link_to(new_press_path) do %>
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+        <span class="fa fa-plus" aria-hidden="true"></span> New
       <% end %>
     </th>
     <th onclick="sortTable(1, false)">Publisher</th>
@@ -17,14 +17,14 @@
   <% @publishers_stats[:presses].each do |press| %>
     <tr>
       <td><%= link_to(edit_press_path(press[:subdomain])) do %>
-          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit
+          <span class="fa fa-pencil" aria-hidden="true"></span> Edit
         <% end %>
       </td>
       <td><%= press[:name] %></td>
       <td><%= press[:modified] %></td>
       <td><%= link_to press[:subdomain], "/#{press[:subdomain]}?locale=#{I18n.locale}" %></td>
       <td><%= press[:monographs] %>&nbsp;<%= link_to(concern_monographs_new_path(press: press[:subdomain])) do %>
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+          <span class="fa fa-plus" aria-hidden="true"></span> Add
         <% end %>
       </td>
       <td><%= press[:resources] %></td>
@@ -32,7 +32,7 @@
       <td>
         <% if press[:trash] %>
           <%= link_to(press_path(press[:subdomain]), method: :delete, class: "btn btn-default", data: { confirm: 'Are you sure?' }) do %>
-            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            <span class="fa fa-trash" aria-hidden="true"></span>
           <% end %>
       <% end %>
       </td>

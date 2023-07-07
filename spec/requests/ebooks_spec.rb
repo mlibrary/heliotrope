@@ -90,7 +90,7 @@ RSpec.describe "PDF EBooks", type: :request do
               expect(response).to have_http_status(:success)
               expect(response).to have_http_status(:ok)
               expect(response.header['Content-Type']).to eq('application/pdf')
-              expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{ebook.filename}\"")
+              expect(response.header['Content-Disposition']).to eq(%|attachment; filename="#{ebook.filename}"; filename*=UTF-8''#{ebook.filename}|)
               expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
               expect(response.body).not_to be_empty
               # watermarking will change the file content and add fonts
@@ -119,7 +119,7 @@ RSpec.describe "PDF EBooks", type: :request do
               expect(response).to have_http_status(:success)
               expect(response).to have_http_status(:ok)
               expect(response.header['Content-Type']).to eq('application/pdf')
-              expect(response.header['Content-Disposition']).to eq("attachment; filename=\"#{ebook.filename}\"")
+              expect(response.header['Content-Disposition']).to eq(%|attachment; filename="#{ebook.filename}"; filename*=UTF-8''#{ebook.filename}|)
               expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
               expect(response.body).not_to be_empty
               # watermarking will change the file content and add fonts

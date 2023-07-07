@@ -3,7 +3,7 @@
 <% ga_url = @press.google_analytics_url %>
 <% map_url = @press.readership_map_url %>
 
-<%= render 'shared/breadcrumbs' %>
+<%= render 'shared/breadcrumbs', presenter: @presenter %>
 
     <div class="col-sm-12" id="tabs">
       <ul class="nav nav-tabs" role="tablist">

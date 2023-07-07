@@ -1,7 +1,7 @@
 <% provide :page_title, @search_ongoing ? "#{@press.name} results - page #{@response.current_page} of #{@response.total_pages}" : @press.name %>
 <% provide :page_class, 'press' %>
 <div id="maincontent">
-  <% if has_facet_values?  %>
+  <% if has_facet_values?(facet_field_names, @response)  %>
   <div class="row">
     <div class="col-sm-12"><h2>Search and Browse Books</h2></div>
   </div>
@@ -10,7 +10,7 @@
       <%= render 'catalog/search_sidebar' %>
     </div>
     <div class="col-sm-9 results-container">
-      <%= render 'catalog/search_results' %>
+      <%= render 'catalog/search_results', press: @press %>
     </div>
   </div>
   <% else %>
@@ -20,7 +20,7 @@
   <div class="row">
     <div class="col-sm-1">&nbsp;</div>
     <div class="col-sm-11 results-container">
-      <%= render 'catalog/search_results' %>
+      <%= render 'catalog/search_results', press: @press %>
     </div>
   </div>
   <% end %>

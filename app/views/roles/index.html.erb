@@ -28,7 +28,7 @@
             </td>
             <td><%= r.object.role.humanize %></td>
             <td><%= link_to "#", data: { behavior: 'edit-user', target: r.object.id } do %>
-              <span class="glyphicon glyphicon-edit"></span>
+              <span class="fa fa-pencil-square-o"></span>
             <% end %></td>
           </tr>
           <%= render 'edit_fields', f: r %>

@@ -12,7 +12,7 @@ module Greensub
     scope :for_entity_id, ->(entity_id) { where(entity_id: entity_id) }
     scope :containing_dlps_institution_id, ->(dlps_institution_id) { joins(:institution_affiliations).merge(InstitutionAffiliation.for_dlps_institution_id(dlps_institution_id)).distinct }
 
-    validates :identifier, presence: true, allow_blank: false, uniqueness: true, numericality: { only_integer: true }
+    validates :identifier, presence: true, allow_blank: false, uniqueness: { case_sensitive: true }, numericality: { only_integer: true }
     validates :name, presence: true, allow_blank: false
     validates :display_name, presence: true, allow_blank: false
 
