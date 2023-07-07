@@ -1,32 +1,36 @@
 <%# Access Icon Legend, HELIO-3520 %>
-<div class="card access-legend">
-  <h3 class="card-header">
-    Legend
-  </h3>
-  <div class="card-body">
-    <div class="row">
-      <p style="padding-left: 10px">
-        <%= image_tag "free.svg", height: "16px", width: "38px", alt: "Free Icon" %>
-        Free resource
-      </p>
+<div class="panel-group access-legend">
+  <div class="panel panel-default facet_limit">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        Legend
+      </h3>
     </div>
-    <div class="row">
-      <p style="padding-left: 10px">
-        <%= image_tag "green_check.svg", height: "16px", width: "16px", alt: "Purchased Icon" %>
-        Access provided by your Library
-      </p>
-    </div>
-    <div class="row">
-      <p style="padding-left: 10px">
-        <%= image_tag "lock_locked.svg", height: "16px", width: "16px", alt: "Restricted Icon" %>
-        You do not have access
-      </p>
-    </div>
-    <div class="row">
-      <p style="padding-left: 10px">
-        <%= image_tag "open-access.svg", height: "16px", width: "16px", alt: "Open Access Icon" %>
-        Open access
-      </p>
+    <div class="panel-body">
+      <div class="row">
+        <p style="padding-left: 10px">
+          <%= image_tag "free.svg", height: "16px", width: "38px", alt: "Free Icon" %>
+          Free resource
+        </p>
+      </div>
+      <div class="row">
+        <p style="padding-left: 10px">
+          <%= image_tag "green_check.svg", height: "16px", width: "16px", alt: "Purchased Icon" %>
+          Access provided by your Library
+        </p>
+      </div>
+      <div class="row">
+        <p style="padding-left: 10px">
+          <%= image_tag "lock_locked.svg", height: "16px", width: "16px", alt: "Restricted Icon" %>
+          You do not have access
+        </p>
+      </div>
+      <div class="row">
+        <p style="padding-left: 10px">
+          <%= image_tag "open-access.svg", height: "16px", width: "16px", alt: "Open Access Icon" %>
+          Open access
+        </p>
+      </div>
     </div>
   </div>
 </div>
