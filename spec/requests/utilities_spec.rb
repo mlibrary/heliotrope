@@ -56,13 +56,14 @@ RSpec.describe "Utilities", type: :request do
     let(:solr_url) { YAML.load(ERB.new(File.read(Rails.root.join('config', 'solr.yml'))).result)[Rails.env]['url'].sub('/solr/', '/solr/admin/cores?action=STATUS&core=') }
     let(:fedora_url) { YAML.load(ERB.new(File.read(Rails.root.join('config', 'fedora.yml'))).result)[Rails.env]['url'] }
     let(:platform_admin) { create(:platform_admin) }
+    let(:redis) { double('redis', ping: "PONG\n", quit: true) }
 
     context 'all good' do
       before do
         # Many of these would pass without stubbing in tests: fedora, solr, ps etc. But definitely don't want to call...
         # out to Shib, or have tests depend on redis running to pass. As it's mock em all or mock some and have...
         # some sort of added complexity for others ()that also use Kernel system calls), I'll mock em all.
-        allow_any_instance_of(Kernel).to receive(:`).with('redis-cli ping').and_return("PONG\n")
+        allow(Redis).to receive(:new).and_return(redis)
         allow_any_instance_of(Kernel).to receive(:`).with('uptime').and_return("15:44  up 9 days,  1:06, 21 users, load averages: 2.98 3.41 3.23")
         allow_any_instance_of(Kernel).to receive(:`).with("curl --max-time 5 -s -w \"%{http_code}\" '#{solr_url}'").and_return("blah... <str name=\"instanceDir\">/path/to/solr/core/dir</str>...blah\n200")
         allow_any_instance_of(Kernel).to receive(:`).with("curl --max-time 5 -s -o /dev/null -w \"%{http_code}\" '#{fedora_url}'").and_return("200")
@@ -159,7 +160,8 @@ RSpec.describe "Utilities", type: :request do
 
     context 'all bad' do
       before do
-        allow_any_instance_of(Kernel).to receive(:`).with('redis-cli ping').and_return('')
+        allow(Redis).to receive(:new).and_return(redis)
+        allow(redis).to receive(:ping).and_return("")
         allow_any_instance_of(Kernel).to receive(:`).with('uptime').and_return("Server out to lunch!")
         allow(ActiveRecord::Migrator).to receive(:current_version).and_raise("BLAH")
         allow_any_instance_of(Kernel).to receive(:`).with("curl --max-time 5 -s -w \"%{http_code}\" '#{solr_url}'").and_return('404')
