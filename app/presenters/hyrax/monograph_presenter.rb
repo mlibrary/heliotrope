@@ -14,7 +14,7 @@ module Hyrax
     include Skylight::Helpers
 
     delegate :date_modified, :date_uploaded, :location, :description,
-             :creator_display, :creator_full_name, :contributor,
+             :creator_display, :creator_full_name, :contributor, :content_warning, :content_warning_information,
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
              :isbn, :license, :rightsholder, :open_access, :funder, :funder_display, :holding_contact, :has_model,
              :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,

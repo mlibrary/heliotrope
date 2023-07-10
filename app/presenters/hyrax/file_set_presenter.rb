@@ -40,7 +40,7 @@ module Hyrax
              :content_type, :creator, :creator_full_name, :contributor, :date_created,
              :keyword, :publisher, :language, :date_uploaded,
              :rights_statement, :license, :embargo_release_date, :lease_expiration_date, :depositor, :tags,
-             :title_or_label, :section_title,
+             :title_or_label, :section_title, :content_warning, :content_warning_information,
              :allow_download, :allow_hi_res, :copyright_status, :rights_granted,
              :exclusive_to_platform, :identifier, :permissions_expiration_date,
              :allow_display_after_expiration, :allow_download_after_expiration, :credit_line,

@@ -49,6 +49,8 @@ METADATA_FIELDS ||=
     { object: :file_set, field_name: 'Sort Date', metadata_name: 'sort_date', required: false, multivalued: :no, date_format: true, description: I18n.t('csv.descriptions.sort_date') },
     { object: :file_set, field_name: 'Display Date', metadata_name: 'display_date', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.display_date') },
     { object: :universal, field_name: 'Description', metadata_name: 'description', required: false, multivalued: :yes, description: I18n.t('csv.descriptions.description') },
+    { object: :universal, field_name: 'Content Warning', metadata_name: 'content_warning', required: false, multivalued: :no, description: I18n.t('csv.descriptions.content_warning') },
+    { object: :universal, field_name: 'Content Warning Information', metadata_name: 'content_warning_information', required: false, multivalued: :no, description: I18n.t('csv.descriptions.content_warning_information') },
     { object: :monograph, field_name: 'Publisher', metadata_name: 'publisher', multivalued: :yes, description: I18n.t('csv.descriptions.publisher') },
     { object: :monograph, field_name: 'Subject', metadata_name: 'subject', multivalued: :yes_split, description: I18n.t('csv.descriptions.subject') },
     { object: :monograph, field_name: 'ISBN(s)', metadata_name: 'isbn', multivalued: :yes_split, description: I18n.t('csv.descriptions.isbn') },

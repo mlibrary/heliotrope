@@ -39,6 +39,19 @@ module HeliotropeUniversalMetadata
       index.as :stored_searchable
     end
 
+    # even if we were to have multiple warning labels per book in the future having this be a multiple-cardinality...
+    # ActiveFedora field would not be helpful as we'd need it to be an ordered parallel array to match the associated...
+    # warning information values. Hence leaving it as `multiple: false`
+    property :content_warning, predicate: ::RDF::URI.new('http://fulcrum.org/ns#contentWarning'), multiple: false do |index|
+      index.as :stored_searchable
+    end
+
+    # See above RE: `multiple: false`. If a use case for multiple warning types emerged we'd need to store them in...
+    # a custom ordered way inside this field as we do for creator and contributor.
+    property :content_warning_information, predicate: ::RDF::URI.new('http://fulcrum.org/ns#contentWarningInformation'), multiple: false do |index|
+      index.as :stored_searchable
+    end
+
     private
 
       def maybe_set_date_published

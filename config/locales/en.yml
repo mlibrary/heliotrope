@@ -317,8 +317,13 @@ en:
         visual_descriptions: "Visual Descriptions must be formatted as WebVTT captions. <a href='https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API' target='_blank'>Get help with WebVTT formatting.</a>"
         tombstone: "Check box to tombstone."
         tombstone_message: "Message displayed on tombstone."
+      file_set:
+        content_warning: "Content warning text for this FileSet. Will be used in a consent dialog which hides the media."
+        content_warning_information: "This may be used in future to further explain this FileSet's content warning."
       monograph:
         citation_publisher: "The publisher name used in auto-generated citations."
+        content_warning: "Content warning text. Shown on the catalog page, this may include one or more specific locations within the text."
+        content_warning_information: "Can be used to further explain this Monograph's content warning, should a Press-level explanation not be suitable."
         creator: "Enter one citation name per line in the format \"Lastname, Firstname (optional role)\". Omit the comma for institutions etc."
         creator_display: "An optional free-text field allowing custom authorship display."
         date_created: "The 4-digit publication year used in auto-generated citations."
@@ -342,6 +347,7 @@ en:
         copyright_year: "Copyright Year - YYYY - four digit year - greater than 1709."
         award: "Enter each Award in the following format: YYYY|Title|Society"
       press:
+        content_warning_information: "A message that will be used for Monographs with a content warning but no content warning information of their own."
         description: "Description of the Press. Markdown is allowed."
         subdomain: "Subdomain used as the Press URL. 2-32 lowercase alphanumeric ASCII characters, plus (non-consecutive) hyphens. Must not start or end with a hyphen."
   sort_date: "Sort Date"
