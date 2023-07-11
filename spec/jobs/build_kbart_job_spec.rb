@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'yaml'
 
 RSpec.describe BuildKbartJob, type: :job do
   let(:doc_a) do
@@ -61,7 +62,7 @@ RSpec.describe BuildKbartJob, type: :job do
   subject { BuildKbartJob.new }
 
   describe "#perform" do
-    let(:product) { create(:product, identifier: 'product', needs_kbart: true, group_key: 'product_key') }
+    let(:product) { create(:product, identifier: 'test_product', needs_kbart: true, group_key: 'test_product') }
     let(:test_root) { File.join(Settings.scratch_space_path, 'spec', 'public', 'products', product.group_key, 'kbart') }
     let(:old_kbart) do <<~KBART
 "publication_title","print_identifier","online_identifier","date_first_issue_online","num_first_vol_online","num_first_issue_online","date_last_issue_online","num_last_vol_online","num_last_issue_online","title_url","first_author","title_id","embargo_info","coverage_depth","notes","publisher_name","publication_type","date_monograph_published_print","date_monograph_published_online","monograph_volume","monograph_edition","first_editor","parent_publication_title_id","preceding_publication_title_id","access_type"
@@ -70,11 +71,18 @@ RSpec.describe BuildKbartJob, type: :job do
 "C Book Italic","","C987654321","","","","","","","https://doi.org/10.3998/mpub.C","Cassidy","10.3998/mpub.C","","fulltext","","C Press","monograph","","2023-01-10","","","","","","F"
     KBART
     end
+    let(:sftp) { double('sftp') }
+    let(:login) { { fulcrum_sftp_credentials: { sftp: 'fake', user: 'fake', password: 'fake', root: '/' } }.with_indifferent_access }
+
+    before do
+      allow_any_instance_of(BuildKbartJob).to receive(:yaml_config).and_return(login)
+      allow(Net::SFTP).to receive(:start).and_yield(sftp)
+    end
 
     context "without components" do
       before do
         FileUtils.mkdir_p(test_root)
-        File.write(File.join(test_root, "product_2022-01-01.csv"), old_kbart)
+        File.write(File.join(test_root, "test_product_2022-01-01.csv"), old_kbart)
 
         ActiveFedora::SolrService.add([doc_c.to_h, doc_b.to_h, doc_d.to_h, doc_a.to_h])
         ActiveFedora::SolrService.commit
@@ -82,112 +90,210 @@ RSpec.describe BuildKbartJob, type: :job do
 
       it "does not create a new kbart file" do
         travel_to("2022-02-02") do
+          expect(Net::SFTP).not_to receive(:start)
+
           subject.perform_now
 
           expect(Dir.glob(test_root + "/*").count).to eq 1
-          expect(File.exist?(File.join(test_root, "product_2022-01-01.csv"))).to be true
-          expect(File.exist?(File.join(test_root, "product_2022-02-02.csv"))).to be false
+          expect(File.exist?(File.join(test_root, "test_product_2022-01-01.csv"))).to be true
+          expect(File.exist?(File.join(test_root, "test_product_2022-02-02.csv"))).to be false
         end
       end
     end
 
     context "with components" do
-      before do
-        FileUtils.rm_rf(test_root)
+      context "with an unknown product group key" do
+        let(:product) { create(:product, identifier: 'something', needs_kbart: true, group_key: 'unknown') }
+        let(:test_root) { File.join(Settings.scratch_space_path, 'spec', 'public', 'products', product.group_key, 'kbart') }
 
-        product.components = [
-          create(:component, noid: doc_c.id),
-          create(:component, noid: doc_b.id),
-          create(:component, noid: doc_d.id),
-          create(:component, noid: doc_a.id)
-        ]
-
-        ActiveFedora::SolrService.add([doc_c.to_h, doc_b.to_h, doc_d.to_h, doc_a.to_h])
-        ActiveFedora::SolrService.commit
-      end
-
-      context "when there are no updates" do
         before do
+          FileUtils.rm_rf(test_root)
+
+          product.components = [
+            create(:component, noid: doc_c.id),
+            create(:component, noid: doc_b.id),
+            create(:component, noid: doc_d.id),
+            create(:component, noid: doc_a.id)
+          ]
+
+          ActiveFedora::SolrService.add([doc_c.to_h, doc_b.to_h, doc_d.to_h, doc_a.to_h])
+          ActiveFedora::SolrService.commit
+        end
+
+        after do
           FileUtils.mkdir_p(test_root)
-          File.write(File.join(test_root, "product_2022-01-01.csv"), old_kbart)
         end
 
         it "does not create a new kbart file" do
           travel_to("2022-02-02") do
+            FileUtils.mkdir_p(test_root)
+
+            expect(Net::SFTP).not_to receive(:start)
+            expect(Rails.logger).to receive(:error)
+
             subject.perform_now
 
-            expect(Dir.glob(test_root + "/*").count).to eq 1
-            expect(File.exist?(File.join(test_root, "product_2022-01-01.csv"))).to be true
-            expect(File.exist?(File.join(test_root, "product_2022-02-02.csv"))).to be false
+            expect(Dir.glob(test_root + "/*").count).to eq 0
           end
         end
       end
 
-      context "when there's an update" do
-        let(:doc_e) do
-          SolrDocument.new(id: 'eeeeeeeee',
-                          has_model_ssim: "Monograph",
-                          title_tesim: ["E Book _Italic_"],
-                          creator_tesim: ["Edwards, Firstname"],
-                          isbn_tesim: ["E123456789 (hardcover)", "E987654321 (ebook)"],
-                          doi_ssim: "10.3998/mpub.E",
-                          press_name_ssim: ["E Press"],
-                          visibility_ssi: "open",
-                          date_published_dtsim: ["2022-02-22T15:04:53Z"],
-                          products_lsim: [product.id])
-        end
-
+      context "with a known product group key" do
         before do
-          product.components << create(:component, noid: doc_e.id)
+          FileUtils.rm_rf(test_root)
 
-          ActiveFedora::SolrService.add([doc_e.to_h])
+          product.components = [
+            create(:component, noid: doc_c.id),
+            create(:component, noid: doc_b.id),
+            create(:component, noid: doc_d.id),
+            create(:component, noid: doc_a.id)
+          ]
+
+          ActiveFedora::SolrService.add([doc_c.to_h, doc_b.to_h, doc_d.to_h, doc_a.to_h])
           ActiveFedora::SolrService.commit
-
-          FileUtils.mkdir_p(test_root)
-          File.write(File.join(test_root, "product_2022-01-01.csv"), old_kbart)
         end
 
-        it "creates new kbart files, .csv and .txt" do
-          travel_to("2022-02-02") do
-            subject.perform_now
+        context "when there are no updates" do
+          before do
+            FileUtils.mkdir_p(test_root)
+            File.write(File.join(test_root, "test_product_2022-01-01.csv"), old_kbart)
+          end
 
-            expect(Dir.glob(test_root + "/*").count).to eq 3
-            expect(File.exist?(File.join(test_root, "product_2022-01-01.csv"))).to be true
-            expect(File.exist?(File.join(test_root, "product_2022-02-02.csv"))).to be true
-            expect(File.exist?(File.join(test_root, "product_2022-02-02.txt"))).to be true
+          it "does not create a new kbart file" do
+            travel_to("2022-02-02") do
+              expect(Net::SFTP).not_to receive(:start)
 
-            # sneak in a check for the txt/tsv here I guess
-            tsv = CSV.read(File.join(test_root, "product_2022-02-02.txt"), col_sep: "\t")
+              subject.perform_now
 
-            expect(tsv[0][0]).to eq "publication_title"
-            expect(tsv[1][0]).to eq "A Book Italic"
-            expect(tsv[2][0]).to eq "B Book Italic"
-            expect(tsv[3][0]).to eq "C Book Italic"
-            expect(tsv[4][0]).to eq "E Book Italic"
+              expect(Dir.glob(test_root + "/*").count).to eq 1
+              expect(File.exist?(File.join(test_root, "test_product_2022-01-01.csv"))).to be true
+              expect(File.exist?(File.join(test_root, "test_product_2022-02-02.csv"))).to be false
+            end
           end
         end
-      end
 
-      context "when there are no existing kbart files" do
-        before do
-          FileUtils.mkdir_p(test_root)
+        context "when there's an update" do
+          let(:doc_e) do
+            SolrDocument.new(id: 'eeeeeeeee',
+                            has_model_ssim: "Monograph",
+                            title_tesim: ["E Book _Italic_"],
+                            creator_tesim: ["Edwards, Firstname"],
+                            isbn_tesim: ["E123456789 (hardcover)", "E987654321 (ebook)"],
+                            doi_ssim: "10.3998/mpub.E",
+                            press_name_ssim: ["E Press"],
+                            visibility_ssi: "open",
+                            date_published_dtsim: ["2022-02-22T15:04:53Z"],
+                            products_lsim: [product.id])
+          end
+          let(:local_csv) { File.join(test_root, "test_product_2022-02-02.csv") }
+          let(:local_tsv) { File.join(test_root, "test_product_2022-02-02.txt") }
+          let(:remote_csv) { "/home/fulcrum_ftp/heliotropium/publishing/Testing/KBART/test_product_2022-02-02.csv" }
+          let(:remote_tsv) { "/home/fulcrum_ftp/heliotropium/publishing/Testing/KBART/test_product_2022-02-02.txt" }
+
+          before do
+            product.components << create(:component, noid: doc_e.id)
+
+            ActiveFedora::SolrService.add([doc_e.to_h])
+            ActiveFedora::SolrService.commit
+
+            FileUtils.mkdir_p(test_root)
+            File.write(File.join(test_root, "test_product_2022-01-01.csv"), old_kbart)
+
+            allow(sftp).to receive(:upload!).and_return(true)
+          end
+
+          it "creates new kbart files, .csv and .txt" do
+            travel_to("2022-02-02") do
+              subject.perform_now
+
+              expect(Net::SFTP).to have_received(:start)
+              expect(sftp).to have_received(:upload!).with(local_csv, remote_csv).once
+              expect(sftp).to have_received(:upload!).with(local_tsv, remote_tsv).once
+
+              expect(Dir.glob(test_root + "/*").count).to eq 3
+              expect(File.exist?(File.join(test_root, "test_product_2022-01-01.csv"))).to be true
+              expect(File.exist?(File.join(test_root, "test_product_2022-02-02.csv"))).to be true
+              expect(File.exist?(File.join(test_root, "test_product_2022-02-02.txt"))).to be true
+
+              # sneak in a check for the txt/tsv here I guess
+              tsv = CSV.read(File.join(test_root, "test_product_2022-02-02.txt"), col_sep: "\t")
+
+              expect(tsv[0][0]).to eq "publication_title"
+              expect(tsv[1][0]).to eq "A Book Italic"
+              expect(tsv[2][0]).to eq "B Book Italic"
+              expect(tsv[3][0]).to eq "C Book Italic"
+              expect(tsv[4][0]).to eq "E Book Italic"
+            end
+          end
         end
 
-        it "creates new kbart files (csv and txt)" do
-          travel_to("2022-02-02") do
-            subject.perform_now
+        context "when there are no existing kbart files" do
+          let(:local_csv) { File.join(test_root, "test_product_2022-02-02.csv") }
+          let(:local_tsv) { File.join(test_root, "test_product_2022-02-02.txt") }
+          let(:remote_csv) { "/home/fulcrum_ftp/heliotropium/publishing/Testing/KBART/test_product_2022-02-02.csv" }
+          let(:remote_tsv) { "/home/fulcrum_ftp/heliotropium/publishing/Testing/KBART/test_product_2022-02-02.txt" }
 
-            expect(Dir.glob(test_root + "/*").count).to eq 2
-            expect(File.exist?(File.join(test_root, "product_2022-02-02.csv"))).to be true
-            expect(File.exist?(File.join(test_root, "product_2022-02-02.txt"))).to be true
+          before do
+            FileUtils.mkdir_p(test_root)
+            allow(sftp).to receive(:upload!).and_return(true)
+          end
+
+          it "creates new kbart files (csv and txt)" do
+            travel_to("2022-02-02") do
+              subject.perform_now
+
+              expect(Net::SFTP).to have_received(:start)
+              expect(sftp).to have_received(:upload!).with(local_csv, remote_csv).once
+              expect(sftp).to have_received(:upload!).with(local_tsv, remote_tsv).once
+
+              expect(Dir.glob(test_root + "/*").count).to eq 2
+              expect(File.exist?(File.join(test_root, "test_product_2022-02-02.csv"))).to be true
+              expect(File.exist?(File.join(test_root, "test_product_2022-02-02.txt"))).to be true
+            end
           end
         end
       end
     end
   end
 
+  describe "#yaml_config" do
+    context "no config" do
+      it "returns nil" do
+        expect(subject.yaml_config).to be nil
+      end
+    end
+
+    context "with config" do
+      let(:data) do
+        {
+          "fulcrum_sftp_credentials" => {
+            "sftp" => 'ftp.fulcrum.org',
+            "user" => 'username',
+            "password" => 'password',
+            "root" => '/'
+          }
+        }
+      end
+      let(:config_file) { Tempfile.new("fulcrum_sftp.yml") }
+
+      before do
+        allow(Rails.root).to receive(:join).with('config', 'fulcrum_sftp.yml').and_return(config_file)
+      end
+
+      it "returns login information" do
+        config_file.write(data.to_yaml)
+        config_file.rewind
+        config = subject.yaml_config["fulcrum_sftp_credentials"]
+        expect(config["sftp"]).to eq "ftp.fulcrum.org"
+        expect(config["user"]).to eq "username"
+        expect(config["password"]).to eq "password"
+        expect(config["root"]).to eq "/"
+      end
+    end
+  end
+
   describe "#published_sorted_monographs" do
-    let(:product) { create(:product, identifier: 'product', needs_kbart: true, group_key: 'product') }
+    let(:product) { create(:product, identifier: 'test_product', needs_kbart: true, group_key: 'test_product') }
 
     before do
       product.components = [
@@ -213,32 +319,32 @@ RSpec.describe BuildKbartJob, type: :job do
   end
 
   describe "#most_recent_kbart" do
-    let(:product) { create(:product, identifier: 'product', needs_kbart: true, group_key: 'product_key') }
+    let(:product) { create(:product, identifier: 'test_product', needs_kbart: true, group_key: 'test_product') }
     let(:test_root) { File.join(Settings.scratch_space_path, 'spec', 'public', 'products', product.group_key, 'kbart') }
 
     before do
       FileUtils.rm_rf(test_root)
       FileUtils.mkdir_p(test_root)
-      FileUtils.touch(File.join(test_root, "product_2022-01-01.csv"))
-      FileUtils.touch(File.join(test_root, "product_2022-02-01.csv"))
-      FileUtils.touch(File.join(test_root, "product_2020-01-01.csv"))
+      FileUtils.touch(File.join(test_root, "test_product_2022-01-01.csv"))
+      FileUtils.touch(File.join(test_root, "test_product_2022-02-01.csv"))
+      FileUtils.touch(File.join(test_root, "test_product_2020-01-01.csv"))
     end
 
     it "returns the most recent kbart file for the product" do
-      expect(subject.most_recent_kbart(test_root, product.identifier)).to eq File.join(test_root, "product_2022-02-01.csv").to_s
+      expect(subject.most_recent_kbart(test_root, product.identifier)).to eq File.join(test_root, "test_product_2022-02-01.csv").to_s
     end
   end
 
   describe "#kbart_root" do
-    let(:product) { create(:product, identifier: 'product', needs_kbart: true, group_key: 'product_key') }
+    let(:product) { create(:product, identifier: 'test_product', needs_kbart: true, group_key: 'test_product') }
 
     it "returns the kbart root directory for the product" do
-      expect(subject.kbart_root(product).to_s).to match(/public\/products\/product_key\/kbart/)
+      expect(subject.kbart_root(product).to_s).to match(/public\/products\/test_product\/kbart/)
     end
   end
 
   describe "#make_kbart_csv" do
-    let(:product) { create(:product, identifier: 'product', needs_kbart: true, group_key: 'product_key') }
+    let(:product) { create(:product, identifier: 'test_product', needs_kbart: true, group_key: 'test_product') }
     let(:monographs) do
       [
         Hyrax::MonographPresenter.new(doc_a, nil),

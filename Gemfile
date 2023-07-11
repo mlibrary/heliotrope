@@ -179,6 +179,9 @@ gem 'rsolr', '~> 2.0.1'
 # Use Zip to extract EPubs
 gem "rubyzip", ">= 1.3.0"
 
+gem 'net-sftp', '~> 4.0'
+
+# to connect to ftp.fulcrum.org
 gem 'sitemap_generator', '~> 6.1.2'
 
 gem 'sinatra', '~> 2.2.3'

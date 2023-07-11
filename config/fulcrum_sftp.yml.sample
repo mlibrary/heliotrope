@@ -1,0 +1,7 @@
+# HELIO-4435
+
+fulcrum_ftp_credentials:
+  ftp: ftp.fulcrum.org
+  user: username 
+  password: password
+  root: "/"
