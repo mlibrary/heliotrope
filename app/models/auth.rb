@@ -78,7 +78,8 @@ class Auth
   end
 
   def publisher_restricted_content?
-    @publisher_restricted_content ||= Greensub::Component.where(noid: @publisher.work_noids(true)).any?
+    @publisher_restricted_content ||= Greensub::Component.where(noid: @publisher.work_noids(true)).any? &&
+                                      (publisher_subscribing_institutions - Greensub::Institution.where(identifier: Settings.world_institution_identifier)).present?
   end
 
   def publisher_individual_subscribers?
