@@ -187,18 +187,6 @@ module Hyrax
       Array(solr_document['press_name_ssim']).first
     end
 
-    def press_obj
-      Press.find_by(subdomain: subdomain)
-    end
-
-    def parent_press_subdomain
-      press_obj&.parent&.subdomain
-    end
-
-    def press_url # rubocop:disable Rails/Delegate
-      press_obj.press_url
-    end
-
     def monograph_tombstone_message
       monograph = Sighrax.from_presenter(self)
       monograph.tombstone_message ||
