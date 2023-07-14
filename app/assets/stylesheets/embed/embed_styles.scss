@@ -89,7 +89,7 @@ html {
   }
 }
 
-.fulcrum-embed-link {
+#fulcrum-embed-link {
   position: absolute;
   top: 0;
   right: 0;
@@ -119,7 +119,7 @@ html {
   }
 }
 
-.fulcrum-embed-link.audio.no-transcript {
+#fulcrum-embed-link.audio.no-transcript {
   // get it on the player but out of the way of the volume bar
   margin-top:45px;
   padding-right: 40px;
@@ -136,14 +136,14 @@ html {
 }
 
 // show link to asset on Fulcrum on hover
-figure:hover > div:nth-child(1), figure:active > div:nth-child(1) {
+figure:hover #fulcrum-embed-link, figure:active #fulcrum-embed-link {
   -webkit-opacity: 1;
   -moz-opacity: 1;
   opacity: 1;
 }
 
 // show link to asset on Fulcrum using k/b navigation
-.fulcrum-embed-link:focus-within {
+#fulcrum-embed-link:focus-within {
   -webkit-opacity: 1;
   -moz-opacity: 1;
   opacity: 1;

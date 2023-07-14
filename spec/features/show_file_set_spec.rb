@@ -3,6 +3,11 @@
 require 'rails_helper'
 
 describe 'FileSet Browse' do
+  before do
+    stub_out_redis
+    stub_out_irus
+  end
+
   context 'Navigating forward/backward' do
     let(:user) { create(:platform_admin) }
     let(:cover) { create(:file_set, title: ['Representative']) }
@@ -10,8 +15,6 @@ describe 'FileSet Browse' do
     let(:fileset_count) { 3 }
 
     before do
-      stub_out_redis
-      stub_out_irus
       login_as user
       monograph.ordered_members << cover
 
@@ -36,6 +39,30 @@ describe 'FileSet Browse' do
       visit hyrax_file_set_path(monograph.ordered_members.to_a[2].id)
       expect(page).to have_link('Previous', href: monograph.ordered_members.to_a[1].id)
       expect(page).to have_link('Next', href: monograph.ordered_members.to_a[3].id)
+    end
+  end
+
+  describe 'Content warnings' do
+    let(:fileset) { create(:public_file_set, content_warning: content_warning) }
+
+    context 'No content warning set' do
+      let(:content_warning) { nil }
+
+      it 'Does not show the blocking dialog or content-hiding wrapper' do
+        visit hyrax_file_set_path(fileset.id)
+        expect(page).to_not have_css('#content-warning-media-consent')
+        expect(page).to_not have_css('#content-warning-media', visible: false)
+      end
+    end
+
+    context 'Content warning is set' do
+      let(:content_warning) { 'this is the content warning' }
+
+      it 'Shows the blocking dialog and content-hiding wrapper' do
+        visit hyrax_file_set_path(fileset.id)
+        expect(page).to have_css('#content-warning-media-consent')
+        expect(page).to have_css('#content-warning-media', visible: false)
+      end
     end
   end
 end

@@ -1,0 +1,54 @@
+/* I wanted to share the content warning styles between regular FileSet show (_media.html.erb) and...
+   embedded FileSet show (_media_embedded.html.erb), to prevent duplication and keep things "simple".
+   I managed that but it proved quite awkward, as the "responsive" embed divs behave quite differently.
+   If editing these styles be sure to test both the FileSet show AND some embedded images and videos...
+   (at various EPUB reader widths) with each change.
+   Should things become too annoying then we'll diverge the styles. */
+
+#content-warning-media-consent {
+    position: absolute;
+    /* color stolen from Bootstrap `class="alert alert-warning"` */
+    /* I just don't want to load all of Bootstrap's CSS in the embed views just for that */
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-bottom: 3px solid #ffc107;
+    font-size: 16px;
+    width: 80%;
+    max-width: 1000px;
+    height: 25%;
+    left: 10%;
+    top: 10%;
+
+    > input {
+        margin: 20px;
+    }
+
+    #content-warning-icon-text {
+        padding: 20px 0px 0px 20px;
+        vertical-align: middle;
+        > img {
+            vertical-align: middle;
+            height: 30px;
+            width: 30px;
+            margin: 10px;
+        }
+    }
+
+    #content-warning-buttons {
+        text-align: center;
+        .btn {
+          margin: 20px;
+        }
+    }
+
+    /* an alternative to "browser back button" behavior for use within embedded FileSets */
+    #content-hidden-message {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+        font-size: 24px;
+        color: white;
+        height: 100%;
+    }
+}
