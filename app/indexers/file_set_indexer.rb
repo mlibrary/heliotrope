@@ -32,6 +32,9 @@ class FileSetIndexer < Hyrax::FileSetIndexer
         solr_doc['search_year_si'] = object.sort_date[0, 4]
         solr_doc['search_year_sim'] = object.sort_date[0, 4]
       end
+
+      # HELIO-2428 index the "full" doi url if there's a doi
+      solr_doc['doi_url_ssim'] = "https://doi.org/" + object.doi if object.doi.present?
     end
   end
 

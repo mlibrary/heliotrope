@@ -13,7 +13,8 @@ describe FileSetIndexer do
       create(:file_set,
              creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
              section_title: ['A section title'],
-             description: ["This is the description"])
+             description: ["This is the description"],
+             doi: "10.3998/mpub.test")
     end
     let(:file) do
       Hydra::PCDM::File.new.tap do |f|
@@ -77,6 +78,11 @@ describe FileSetIndexer do
 
     it 'has description indexed by Hyrax::IndexesBasicMetadata' do
       expect(subject['description_tesim'].first).to eq 'This is the description'
+    end
+
+    it "indexes it's DOI and also the full DOI 'url'" do
+      expect(subject['doi_ssim']).to eq ["10.3998/mpub.test"]
+      expect(subject['doi_url_ssim']).to eq "https://doi.org/10.3998/mpub.test"
     end
   end
 
