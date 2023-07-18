@@ -38,5 +38,13 @@ module SolrDocumentExtensions
     def tombstone_message
       Array(self['tombstone_message_tesim']).first
     end
+
+    def content_warning
+      Array(self['content_warning_tesim']).first
+    end
+
+    def content_warning_information
+      Array(self['content_warning_information_tesim']).first
+    end
   end
 end

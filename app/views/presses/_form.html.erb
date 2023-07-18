@@ -39,6 +39,7 @@
   <%= f.input :parent_id, collection: Press.parent_presses, include_blank: true, prompt: "Choose a parent press (optional)" %>
   <%= f.input :restricted_message, label: 'Message for restricted works (if any). HTML is ok' %>
   <%= f.input :tombstone_message, label: 'Message for tombstone works (if any). HTML is ok' %>
+  <%= f.input :content_warning_information, label: 'Default content warning information text (for Monographs that have a content warning but no custom content warning information text).' %>
   <%= f.input :share_links, label: 'Allow "share links" for temporary access of restricted materials?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
   <%= f.input :watermark, label: 'Apply watermark to downloaded ebooks?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
   <%= f.input :interval, label: 'Allow ebook interval (chapter) download?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>

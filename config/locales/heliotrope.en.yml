@@ -211,6 +211,13 @@ en:
         --interview excerpt
         --German folk tune
         --performance
+      content_warning: |
+        Content warning text. Used on Monograph catalog pages and FileSet media dialogs.
+        For Monographs this may include one or more specific locations within the text.
+      content_warning_information: |
+        Content warning explanatory text.
+        This can be used to explain this specific object's content warning.
+        If this is not set, Monographs will inherit any content warning information set at the Press level.
       creator: |
         REQUIRED FOR MONOGRAPH AUTO-CITATIONS
 

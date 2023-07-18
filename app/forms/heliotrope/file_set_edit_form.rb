@@ -7,6 +7,7 @@ module Heliotrope
 
     self.terms += %i[creator contributor resource_type caption alt_text rightsholder
                      description content_type date_created keyword
+                     content_warning content_warning_information
                      language section_title license
                      copyright_status rights_granted
                      exclusive_to_platform permissions_expiration_date

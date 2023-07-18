@@ -54,6 +54,8 @@ describe Hyrax::MonographForm do
                            holding_contact
                            location
                            section_titles
+                           content_warning
+                           content_warning_information
                            edition_name
                            previous_edition
                            next_edition
@@ -102,6 +104,8 @@ describe Hyrax::MonographForm do
                            funder_display
                            holding_contact
                            section_titles
+                           content_warning
+                           content_warning_information
                            edition_name
                            previous_edition
                            next_edition

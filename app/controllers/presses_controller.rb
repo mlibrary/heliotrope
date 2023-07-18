@@ -78,7 +78,8 @@ class PressesController < ApplicationController
                                     :default_list_view,
                                     :aboutware,
                                     :interval,
-                                    :tombstone_message
+                                    :tombstone_message,
+                                    :content_warning_information
                                    )
     end
 end
