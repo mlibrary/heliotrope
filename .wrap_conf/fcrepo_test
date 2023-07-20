@@ -2,5 +2,5 @@ port: 8986
 enable_jms: false
 version: 4.7.4
 download_dir: tmp/fedora_download
-instance_dir: tmp/fedora
-fcrepo_home_dir: tmp/fedora/test
+instance_dir: tmp/fedora/test/instance_dir
+fcrepo_home_dir: tmp/fedora/test/fcrepo_home_dir
