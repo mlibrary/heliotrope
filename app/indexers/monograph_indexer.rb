@@ -79,6 +79,9 @@ class MonographIndexer < Hyrax::WorkIndexer
 
       # Index the ToC of the monograph's epub or pdf_ebook if it has one, HELIO-3870
       solr_doc['table_of_contents_tesim'] = table_of_contents(object.id)
+
+      # HELIO-2428 index the "full" doi url if there's a doi
+      solr_doc['doi_url_ssim'] = "https://doi.org/" + object.doi if object.doi.present?
     end
   end
 

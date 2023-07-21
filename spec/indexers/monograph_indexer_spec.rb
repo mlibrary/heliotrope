@@ -21,7 +21,8 @@ RSpec.describe MonographIndexer do
             date_created: date_created,
             isbn: ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'],
             identifier: ['bar_number:S0001', 'heb_id: heb9999.0001.001'],
-            press: press.subdomain)
+            press: press.subdomain,
+            doi: "10.3998/mpub.test")
     }
     let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
     let(:press_name) { press.name }
@@ -36,6 +37,11 @@ RSpec.describe MonographIndexer do
 
     it 'indexes the ordered members' do
       expect(subject['ordered_member_ids_ssim']).to eq [file_set.id]
+    end
+
+    it "indexes it's DOI and also the full DOI 'url'" do
+      expect(subject['doi_ssim']).to eq ["10.3998/mpub.test"]
+      expect(subject['doi_url_ssim']).to eq "https://doi.org/10.3998/mpub.test"
     end
 
     describe 'press name' do
