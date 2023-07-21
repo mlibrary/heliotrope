@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-########################################
-## NOTE: THIS IS RUN FROM A CRON JOB! ##
-########################################
+# Formerly run from a cron, this task is no longer useful because we don't show the stats in the app, and...
+# with the move to GA4 the logic will no longer work anyway. Probably to be deleted by HELIO-4489.
 
 desc "cache google analytics data"
 namespace :heliotrope do
