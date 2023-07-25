@@ -44,6 +44,14 @@ RSpec.describe PressPresenter do
       end
     end
 
+    describe "#content_warning_information" do
+      let(:press) { create(:press, subdomain: "blah", content_warning_information: "This press's default content warning information.") }
+
+      it "returns the restricted_message" do
+        expect(subject.content_warning_information).to eq "This press's default content warning information."
+      end
+    end
+
     describe "when a child press has a parent" do
       let(:parent_press) {
         create(:press, subdomain: "blue",

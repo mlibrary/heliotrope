@@ -908,6 +908,48 @@ footer.press {
         }
       }
 
+      #content-warning-ebook {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        /* color stolen from Bootstrap `class="alert alert-warning"` */
+        color: #8a6d3b;
+        background-color: #fcf8e3;
+        font-size: 16px;
+        border-bottom: 3px solid #ffc107;
+
+        // for the show/hide links with no href
+        a:hover {
+          cursor:pointer;
+        }
+      }
+
+      #content-warning-icon {
+        display: flex;
+        flex: 10%;
+        justify-content: center;
+        > img {
+          height: 30px;
+          width: 30px;
+        }
+      }
+
+      #content-warning-text {
+        flex: 90%;
+      }
+
+      #content-warning-information-buffer {
+        flex: 10%;
+      }
+
+      #content-warning-information {
+        flex: 90%;
+      }
+
+      #content-warning-information-expand {
+        margin-left: 0.5em;
+      }
     }
   }
     /* Monograph TOC */

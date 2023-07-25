@@ -91,6 +91,10 @@ class PressPresenter < ApplicationPresenter
     @press.restricted_message.presence || parent_press(@press)&.restricted_message.presence
   end
 
+  def content_warning_information
+    @press&.content_warning_information.presence || ''
+  end
+
   private
 
     def initialize(subdomain, press)

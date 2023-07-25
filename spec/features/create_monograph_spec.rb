@@ -5,7 +5,7 @@ require 'rails_helper'
 describe 'Create a monograph' do
   context 'a logged in user' do
     let(:user) { create(:platform_admin) }
-    let!(:press) { create(:press) }
+    let!(:press) { create(:press, content_warning_information: "Some Press-level content warning information, with a <a href=\"https://www.bing.com\">link</a>.") }
 
     before do
       allow(Hyrax::TimeService).to receive(:time_in_utc).and_return('2023-01-01T10:10:20+00:00')
@@ -96,6 +96,9 @@ describe 'Create a monograph' do
       expect(page).to have_link(nil, href: 'https://creativecommons.org/publicdomain/mark/1.0/')
       expect(page.find(:css, 'a[href="https://creativecommons.org/publicdomain/mark/1.0/"]')[:target]).to eq '_blank'
 
+      # The press-level content warning information is not used with no content warning on the Monograph.
+      expect(page).not_to have_content 'Some Press-level content warning information, with a link.'
+
       # check breadcrumbs
       linked_crumbs = page.all('ol.breadcrumb li a')
       expect(linked_crumbs.count).to eq 1
@@ -124,6 +127,8 @@ describe 'Create a monograph' do
       expect(page).to have_css('input.monograph_isbn', count: 2)
       page.all(:fillable_field, 'monograph[isbn][]').last.set('123-456-7891')
 
+      fill_in 'Content warning', with: 'Monograph content warning text'
+
       click_button 'Save'
 
       expect(Monograph.find(noid).date_modified).to eq(Monograph.find(noid).modified_date)
@@ -141,6 +146,26 @@ describe 'Create a monograph' do
       # ISBN
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content '123-456-7891'
+
+      expect(page).to have_content 'Monograph content warning text'
+      # the content warning information is shown only when this JS-triggering link is clicked, hence `visible:false`
+      expect(page).to have_link('Expand to read full warning statement...', href: nil)
+      expect(page).to have_css("div#content-warning-information", visible: false, text: 'Some Press-level content warning information, with a link.')
+      expect(page).to have_link('link', href: 'https://www.bing.com', visible: false)
+
+      # back to the edit page to set some content warning text specific to this Monograph, which will override the Press-level text seen above
+      click_link 'Edit'
+
+      fill_in 'Content warning information', with: "Monograph's specific content warning information text, with a <a href=\"https://www.google.com\">link</a>."
+
+      click_button 'Save'
+
+      # back on Monograph catalog page
+      expect(page).to have_content 'Monograph content warning text'
+      # the content warning information is shown only when this JS-triggering link is clicked, hence `visible:false`
+      expect(page).to have_link('Expand to read full warning statement...', href: nil)
+      expect(page).to have_css("div#content-warning-information", visible: false, text: "Monograph's specific content warning information text, with a link.")
+      expect(page).to have_link('link', href: 'https://www.google.com', visible: false)
 
       click_link 'Manage Files'
 
