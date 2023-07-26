@@ -17,6 +17,10 @@ option_parser = OptionParser.new do |opts|
       puts "The path #{path} must be a directory!"
       exit(2)
     end
+    unless File.writable?(path)
+      puts "The directory #{path} must be writable!"
+      exit(3)
+    end
   end
   opts.on_tail('-h', '--help', 'Print this help message') do
     puts opts
@@ -30,14 +34,28 @@ if ARGV.empty?
 else
   require File.expand_path('../config/environment', __dir__)
   require 'export'
-  monograph_id = ARGV[0]
+  monograph_ids = ARGV
   pwd = Dir.pwd
   Dir.chdir(options.path) if options.path.present?
-  begin
-    Export::Exporter.new(monograph_id).extract
-  rescue StandardError => e
-    STDERR.puts e.message
+
+  for id in monograph_ids do
+    begin
+      unless ValidationService.valid_noid?(id)
+        puts "Skipping #{id}. It is not a valid NOID."
+        next
+      end
+      if Monograph.where(id: id).count.zero?
+        puts "Skipping #{id}. No Monograph found using this NOID."
+        next
+      end
+      puts "Extracting Monograph with NOID #{id}."
+
+      Export::Exporter.new(id).extract
+    rescue StandardError => e
+      STDERR.puts e.message
+    end
   end
+
   Dir.chdir(pwd)
   exit!(0)
 end
