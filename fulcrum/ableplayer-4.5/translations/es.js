@@ -1,4 +1,4 @@
-var es = {
+{
 
 "audio": "audio",
 
@@ -74,11 +74,11 @@ var es = {
 
 "preferences": "Preferencias",
 
-"enterFullScreen": "Ver a pantalla completa",
+"enterFullscreen": "Ver a pantalla completa",
 
-"exitFullScreen": "Salir de pantalla completa",
+"exitFullscreen": "Salir de pantalla completa",
 
-"fullScreen": "Pantalla completa",
+"fullscreen": "Pantalla completa",
 
 "speed": "Velocidad",
 
@@ -166,7 +166,7 @@ var es = {
 
 "prefIntroTranscript": "Las siguientes preferencias afectan a la transcripción interactiva.",
 
-"prefCookieWarning": "Gurdar sus preferencias requiere el uso de cookies.",
+"prefCookieWarning": "Para guardar sus preferencias se requiere el uso de cookies.",
 
 "prefHeadingKeyboard1": "Teclas modificadoras utilizadas para atajos de teclado",
 
@@ -192,7 +192,7 @@ var es = {
 
 "prefDescFormat": "Formato preferido",
 
-"prefDescFormatHelp": "Si ambos formatos están disponibles, se usará sólo uno de ello.",
+"prefDescFormatHelp": "Si ambos formatos están disponibles, se usará sólo uno de ellos.",
 
 "prefDescFormatOption1": "versión alternativa del vídeo, descrito",
 
@@ -204,9 +204,27 @@ var es = {
 
 "prefDescPause": "Pausar automáticamente el video cuando arranque una descripción",
 
-"prefVisibleDesc": "Hacer visibles las descripciones en texto si se están usando",
+"prefDescVisible": "Hacer visibles las descripciones en texto si se están usando",
 
-"prefHighlight": "Resaltar la transcripción según avanza el contenido",
+"prefDescVoice": "Voz",
+
+"prefDescRate": "Velocidad",
+
+"prefDescPitch": "Tono",
+
+"prefDescPitch1": "Muy grave",
+
+"prefDescPitch2": "Grave",
+
+"prefDescPitch3": "Normal",
+
+"prefDescPitch4": "Aguda",
+
+"prefDescPitch5": "Muy aguda",
+
+"sampleDescriptionText": "Ajuste la configuración para escuchar este texto de muestra",
+
+"prefHighlight": "Resalte la transcripción a medida que avance el contenido",
 
 "prefTabbable": "Transcripción manejable por teclado",
 
@@ -334,4 +352,4 @@ var es = {
 
 "enableKeyboardShortcuts": "Enable keyboard shortcuts"
 
-};
+}

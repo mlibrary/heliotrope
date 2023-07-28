@@ -1,4 +1,4 @@
-var he = {
+{
 
 "audio": "שמע",
 
@@ -74,11 +74,11 @@ var he = {
 
 "preferences": "העדפות",
 
-"enterFullScreen": "מעבר למסך מלא",
+"enterFullscreen": "מעבר למסך מלא",
 
-"exitFullScreen": "יציאה ממסך מלא",
+"exitFullscreen": "יציאה ממסך מלא",
 
-"fullScreen": "מסך מלא",
+"fullscreen": "מסך מלא",
 
 "speed": "מהירות",
 
@@ -204,7 +204,25 @@ var he = {
 
 "prefDescPause": "השהה את הווידאו באופן אוטומטי כאשר התיאור מתחיל",
 
-"prefVisibleDesc": "הפוך תיאור גלוי",
+"prefDescVisible": "הפוך תיאור גלוי",
+
+"prefDescVoice": "Voice",
+
+"prefDescRate": "Rate",
+
+"prefDescPitch": "Pitch",
+
+"prefDescPitch1": "Very low",
+
+"prefDescPitch2": "Low",
+
+"prefDescPitch3": "Default",
+
+"prefDescPitch4": "High",
+
+"prefDescPitch5": "Very high",
+
+"sampleDescriptionText": "Adjust settings to hear this sample text.",
 
 "prefHighlight": "הדגש תמליל כמו משחק מדיה",
 
@@ -334,4 +352,4 @@ var he = {
 
 "enableKeyboardShortcuts": "Enable keyboard shortcuts"
 
-};
+}

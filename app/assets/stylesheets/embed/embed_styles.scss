@@ -22,7 +22,8 @@ html {
   margin-top: 45px;
 }
 
-.able-wrapper {
+.able-wrapper.able-skin-2020 {
+  margin: 0px; // chaining both classes allows this to take precedence over the margin setting in `ableplayer.min.css`
   .able {
     margin: 0px;
     box-shadow: 0 0 0 0 transparent;

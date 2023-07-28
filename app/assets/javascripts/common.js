@@ -1,6 +1,6 @@
 // Scripts common to app and embed views
 //
-//= require jquery
+//= require jquery3
 //= require jquery_ujs
 //= require turbolinks
 //= require leaflet_1.4.0
