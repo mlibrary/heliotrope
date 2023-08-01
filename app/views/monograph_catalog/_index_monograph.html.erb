@@ -106,6 +106,36 @@
             <% end %>
           </div><!-- /.btn-group -->
         </div><!-- /.btn-toolbar -->
+      <% if @presenter.content_warning.present? %>
+        <% content_warning_information = @presenter.content_warning_information || press_presenter.content_warning_information %>
+        <div role="dialog" id="content-warning-ebook" aria-label="Ebook Content Warning">
+          <div id="content-warning-icon">
+            <%= image_tag "exclamation-triangle-fill.svg", alt: "Warning Icon", 'aria-hidden': "true" %>
+          </div>
+          <div id="content-warning-text"><%= @presenter.content_warning %>
+          <% if content_warning_information.present? %>
+            <span id="content-warning-information-expand"><a id="toggle-content-warning-information-expand" onclick="toggleContentInformation()">Expand to read full warning statement...</a></span>
+            </div>
+            <div id="content-warning-information-buffer"></div>
+            <div id="content-warning-information" style="display: none"><%= raw content_warning_information %>
+              <span><a onclick="toggleContentInformation()"><br />Close warning statement</a></span>
+
+              <script>
+                function toggleContentInformation() {
+                  if(document.getElementById("content-warning-information").style.display == 'none') {
+                    document.getElementById("content-warning-information").style.display = 'inline-block';
+                    document.getElementById("content-warning-information-expand").style.visibility = 'hidden'
+                  }
+                  else {
+                    document.getElementById("content-warning-information").style.display = 'none';
+                    document.getElementById("content-warning-information-expand").style.visibility = 'visible'
+                  }
+                }
+              </script>
+          <% end %>
+          </div>
+        </div>
+      <% end %>
     <% end %>
 
     <!-- BOOK INFORMATION TABS - TABS -->
