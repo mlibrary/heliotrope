@@ -37,19 +37,19 @@ function displayNonModalSurvey() {
   var gabiiSurveyStatus = Cookies.get('survey_gabii');
   var bigTenSurveyStatus = Cookies.get('survey_bigten');
   if (( surveyStatus == 'ignore') || (surveyStatus == 'clicked')) {
-    $('div.alert.survey').hide();
+    $('#surveyNonModal').hide();
   } else {
-    $('div.alert.survey').show();
+    $('#surveyNonModal').show();
   }
   if (( gabiiSurveyStatus == 'ignore') || (gabiiSurveyStatus == 'clicked')) {
-    $('div.alert.survey').hide();
+    $('#surveyNonModalGabii').hide();
   } else {
-    $('div.alert.survey').show();
+    $('#surveyNonModalGabii').show();
   }
   if (( bigTenSurveyStatus == 'ignore') || (bigTenSurveyStatus == 'clicked')) {
-    $('div.alert.survey').hide();
+    $('#surveyNonModalBigten').hide();
   } else {
-    $('div.alert.survey').show();
+    $('#surveyNonModalBigten').show();
   }
 }
 
