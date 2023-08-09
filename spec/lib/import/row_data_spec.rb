@@ -137,7 +137,7 @@ describe Import::RowData do
     let(:object) { :monograph }
 
     context 'truly missing values (no `field_name` or `FIELD_NAME_MAP` values available)' do
-      let(:row) { {} }
+      let(:row) { CSV::Row.new([], []) }
 
       it 'lets them be nil' do
         subject
@@ -146,7 +146,7 @@ describe Import::RowData do
     end
 
     context 'row has a `field_name` value *and* a `FIELD_NAME_MAP` value' do
-      let(:row) { { 'Copyright Holder' => 'Copyright Holder Thingy', 'Rightsholder' => 'Rightsholder Thingy' } }
+      let(:row) { CSV::Row.new(['Copyright Holder', 'Rightsholder'], ['Copyright Holder Thingy', 'Rightsholder Thingy']) }
 
       it 'defers to the official/proper/current `field_name` (CSV header row) value' do
         subject
@@ -154,8 +154,9 @@ describe Import::RowData do
       end
     end
 
+    # this is by far the most likely use case when importing/processing old metadata CSV sheets
     context 'row only has a `FIELD_NAME_MAP` value' do
-      let(:row) { { 'Copyright Holder' => 'Copyright Holder Thingy' } }
+      let(:row) { CSV::Row.new(['Copyright Holder'], ['Copyright Holder Thingy']) }
 
       it 'uses the `FIELD_NAME_MAP` value for the corresponding `field_name` value' do
         subject
