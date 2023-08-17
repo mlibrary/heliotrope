@@ -14,6 +14,7 @@
     border-bottom: 3px solid #ffc107;
     font-size: 16px;
     width: 80%;
+    height: 50%;
     max-width: 1000px;
     left: 10%;
     top: 10%;
@@ -26,7 +27,8 @@
 #content-warning-icon-text {
     padding: 1em 0 0 1em;
     vertical-align: middle;
-    display: flex;       
+    display: flex;    
+    font-family: "effra", Effra-regular, AvenirNext-Medium, Avenir-Medium, avenir, sans-serif;   
 }
 
 #content-warning-icon-text img {
@@ -43,7 +45,6 @@
 #content-warning-buttons .btn {
     margin: 20px;
     display: inline-block;
-    margin-bottom: 0;
     font-weight: normal;
     text-align: center;
     white-space: nowrap;
@@ -67,6 +68,7 @@
     color: #fff;
     background-color: #337ab7;
     border-color: #2e6da4;
+    font-family: "effra", Effra-regular, AvenirNext-Medium, Avenir-Medium, avenir, sans-serif;
 }
 
 #content-warning-buttons .btn:hover {
@@ -87,5 +89,5 @@
     padding: 2em;
     background-color: #e5e5e5;
     color: black;
-    font-family: "Crete Round", Merriweather, georgia, serif;
+    font-family: "effra", Effra-regular, AvenirNext-Medium, Avenir-Medium, avenir, sans-serif;
 }

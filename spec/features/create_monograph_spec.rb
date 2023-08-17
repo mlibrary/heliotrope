@@ -149,7 +149,7 @@ describe 'Create a monograph' do
 
       expect(page).to have_content 'Monograph content warning text'
       # the content warning information is shown only when this JS-triggering link is clicked, hence `visible:false`
-      expect(page).to have_link('Expand to read full warning statement...', href: nil)
+      expect(page).to have_link('Expand to read full warning statement...', href: '#content-warning-information')
       expect(page).to have_css("div#content-warning-information", visible: false, text: 'Some Press-level content warning information, with a link.')
       expect(page).to have_link('link', href: 'https://www.bing.com', visible: false)
 
