@@ -16,6 +16,8 @@ module API
     attr_reader :current_user
 
     rescue_from ActiveFedora::ObjectNotFoundError, ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound, StandardError do |exception|
+      # Rails.logger.debug(exception.inspect)
+      # Rails.logger.debug(exception.backtrace)
       log_request_response(exception)
       case exception
       when ActiveFedora::ObjectNotFoundError
