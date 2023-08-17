@@ -17,37 +17,75 @@
     max-width: 1000px;
     left: 10%;
     top: 10%;
+}
 
-    > input {
-        margin: 20px;
-    }
+#content-warning-media-consent input {
+    margin: 20px;
+}
 
-    #content-warning-icon-text {
-        padding: 20px 0px 0px 20px;
-        vertical-align: middle;
-        > img {
-            vertical-align: middle;
-            height: 30px;
-            width: 30px;
-            margin: 10px;
-        }
-    }
+#content-warning-icon-text {
+    padding: 1em 0 0 1em;
+    vertical-align: middle;
+    display: flex;       
+}
 
-    #content-warning-buttons {
-        text-align: center;
-        .btn {
-          margin: 20px;
-        }
-    }
+#content-warning-icon-text img {
+    vertical-align: middle;
+    height: 30px;
+    width: 30px;
+    margin: 5px 1em;
+}
 
-    /* an alternative to "browser back button" behavior for use within embedded FileSets */
-    #content-hidden-message {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-content: center;
-        font-size: 24px;
-        color: white;
-        height: 100%;
-    }
+#content-warning-buttons {
+    text-align: center;
+}
+
+#content-warning-buttons .btn {
+    margin: 20px;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+#content-warning-buttons .btn:hover {
+    color: #fff;
+    background-color: #286090;
+    border-color: #204d74;
+  }
+
+/* an alternative to "browser back button" behavior for use within embedded FileSets */
+#content-hidden-message {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    font-size: 24px;
+    color: white;
+    height: 100%;
+    padding: 2em;
+    background-color: #e5e5e5;
+    color: black;
+    font-family: "Crete Round", Merriweather, georgia, serif;
 }
