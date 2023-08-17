@@ -20,7 +20,7 @@ module StatusPageService
             else
               Redis.new(host: "localhost", port: 6379)
             end
-    result = redis.ping == "PONG\n" ? 'UP' : 'DOWN'
+    result = redis.ping == "PONG" ? 'UP' : 'DOWN'
     redis.quit
     result
   end
