@@ -56,7 +56,7 @@ RSpec.describe "Utilities", type: :request do
     let(:solr_url) { YAML.load(ERB.new(File.read(Rails.root.join('config', 'solr.yml'))).result)[Rails.env]['url'].sub('/solr/', '/solr/admin/cores?action=STATUS&core=') }
     let(:fedora_url) { YAML.load(ERB.new(File.read(Rails.root.join('config', 'fedora.yml'))).result)[Rails.env]['url'] }
     let(:platform_admin) { create(:platform_admin) }
-    let(:redis) { double('redis', ping: "PONG\n", quit: true) }
+    let(:redis) { double('redis', ping: "PONG", quit: true) }
 
     context 'all good' do
       before do
