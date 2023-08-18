@@ -161,6 +161,8 @@ en:
   monograph_catalog:
     index:
       buy: "Buy a print copy of %{title}"
+      buy_hardcover: "Order Hardcover"
+      buy_hardcover_button_title: "Buy a hardcover copy of %{title}"
       buy_book: "Buy Book"
       catalog: "Books"
       download_book: "Download"
@@ -169,6 +171,7 @@ en:
       home: "Home"
       next_edition_html: "Read a newer version of <i>%{title}</i>"
       next_edition: "Read a newer version of %{title}"
+      oa_registration_required_button: "Register for Free Download"
       previous_edition_html: "Looking for an older version of <i>%{title}</i>?"
       previous_edition: "Looking for an older version of %{title}?"
       read_book: "Read Book"

@@ -219,6 +219,79 @@ RSpec.describe "monograph_catalog/index.html.erb" do
           is_expected.to match HandleNet::HANDLE_NET_PREFIX + HandleNet::FULCRUM_HANDLE_PREFIX + "999999999"
         end
       end
+
+      describe 'registration required to view/download ebook' do
+        let(:pdf_ebook_presenter) { instance_double("pdf_ebook_presenter", id: 'validnoid') }
+
+        before do
+          allow(view).to receive(:current_actor).and_return(Anonymous.new({}))
+          allow_any_instance_of(EbookIntervalDownloadOperation).to receive(:allowed?).and_return(true)
+          allow(presenter).to receive(:reader_ebook?).and_return(true)
+          allow(presenter).to receive(:reader_ebook).and_return({ id: 'validnoid' })
+          allow(presenter).to receive(:epub?).and_return(false)
+          allow(presenter).to receive(:toc?).and_return(true)
+          allow(presenter).to receive(:pdf_ebook_presenter).and_return(pdf_ebook_presenter)
+          allow(pdf_ebook_presenter).to receive(:intervals).and_return([instance_double(EBookIntervalPresenter,
+                                                                                        title: 'Contents',
+                                                                                        level: 1,
+                                                                                        cfi: "page=6",
+                                                                                        'downloadable?': true),
+                                                                        instance_double(EBookIntervalPresenter,
+                                                                                        title: 'Foreword | Timmy B. Wright',
+                                                                                        level: 1, cfi: 'page=8',
+                                                                                        'downloadable?': true)])
+        end
+
+        context 'normal Monograph that does not require Google Form registration to access' do
+          before do
+            allow(presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
+            render
+          end
+
+          it 'uses the standard "read/download/buy" partial, links ToC entries' do
+            debug_puts subject.to_s
+            is_expected.to render_template(partial: '_read_download_buy')
+            is_expected.to_not render_template(partial: '_read_download_buy_registration_required')
+            is_expected.to match 'monograph_catalog.index.read_book'
+            is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
+            is_expected.to match 'toc-link'
+          end
+        end
+
+        context 'Monograph that requires Google Form registration to access' do
+          before do
+            allow(presenter).to receive(:subdomain).and_return('ee')
+            allow(presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "9781607857471"])
+            render
+          end
+
+          it 'uses the registration required "read/download/buy" partial, does not link ToC entries' do
+            debug_puts subject.to_s
+            is_expected.to_not render_template(partial: '_read_download_buy')
+            is_expected.to render_template(partial: '_read_download_buy_registration_required')
+            is_expected.to_not match 'monograph_catalog.index.oa_registration_required_button'
+            is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
+            is_expected.to_not match 'toc-link'
+          end
+
+          context 'When it has both a readable ebook and a downloadable ebook' do
+            before do
+              assign(:ebook_download_presenter, ebook_download_presenter)
+              allow(ebook_download_presenter).to receive(:downloadable_ebooks?).and_return(true)
+              render
+            end
+
+            it 'shows the Google Form button' do
+              debug_puts subject.to_s
+              is_expected.to_not render_template(partial: '_read_download_buy')
+              is_expected.to render_template(partial: '_read_download_buy_registration_required')
+              is_expected.to match 'monograph_catalog.index.oa_registration_required_button'
+              is_expected.to match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
+              is_expected.to_not match 'toc-link'
+            end
+          end
+        end
+      end
     end
   end
 end

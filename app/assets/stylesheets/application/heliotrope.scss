@@ -790,6 +790,22 @@ footer.press {
       margin: 2em 0 1em 0;
     }
 
+    .oa-registration-required {
+      #monograph-read-btn {
+        margin-right: 20px;
+      }
+    }
+
+    .btn-oa-registration-required {
+      display:flex;
+      align-items: center;
+      img {
+        height: 20px;
+        filter: invert(100%);
+        padding-left: 6px;
+      }
+    }
+
     .btn-group {
       margin-left: 0;
     }

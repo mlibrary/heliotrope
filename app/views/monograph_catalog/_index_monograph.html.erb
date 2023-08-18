@@ -1,4 +1,6 @@
 <% princess_de_cleves = @presenter.subdomain == 'leverpress' && (@presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }) %>
+<% oa_registration_required = @presenter.subdomain == 'ee' %>
+
 <div id="maincontent" class="row monograph-info-epub">
   <!-- ADMIN TOOLS -->
   <div class="platform-admin">
@@ -57,55 +59,11 @@
     <!-- READ, DOWNLOAD, BUY BUTTONS -->
     <%# ensure all of the toolbar's internal components' conditionals are present here to control the toolbar's appearance %>
     <% if @presenter.reader_ebook? || (@ebook_download_presenter.downloadable_ebooks? && !@presenter.tombstone?) || @presenter.buy_url? %>
-        <div class="btn-toolbar" role="toolbar">
-          <div class="btn-group btn-group-lg" role="group">
-            <% if @presenter.reader_ebook? %>
-              <% if @disable_read_button || @presenter.tombstone? %>
-                <a id="monograph-read-btn"
-                   href=""
-                   title="<%= t('monograph_catalog.index.read_book') %>"
-                   aria-label="<%= t('monograph_catalog.index.read_book') %>"
-                   class="btn btn-default"
-                   data-turbolinks="false"
-                   aria-disabled="true"
-                   disabled>
-                   <%= t('monograph_catalog.index.read_book') %>
-                </a>
-              <% else %>
-                <a id="monograph-read-btn"
-                   href="<%= princess_de_cleves ? epub_ebook_path(@presenter.reader_ebook) : epub_path(@presenter.reader_ebook) %>"
-                   class="btn btn-default"
-                   data-turbolinks="false">
-                   <%= t('monograph_catalog.index.read_book') %>
-                </a>
-              <% end %>
-            <% end %>
-            <% if @ebook_download_presenter.downloadable_ebooks? && !@presenter.tombstone? %>
-                <div class="btn-group btn-group-lg">
-                  <button type="button"
-                          id="monograph-download-btn"
-                          target="_blank"
-                          aria-haspopup="true"
-                          class="btn btn-default dropdown-toggle"
-                          data-toggle="dropdown"
-                          aria-expanded="false">
-                          <%= t('monograph_catalog.index.download_book') %>
-                          <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu monograph-catalog-rep-downloads">
-                  <% @ebook_download_presenter.ebook_presenters.each do |ebook| %>
-                    <% if @ebook_download_presenter.downloadable?(ebook) %>
-                      <li><a data-rep-type="<%= ebook.ebook_format.downcase %>" href="<%= download_ebook_path(ebook.id) %>" <% if @presenter.open_access? || @presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %> <% if @presenter.subdomain == 'bigten' %> onclick="displayBigTenModalSurvey();" <% else %> onclick="displayModalSurvey();" <% end %> <% end %> target="_blank"><%= ebook.ebook_format %> (<%= number_to_human_size(ebook.file_size) %>)</a></li>
-                    <% end %>
-                  <% end %>
-                  </ul>
-                </div>
-            <% end %>
-            <% if @presenter.buy_url? %>
-              <a id="monograph-buy-btn" href="<%= @presenter.buy_url %>" target="_blank" title="<%= t('monograph_catalog.index.buy', title: @presenter.title) %>" aria-label="<%= t('monograph_catalog.index.buy', title: @presenter.title) %>" class="btn btn-default" data-turbolinks="false"><%= t('monograph_catalog.index.buy_book') %></a>
-            <% end %>
-          </div><!-- /.btn-group -->
-        </div><!-- /.btn-toolbar -->
+      <% if oa_registration_required %>
+        <%= render 'read_download_buy_registration_required' %>
+      <% else %>
+        <%= render "read_download_buy", princess_de_cleves: princess_de_cleves %>
+      <% end %>
       <% if @presenter.content_warning.present? %>
         <% content_warning_information = @presenter.content_warning_information || press_presenter.content_warning_information %>
         <div role="dialog" id="content-warning-ebook" aria-label="Ebook Content Warning">
@@ -216,7 +174,7 @@
         <% if @presenter.toc? %>
           <section id="toc" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-toc" tabindex="0">
             <div class="col-sm-12">
-              <%= render 'index_epub_toc' %>
+              <%= render 'index_epub_toc', oa_registration_required: oa_registration_required, princess_de_cleves: princess_de_cleves %>
             </div>
           </section>
         <% end %>

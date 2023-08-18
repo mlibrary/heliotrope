@@ -2,7 +2,6 @@
   level = 0
   ebook_presenter = @presenter.epub? ? @presenter.epub_presenter : @presenter.pdf_ebook_presenter
   permit_download_buttons = EbookIntervalDownloadOperation.new(current_actor, Sighrax.from_solr_document(@presenter.reader_ebook)).allowed?
-  princess_de_cleves = @presenter.subdomain == 'leverpress' && (@presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' })
   show_limit = 13  # only show the first 14 intervals/chapters by default, HELIO-4245
 %>
 <%# A wrapper div whose closing tag below will control where the browser _might_ automagically close any li/ul... %>
@@ -41,8 +40,13 @@
       <% if @presenter.tombstone? %>
         <span><%= interval.title %></span>
       <% else %>
-        <a class="toc-link" href="<%= (princess_de_cleves ? epub_ebook_path(@presenter.reader_ebook) : epub_path(id: ebook_presenter.id)) + '#' + interval.cfi  %>" data-turbolinks="false"><%= interval.title %></a>
-        <% if interval.downloadable? && permit_download_buttons %>
+        <% if oa_registration_required %>
+          <%= interval.title %>
+        <% else %>
+          <a class="toc-link" href="<%= (princess_de_cleves ? epub_ebook_path(@presenter.reader_ebook) : epub_path(id: ebook_presenter.id)) + '#' + interval.cfi  %>" data-turbolinks="false"><%= interval.title %></a>
+        <% end %>
+        <%# `oa_registration_required` should be unnecessary here thanks to Press-level settings or other methods, but just in case! %>
+        <% if interval.downloadable? && permit_download_buttons && !oa_registration_required %>
           <div class="btn-group download" role="group" aria-label="Download Section">
             <a class="btn btn-default btn-sm toc-download-link" href="<%= epub_download_interval_path(id: ebook_presenter.id, title: interval.title, chapter_index: index) %>" data-turbolinks="false">
             <i id="download" class="oi" data-glyph="data-transfer-download" title="Download section" aria-hidden="true"></i> Download</a>
