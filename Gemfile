@@ -166,7 +166,6 @@ gem 'pragmatic_segmenter', '~> 0.3'
 gem 'prawn', '~> 2.2'
 
 gem 'redcarpet', '~> 3.5.1'
-gem 'reverse_markdown'
 
 # see HELIO-4484 and https://github.com/samvera/hyrax/pull/5961
 gem 'redlock', '>= 0.1.2', '< 2.0'

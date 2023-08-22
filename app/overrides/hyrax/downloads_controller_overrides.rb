@@ -102,6 +102,15 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
       ResourceDownloadOperation.new(current_actor, Sighrax.from_noid(params[:id])).allowed?
     end
 
+    # HELIO-4501 Override to use the Hyrax 3.4 version of this with no workflow related code.
+    # We really only depend on allow_download? above for this.
+    def authorize_download!
+      authorize! :download, params[asset_param_key]
+    rescue CanCan::AccessDenied
+      unauthorized_image = Rails.root.join("app", "assets", "images", "unauthorized.png")
+      send_file unauthorized_image, status: :unauthorized
+    end
+
     def thumbnail?
       params[:file] == 'thumbnail'
     end

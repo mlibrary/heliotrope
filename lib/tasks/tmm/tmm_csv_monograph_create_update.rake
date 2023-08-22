@@ -103,10 +103,6 @@ namespace :heliotrope do
         # in order to offer the ability to blank out metadata we need to merge in some nils
         attrs = blank_metadata.merge(attrs)
 
-        # TMM has some fields with HTML tags in it. This functionality will have to be manually tested as...
-        # part of HELIO-2298
-        attrs = maybe_convert_to_markdown(attrs)
-
         # sending new_monograph param here because of a weird FCREPO bug that affects Hyrax work *creation* only
         # https://github.com/samvera/hyrax/issues/3527
         attrs = cleanup_characters(attrs, new_monograph)
@@ -139,28 +135,6 @@ namespace :heliotrope do
     # note: 'NOID', 'Link' are not in METADATA_FIELDS, they're export-only ADMIN_METADATA_FIELDS.
     unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - monograph_fields.pluck(:field_name) - ['NOID', 'Link']
     puts "***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped: #{unexpecteds.join(', ')}\n\n" if unexpecteds.present?
-  end
-
-  def maybe_convert_to_markdown(attrs)
-    attrs_out = {}
-    attrs.each do |key, value|
-      if value.present?
-        # TODO: maybe stop converting HTML to Markdown as HTML should work just fine in Fulcrum fields, theoretically
-        #       otherwise a check like this might be better than listing fields:
-        #       if ActionController::Base.helpers.strip_tags(value) != value
-        attrs_out[key] = if ['title', 'description'].include? key.downcase
-                           # 1) HTMLEntities is cleaning up the many HTML entity and decimal codes in the TMM HTML data
-                           # 2) the calls to gsub are getting rid of an inordinate number of non-breaking spaces,...
-                           # which appear in large numbers in the TMM data for seemingly no reason.
-                           Array(HtmlToMarkdownService.convert(HTMLEntities.new.decode(value.first.gsub('&#160;', ' ').gsub('&nbsp;', ' '))))
-                         else
-                           value
-                         end
-      else
-        attrs_out[key] = nil
-      end
-    end
-    attrs_out
   end
 
   # this method expects HTMLEntities to have done its work in converting entities and decimal codes
