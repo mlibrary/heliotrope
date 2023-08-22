@@ -744,7 +744,7 @@ GEM
       pry (>= 0.10.4)
     psych (3.3.4)
     public_suffix (5.0.1)
-    puma (5.6.4)
+    puma (5.6.7)
       nio4r (~> 2.0)
     qa (5.10.0)
       activerecord-import
@@ -1238,7 +1238,7 @@ DEPENDENCIES
   pragmatic_segmenter (~> 0.3)
   prawn (~> 2.2)
   pry-rails (~> 0.3.4)
-  puma (~> 5.6.4)
+  puma (~> 5.6.7)
   rack (~> 2.2.6)
   rails (~> 5.2.8.1)
   rails-controller-testing
