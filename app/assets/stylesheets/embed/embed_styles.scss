@@ -186,12 +186,6 @@ figure:hover #fulcrum-embed-link, figure:active #fulcrum-embed-link {
   margin: auto;
 }
 
-.embed-static-image.portrait {
-  width: auto;
+.embed-static-image {
   height: 100%;
-}
-
-.embed-static-image.landscape {
-  width: 100%;
-  height: auto
 }
