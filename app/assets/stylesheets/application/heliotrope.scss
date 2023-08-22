@@ -918,6 +918,8 @@ footer.press {
         background-color: #fcf8e3;
         font-size: 16px;
         border-bottom: 3px solid #ffc107;
+        margin-top: 2em;
+        padding: 1em;
 
         // for the show/hide links with no href
         a:hover {
@@ -937,6 +939,12 @@ footer.press {
 
       #content-warning-text {
         flex: 90%;
+        #warning-button[aria-expanded=false] .text-expanded {
+          display: none;
+        }
+        #warning-button[aria-expanded=true] .text-collapsed {
+          display: none;
+        }
       }
 
       #content-warning-information-buffer {
@@ -945,6 +953,10 @@ footer.press {
 
       #content-warning-information {
         flex: 90%;
+        margin-top: 1em;
+        span {
+          display: block;
+        }
       }
 
       #content-warning-information-expand {
