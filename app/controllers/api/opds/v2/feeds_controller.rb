@@ -58,21 +58,23 @@ module API
         # @example get /api/opds/umpebc_oa
         # @return [ActionDispatch::Response] { <opds_feed> }
         def umpebc_oa
+          product_id = Greensub::Product.find_by(identifier: 'ebc_oa').id
+          total, response = feed_solr_response([product_id])
+
           feed = {
             "metadata": {
-              "title": "University of Michigan Press Ebook Collection Open Access"
+              "title": "University of Michigan Press Ebook Collection Open Access",
+              "numberOfItems": total,
+              "itemsPerPage": 50,
+              "currentPage": page
             },
             "links": [
-              {
-                "rel": "self",
-                "href": Rails.application.routes.url_helpers.api_opds_umpebc_oa_url,
-                "type": "application/opds+json"
-              }
             ],
             "publications": [
             ]
           }
-          feed[:publications] = umpebc_oa_publications
+          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_umpebc_oa_url, total)
+          feed[:publications] = publications(response["response"]["docs"], params[:filterByEntityId])
           render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
 
@@ -80,43 +82,63 @@ module API
         # @example get /api/opds/umpebc
         # @return [ActionDispatch::Response] { <opds_feed> }
         def umpebc
+          entity_id = params[:filterByEntityId]
+          # Default with no entity_id is ebc_complete or "everything" even if you can't read some of it.
+          product_ids = [Greensub::Product.find_by(identifier: 'ebc_complete').id]
+          if entity_id.present?
+            # If you've got an entity_id you want to filter all of umpebc by what you're actually subcribed to.
+            # But you also get all the OA books
+            product_ids = ebc_subscribed_products(entity_id)
+          end
+
+          total, response = feed_solr_response(product_ids)
+
           feed = {
             "metadata": {
-              "title": "University of Michigan Press Ebook Collection"
+              "title": "University of Michigan Press Ebook Collection",
+              "numberOfItems": total,
+              "itemsPerPage": 50,
+              "currentPage": page
             },
             "links": [
-              {
-                "rel": "self",
-                "href": Rails.application.routes.url_helpers.api_opds_umpebc_url,
-                "type": "application/opds+json"
-              }
             ],
             "publications": [
             ]
           }
-          feed[:publications] = umpebc_publications
+          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_umpebc_url, total)
+          feed[:publications] = publications(response["response"]["docs"], entity_id)
           render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
 
-        # This resource returns the umpebc publications feed.
+        # This resource returns the heb publications feed.
         # @example get /api/opds/heb
         # @return [ActionDispatch::Response] { <opds_feed> }
         def heb
+          # If you provide an entity_id and are subscribed, you get the heb product
+          # If you provide an entity_id and are not subscribed, you get the heb_oa product
+          # If you do not provide an entity_id, you get the heb product (but can't read the non-OA books)
+          entity_id = params[:filterByEntityId]
+          product_id = Greensub::Product.find_by(identifier: 'heb').id
+          if entity_id.present? && !can_read_heb?(entity_id)
+            product_id = Greensub::Product.find_by(identifier: 'heb_oa').id
+          end
+
+          total, response = feed_solr_response([product_id])
+
           feed = {
             "metadata": {
-              "title": "ACLS Humanities Ebook"
+              "title": "ACLS Humanities Ebook",
+              "numberOfItems": total,
+              "itemsPerPage": 50,
+              "currentPage": page
             },
             "links": [
-              {
-                "rel": "self",
-                "href": Rails.application.routes.url_helpers.api_opds_heb_url,
-                "type": "application/opds+json"
-              }
             ],
             "publications": [
             ]
           }
-          feed[:publications] = heb_publications
+          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_heb_url, total, entity_id)
+          feed[:publications] = publications(response["response"]["docs"], entity_id)
           render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
 
@@ -124,21 +146,23 @@ module API
         # @example get /api/opds/leverpress
         # @return [ActionDispatch::Response] { <leverpress_feed> }
         def leverpress
+          product_id = Greensub::Product.find_by(identifier: 'leverpress').id
+          total, response = feed_solr_response([product_id])
+
           feed = {
             "metadata": {
-              "title": "Lever Press"
+              "title": "Lever Press",
+              "numberOfItems": total,
+              "itemsPerPage": 50,
+              "currentPage": page
             },
             "links": [
-              {
-                "rel": "self",
-                "href": Rails.application.routes.url_helpers.api_opds_leverpress_url,
-                "type": "application/opds+json"
-              }
             ],
             "publications": [
             ]
           }
-          feed[:publications] = publications_by_subdomain("leverpress")
+          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_leverpress_url, total)
+          feed[:publications] = publications(response["response"]["docs"], params[:filterByEntityId])
           render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
 
@@ -146,28 +170,43 @@ module API
         # @example get /api/opds/amherst
         # @return [ActionDispatch::Response] { <amherst_feed> }
         def amherst
+          product_id = Greensub::Product.find_by(identifier: 'amherst').id
+          total, response = feed_solr_response([product_id])
+
           feed = {
             "metadata": {
-              "title": "Amherst College Press"
+              "title": "Amherst College Press",
+              "numberOfItems": total,
+              "itemsPerPage": 50,
+              "currentPage": page
             },
             "links": [
-              {
-                "rel": "self",
-                "href": Rails.application.routes.url_helpers.api_opds_amherst_url,
-                "type": "application/opds+json"
-              }
             ],
             "publications": [
             ]
           }
-          feed[:publications] = publications_by_subdomain("amherst")
+
+          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_amherst_url, total)
+          feed[:publications] = publications(response["response"]["docs"], params[:filterByEntityId])
           render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
 
         private
 
           def feeds_params
-            params.permit(:filterByEntityId)
+            params.permit(:filterByEntityId, :currentPage)
+          end
+
+          def page
+            params[:currentPage].present? ? params[:currentPage].to_i : 1
+          end
+
+          def start
+            # page 1 then start = 0 (show 0 - 49)
+            # page 2 then start = 50 (show 50 - 99)
+            # page 3 then start = 100 (show 100 - 149)
+            # page 4 then start = 150 (show 150 - 199)
+            (page - 1) * 50
           end
 
           def javascript_escaping(hash_to_json)
@@ -230,99 +269,87 @@ module API
             hash_to_json.gsub('\\u003c/', '\\u003c\\/')
           end
 
-          # HELIO-4389 filter access by entity_id if it exists
-          def institution_can_access?(book_products)
-            entity_id = params[:filterByEntityId]
-            return true unless entity_id
+          def feed_links(url, total, entity_id = nil)
+            rel_self = url + "?currentPage=#{page}"
+            rel_self += "&filterByEntityId=#{entity_id}" if entity_id.present?
 
-            @products ||= accessible_products(entity_id)
-            (book_products & @products).present?
-          end
+            rel_first = url + "?currentPage=1"
+            rel_first += "&filterByEntityId=#{entity_id}" if entity_id.present?
 
-          def accessible_products(entity_id)
-            @institutions ||= Greensub::Institution.where(entity_id: entity_id)
-            products = []
-            # Subscribed
-            @institutions.each do |inst|
-              products += inst.products.pluck(:id)
-            end
-            # Free to read
-            free_to_read ||= Greensub::Institution.find_by(identifier: Settings.world_institution_identifier)&.products&.pluck(:id)
-            products += free_to_read if free_to_read.present?
-            products
-          end
+            rel_last = url + "?currentPage=#{(total / 50 < 1 ? 1 : total / 50 + 1)}"
+            rel_last += "&filterByEntityId=#{entity_id}" if entity_id.present?
 
-          def umpebc_oa_publications
             rvalue = []
+            rvalue << {
+              "rel": "self",
+              "href": rel_self,
+              "type": "application/opds+json"
+            }
 
-            ebc_backlist = Greensub::Product.find_by(identifier: 'ebc_complete')
-            return rvalue if ebc_backlist.blank?
+            # I think don't show a next link if there's no next, right?
+            if (page * 50) + 50 < total
+              rel_next = url + "?currentPage=#{page + 1}"
+              rel_next += "&filterByEntityId=#{entity_id}" if entity_id.present?
 
-            monograph_noids = ebc_backlist.components.pluck(:noid)
-            return rvalue if monograph_noids.blank?
-
-            query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(monograph_noids)
-
-            (ActiveFedora::SolrService.query(query, rows: monograph_noids.count, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
-              sm = ::Sighrax.from_solr_document(solr_doc)
-              op = ::Opds::Publication.new_from_monograph(sm, true, params[:filterByEntityId])
-              rvalue.append(op.to_h) if op.valid?
+              rvalue << {
+                "rel": "next",
+                "href": rel_next,
+                "type": "application/opds+json"
+              }
             end
+
+            rvalue << {
+                "rel": "first",
+                "href": rel_first,
+                "type": "application/opds+json"
+            }
+
+            rvalue << {
+                "rel": "last",
+                "href": rel_last,
+                "type": "application/opds+json"
+            }
 
             rvalue
           end
 
-          def umpebc_publications
-            rvalue = []
-
-            ebc_backlist = Greensub::Product.find_by(identifier: 'ebc_complete')
-            return rvalue if ebc_backlist.blank?
-
-            monograph_noids = ebc_backlist.components.pluck(:noid)
-            return rvalue if monograph_noids.blank?
-
-            query = ActiveFedora::SolrQueryBuilder.construct_query_for_ids(monograph_noids)
-
-            (ActiveFedora::SolrService.query(query, rows: monograph_noids.count, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
-              sm = ::Sighrax.from_solr_document(solr_doc)
-              op = ::Opds::Publication.new_from_monograph(sm, false, params[:filterByEntityId])
-              rvalue.append(op.to_h) if op.valid? && (institution_can_access?(solr_doc["products_lsim"]) || sm.open_access?)
+          def ebc_subscribed_products(entity_id)
+            product_ids = []
+            institutions = Greensub::Institution.where(entity_id: entity_id)
+            institutions.each do |inst|
+              inst.products.each do |prod|
+                # Get the products they're subscribed to
+                product_ids << prod.id if prod.identifier.match?(/^ebc_/)
+              end
             end
-
-            rvalue
+            # Add all the OA books
+            product_ids << Greensub::Product.find_by(identifier: 'ebc_oa').id
           end
 
-          def heb_publications
-            rvalue = []
-
-            heb_product = Greensub::Product.find_by(identifier: 'heb')
-            return rvalue if heb_product.blank?
-
-            # HEB is too big to do a noid query
-            # Use product_id/products_lsim instead
-            # HEB is a single product so that should work fine
-            (ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +products_lsim:#{heb_product.id}", rows: 100_000, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
-              sm = ::Sighrax.from_solr_document(solr_doc)
-              op = ::Opds::Publication.new_from_monograph(sm, false, params[:filterByEntityId])
-              rvalue.append(op.to_h) if op.valid? && (institution_can_access?(solr_doc["products_lsim"]) || sm.open_access?)
+          def can_read_heb?(entity_id)
+            can_read = false
+            institutions = Greensub::Institution.where(entity_id: entity_id)
+            institutions.each do |inst|
+              inst.products.each do |prod|
+                can_read = true if prod.identifier == "heb"
+              end
             end
-
-            rvalue
+            can_read
           end
 
-          # Use this if the Press WILL ONLY EVER publish Open Access books.
-          # So for instance Lever Press or Amherst Press.
-          # (Although this will only return OA books due to Opds::Publication#valid?)
-          # HELIO-3738
-          def publications_by_subdomain(subdomain)
+          def feed_solr_response(product_ids)
+            response = ActiveFedora::SolrService.get("+has_model_ssim:Monograph AND +visibility_ssi:open AND +products_lsim:(#{product_ids.join(" ")}) AND -tombstone_ssim:yes", sort: "date_modified_dtsi desc", rows: 50, start: start)
+            total = response["response"]["numFound"]
+            return total, response
+          end
+
+          def publications(docs, entity_id = nil)
             rvalue = []
-
-            (ActiveFedora::SolrService.query("+press_sim:#{subdomain} AND +visibility_ssi:open", rows: 100_000, sort: "date_modified_dtsi desc") || []).each do |solr_doc|
+            docs.each do |solr_doc|
               sm = ::Sighrax.from_solr_document(solr_doc)
-              op = ::Opds::Publication.new_from_monograph(sm, true, params[:filterByEntityId])
-              rvalue.append(op.to_h) if op.valid?
+              op = ::Opds::Publication.new_from_monograph(sm, entity_id)
+              rvalue.append(op.to_h)
             end
-
             rvalue
           end
       end

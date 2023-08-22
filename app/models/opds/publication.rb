@@ -7,8 +7,8 @@ module Opds
     delegate :to_json, to: :to_h
 
     class << self
-      def new_from_monograph(monograph, open_access = true, entity_id = nil)
-        Publication.send(:new, monograph, open_access, entity_id)
+      def new_from_monograph(monograph, entity_id = nil)
+        Publication.send(:new, monograph, entity_id)
       end
 
       def to_iso_639_2(language)
@@ -24,22 +24,7 @@ module Opds
       end
     end
 
-    def valid? # rubocop:disable Metrics/CyclomaticComplexity
-      return false unless @monograph.is_a?(::Sighrax::Monograph)
-      return false unless @monograph.published?
-      return false if open_access? && !@monograph.open_access?
-      return false unless @monograph.cover.valid?
-      return false unless @monograph.epub_ebook.valid? || @monograph.pdf_ebook.valid?
-      true
-    end
-
-    def open_access?
-      @open_access
-    end
-
     def to_h
-      raise StandardError.new('Invalid OPDS Publication') unless valid?
-
       rvalue = {
         metadata: {},
         links: [],
@@ -92,6 +77,14 @@ module Opds
       elsif @monograph.pdf_ebook.valid?
         rvalue[:links].append({ rel: 'self', href: download_ebook_url(@monograph.pdf_ebook), type: 'application/pdf' })
         rvalue[:links].append({ rel: 'http://opds-spec.org/acquisition/open-access', href: download_ebook_url(@monograph.pdf_ebook), type: 'application/pdf' })
+      else
+        # We have "publications" or Monographs without any actual book in umpebc like: zc77ss45g, rx913r17x or z603r054w
+        # I don't know if that really makes sense in the OPDS context, but here we are.
+        # However some kind of acquisition link is required in OPDS.
+        # https://github.com/opds-community/drafts/blob/master/opds-2.0.md#43-acquisition-links
+        # I guess we can use http://opds-spec.org/acquisition and just point to the DOI? We'll see.
+        # See HELIO-4443
+        rvalue[:links].append({ rel: "http://opds-spec.org/acquisition", href: @monograph.citable_link })
       end
 
       rvalue[:images].append({ href: monograph_image_url(@monograph), type: "image/jpeg" })
@@ -264,9 +257,8 @@ module Opds
         Riiif::Engine.routes.url_helpers.image_url(monograph.cover.noid, host: Rails.application.routes.url_helpers.root_url, size: width_size_string, format: 'jpg')
       end
 
-      def initialize(monograph, open_access = true, entity_id = nil)
+      def initialize(monograph, entity_id = nil)
         @monograph = monograph
-        @open_access = open_access
         @entity_id = entity_id
       end
   end
