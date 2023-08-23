@@ -28,7 +28,7 @@
     </div>
     <div id="content-warning-media" style="visibility:hidden">
   <% end %>
-  <div id="fulcrum-embed-link<%= ' audio no-transcript' if @presenter.audio_without_closed_captions? %>">
+  <div id="fulcrum-embed-link"<%= ' class="audio no-transcript"'.html_safe if @presenter.audio_without_closed_captions? %>>
     <%# note embed_fulcrum_logo_title is double-quoted, <base target="_blank"> in embedded.html.erb doesn't work here %>
     <a href="<%= @presenter.embed_fulcrum_logo_link %>"
        aria-label='<%= @presenter.embed_fulcrum_logo_title %>'
