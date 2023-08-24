@@ -283,7 +283,7 @@ module Hyrax
     end
 
     def use_svgicon?
-      mime_type.blank? || external_resource? || using_default_thumbnail?
+      mime_type.blank? || external_resource? || content_warning.present? || using_default_thumbnail?
     end
 
     def svgicon_type
