@@ -1,5 +1,51 @@
 <% provide :page_title, @search_ongoing ? "#{@press.name} results - page #{@response.current_page} of #{@response.total_pages}" : @press.name %>
 <% provide :page_class, 'press' %>
+
+<% if Flipflop.search_snippets? && params[:q].present? %>
+  <% content_for :head do %>
+    <script>
+      $(document).on('turbolinks:load', function () {
+        $(".full-text-result").each(async function(index, el) {
+          const q = el.attributes["data-q"].value;
+          // const press = el.attributes["data-press"].value;
+          const file_set_id = el.attributes["data-file-set-id"].value;
+
+          try {
+            const url = "/book_search_hits?q=" + q + ";file_set_id=" + file_set_id
+            const response = await fetch(url, {
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              }
+            });
+
+            const data = await response.json();
+
+            // results relating to Monograph metadata fields can also be present here, so check for a full-text page...
+            // hit count > 0
+            if(data.solr_hits > 0) {
+              $(el).append('Text sample from <a href="/epubs/' + file_set_id + '#page=' + data.page_number +
+                '" style="display:inline">page ' + data.page_number + ':<br />' + '<div style="background-color: #eceff1">'
+                + data.highlight + '</div></a><br />');
+              if(data.solr_hits > 1) {
+                $(el).append('<a href = "/concern/monographs/' + el.attributes["data-monograph-id"].value +
+                  '/full_text?q=<%= params[:q] %>">view all results in this book</a>');
+              } else {
+                $(el).append('This is the only result found in this book.');
+              }
+              el.removeAttribute("visibility");
+            }
+            $(el).removeClass("full-text-result"); // stop Turbolinks running this code again on link navigation
+
+          } catch (error) {
+            console.log(error);
+          }
+        });
+      });
+    </script>
+  <% end %>
+<% end %>
+
 <div id="maincontent">
   <%# To keep the press landing pages looking tidy we don't show the facet sidebar when a press has very few books (results) to begin with. %>
   <%# But obviously the sidebar needs to be shown when any facet query is in use, be it our custom `user_access` "fake facet", or a Blacklight `_sim` facet field. %>

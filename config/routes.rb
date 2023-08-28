@@ -198,6 +198,9 @@ Rails.application.routes.draw do
   get 'whoami', controller: :utilities, action: :whoami, as: :whoami_utility
   get 'status', controller: :utilities, action: :status, as: :status_utility
 
+  # HELIO-4460 "hits" from a fulltext search
+  get 'book_search_hits', controller: :book_search_hits, action: :hits, as: :hits
+
   mount Blacklight::Engine => '/'
   mount Riiif::Engine => '/image-service', as: 'riiif'
 
@@ -250,6 +253,8 @@ Rails.application.routes.draw do
   get 'concern/monographs/:id/show', controller: 'hyrax/monographs', action: :show, as: :monograph_show
   patch 'concern/monographs/:id/reindex', controller: 'hyrax/monographs', action: :reindex, as: :monograph_reindex
   get 'monograph_catalog/facet/:id', controller: :monograph_catalog, action: :facet, as: :monograph_catalog_facet
+
+  get 'concern/monographs/:id/full_text', controller: :full_text_catalog, action: :index, as: :full_text_catalog
 
   curation_concerns_basic_routes
   concern :exportable, Blacklight::Routes::Exportable.new
