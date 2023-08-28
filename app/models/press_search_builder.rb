@@ -36,6 +36,7 @@ class PressSearchBuilder < ::SearchBuilder
 
   # show both works that match the query and works that contain files that match the query
   # see https://github.com/samvera/hyrax/blob/1477059ba7983bc3e1e3980d107d3ebc1b1f4af4/app/search_builders/hyrax/catalog_search_builder.rb#L10
+  # we're only going to use this for Monograph discovery through FileSet metadata, *not* full text
   def show_works_or_works_that_contain_files(solr_parameters)
     return if blacklight_params[:q].blank? || blacklight_params['press'] != 'barpublishing'
     solr_parameters[:user_query] = blacklight_params[:q]

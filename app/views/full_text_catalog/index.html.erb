@@ -1,0 +1,40 @@
+<%# provide :page_title, " results - page #{@response.current_page} of #{@response.total_pages}" %>
+<% provide :page_class, 'press' %>
+
+
+<% if Flipflop.search_snippets? && params[:q].present? && press.subdomain == 'barpublishing' %>
+  <div id="maincontent">
+    <div class="row">
+      <div class="col-sm-12"><h2>Full Text results for '<%= params[:q] %>' in <i><%= @presenter.title %></i></h2></div>
+      <a href="javascript:history.back()">Back to all book results</a>
+    </div>
+    <div class="row">
+      <div class="col-sm-1">&nbsp;</div>
+      <div class="col-sm-11 results-container">
+        <%= render 'helio_results_sr_only_div' %>
+
+        <h3 class="sr-only top-content-title"><%# t('blacklight.search.search_results_header') %></h3>
+
+        <% @page_title = t('blacklight.search.page_title.title', constraints: render_search_to_page_title(params), application_name: application_name) %>
+
+        <h3 class="sr-only"><%= t('blacklight.search.search_results') %></h3>
+
+        <%- if @response.empty? %>
+          <%= render "zero_results" %>
+        <%- else %>
+          <% @response['highlighting'].each do |page_id, full_text_field_highlights| %>
+            <% epub_id, page_number = page_id.split('_') %>
+            <% page_highlights = full_text_field_highlights['page_content_tesiv'] %>
+            <a href="<%= "/epubs/#{epub_id}#page=#{page_number}" %>"><h3>Page <%= page_number %></h3></a>
+            <% page_highlights.each_with_index do |highlight, index| %>
+              <%= highlight.html_safe %>
+              <%='<hr>'.html_safe unless index == page_highlights.count - 1 %>
+            <% end %>
+          <% end %>
+        <%- end %>
+
+        <%# render 'results_pagination' %>
+      </div>
+    </div>
+  </div>
+<% end %>

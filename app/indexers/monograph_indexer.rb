@@ -97,6 +97,23 @@ class MonographIndexer < Hyrax::WorkIndexer
 
       # HELIO-4125 - Extract EPUB metadata on ingest and store in Solr
       maybe_index_accessibility_metadata(solr_doc)
+
+      # because we want to do more complex things like count the occurrences of query hits in the "all text" field, we
+      # can't really proceed with the join_for_works_from_files solution from Hyrax with the weird dismax subquery stuff
+      # https://github.com/samvera/hyrax/blob/1477059ba7983bc3e1e3980d107d3ebc1b1f4af4/app/search_builders/hyrax/catalog_search_builder.rb#L10
+      # In any case, at no time do ebook FeaturedRepresentatives show up in results themselves, so it makes sense
+      # to attach the full text field to the parent document instead.
+
+      # TODO: this means that Monograph reindexing will also need to be triggered somewhere in the Characterization
+      # process for PDF ebook FileSets
+      if FeaturedRepresentative.where(work_id: object.id, kind: ['pdf_ebook']).present? && FeaturedRepresentative.where(work_id: object.id, kind: ['epub']).blank?
+        pdf_file_set = FileSet.find(FeaturedRepresentative.where(work_id: object.id, kind: ['pdf_ebook']).first.file_set_id)
+        pdf_full_text_file = "#{UnpackService.root_path_from_noid(pdf_file_set.id, 'pdf_ebook_full_text')}.txt"
+        # We don't need this to be a stored field, we're not pulling snippets/fragments from these, and having huge...
+        # returned documents has the potential to slow *every* catalog page load a lot, or at least things like...
+        # "all facet values" modal loads. I think this is because of inherited Blacklight behavior I don't understand.
+        solr_doc['all_text_teiv'] = File.read(pdf_full_text_file) if File.exist?(pdf_full_text_file)
+      end
     end
   end
 

@@ -33,6 +33,21 @@ Hyrax::FileSetDerivativesService.class_eval do # rubocop:disable Metrics/BlockLe
       end
     end
 
+    def create_pdf_derivatives(filename)
+      Hydra::Derivatives::PdfDerivatives.create(filename,
+                                                outputs: [{
+                                                            label: :thumbnail,
+                                                            format: 'jpg',
+                                                            size: '338x493',
+                                                            url: derivative_url('thumbnail'),
+                                                            layer: 0
+                                                          }])
+      # Don't do this very expensive extraction using Solr for all PDFs. The important/FeaturedRepresentative ones...
+      # are having their text extracted in UnpackJob now. There are very few PDF resources. We can deal with indexing...
+      # their text later as checking their FeaturedRepresentative status here is a timing issue.
+      # extract_full_text(filename, derivative_url('extracted_text'))
+    end
+
     def create_audio_derivatives(filename)
       Hydra::Derivatives::AudioDerivatives.create(filename,
                                                   outputs: [{ label: 'mp3', format: 'mp3', url: derivative_url('mp3') }])
