@@ -24,3 +24,9 @@
     <% end %>
   </div>
 <% end %>
+
+<div class="col-10">
+  <% if Flipflop.search_snippets? && params[:q].present? && press.subdomain == 'barpublishing' && presenter.pdf_ebook? %>
+    <span visibility="hidden" class="full-text-result" data-q="<%= params[:q] %>" data-press="<%= press.subdomain %>" data-monograph-id="<%= presenter.id %>" data-file-set-id="<%= presenter.pdf_ebook_id %>"></span>
+  <% end %>
+</div>

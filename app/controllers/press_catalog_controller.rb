@@ -143,7 +143,9 @@ class PressCatalogController < ::CatalogController
 
       blacklight_config.add_facet_fields_to_solr_request!
 
-      blacklight_config.default_solr_params[:qf] += ' all_text_timv' if @press.subdomain == 'barpublishing'
+      if @press.subdomain == 'barpublishing' && params[:q].present?
+        blacklight_config.default_solr_params[:qf] += ' all_text_teiv'
+      end
 
       # HELIO-4660 we might need this in PressSearchBuilder#filter_by_product_access so we'll sneak it in with the blacklight_config
       blacklight_config.current_actor = current_actor

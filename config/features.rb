@@ -12,4 +12,7 @@ Flipflop.configure do
   feature :show_accessibility_claims_tab,
           default: false,
           description: "The 'Accessibility Claims' tab will appear on Monograph catalog pages"
+  feature :search_snippets,
+          default: false,
+          description: "Show full text search snippets"
 end

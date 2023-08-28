@@ -60,13 +60,49 @@ class UnpackJob < ApplicationJob
       # each file to cache a `downloadable?` flag for that interval/chapter
       create_pdf_chapters(id, pdf, root_path) if File.exist? pdf
       cache_pdf_toc(id, pdf) if File.exist? pdf
-      file_set.parent.update_index if file_set.parent.present? # index the ToC to the monograph
+      pdf_full_text_indexing(id, pdf, file_set.parent&.id)
+      file_set.parent.update_index if file_set.parent.present? # index the ToC and full text to the monograph
     else
       Rails.logger.error("Can't unpack #{kind} for #{id}")
     end
   end
 
   private
+
+    def pdf_full_text_indexing(id, pdf, parent_id)
+      # first lets clear out any existing `PdfPage` Solr docs linked to this FileSet id
+      ids = ActiveFedora::SolrService.query("has_model_ssim:PdfPage AND file_set_id_ssi:#{id}", fl: ['id'], rows: 10_000).map(&:id)
+      ids.each do |id|
+        ActiveFedora::SolrService.delete(id)
+      end
+
+      raise "pdftotext (poppler-utils) is not present on machine" unless system("which pdftotext > /dev/null 2>&1")
+      pdf_full_text_file = "#{UnpackService.root_path_from_noid(id, 'pdf_ebook_full_text')}.txt"
+      begin
+        # We'll index this file on the Monograph's Solr doc in MonographIndexer.
+        run_command("pdftotext -raw #{pdf} #{pdf_full_text_file}")
+        # Index the pages of said file. Note`pdftotext` adds form feed ("\f") as page breaks.
+        File.foreach(pdf_full_text_file, "\f").each_with_index do |page_text, index|
+          # blank pages in PDFs are common. No need for a Solr doc then!
+          if page_text.present?
+            document = {
+              id: "#{id}_#{index + 1}",
+              file_set_id_ssi: id,
+              monograph_id_ssi: parent_id,
+              has_model_ssim: ["PdfPage"],
+              page_number_isi: index + 1, # integer for sort
+              # 'text english' will more closely match the grep-like search within the e-reader...
+              # due to singular search terms matching plural results etc. Though in future we might move to...
+              # forcing Solr itself to do a grep-like search. Who knows.
+              page_content_tesiv: page_text
+            }
+            ActiveFedora::SolrService.add(document)
+          end
+        end
+      rescue StandardError => e
+        Rails.logger.error("[PDF FULL_TEXT_INDEXING ERROR] #{e.message}")
+      end
+    end
 
     def cache_pdf_toc(id, pdf)
       EbookTableOfContentsCache.find_by(noid: id)&.destroy
@@ -196,11 +232,13 @@ class UnpackJob < ApplicationJob
     def run_command(command)
       stdin, stdout, stderr, wait_thr = popen3(command)
       stdin.close
+      # read `stderr` first as PDF processing tools can output a ton of stuff to stderr, which amount to PDF file...
+      # syntax/structure warnings. See https://bugs.ruby-lang.org/issues/9082
+      err = stderr.read
+      stderr.close
       stdout.binmode
       out = stdout.read
       stdout.close
-      err = stderr.read
-      stderr.close
       # https://tools.lib.umich.edu/jira/browse/HELIO-3247
       raise "Unable to execute command \"#{command}\"\n#{err}\n#{out}" unless wait_thr.value.success? || err.include?('operation succeeded with warnings')
     end
