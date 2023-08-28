@@ -18,4 +18,7 @@ Flipflop.configure do
   feature :use_new_reader_style_wherever_possible,
           default: false,
           description: "Use new reader style wherever possible"
+  feature :search_snippets,
+          default: false,
+          description: "Show full text search snippets"
 end
