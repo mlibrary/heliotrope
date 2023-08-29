@@ -20,7 +20,7 @@ RSpec.describe RolesController, type: :controller do
   describe 'when user is an admin' do
     let(:admin) { create(:press_admin, press: press) }
     let(:user) { create(:user) }
-    let(:role) { admin.roles.first }
+    let(:role) { admin.roles.first } # admin user has a role in the press, see counts below
 
     before { sign_in admin }
 
@@ -33,15 +33,50 @@ RSpec.describe RolesController, type: :controller do
     end
 
     describe 'PATCH update_all' do
-      it 'creates new roles' do
-        patch :update_all, params: { press_id: press, 'press' => {
-          'roles_attributes' => {
-            '0' => { 'role' => 'editor', 'user_key' => user.email }
-          }
-        } }
+      context 'creating new roles' do
+        it 'happy path' do
+          patch :update_all, params: { press_id: press, 'press' => {
+            'roles_attributes' => {
+              '0' => { 'role' => 'editor', 'user_key' => user.email }
+            }
+          } }
 
-        expect(press.roles.last.role).to eq 'editor'
-        expect(press.roles.last.user.email).to eq user.email
+          # count here to show that the admin role created by create(:press_admin, press: press) is not affected
+          # note that the form actually sends all existing roles through in `roles_attributes` every time,...
+          # whether they've changed or not. So the spec exercises the code but doesn't match what actually happens.
+          expect(press.roles.count).to eq 2
+          expect(press.roles.last.role).to eq 'editor'
+          expect(press.roles.last.user.email).to eq user.email
+          expect(flash[:notice]).to eq I18n.t(:'helpers.submit.role.added')
+        end
+
+        it 'user does not exist' do
+          patch :update_all, params: { press_id: press, 'press' => {
+            'roles_attributes' => {
+              '0' => { 'role' => 'editor', 'user_key' => 'blah@blah.blah' }
+            }
+          } }
+
+          expect(press.roles.count).to eq 1 # create(:press_admin, press: press)
+          expect(response).to be_successful
+          expect(flash[:alert]).to eq I18n.t(:'helpers.submit.role.user_missing')
+        end
+
+        context 'user already has a role within that press' do
+          before { create(:role, resource: Press.first, user: user, role: 'analyst') }
+
+          it 'user already has a role within that press' do
+            patch :update_all, params: { press_id: press, 'press' => {
+              'roles_attributes' => {
+                '0' => { 'role' => 'editor', 'user_key' => user.email }
+              }
+            } }
+
+            expect(press.roles.count).to eq 2 # create(:press_admin, press: press) and create(:role, resource: Press.first, user: user, role: 'analyst')
+            expect(response).to be_successful
+            expect(flash[:alert]).to eq I18n.t(:'helpers.submit.role.a_role_exists')
+          end
+        end
       end
 
       it 'updates roles' do
@@ -55,6 +90,7 @@ RSpec.describe RolesController, type: :controller do
 
         admin.reload
 
+        expect(press.roles.count).to eq 1
         expect(admin.roles.first.role).to eq 'editor'
       end
 
@@ -75,6 +111,7 @@ RSpec.describe RolesController, type: :controller do
             '0' => { 'role' => 'editor', 'id' => role.id }
           }
         } }
+        expect(press.roles.count).to eq 1
         expect(response).to redirect_to root_path
         expect(flash[:alert]).to eq 'You are not authorized to access this page.'
         expect(press.roles.first.role).to eq 'admin'
@@ -99,6 +136,7 @@ RSpec.describe RolesController, type: :controller do
             '0' => { 'role' => 'editor', 'id' => role.id }
           }
         } }
+        expect(press.roles.count).to eq 1
         expect(response).to be_successful
         expect(flash[:alert]).to eq 'There was a problem saving the user role(s).'
       end

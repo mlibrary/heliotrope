@@ -116,9 +116,12 @@ en:
   helpers:
     submit:
       role:
-        updated:   "User role has been updated."
-        destroyed: "User role has been removed."
+        a_role_exists: "User already has a role within this press."
+        added: "User role successfully added."
         batch_error: "There was a problem saving the user role(s)."
+        destroyed: "User role has been removed."
+        updated:   "User role has been updated."
+        user_missing: "User must sign up first."
   hdl: "Handle"
   holding_contact: "Holding Contact"
   hyrax:
