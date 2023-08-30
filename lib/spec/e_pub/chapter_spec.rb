@@ -80,52 +80,5 @@ RSpec.describe EPub::Chapter do
     after do
       FileUtils.rm_rf(Dir[File.join('./tmp', 'rspec_derivatives')])
     end
-
-    describe "#from_cfi" do
-      subject { described_class.from_cfi(publication, cfi) }
-
-      let(:cfi) { '/6/2[xhtml00000003]!' }
-      let(:publication) { EPub::Publication.from_directory(@root_path) }
-
-      it { expect(subject).to be_a described_class }
-
-      describe "#downloadable?" do
-        it { expect(subject.downloadable?).to be true }
-      end
-
-      describe "#files_in_chapter" do
-        it "lists the files (pages) in the chapter" do
-          expect(subject.files_in_chapter).to eq ["./tmp/rspec_derivatives/99/99/99/99/7-epub/OEBPS/xhtml/00000003_fixed_scan.xhtml",
-                                                  "./tmp/rspec_derivatives/99/99/99/99/7-epub/OEBPS/xhtml/00000004_fixed_scan.xhtml",
-                                                  "./tmp/rspec_derivatives/99/99/99/99/7-epub/OEBPS/xhtml/00000005_fixed_scan.xhtml"]
-        end
-      end
-
-      describe "#images_in_files" do
-        it "lists the images in the files" do
-          expect(subject.images_in_files(subject.files_in_chapter)).to eq ["./tmp/rspec_derivatives/99/99/99/99/7-epub/OEBPS/images/00000003.png",
-                                                                           "./tmp/rspec_derivatives/99/99/99/99/7-epub/OEBPS/images/00000004.png",
-                                                                           "./tmp/rspec_derivatives/99/99/99/99/7-epub/OEBPS/images/00000005.png"]
-        end
-      end
-
-      describe "#pdf" do
-        context "when downloadable" do
-          it "creates the pdf object" do
-            expect(subject.pdf).to be_a Prawn::Document
-            expect(subject.pdf.page_count).to be 3
-          end
-        end
-
-        context "when not downloadable" do
-          it do
-            allow(publication).to receive(:multi_rendition).and_return(false)
-            allow(EPub.logger).to receive(:error).and_return(true)
-            expect(subject.pdf).to be_a Prawn::Document
-            expect(subject.pdf.page_count).to be 1 # one empty page
-          end
-        end
-      end
-    end
   end
 end

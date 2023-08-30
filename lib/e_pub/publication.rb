@@ -18,11 +18,6 @@ module EPub
       null_object
     end
 
-    def self.from_unmarshaller_container(unmarshaller_container)
-      return null_object unless unmarshaller_container&.instance_of?(Unmarshaller::Container)
-      new(Validator.null_object, unmarshaller_container)
-    end
-
     def self.null_object
       PublicationNullObject.send(:new)
     end

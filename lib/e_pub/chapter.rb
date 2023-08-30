@@ -8,18 +8,6 @@ module EPub
     private_class_method :new
 
     # Class Methods
-    def self.from_cfi(publication, cfi)
-      result = EPub::SqlLite.from_publication(publication).find_by_cfi(cfi) # rubocop:disable  Rails/DynamicFindBy
-      return EPub::ChapterNullObject.send(:new) if result.blank?
-
-      new(id: result[:id],
-          href: result[:href],
-          title: result[:title],
-          basecfi: result[:basecfi],
-          doc: result[:doc],
-          publication: publication)
-    end
-
     def self.null_object
       ChapterNullObject.send(:new)
     end

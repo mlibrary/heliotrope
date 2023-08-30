@@ -15,14 +15,6 @@ module PDFEbook
       PublicationNullObject.send(:new)
     end
 
-    def self.from_string_id(string, id)
-      file = StringIO.new(string)
-      new(file, id)
-    rescue StandardError => e
-      ::PDFEbook.logger.info("Publication.from_string_id(#{string[0..100]}) raised #{e} #{e.backtrace.join("\n")}")
-      PublicationNullObject.send(:new)
-    end
-
     # Public method
     def intervals
       @intervals ||= extract_intervals

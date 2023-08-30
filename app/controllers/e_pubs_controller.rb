@@ -123,26 +123,6 @@ class EPubsController < CheckpointController
     head :not_found
   end
 
-  def download_chapter
-    return head :no_content unless @policy.show?
-
-    epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(@noid, 'epub'))
-    cfi = params[:cfi]
-    chapter = EPub::Chapter.from_cfi(epub, cfi)
-
-    return head :no_content if chapter.is_a?(EPub::ChapterNullObject)
-
-    rendered_pdf = Rails.cache.fetch(pdf_cache_key(@noid, chapter.title), expires_in: 30.days) do
-      pdf = chapter.pdf
-      pdf.render
-    end
-    CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter.title) if rendered_pdf.present?
-    send_data rendered_pdf, type: "application/pdf", disposition: "inline"
-  rescue StandardError => e
-    Rails.logger.error "EPubsController.download_chapter raised #{e}"
-    head :no_content
-  end
-
   def download_interval # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return head :no_content unless EbookIntervalDownloadOperation.new(current_actor, @entity).allowed?
     return head :no_content if params[:title].blank? || params[:chapter_index].blank?

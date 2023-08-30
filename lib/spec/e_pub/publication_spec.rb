@@ -18,56 +18,6 @@ RSpec.describe EPub::Publication do
     it { expect(subject.rendition).to be_an_instance_of(EPub::RenditionNullObject) }
   end
 
-  describe '#from_unmarshaller_container' do
-    subject { described_class.from_unmarshaller_container(unmarshaller_container) }
-
-    let(:unmarshaller_container) { double('unmarshaller container', rootfiles: rootfiles, rootfile: rootfiles.first) }
-    let(:rootfiles) { [] }
-
-    it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
-
-    context 'Unmarshaller Container' do
-      let(:image_rootfile) { double('image rootfile') }
-      let(:text_rootfile) { double('text rootfile') }
-      let(:image_rendition) { double('image rendition', label: 'Page Scan') }
-      let(:text_rendition) { double('text rendition', label: 'Text') }
-
-      before do
-        allow(unmarshaller_container).to receive(:instance_of?).with(EPub::Unmarshaller::Container).and_return(true)
-        allow(image_rendition).to receive(:instance_of?).with(EPub::Rendition).and_return(true)
-        allow(text_rendition).to receive(:instance_of?).with(EPub::Rendition).and_return(true)
-        allow(EPub::Rendition).to receive(:from_publication_unmarshaller_container_rootfile).with(subject, image_rootfile).and_return(image_rendition)
-        allow(EPub::Rendition).to receive(:from_publication_unmarshaller_container_rootfile).with(subject, text_rootfile).and_return(text_rendition)
-      end
-
-      context 'single rendition' do
-        let(:rootfiles) { [text_rootfile] }
-
-        it { is_expected.to be_an_instance_of(described_class) }
-        it { expect(subject.downloadable?).to be false }
-        it { expect(subject.single_rendition?).to be true }
-        it { expect(subject.multi_rendition?).to be false }
-        it { expect(subject.labeled_rendition?('text')).to be true }
-        it { expect(subject.labeled_rendition('text')).to be text_rendition }
-        it { expect(subject.renditions.length).to eq 1 }
-        it { expect(subject.rendition.label).to eq 'Text' }
-      end
-
-      context 'multi rendition' do
-        let(:rootfiles) { [image_rootfile, text_rootfile] }
-
-        it { is_expected.to be_an_instance_of(described_class) }
-        it { expect(subject.downloadable?).to be true }
-        it { expect(subject.single_rendition?).to be false }
-        it { expect(subject.multi_rendition?).to be true }
-        it { expect(subject.labeled_rendition?('Page Scan')).to be true }
-        it { expect(subject.labeled_rendition('page scan')).to be image_rendition }
-        it { expect(subject.renditions.length).to eq 2 }
-        it { expect(subject.rendition.label).to eq 'Text' }
-      end
-    end
-  end
-
   describe "without a test epub" do
     let(:directory) { 'directory' }
     let(:noid) { 'validnoid' }

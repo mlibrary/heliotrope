@@ -65,16 +65,6 @@ RSpec.describe "EPubs", type: :request do
       end
     end
 
-    describe 'GET /epubs_download_chapter/:id' do
-      subject { get "/epubs_download_chapter/#{epub.id}" }
-
-      it do
-        expect { subject }.not_to raise_error
-        expect(response).to have_http_status(:unauthorized)
-        expect(response).to render_template('hyrax/base/unauthorized')
-      end
-    end
-
     describe 'GET /epubs_download_interval/:id' do
       subject { get "/epubs_download_interval/#{epub.id}" }
 
@@ -137,16 +127,6 @@ RSpec.describe "EPubs", type: :request do
 
       describe 'GET /epubs/:id/*file' do
         subject { get "/epubs/#{epub.id}/META-INF/container.xml" }
-
-        it do
-          expect { subject }.not_to raise_error
-          expect(response).to have_http_status(:no_content)
-          expect(response.body).to be_empty
-        end
-      end
-
-      describe 'GET /epubs_download_chapter/:id' do
-        subject { get "/epubs_download_chapter/#{epub.id}" }
 
         it do
           expect { subject }.not_to raise_error
@@ -218,36 +198,6 @@ RSpec.describe "EPubs", type: :request do
             expect { subject }.not_to raise_error
             expect(response).to have_http_status(:ok)
             expect(response.body).to eq('present')
-          end
-        end
-      end
-
-      describe 'GET /epubs_download_chapter/:id' do
-        subject { get "/epubs_download_chapter/#{epub.id}" }
-
-        it do
-          expect { subject }.not_to raise_error
-          expect(response).to have_http_status(:no_content)
-          expect(response.body).to be_empty
-        end
-
-        context 'cfi' do
-          subject { get "/epubs_download_chapter/#{epub.id}?cfi=cfi" }
-
-          let(:chapter) { double('chapter', title: 'title', pdf: pdf) }
-          let(:pdf) { double('pdf', render: rendered_pdf) }
-          let(:rendered_pdf) { 'rendered_pdf' }
-
-          before do
-            allow(EPub::Chapter).to receive(:from_cfi).with(publication, 'cfi').and_return(chapter)
-            allow(counter_service).to receive(:count).with(request: 1, section: 'title', section_type: 'Chapter')
-          end
-
-          it do
-            expect { subject }.not_to raise_error
-            expect(response).to have_http_status(:ok)
-            expect(response.body).to eq(rendered_pdf)
-            expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
           end
         end
       end

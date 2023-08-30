@@ -11,26 +11,6 @@ RSpec.describe EPub::Marshaller::PDF do
     it { is_expected.to be_an_instance_of(EPub::Marshaller::PDFNullObject) }
   end
 
-  describe '#from_publication' do
-    subject { described_class.from_publication(publication) }
-
-    let(:publication) { double('publication') }
-
-    it { is_expected.to be_an_instance_of(EPub::Marshaller::PDFNullObject) }
-
-    context 'Publication' do
-      before { allow(publication).to receive(:instance_of?).with(EPub::Publication).and_return(true) }
-
-      context 'single rendition' do
-        it { is_expected.to be_an_instance_of(described_class) }
-      end
-
-      context 'multiple rendition' do
-        it { is_expected.to be_an_instance_of(described_class) }
-      end
-    end
-  end
-
   describe '#from_publication_interval' do
     subject { described_class.from_publication_interval(publication, interval) }
 
