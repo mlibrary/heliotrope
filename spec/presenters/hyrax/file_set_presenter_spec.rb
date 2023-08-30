@@ -279,8 +279,10 @@ RSpec.describe Hyrax::FileSetPresenter do
                          has_model_ssim: ['FileSet'],
                          mime_type_ssi: mime_type,
                          external_resource_url_ssim: external_resource_url,
+                         content_warning_tesim: content_warning,
                          thumbnail_path_ss: thumbnail_path)
       }
+      let(:content_warning) { nil }
 
       context 'file not using a thumbnail derivative' do
         let(:mime_type) { 'application/pdf' }
@@ -302,6 +304,15 @@ RSpec.describe Hyrax::FileSetPresenter do
         let(:mime_type) { nil }
         let(:external_resource_url) { 'URL' }
         let(:thumbnail_path) { nil }
+
+        it { is_expected.to be true }
+      end
+
+      context 'content warning' do
+        let(:mime_type) { 'image/jpeg' }
+        let(:external_resource_url) { nil }
+        let(:thumbnail_path) { nil }
+        let(:content_warning) { 'Warning: Something, something, Daaaark Siiiide!' }
 
         it { is_expected.to be true }
       end
