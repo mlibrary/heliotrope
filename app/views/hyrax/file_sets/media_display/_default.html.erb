@@ -1,13 +1,12 @@
-<% if file_set.use_glyphicon? %>
+<% if file_set.use_svgicon? %>
   <% if @resource_download_operation_allowed %>
-    <%= link_to hyrax.download_path(file_set), target: "_new", title: file_set.download_button_label, class: 'glyphicon-download-link' do %>
-      <span class="<%= file_set.glyphicon_type %> asset-page-glyphicon"
-            aria-hidden="true"
-            alt='"<%= file_set.download_button_label %>, titled "<%= file_set.page_title.delete('"') %>"'>
-      </span>
+    <div id="resource-page-svgicon">
+    <%= link_to hyrax.download_path(file_set), target: "_new", title: file_set.download_button_label do %>
+      <%= image_tag(file_set.svgicon_type, class: 'svgicon', alt: file_set.svgicon_alt, sizes: "(max-width: 100%)", width: "200px", height: "auto") %>
     <% end %>
+    </div>
   <% else %>
-    <span class="<%= file_set.glyphicon_type %> asset-page-glyphicon"
+    <span class="<%= file_set.svgicon_type %>"
           aria-hidden="true"
           alt=""
           role="presentation">
