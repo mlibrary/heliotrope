@@ -73,7 +73,7 @@ module API
             "publications": [
             ]
           }
-          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_umpebc_oa_url, total)
+          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_umpebc_oa_url, total, params[:filterByEntityId])
           feed[:publications] = publications(response["response"]["docs"], params[:filterByEntityId])
           render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
@@ -105,7 +105,7 @@ module API
             "publications": [
             ]
           }
-          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_umpebc_url, total)
+          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_umpebc_url, total, entity_id)
           feed[:publications] = publications(response["response"]["docs"], entity_id)
           render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
@@ -161,7 +161,7 @@ module API
             "publications": [
             ]
           }
-          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_leverpress_url, total)
+          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_leverpress_url, total, params[:filterByEntityId])
           feed[:publications] = publications(response["response"]["docs"], params[:filterByEntityId])
           render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
@@ -186,7 +186,7 @@ module API
             ]
           }
 
-          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_amherst_url, total)
+          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_amherst_url, total, params[:filterByEntityId])
           feed[:publications] = publications(response["response"]["docs"], params[:filterByEntityId])
           render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
