@@ -47,6 +47,10 @@ namespace :heliotrope do
     rows.each do |row|
       row_num += 1
 
+      # HELIO-4472 - don't create or edit Gabii monographs with this script
+      gabii_isbns = ['9780472999002', '9780472999064']
+      next if (row['ISBN(s)'].split(';').map { |isbn| isbn.delete('^0-9') } & gabii_isbns).any?
+
       # For now this is the only place where we set a Monograph's press from a CSV column. Handle this field separately.
       # Every row should have a press set, but some use TMM names that need mapping to an actual Fulcrum subdomain.
       # We'll skip the row if no valid press is set.
@@ -92,6 +96,7 @@ namespace :heliotrope do
 
         attrs = {}
         Import::RowData.new.field_values(:monograph, row, attrs)
+
         attrs['press'] = press
 
         # blank Monograph titles caused problems. We don't allow them in the importer and shouldn't here either.
@@ -112,7 +117,7 @@ namespace :heliotrope do
           attrs['visibility'] = 'restricted'
 
           Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
-        elsif monograph.press != 'gabii' # don't edit Gabii monographs with this script
+        else
           if check_for_changes_identifier(monograph, identifier, attrs, row_num)
             backup_file = open_backup_file(input_file) if !backup_file_created
             backup_file_created = true
