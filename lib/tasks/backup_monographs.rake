@@ -8,7 +8,18 @@ namespace :heliotrope do
     # Force refresh of all backups:
     # bundle exec rails "heliotrope:backup_monographs[/path/to/backup_directory, true]"
 
-    fail "Backup directory for Monographs not found: '#{args.backup_directory}'" unless Dir.exist?(args.backup_directory)
+    unless File.writable?(args.backup_directory)
+      message = "The backup directory for Monographs is not writable: #{args.backup_directory}"
+
+      if Settings.host == "www.fulcrum.org"
+        ActionMailer::Base.mail(to: 'fulcrum-dev@umich.edu',
+                                from: 'fulcrum-dev@umich.edu',
+                                subject: 'Fulcrum Monographs Backup Task Failed',
+                                body: message).deliver_now
+      end
+
+      fail message
+    end
 
     count = 0
     docs = monograph_docs
@@ -83,10 +94,10 @@ def deposit_up_to_date?(monograph_doc, tar_file_path)
 
   last_backup_timestamp = File.mtime(tar_file_path)
 
-  return false if Time.parse(monograph_doc['date_modified_dtsi'].to_s) > last_backup_timestamp
+  return false if Time.zone.parse(monograph_doc['date_modified_dtsi'].to_s) > last_backup_timestamp
 
   file_set_docs(monograph_doc).each do |file_set_doc|
-    return false if Time.parse(file_set_doc['date_modified_dtsi'].to_s) > last_backup_timestamp
+    return false if Time.zone.parse(file_set_doc['date_modified_dtsi'].to_s) > last_backup_timestamp
   end
 
   true
