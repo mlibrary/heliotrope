@@ -1,0 +1,7 @@
+# HELIO-4513
+
+firebrand_sftp_credentials:
+  sftp: hosted.ftp.firebrandtech.com
+  user: username
+  password: password
+  root: "/"
