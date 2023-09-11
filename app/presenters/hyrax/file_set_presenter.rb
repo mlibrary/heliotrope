@@ -242,44 +242,9 @@ module Hyrax
       thumbnail_path.start_with?('/assets/')
     end
 
-    def gylphicon
-      tag.span class: glyphicon_type + " file-set-glyphicon", "aria-label": alt_text&.first || ""
-    end
-
-    def glyphicon_type
-      return 'glyphicon glyphicon-file' if resource_type.blank?
-      glyphicon_by_resource_type
-    end
-
-    def glyphicon_by_resource_type
-      case resource_type.first.downcase
-      when 'text'
-        'glyphicon glyphicon-file'
-      when 'image'
-        'glyphicon glyphicon-picture'
-      when 'video'
-        'glyphicon glyphicon-film'
-      when 'audio'
-        'glyphicon glyphicon-volume-up'
-      when 'map', 'interactive map'
-        'glyphicon glyphicon-map-marker'
-      else
-        'glyphicon glyphicon-file'
-      end
-    end
-
     def use_riiif_for_icon?
       # sidestep hydra-derivatives and use riiif for FileSet icons
       eps?
-    end
-
-    def use_glyphicon?
-      # If the thumbnail_path in Solr points to the assets directory, it is using a Hyrax default.
-      # aside: Much of the thumbnail behavior can be examined by reading this page and its links to Hyrax code:
-      # https://github.com/samvera/hyrax/wiki/How-Thumbnails-Get-rendered
-      # Anyway, this default (set with a call to ActionController::Base.helpers.image_path) can't be styled per...
-      # publisher so instead we'll use resource-type-specific glyphicons in "publisher branding" colors
-      mime_type.blank? || external_resource? || using_default_thumbnail?
     end
 
     def use_svgicon?
@@ -287,6 +252,8 @@ module Hyrax
     end
 
     def svgicon_type
+      return 'svgicon/default.svg' if resource_type.blank?
+
       case resource_type&.first&.downcase
       when 'text'
         'svgicon/text.svg'
@@ -321,7 +288,7 @@ module Hyrax
     end
 
     def center_caption?
-      # when using the default thumbnail view (or glyphicon) both this and the download button are centered.
+      # when using the default thumbnail view (or svgicon) both this and the download button are centered.
       # The caption lies between these. It looks very weird if it's left-aligned, especially if it's short.
       !image? && !video? && !audio? && !external_resource?
     end
