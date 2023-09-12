@@ -7,11 +7,6 @@ module EPub
 
       # Class Methods
 
-      def self.from_publication(publication)
-        return null_object unless publication.instance_of?(EPub::Publication)
-        new(publication)
-      end
-
       def self.from_publication_interval(publication, interval)
         return null_object unless publication.instance_of?(EPub::Publication) && interval.instance_of?(EPub::Interval)
         new(publication, interval)
