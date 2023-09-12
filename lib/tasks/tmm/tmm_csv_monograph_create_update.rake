@@ -14,7 +14,24 @@ namespace :heliotrope do
     # note: fail messages will be emailed to MAILTO by cron *unless* you use 2>&1 at the end of the job line
     fail "CSV directory not found: '#{args.tmm_csv_dir}'" unless Dir.exist?(args.tmm_csv_dir)
 
-    input_file = Dir.glob(File.join(args.tmm_csv_dir, "TMMData_*#{Time.now.getlocal.strftime('%Y-%m-%d')}.csv")).sort.last
+    yaml = Rails.root.join('config', 'firebrand_sftp.yml')
+    fail "FTP YML config file not found at '#{yaml}'" unless File.exist? yaml
+    config = YAML.safe_load(File.read(yaml))
+
+    todays_filename = "TMMData_#{Time.now.getlocal.strftime('%Y-%m-%d')}.csv"
+    todays_local_file_path = File.join(args.tmm_csv_dir, "TMMData_#{Time.now.getlocal.strftime('%Y-%m-%d')}.csv")
+
+    firebrand_sftp = config['firebrand_sftp_credentials']
+    begin
+      Net::SFTP.start(firebrand_sftp["sftp"], firebrand_sftp["user"], password: firebrand_sftp["password"]) do |sftp|
+        puts "Downloading 'ToFulcrum/#{todays_filename}' from sftp://hosted.ftp.firebrandtech.com to '#{todays_local_file_path}'"
+        sftp.download!("ToFulcrum/#{todays_filename}", todays_local_file_path)
+      end
+    rescue RuntimeError, Net::SFTP::StatusException => e
+      fail "SFTP ERROR: #{e}"
+    end
+
+    input_file = Dir.glob(File.join(args.tmm_csv_dir, todays_filename)).sort.last
     fail "CSV file not found in directory '#{args.tmm_csv_dir}'" if input_file.blank?
     fail "CSV file may accidentally be a backup as '#{input_file}' contains 'bak'. Exiting." if input_file.include? 'bak'
 
