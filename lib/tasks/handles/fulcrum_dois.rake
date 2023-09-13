@@ -68,5 +68,22 @@ namespace :heliotrope do
     end
 
     puts "#{hits.count} handles have been output to #{file_path}"
+
+    yaml = Rails.root.join('config', 'firebrand_sftp.yml')
+    fail "FTP YML config file not found at '#{yaml}'" unless File.exist? yaml
+    config = YAML.safe_load(File.read(yaml))
+
+    firebrand_sftp = config['firebrand_sftp_credentials']
+    begin
+      Net::SFTP.start(firebrand_sftp["sftp"], firebrand_sftp["user"], password: firebrand_sftp["password"]) do |sftp|
+        puts "Uploading '#{file_path}' to sftp://hosted.ftp.firebrandtech.com (destination directory 'ToTMM')"
+        # RE: `File.basename` - the script is written to let the user choose a specific output file *path* if desired.
+        # So just covering that even though our only usage of this (in a cron) provides a directory and so uses the...
+        # default file name of `fulcrum_dois.csv`.
+        sftp.upload!(file_path, "ToTMM/#{File.basename(file_path)}")
+      end
+    rescue RuntimeError, Net::SFTP::StatusException => e
+      fail "SFTP ERROR: #{e}"
+    end
   end
 end
