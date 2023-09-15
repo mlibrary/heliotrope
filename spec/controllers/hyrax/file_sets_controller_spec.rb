@@ -335,6 +335,8 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
       expect(Hyrax::DerivativePath.derivatives_for_reference(file_set).count).to eq 1
       expect(File).to exist(thumbnail_deriv_path)
       expect(FileUtils.compare_file(thumbnail_path, thumbnail_deriv_path)).to be_truthy
+      # test the chmod worked so that this thumbnail can be read by users other than the app user, i,e. Apache (X-Sendfile)
+      expect(sprintf("%o", (File.stat(thumbnail_deriv_path).mode))).to eq('100664')
     end
     after do
       FileUtils.rm_rf(Hyrax.config.derivatives_path)

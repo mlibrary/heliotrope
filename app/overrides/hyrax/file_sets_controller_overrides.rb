@@ -99,6 +99,9 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
         dest = Hyrax::DerivativePath.derivative_path_for_reference(params[:id], 'thumbnail')
         FileUtils.mkdir_p(File.dirname(dest))
         FileUtils.cp(params[:user_thumbnail][:custom_thumbnail].path, dest)
+        # Because the file at `params[:user_thumbnail][:custom_thumbnail].path` was created with Tempfile.new (see...
+        # Rack::Multipart::UploadedFile.initialize), it has 0600 permissions, so we need to chmod for X-Sendfile to work.
+        File.chmod(0664, dest)
       end
       if params[:user_thumbnail].key?(:use_default)
         if params[:user_thumbnail][:use_default] == '1'
