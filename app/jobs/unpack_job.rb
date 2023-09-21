@@ -174,7 +174,8 @@ class UnpackJob < ApplicationJob
       else
         FileUtils.copy(file, "#{root_path}.pdf")
       end
-      # This is weird, but perms are -rw------- and they need to be -rw-rw-r--
+      # Because `file` was created with Tempfile.new, which defaults to 0600 permissions, the `#{root_path}.pdf` copy's
+      # perms are -rw------- too. They need to be -rw-rw-r-- for X-Sendfile to work, so we'll chmod.
       File.chmod 0664, "#{root_path}.pdf"
       "#{root_path}.pdf"
     end
