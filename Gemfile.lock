@@ -9,8 +9,8 @@ GIT
 
 GIT
   remote: https://github.com/mlibrary/irus_analytics
-  revision: 0de9a17b2f764a0ce7bdd1d0221c60b88c2643e7
-  ref: 0de9a17b2f764a0ce7bdd1d0221c60b88c2643e7
+  revision: cbffb84ee2db696c8d8a3ca1a0aae7aae37f33fa
+  ref: cbffb84ee2db696c8d8a3ca1a0aae7aae37f33fa
   specs:
     irus_analytics (1.0.3)
       config_files
@@ -208,7 +208,7 @@ GEM
     config (3.1.0)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
-    config_files (0.1.6)
+    config_files (0.1.7)
       activesupport (>= 2.2.1)
     connection_pool (2.4.1)
     coveralls (0.8.22)
@@ -642,7 +642,7 @@ GEM
     mailboxer (0.15.1)
       carrierwave (>= 0.5.8)
       rails (>= 5.0.0)
-    marc (1.1.1)
+    marc (1.2.0)
       rexml
       scrub_rb (>= 1.0.1, < 2)
       unf
@@ -1119,7 +1119,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.8)
+    unf_ext (0.0.8.2)
     unicode (0.4.4.4)
     unicode-display_width (2.1.0)
     unicode-types (1.8.0)
