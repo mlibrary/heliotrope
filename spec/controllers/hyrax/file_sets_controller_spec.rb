@@ -264,7 +264,8 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
     let(:epub) { create(:public_file_set) }
     let(:cover) { create(:public_file_set) }
     let(:thumbnail) { create(:public_file_set) }
-    let(:fre) { create(:featured_representative, work_id: epub_monograph.id, file_set_id: epub.id, kind: 'epub') }
+    let(:kind) { 'epub' }
+    let(:fre) { create(:featured_representative, work_id: epub_monograph.id, file_set_id: epub.id, kind: kind) }
 
     before do
       epub_monograph.ordered_members = [cover, thumbnail, epub]
@@ -302,7 +303,7 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
         sign_in non_editor
       end
 
-      it 'representative redirects to the monograph show page' do
+      it 'EPUB representative redirects to the monograph show page' do
         get :show, params: { id: fre.file_set_id }
         expect(response).to redirect_to Rails.application.routes.url_helpers.monograph_catalog_path(epub_monograph.id)
       end
@@ -315,6 +316,26 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
       it 'thumbnail redirects to the monograph show page' do
         get :show, params: { id: thumbnail.id }
         expect(response).to redirect_to Rails.application.routes.url_helpers.monograph_catalog_path(epub_monograph.id)
+      end
+
+      context 'Gabii-specific representatives' do
+        let(:kind) { 'database' }
+        it 'does not redirect for a database representative' do
+          get :show, params: { id: fre.file_set_id }
+          expect(response).not_to redirect_to Rails.application.routes.url_helpers.monograph_catalog_path(epub_monograph.id)
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template(:show)
+          expect(response).to render_template("hyrax/file_sets/show")
+        end
+
+        let(:kind) { 'webgl' }
+        it 'does not redirect for a webgl representative' do
+          get :show, params: { id: fre.file_set_id }
+          expect(response).not_to redirect_to Rails.application.routes.url_helpers.monograph_catalog_path(epub_monograph.id)
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template(:show)
+          expect(response).to render_template("hyrax/file_sets/show")
+        end
       end
     end
   end

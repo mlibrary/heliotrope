@@ -57,9 +57,12 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
     end
 
     def bounce_from_representatives?
-      # non-editors and search engines shouldn't see show pages for covers or "representative" FileSets
+      # non-editors and search engines shouldn't see show pages for covers or "representative" FileSets, with the...
+      # exception of the "Gabii-specific" FeaturedRepresentatives, which have a `kind` of 'database' or 'webgl'
       featured_rep = FeaturedRepresentative.where(file_set_id: params[:id]).first
-      !(can? :edit, params[:id]) && (featured_rep.present? || [presenter&.parent&.representative_id, presenter&.parent&.thumbnail_id].include?(params[:id]))
+      return false unless featured_rep.present? || [presenter&.parent&.representative_id, presenter&.parent&.thumbnail_id].include?(params[:id])
+      return false if ['database', 'webgl'].include?(featured_rep&.kind)
+      !(can? :edit, params[:id])
     end
 
     # this is provided so that implementing application can override this behavior and map params to different attributes
