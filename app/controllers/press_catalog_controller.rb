@@ -4,7 +4,7 @@ class PressCatalogController < ::CatalogController
   before_action :load_press
   before_action :load_actor_product_ids
   before_action :load_allow_read_product_ids
-  before_action :has_open_access
+  before_action :has_open_access?
   before_action :conditional_blacklight_configuration
   before_action :wayfless_redirect_to_shib_login, only: %i[index]
   after_action :add_counter_stat, only: %i[index]
@@ -50,6 +50,10 @@ class PressCatalogController < ::CatalogController
     super
   end
 
+  def has_open_access?
+    @has_open_access ||= display_works.select { |doc| doc['open_access_tesim'] == ['yes'] }.count > 0
+  end
+
   private
 
     def load_press
@@ -66,10 +70,6 @@ class PressCatalogController < ::CatalogController
 
     def load_allow_read_product_ids
       @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
-    end
-
-    def has_open_access
-      @has_open_access ||=  display_works.select { |doc| doc['open_access_tesim'] == ['yes'] }.count > 0
     end
 
     def all_works
@@ -104,6 +104,9 @@ class PressCatalogController < ::CatalogController
         # Sort HEB facets alphabetically, others by count
         sort = (@press.subdomain == 'heb') ? 'index' : 'count'
 
+        # The fake user access facet HELIO-3347, HELIO-4517
+        blacklight_config.add_facet_field 'open_access_sim', label: 'Access', component: ::UserAccessFacetComponent, collapse: false
+
         if Incognito.developer?(current_actor)
           # This is replaced with the Access "fake facet", HELIO-3347
           # blacklight_config.add_facet_field 'open_access_sim', label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
@@ -119,8 +122,6 @@ class PressCatalogController < ::CatalogController
             blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: false
           end
         else
-          # This is replaced with the Access "fake facet", HELIO-3347
-          # blacklight_config.add_facet_field 'open_access_sim', label: "Open Access", limit: 1, url_method: :facet_url_helper, sort: sort
           blacklight_config.add_facet_field 'funder_sim', label: "Funder", limit: 5, url_method: :facet_url_helper, sort: sort
           blacklight_config.add_facet_field 'subject_sim', label: "Subject", limit: 10, url_method: :facet_url_helper, sort: sort
           blacklight_config.add_facet_field 'creator_sim', label: "Author", limit: 5, url_method: :facet_url_helper, sort: sort
@@ -129,10 +130,12 @@ class PressCatalogController < ::CatalogController
           end
           blacklight_config.add_facet_field 'series_sim', label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
           blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: 5, url_method: :facet_url_helper, sort: sort
+
           if Sighrax.platform_admin?(current_actor)
             blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: 5
           end
         end
+
 
         blacklight_config.add_facet_fields_to_solr_request!
       end
