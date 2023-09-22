@@ -6,21 +6,21 @@ describe "Press Catalog Facets" do
   describe 'Access facet' do
     let(:press) { create(:press) }
 
-    it 'DOES NOT display the open access facet' do
+    it 'DOES NOT display the user access facet' do
       FactoryBot.create_list :public_monograph, 10, press: press.subdomain, creator: ['creator']
       visit press_catalog_path(press: press.subdomain)
       # save_and_open_page
-      expect(page).to have_selector('#facet-user_access')
+      expect(page).to have_selector('#facet-open_access_sim')
       expect(page).to have_text 'All content'
       expect(page).to have_text 'Only content I can access'
       expect(page).not_to have_text 'Only open access content'
     end
 
-    it 'DOES display the open access facet' do
+    it 'DOES display the user access facet' do
       FactoryBot.create_list :public_monograph, 10, press: press.subdomain, creator: ['creator'], open_access: 'yes'
       visit press_catalog_path(press: press.subdomain)
       # save_and_open_page
-      expect(page).to have_selector('#facet-user_access')
+      expect(page).to have_selector('#facet-open_access_sim')
       expect(page).to have_text 'All content'
       expect(page).to have_text 'Only content I can access'
       expect(page).to have_text 'Only open access content'
