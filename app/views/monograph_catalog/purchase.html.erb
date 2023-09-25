@@ -19,7 +19,7 @@
       <div class="row">
         <div class="col-sm-3">
           <% if @monograph_presenter.representative_id.present? %>
-            <%= @monograph_presenter.thumbnail_tag(225, class: "img-responsive") %>
+            <%= @monograph_presenter.thumbnail_tag(225, class: "img-fluid") %>
           <% else %>
             <%= @monograph_presenter.thumbnail_tag(225) %>
           <% end %>

@@ -1,18 +1,17 @@
 <% princess_de_cleves = @monograph_presenter.subdomain == 'leverpress' && (@monograph_presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }) %>
 <% oa_registration_required = @monograph_presenter.subdomain == 'ee' %>
-
-<div id="maincontent" class="row monograph-info-epub">
-  <!-- ADMIN TOOLS -->
-  <div class="platform-admin">
-    <% if can? :edit, @monograph_presenter %>
-      <a href="<%= main_app.edit_hyrax_monograph_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
-      <a href="<%= main_app.monograph_show_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
-      <% if @monograph_presenter.reader_ebook? %>
-        <a href="<%= princess_de_cleves ? epub_ebook_path(@monograph_presenter.reader_ebook) : epub_path(@monograph_presenter.reader_ebook) %>" title="<%= t('monograph_catalog.index.read_book') %>" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
-      <% end %>
-      <%= @monograph_presenter.permission_badge %>
+<!-- ADMIN TOOLS -->
+<div class="row platform-admin">
+  <% if can? :edit, @monograph_presenter %>
+    <a href="<%= main_app.edit_hyrax_monograph_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
+    <a href="<%= main_app.monograph_show_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
+    <% if @monograph_presenter.reader_ebook? %>
+      <a href="<%= princess_de_cleves ? epub_ebook_path(@monograph_presenter.reader_ebook) : epub_path(@monograph_presenter.reader_ebook) %>" title="<%= t('monograph_catalog.index.read_book') %>" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
     <% end %>
-    </div>
+    <%= @monograph_presenter.permission_badge %>
+  <% end %>
+</div>
+<div id="maincontent" class="row monograph-info-epub">
   <% if @monograph_presenter.monograph_coins_title? %>
     <!-- COinS for Zotero, etc -->
     <span class="Z3988" title="<%= @monograph_presenter.monograph_coins_title %>" aria-hidden="true"></span>
@@ -23,7 +22,7 @@
     </div>
   <% end %>
   <!-- BOOK TITLE AND PRIMARY METADATA -->
-  <div class="col-sm-8 col-sm-push-4 monograph-metadata">
+  <div class="col-sm-8 order-last monograph-metadata">
     <!-- TITLE -->
     <h1 id="work-title"><%= @monograph_presenter.title %></h1>
     <!-- VOLUME -->
@@ -221,7 +220,7 @@
     </div>
   </div>
   <!-- BOOK COVER AND ADDITIONAL METADATA -->
-  <div class="col-sm-4 col-sm-pull-8 monograph-metadata-additional">
+  <div class="col-sm-4 order-first monograph-metadata-additional">
     <!-- BOOK COVER -->
     <% if @monograph_presenter.tombstone_thumbnail? %>
       <div class="monograph-cover">
@@ -232,7 +231,7 @@
       <div class="monograph-cover">
         <!-- Image trigger modal -->
         <button type="button" class="btn btn-link" aria-label="Select to enlarge cover" data-toggle="modal" data-target="#modalImage">
-          <%= @monograph_presenter.thumbnail_tag(286, class: "img-responsive", alt: "Cover image for #{@monograph_presenter.title}") %>
+          <%= @monograph_presenter.thumbnail_tag(286, class: "img-fluid", alt: "Cover image for #{@monograph_presenter.title}") %>
         </button>
 
         <!-- Modal image -->

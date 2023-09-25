@@ -224,10 +224,6 @@ div.skip {
     transform: rotate(15deg);
   }
 
-  .breadcrumb li {
-    margin-left: -.6em;
-  }
-
   .breadcrumb li:first-child {
     margin-left: 0;
   }
@@ -415,6 +411,28 @@ footer.press {
 
 }
 .press {
+
+  // reduce standard button size for dropdowns/sorts
+  .search-widgets {
+    font-size: 14px;
+
+    .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      border-radius: 0.2rem;
+    }
+
+    .dropdown-menu {
+      font-size: 14px;
+    }
+
+  }
+
+  .page_links {
+    font-size: 14px;
+  }
+
   p.authors {
     margin-bottom: 2px;
   }
@@ -431,14 +449,16 @@ footer.press {
     .document {
       border-bottom: none;
       padding-top: 2em;
+      padding-bottom: 1.5em;
 
       a {
-        display: block;
-        overflow: auto;
+        display: flex;
+        justify-content: flex-start;
+        flex-grow: 1;
       }
 
       .thumbnail {
-        text-align: left;
+        display: flex;
         border: none;
         border-radius: 0px;
         padding: 0px;
@@ -453,10 +473,11 @@ footer.press {
       .caption {
         h3.index_title {
           font-size: 16px;
+          font-weight: 600;
         }
 
         .authors {
-          font-size: 13px;
+          font-size: 14px;
         }
       }
     }
@@ -475,7 +496,8 @@ footer.press {
 
   }
 
-  #documents.gallery {
+  #documents.documents-gallery {
+    justify-content: space-between;
 
     .document {
       border-top: none;
@@ -483,6 +505,11 @@ footer.press {
       margin-top: 0px;
       padding-top: 0px;
       padding-bottom: 3em;
+
+      a {
+        display: flex;
+        flex-direction: column;
+      }
 
       .thumbnail {
         text-align: left;
@@ -503,10 +530,11 @@ footer.press {
 
         h3.index_title {
           font-size: 16px;
+          font-weight: 600;
         }
 
         .authors {
-          font-size: 13px;
+          font-size: 14px;
         }
 
         .col-sm-12 {
@@ -673,6 +701,7 @@ footer.press {
 
     .btn {
       padding: 0;
+      border: 0;
     }
 
     .modal {

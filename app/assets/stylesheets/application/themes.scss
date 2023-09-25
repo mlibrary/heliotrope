@@ -5319,7 +5319,8 @@ $um-white: #fff;
     font-weight: 600;
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($um-accent-color);
     @include button-font-color($um-white);
     border-color: $um-accent-color;
@@ -5328,7 +5329,8 @@ $um-white: #fff;
   }
 
   .download {
-    .btn-default {
+    .btn-default, 
+    .btn {
     @include button-background-color($um-accent-color);
     @include button-font-color($um-white);
     border-color: $um-accent-color;
@@ -5338,7 +5340,9 @@ $um-white: #fff;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($um-brand-color);
     @include button-hover-font-color(#fff);
     border-color: $um-brand-color;
@@ -5536,6 +5540,10 @@ $um-white: #fff;
   #facets a:hover {
     text-decoration: underline;
     text-decoration-thickness: 2px;
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: $um-white;
   }
 
   // monograph catalog
