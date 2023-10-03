@@ -5546,6 +5546,17 @@ $um-white: #fff;
     fill: $um-white;
   }
 
+  #facet-panel-collapse {
+    h3 {
+      margin-top: 0;
+    }
+
+    button {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
   // monograph catalog
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
     color: $um-white;
@@ -6042,6 +6053,12 @@ $um-white: #fff;
     a:hover {
       text-decoration: underline;
       text-decoration-thickness: 2px;
+    }
+  }
+
+  #facet-panel-collapse {
+    h3 {
+      margin-top: 0;
     }
   }
 
