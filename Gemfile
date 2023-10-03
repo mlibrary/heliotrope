@@ -123,7 +123,7 @@ gem 'hyrax', '3.5.0'
 # pinned for Jekyll
 gem 'i18n', '~> 0.7'
 
-gem 'irus_analytics', git: 'https://github.com/mlibrary/irus_analytics', ref: '0de9a17b2f764a0ce7bdd1d0221c60b88c2643e7'
+gem 'irus_analytics', git: 'https://github.com/mlibrary/irus_analytics', ref: 'cbffb84ee2db696c8d8a3ca1a0aae7aae37f33fa'
 
 # Use Jekyll for blog and informational pages
 gem 'jekyll', '~> 3.9.0'
