@@ -11,19 +11,28 @@
     <!-- asset navigation -->
     <div class="row">
       <nav class="asset-navigation col-sm-12">
-        <ul class="pager">
-            <li class="previous">
-            <% if @presenter.previous_id? %>
-              <a href="<%= @presenter.previous_id %>" class="previous" data-turbolinks="false"><span class="fa fa-chevron-left" aria-hidden="true"></span> Previous</a>
-            <% end %>
-            </li>
-            <li class="next">
-            <% if @presenter.next_id? %>
-              <a href="<%= @presenter.next_id %>" class="next" data-turbolinks="false">Next <span class="fa fa-chevron-right" aria-hidden="true"></span></a>
-            <% end %>
-            </li>
-        </ul>
+        <div class="pager d-flex justify-content-between">
+          <span class="previous float-left">
+          <% if @presenter.previous_id? %>
+            <a href="<%= @presenter.previous_id %>" class="btn btn-outline-light rounded-pill previous" data-turbolinks="false">
+              <span class="fa fa-angle-left" aria-hidden="true"></span>
+              Previous
+            </a>
+          <% end %>
+          </span>
+          <span class="next float-right">
+          <% if @presenter.next_id? %>
+            <a href="<%= @presenter.next_id %>" class="btn btn-outline-light rounded-pill next" data-turbolinks="false">
+              Next
+              <span class="fa fa-angle-right" aria-hidden="true"></span>
+            </a>
+          <% end %>
+          </span>
+        </div>
       </nav>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">&nbsp;</div>
     </div>
   <% else %>
     <div class="row">
