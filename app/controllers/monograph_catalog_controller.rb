@@ -72,6 +72,9 @@ class MonographCatalogController < ::CatalogController
   end
 
   def facet
+    # Related to helpers/facets_helper#facet_url_helper
+    # and views/catalog/_facet_limit.html.erb
+    # For the monograph_catalog we need the monograph_id to run through blacklight
     super
   end
 

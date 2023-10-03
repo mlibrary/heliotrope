@@ -22,7 +22,7 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
   end
 
   def facet_url_helper(facet_field, item)
-    # called from the facet modal from the monograph_catalog page
+    # called from the facet "more" page from the monograph_catalog page
     if params[:monograph_id]
       previous_params = search_state.params_for_search.except(:monograph_id, :_)['f']
       previous_param_string = ''
@@ -34,7 +34,7 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
           end
         end
       end
-      "#{params[:monograph_id]}?f%5B#{facet_field}%5D%5B%5D=#{item.value}#{previous_param_string}"
+      monograph_catalog_path(params[:monograph_id]) + "&f%5B#{facet_field}%5D%5B%5D=#{item.value}#{previous_param_string}"
     else
       search_action_path(search_state.add_facet_params_and_redirect(facet_field, item))
     end
