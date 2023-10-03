@@ -31,7 +31,7 @@ module Watermark
 
         command = "pdftk #{file_path} stamp #{stamp_file_path} output #{stamped_file_path}"
 
-        run_command_with_timeout(command, 45) # hopefully 45 seconds is enough for a large PDF at busy times
+        run_command_with_timeout(command, 90) # hopefully 90 seconds is enough :-) see HELIO-4530
         IO.binread(stamped_file_path)
       end
     end
