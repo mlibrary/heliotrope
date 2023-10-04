@@ -205,6 +205,7 @@ div.skip {
 .breadcrumbs {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+  font-size: .9rem;
   .active {
     color: $gray-60 !important;
   }
@@ -720,6 +721,7 @@ footer.press {
 
   .monograph-metadata-additional {
 
+    font-size: .9rem;
     line-height: 24px;
 
     .peer-review {
@@ -781,6 +783,7 @@ footer.press {
 
       input#permalink {
         max-width: 296px;
+        font-size: .9rem;
       }
     }
 
@@ -849,6 +852,9 @@ footer.press {
     // BUY/READ/DOWNLOAD BUTTONS
     .btn-toolbar {
       margin: 2em 0 1em 0;
+      .btn {
+        font-size: 1.15rem;
+      }
     }
 
     .oa-registration-required {
@@ -942,6 +948,7 @@ footer.press {
 
       .nav-tabs h2 {
         padding: 8px 0;
+        font-size: .9rem;
       }
     }
 
