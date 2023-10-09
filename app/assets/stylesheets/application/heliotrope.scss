@@ -520,39 +520,71 @@ footer.press {
 ///////////////////////////////////
 // PRESS AND MONOGRAPH FILTERS
 ///////////////////////////////////
-.col-sm-3.facets-container,
-#facet-panel-collapse {
-  padding-left: 0px;
-}
 
-.facet-anchor {
-  display: flex;
-  justify-content: space-between;
-}
-
+// press catalog
 .facets-container {
-  .panel-group {
-    padding-left: 0px;
+  padding-top: 15px;
+
+  .facets .facets-header {
+    // this comes from blacklight and we don't use it.
+    display: none;
   }
 
-  .panel-group .panel {
-    border-radius: 0px;
-  }
+  .card {
+    margin-bottom: 0px;
 
-  .panel-heading {
-    padding-top: 15px;
-  }
-
-  .panel-group .panel + .panel {
-    margin-top: 0px;
-  }
-
-  #facet-panel-collapse {
-    padding-left: 0;
+    .card-header {
+      margin-top: 0px;
+      .btn {
+        font-weight: 700;
+        margin-top: .5em;
+        margin-bottom: .5em;
+      }
+    }
   }
 
   .access-legend {
-    padding-right: 15px;
+    margin-top: 1em;
+
+    .card-header {
+      text-align: left;
+      padding-left: .5rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: .25rem;
+    }
+  }
+}
+
+// monograph catalog
+.fulcrum_sidebar {
+  .facets .facets-header {
+    // this comes from blacklight and we don't use it.
+    display: none;
+  }
+
+  .facets .facets-panel-collapse {
+    margin-top: 0px;
+  }
+
+  .facets .facets-heading {
+    margin-top: 6px;
+  }
+
+  #facets {
+    margin-top: 1rem;
+  }
+
+  .card {
+    margin-bottom: 0px;
+    .card-header {
+      margin-top: 0px;
+      .btn {
+        font-weight: 700;
+        margin-top: .5em;
+        margin-bottom: .5em;
+      }
+    }
   }
 }
 
