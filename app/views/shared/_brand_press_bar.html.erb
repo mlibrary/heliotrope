@@ -1,26 +1,19 @@
-<nav id="brand-bar" class="navbar navbar-default navbar-static-top">
-  <div class="container">
-    <!-- brand and toggle grouped together -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#brand-bar-nav" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+<nav id="brand-bar" class="navbar navbar-expand-lg navbar-static-top">
       <% if press_presenter.present? %>
         <a class="navbar-brand" href="<%= main_app.press_catalog_path(press_presenter.press) %>"><%= press_presenter.name %></a>
       <% else %>
         <a class="navbar-brand" href="#">University Press</a>
       <% end %>
-    </div>
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
     <!-- search -->
     <% if show_site_search? %>
       <%= render 'shared/site_search' %>
     <% end %>
 
-    <div class="collapse navbar-collapse" id="brand-bar-nav">
+    <div class="collapse navbar-collapse flex-row-reverse" id="navbar">
       <div class="navbar-right">
         <!-- show special navigation if it exists -->
         <!-- NOTE: this is not neccessarily the same as "aboutware" see HELIO-3275 -->
@@ -36,5 +29,4 @@
         <% end %>
       </div>
     </div>
-  </div>
 </nav>
