@@ -2009,28 +2009,28 @@ footer.press {
       font-size: .9em;
     }
 
-.cozy-container i[class^='icon-'] {
+    .cozy-container i[class^='icon-'] {
+      font-size: 1.25rem !important;
+  }
+
+.cozy-container i[class^='icon-chevron-'] {
     font-size: 2rem !important;
 }
 
-.cozy-container i[class^='icon-chevron-'] {
-    font-size: 2em !important;
-}
-
 .cozy-container i.icon-comment-square {
-  font-size: 1.7rem !important;
+  font-size: 1rem !important;
 }
 
 .cozy-preferences-modal .button--sm {
-  font-size: 1em !important;
+  font-size: 1rem !important;
 }
 
 .cozy-control button.button--sm.cozy-citation {
-    font-size: .9em !important;
+    font-size: 1rem !important;
 }
 
 .cozy-control button.button--sm.annotation i {
-  font-size: 1.1em !important;
+  font-size: 1rem !important;
   margin-top: 1px;
 }
 
@@ -2043,7 +2043,7 @@ footer.press {
   width: 20px;
   border-radius: 50%;
   display: block;
-  font-size: .7em;
+  font-size: .7rem;
 }
 
 .cozy-container input[type="radio"] {

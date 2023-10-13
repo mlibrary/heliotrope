@@ -1,20 +1,15 @@
 <nav id="brand-bar" class="navbar navbar-expand-lg navbar-static-top">
+  <div class="container">
       <% if press_presenter.present? %>
         <a class="navbar-brand" href="<%= main_app.press_catalog_path(press_presenter.press) %>"><%= press_presenter.name %></a>
       <% else %>
         <a class="navbar-brand" href="#">University Press</a>
       <% end %>
-      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#brand-bar-nav" aria-expanded="false" aria-controls="brand-bar-nav" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <!-- search -->
-    <% if show_site_search? %>
-      <%= render 'shared/site_search' %>
-    <% end %>
-
-    <div class="collapse navbar-collapse flex-row-reverse" id="navbar">
-      <div class="navbar-right">
+    <div class="collapse navbar-collapse" id="brand-bar-nav">
         <!-- show special navigation if it exists -->
         <!-- NOTE: this is not neccessarily the same as "aboutware" see HELIO-3275 -->
         <% if press_presenter.present? && press_presenter.navigation_block.present? %>
@@ -22,11 +17,11 @@
         <% end %>
         <% if current_user && show_site_actions? %>
           <%= render 'shared/my_actions' %>
-        <% elsif current_institutions? %>
-          <%= render 'shared/institutions' %>
-        <% else %>
-          <a href="/" title="Fulcrum" data-turbolinks="false"><%= image_tag "fulcrum-mark-white-30px.png", class: 'logo', alt: 'Fulcrum logo' %></a>
         <% end %>
-      </div>
+        <!-- search -->
+        <% if show_site_search? %>
+          <%= render 'shared/site_search' %>
+        <% end %>
     </div>
+  </div>
 </nav>
