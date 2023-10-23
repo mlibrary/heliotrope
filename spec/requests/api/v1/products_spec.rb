@@ -97,7 +97,7 @@ RSpec.describe "Products", type: :request do
       end
 
       it 'not_found' do
-        get api_component_products_path(1), headers: headers
+        get api_component_products_path(999999999), headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component")
