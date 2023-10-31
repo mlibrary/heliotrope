@@ -203,7 +203,11 @@ class BuildKbartJob < ApplicationJob
     # ELSE, leave blank.
     # I *think* this is the right date_published based on
     # https://mlit.atlassian.net/wiki/spaces/FUL/pages/9782263869/Fulcrum+Programmatic+Dates
-    return monograph.date_published if print_isbn(monograph.isbn).present?
+    # return monograph.date_published if print_isbn(monograph.isbn).present?
+    # ""
+
+    # See HELIO-4514 we're changing this to date_created, whatever is in that field:
+    return monograph.date_created&.first if print_isbn(monograph.isbn).present?
     ""
   end
 
@@ -312,11 +316,14 @@ class BuildKbartJob < ApplicationJob
   end
 
   def publisher_name(monograph)
-    # bar always gets this
-    return "British Archaeological Reports" if monograph.subdomain == "barpublishing"
-    # heb gets the monograph's publisher
-    return monograph.publisher.first if monograph.subdomain == "heb"
-    # the rest get the Press.name (which would be subpress for subpresses)
-    monograph.press
+    # # bar always gets this
+    # return "British Archaeological Reports" if monograph.subdomain == "barpublishing"
+    # # heb gets the monograph's publisher
+    # return monograph.publisher.first if monograph.subdomain == "heb"
+    # # the rest get the Press.name (which would be subpress for subpresses)
+    # monograph.press
+
+    # See HELIO-4514 everything now just gets the monograph.publisher, not just heb
+    monograph.publisher&.first || ""
   end
 end

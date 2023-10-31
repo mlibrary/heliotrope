@@ -11,9 +11,10 @@ RSpec.describe BuildKbartJob, type: :job do
                      creator_tesim: ["Adams, Firstname"],
                      isbn_tesim: ["A123456789 (hardcover)", "A987654321 (ebook)"],
                      doi_ssim: "10.3998/mpub.A",
-                     press_name_ssim: ["A Press"],
+                     publisher_tesim: ["A Press"],
                      visibility_ssi: "open",
                      date_published_dtsim: ["2023-03-30T15:04:53Z"],
+                     date_created_tesim: ["1999"],
                      products_lsim: [product.id])
   end
 
@@ -24,11 +25,12 @@ RSpec.describe BuildKbartJob, type: :job do
                      creator_tesim: ["Brock, Firstname"],
                      isbn_tesim: ["B123456789 (hardcover)", "B987654321 (ebook)"],
                      doi_ssim: "10.3998/mpub.B",
-                     press_name_ssim: ["B Press"],
+                     publisher_tesim: ["B Press"],
                      visibility_ssi: "open",
                      volume_tesim: ["Vol 1"],
                      edition_name_tesim: ["Second Edition"],
                      date_published_dtsim: ["2023-02-20T15:04:53Z"],
+                     date_created_tesim: ["2000"],
                      products_lsim: [product.id])
   end
 
@@ -39,10 +41,11 @@ RSpec.describe BuildKbartJob, type: :job do
                      creator_tesim: ["Cassidy, Firstname"],
                      isbn_tesim: ["C987654321 (open access)"],
                      doi_ssim: "10.3998/mpub.C",
-                     press_name_ssim: ["C Press"],
+                     publisher_tesim: ["C Press"],
                      open_access_tesim: ["yes"],
                      visibility_ssi: "open",
                      date_published_dtsim: ["2023-01-10T15:04:53Z"],
+                     date_created_tesim: ["2023"],
                      products_lsim: [product.id])
   end
 
@@ -53,9 +56,10 @@ RSpec.describe BuildKbartJob, type: :job do
                      creator_tesim: ["Davidson, Firstname"],
                      isbn_tesim: ["D123456789 (hardcover)", "D987654321 (ebook)"],
                      doi_ssim: "10.3998/mpub.D",
-                     press_name_ssim: ["D Press"],
+                     publisher_tesim: ["D Press"],
                      visibility_ssi: 'restricted',
                      date_published_dtsim: ["2000-01-01T15:04:53Z"],
+                     date_created_tesim: ["2001"],
                      products_lsim: [product.id])
   end
 
@@ -66,8 +70,8 @@ RSpec.describe BuildKbartJob, type: :job do
     let(:test_root) { File.join(Settings.scratch_space_path, 'spec', 'public', 'products', product.group_key, 'kbart') }
     let(:old_kbart) do <<~KBART
 "publication_title","print_identifier","online_identifier","date_first_issue_online","num_first_vol_online","num_first_issue_online","date_last_issue_online","num_last_vol_online","num_last_issue_online","title_url","first_author","title_id","embargo_info","coverage_depth","notes","publisher_name","publication_type","date_monograph_published_print","date_monograph_published_online","monograph_volume","monograph_edition","first_editor","parent_publication_title_id","preceding_publication_title_id","access_type"
-"A Book Italic","A123456789","A987654321","","","","","","","https://doi.org/10.3998/mpub.A","Adams","10.3998/mpub.A","","fulltext","","A Press","monograph","2023-03-30","2023-03-30","","","","","","P"
-"B Book Italic","B123456789","B987654321","","","","","","","https://doi.org/10.3998/mpub.B","Brock","10.3998/mpub.B","","fulltext","","B Press","monograph","2023-02-20","2023-02-20","Vol 1","Second Edition","","","","P"
+"A Book Italic","A123456789","A987654321","","","","","","","https://doi.org/10.3998/mpub.A","Adams","10.3998/mpub.A","","fulltext","","A Press","monograph","1999","2023-03-30","","","","","","P"
+"B Book Italic","B123456789","B987654321","","","","","","","https://doi.org/10.3998/mpub.B","Brock","10.3998/mpub.B","","fulltext","","B Press","monograph","2000","2023-02-20","Vol 1","Second Edition","","","","P"
 "C Book Italic","","C987654321","","","","","","","https://doi.org/10.3998/mpub.C","Cassidy","10.3998/mpub.C","","fulltext","","C Press","monograph","","2023-01-10","","","","","","F"
     KBART
     end
@@ -180,9 +184,10 @@ RSpec.describe BuildKbartJob, type: :job do
                             creator_tesim: ["Edwards, Firstname"],
                             isbn_tesim: ["E123456789 (hardcover)", "E987654321 (ebook)"],
                             doi_ssim: "10.3998/mpub.E",
-                            press_name_ssim: ["E Press"],
+                            publisher_tesim: ["E Press"],
                             visibility_ssi: "open",
                             date_published_dtsim: ["2022-02-22T15:04:53Z"],
+                            date_created_tesim: ["2022"],
                             products_lsim: [product.id])
           end
           let(:local_csv) { File.join(test_root, "test_product_2022-02-02.csv") }
@@ -366,7 +371,7 @@ RSpec.describe BuildKbartJob, type: :job do
       expect(csv[2][0]).to eq "B Book Italic"
       # a print_isbn means a date_monograph_published_print
       expect(csv[2][1]).to eq "B123456789"
-      expect(csv[2][17]).to eq "2023-02-20"
+      expect(csv[2][17]).to eq "2000"
       expect(csv[2][19]).to eq "Vol 1"
       expect(csv[2][20]).to eq "Second Edition"
 
@@ -526,15 +531,41 @@ RSpec.describe BuildKbartJob, type: :job do
   end
 
   describe "#publisher_name" do
-    context "if it's barpublishing" do
-      let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(press_tesim: ["barpublishing"]), nil) }
+    # context "if it's barpublishing" do
+    #   let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(press_tesim: ["barpublishing"]), nil) }
 
-      it "returns 'British Archaeological Reports'" do
+    #   it "returns 'British Archaeological Reports'" do
+    #     expect(subject.publisher_name(monograph)).to eq "British Archaeological Reports"
+    #   end
+    # end
+
+    # context "if it's heb" do
+    #   let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(press_tesim: ["heb"], publisher_tesim: ["Oxford Press"]), nil) }
+
+    #   it "returns the monograph's publisher property" do
+    #     expect(subject.publisher_name(monograph)).to eq "Oxford Press"
+    #   end
+    # end
+
+    # context "all other presses" do
+    #   # It's probably a long ago mistake that a press name is indexed on the Monograph as _ssim but ok
+    #   let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(press_name_ssim: ["The Name of the Press"]), nil) }
+
+    #   it "returns the press name" do
+    #     expect(subject.publisher_name(monograph)).to eq "The Name of the Press"
+    #   end
+    # end
+
+    # All presses are now the same and use "publisher" (publisher_tesim) for this see HELIO-4514
+    context "bar publishing" do
+      let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(press_tesim: ["barpublishing"], publisher_tesim: ["British Archaeological Reports"]), nil) }
+
+      it do
         expect(subject.publisher_name(monograph)).to eq "British Archaeological Reports"
       end
     end
 
-    context "if it's heb" do
+    context "heb" do
       let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(press_tesim: ["heb"], publisher_tesim: ["Oxford Press"]), nil) }
 
       it "returns the monograph's publisher property" do
@@ -542,12 +573,11 @@ RSpec.describe BuildKbartJob, type: :job do
       end
     end
 
-    context "all other presses" do
-      # It's probably a long ago mistake that a press name is indexed on the Monograph as _ssim but ok
-      let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(press_name_ssim: ["The Name of the Press"]), nil) }
+    context "all presses" do
+      let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(press_tesim: "bigten", publisher_tesim: ["University of Michigan Press"], press_name_ssim: ["The Name of the Press"]), nil) }
 
-      it "returns the press name" do
-        expect(subject.publisher_name(monograph)).to eq "The Name of the Press"
+      it "returns the monograph's publisher property" do
+        expect(subject.publisher_name(monograph)).to eq "University of Michigan Press"
       end
     end
   end
