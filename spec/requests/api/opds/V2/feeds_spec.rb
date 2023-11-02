@@ -49,6 +49,11 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
                   "type": "application/opds+json"
                 },
                 {
+                  "title": "Big Ten Open Books",
+                  "href": Rails.application.routes.url_helpers.api_opds_bigten_url,
+                  "type": "application/opds+json"
+                },
+                {
                   "title": "Lever Press",
                   "href": Rails.application.routes.url_helpers.api_opds_leverpress_url,
                   "type": "application/opds+json"
@@ -146,6 +151,80 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
           it 'is non-empty' do
             get api_opds_amherst_path, headers: headers
+            expect(response.content_type).to eq("application/opds+json")
+            expect(response).to have_http_status(:ok)
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(response_body['publications'].count).to eq(1)
+            expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id)).to_json))
+          end
+        end
+      end
+
+      describe "#bigten" do
+        let!(:bigten_press) { create(:press, subdomain: "bigten") }
+        let!(:bigten_product) { create(:product, identifier: "bigten") }
+        let(:bigten_feed) do
+          JSON.parse({
+                      "metadata": {
+                        "title": "Big Ten Open Books",
+                        "currentPage": 1,
+                        "itemsPerPage": 50,
+                        "numberOfItems": 0
+                      },
+                      "links": [
+                        {
+                          "rel": "self",
+                          "href": Rails.application.routes.url_helpers.api_opds_bigten_url(currentPage: 1),
+                          "type": "application/opds+json"
+                        },
+                        {
+                          "rel": "first",
+                          "href": Rails.application.routes.url_helpers.api_opds_bigten_url(currentPage: 1),
+                          "type": "application/opds+json"
+                        },
+                        {
+                          "rel": "last",
+                          "href": Rails.application.routes.url_helpers.api_opds_bigten_url(currentPage: 1),
+                          "type": "application/opds+json"
+                        }
+                      ],
+                      "publications": [
+                      ]
+                    }.to_json)
+        end
+
+        context "with no books" do
+          it 'empty feed' do
+            get api_opds_bigten_path, headers: headers
+            expect(response.content_type).to eq("application/opds+json")
+            expect(response).to have_http_status(:ok)
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(response_body).to eq(bigten_feed)
+            expect(response_body['publications']).to be_empty
+          end
+        end
+
+        context 'with bigten books' do
+          let(:monograph) { create(:public_monograph, press: bigten_press.subdomain) }
+          let(:cover) { create(:public_file_set) }
+          let(:epub) { create(:public_file_set) }
+          let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
+
+          before do
+            monograph.ordered_members << cover
+            monograph.representative_id = cover.id
+            monograph.ordered_members << epub
+            monograph.open_access = 'yes'
+            monograph.date_modified = Time.now
+            monograph.save!
+            cover.save!
+            epub.save!
+            fr
+            bigten_product.components << Greensub::Component.create(identifier: monograph.id, name: monograph.id, noid: monograph.id)
+          end
+
+          it 'is non-empty' do
+            get api_opds_bigten_path, headers: headers
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
             expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
