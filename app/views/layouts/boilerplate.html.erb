@@ -107,7 +107,7 @@
 
     <%= content_for?(:body) ? yield(:body) : yield %>
 
-    <%= render 'shared/ajax_modal' %>
+    <%= render 'shared/blacklight_modal' %>
     <%= render 'shared/cookie_alert' %>
     <%= render 'shared/monitoring' if Rails.env.production? %>
   <% end %>
