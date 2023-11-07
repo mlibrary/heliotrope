@@ -151,6 +151,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .searches
                    .access_type(access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press.id)
@@ -161,6 +162,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .investigations
                    .access_type(access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press.id)
@@ -171,6 +173,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .investigations
                    .access_type(access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press.id)
@@ -182,6 +185,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .investigations
                    .access_type(access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press.id)
@@ -193,6 +197,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .requests
                    .access_type(access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press.id)
@@ -203,6 +208,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .requests
                    .access_type(access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press.id)
@@ -214,6 +220,7 @@ module CounterReporter
       CounterReport.institution(@params.institution)
                    .requests
                    .access_type(access_type)
+                   .turnaway
                    .start_date(month.beginning_of_month)
                    .end_date(month.end_of_month)
                    .press(@params.press.id)

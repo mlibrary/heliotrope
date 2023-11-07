@@ -49,6 +49,7 @@ RSpec.describe CounterReporter::PlatformReport do
         create(:counter_report, press: press.id, session: 1,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 6,  noid: 'b',  parent_noid: 'B', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 10, noid: 'b',  parent_noid: 'B', institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
+        create(:counter_report, press: press.id, session: 8,  noid: 'a',  parent_noid: 'A', institution: 1, created_at: Time.parse("2018-02-15").utc, access_type: "Controlled", request: 1, turnaway: "No_License")
       end
 
       it "has the correct platform" do

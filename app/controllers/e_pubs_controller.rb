@@ -12,7 +12,7 @@ class EPubsController < CheckpointController
     @parent_noid = @parent_presenter.id
 
     unless @policy.show?
-      CounterService.new(self, @presenter).count(request: 1, turnaway: "No_License")
+      CounterService.new(self, @presenter).count(request: 1, turnaway: "No_License") unless @parent_presenter.tombstone?
       return redirect_to monograph_authentication_url(@parent_noid)
     end
 
