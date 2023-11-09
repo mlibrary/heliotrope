@@ -189,7 +189,7 @@ RSpec.describe CounterReporter::ItemReport do
       end
 
       let(:start_date) { "2018-01-01" }
-      let(:end_date) { "2018-02-01" }
+      let(:end_date) { "2018-02-01" } # this will include the whole month of Feb
       let(:data_type) { 'Book' }
       let(:access_type) { 'Controlled' }
       let(:access_method) { 'Regular' }
@@ -209,7 +209,11 @@ RSpec.describe CounterReporter::ItemReport do
         create(:counter_report, press: press.id, session: 1,  noid: 'b',     model: 'FileSet',   parent_noid: 'blue',  institution: 1, created_at: Time.parse("2018-01-02").utc, access_type: "Controlled", request: 1, section: "Chapter X", section_type: "Chapter")
         create(:counter_report, press: press.id, session: 6,  noid: 'c',     model: 'FileSet',   parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
         create(:counter_report, press: press.id, session: 6,  noid: 'c',     model: 'FileSet',   parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-11").utc, access_type: "Controlled", request: 1)
+        # This is an Investigation so should not be in the report which is Requests
         create(:counter_report, press: press.id, session: 7,  noid: 'green', model: 'Monograph', parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-13").utc, access_type: "Controlled")
+        # This is a turnaway so should not be in the report which is for Total_Item_Requests, not No_License
+        create(:counter_report, press: press.id, session: 8,  noid: 'c',     model: 'FileSet',   parent_noid: 'green', institution: 1, created_at: Time.parse("2018-02-15").utc, access_type: "Controlled", request: 1, turnaway: "No_License")
+        # This is outside the date range of Jan-Feb and a different Institution so should not be in the report
         create(:counter_report, press: press.id, session: 10, noid: 'a',     model: 'FileSet',   parent_noid: 'red',   institution: 2, created_at: Time.parse("2018-11-11").utc, access_type: "Controlled", request: 1)
       end
 

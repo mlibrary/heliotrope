@@ -442,14 +442,33 @@ RSpec.describe EPubsController, type: :controller do
           expect(CounterReport.first.turnaway).to eq "No_License"
         end
 
-        it 'Authenticated User' do
-          sign_in(create(:user))
-          get :show, params: { id: file_set.id }
-          expect(assigns(:actor_product_ids))
-          expect(assigns(:allow_read_product_ids))
-          expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(monograph_authentication_url(monograph.id))
-          expect(CounterReport.first.turnaway).to eq "No_License"
+        context "Authenticated but Unsubscribed User" do
+          it "does not have access" do
+            sign_in(create(:user))
+            get :show, params: { id: file_set.id }
+            expect(assigns(:actor_product_ids))
+            expect(assigns(:allow_read_product_ids))
+            expect(response).to have_http_status(:found)
+            expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+            expect(CounterReport.first.turnaway).to eq "No_License"
+          end
+
+          context "with a tombstoned monograph" do
+            before do
+              monograph.tombstone = "yes"
+              monograph.save
+            end
+
+            it "does not record a counter hit" do
+              sign_in(create(:user))
+              get :show, params: { id: file_set.id }
+              expect(assigns(:actor_product_ids))
+              expect(assigns(:allow_read_product_ids))
+              expect(response).to have_http_status(:found)
+              expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+              expect(CounterReport.count).to eq 0
+            end
+          end
         end
 
         it 'Platform Admin' do
