@@ -5,7 +5,7 @@ module API
   module Opds
     module V2
       # Feeds Controller
-      class FeedsController < API::ApplicationController
+      class FeedsController < API::ApplicationController # rubocop:disable Metrics/ClassLength
         skip_before_action :authorize_request
 
         # This resource returns the root feed a.k.a. OPDS Catalog.
@@ -27,6 +27,11 @@ module API
               {
                 "title": "Amherst College Press",
                 "href": Rails.application.routes.url_helpers.api_opds_amherst_url,
+                "type": "application/opds+json"
+              },
+              {
+                "title": "Big Ten Open Books",
+                "href": Rails.application.routes.url_helpers.api_opds_bigten_url,
                 "type": "application/opds+json"
               },
               {
@@ -187,6 +192,31 @@ module API
           }
 
           feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_amherst_url, total, params[:filterByEntityId])
+          feed[:publications] = publications(response["response"]["docs"], params[:filterByEntityId])
+          render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
+        end
+
+        # This resource returns the bigten publications feed.
+        # @example get /api/opds/bigten
+        # @return [ActionDispatch::Response] { <bigten_feed> }
+        def bigten
+          product_id = Greensub::Product.find_by(identifier: 'bigten').id
+          total, response = feed_solr_response([product_id])
+
+          feed = {
+            "metadata": {
+              "title": "Big Ten Open Books",
+              "numberOfItems": total,
+              "itemsPerPage": 50,
+              "currentPage": page
+            },
+            "links": [
+            ],
+            "publications": [
+            ]
+          }
+
+          feed[:links] = feed_links(Rails.application.routes.url_helpers.api_opds_bigten_url, total, params[:filterByEntityId])
           feed[:publications] = publications(response["response"]["docs"], params[:filterByEntityId])
           render plain: javascript_escaping(feed.to_json), content_type: 'application/opds+json'
         end
