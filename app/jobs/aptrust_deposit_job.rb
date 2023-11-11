@@ -41,14 +41,14 @@ class AptrustDepositJob < ApplicationJob
     # New bag
     bag = BagIt::Bag.new(File.join('.', dirname))
 
-    # Create bagit-info.txt file
-    bag.write_bag_info(bag_info(monograph))
-
     # Create aptrust-info.txt file
     File.write(File.join(bag.bag_dir, 'aptrust-info.txt'), aptrust_info(monograph), mode: 'w')
 
-    # Extract monograph into data directory
+    # Extract monograph into `./data` (bag payload) subdirectory. This obviously comes *before* the call to...
+    # `bag.write_bag_info` so that `Payload-Oxum` (size of payload directory in bytes) can be calculated and...
+    # written into `bag-info.txt`
     Export::Exporter.new(monograph.noid).extract("#{bag.bag_dir}/data/", true)
+    bag.write_bag_info(bag_info(monograph))
 
     # Create manifests
     bag.manifest!(algo: 'md5')
