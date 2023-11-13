@@ -16,7 +16,7 @@ namespace :heliotrope do
       if (failure["exception"] == "Net::OpenTimeout" && failure["error"] == "execution expired") ||
          (failure["exception"] == "Net::OpenTimeout" && failure["error"] == "Net::OpenTimeout") ||
          (failure["exception"] == "Net::ReadTimeout" && failure["error"] == "Net::ReadTimeout") ||
-         (failure["exception"] == "Net::ReadTimeout" && failure["error"] == "Failed to open TCP connection to irus.jisc.ac.uk:443 (execution expired)")
+         (failure["exception"] == "Net::OpenTimeout" && failure["error"] == "Failed to open TCP connection to irus.jisc.ac.uk:443 (execution expired)")
         
         Rails.logger.info("RESQUE RETRY with #{failure['payload']}")
         Resque::Failure.requeue(error_index_number)
