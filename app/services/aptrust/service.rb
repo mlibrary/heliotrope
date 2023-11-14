@@ -5,7 +5,10 @@ module Aptrust
     def ingest_status(identifier) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       # For API V3 we need identifiers that look like fulcrum.org/fulcrum.org.michelt-zc77ss45g
       # and not just fulcrum.org.michelt-zc77ss45g
-      response = connection.get("items?object_identifier=fulcrum.org\/#{identifier}&action=Ingest")
+      # This "Work Items" endpoint always returns multiple, paginated results. Hence `results.first` below.
+      # See https://aptrust.github.io/registry/#/Work%20Items
+      # We'll request one result per page, and use a "date desc" sort to get the most recently-processed ingest for this identifier.
+      response = connection.get("items?object_identifier=fulcrum.org\/#{identifier}&action=Ingest&per_page=1&sort=date_processed__desc")
 
       return 'http_error' unless response.success?
 
