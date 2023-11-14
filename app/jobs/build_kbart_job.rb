@@ -48,7 +48,7 @@ class BuildKbartJob < ApplicationJob
       File.write(new_kbart_name + ".txt", tabs)
 
       # FTP the files to ftp.fulcrum.org
-      sftp_kbart(new_kbart_name, product.group_key)
+      sftp_kbart(new_kbart_name, product.group_key, file_root)
     end
   end
 
@@ -70,12 +70,13 @@ class BuildKbartJob < ApplicationJob
     }
   end
 
-  def sftp_kbart(kbart, group_key)
+  def sftp_kbart(kbart, group_key, file_root)
     config = yaml_config
     if config.present?
       fulcrum_sftp = config['fulcrum_sftp_credentials']
       begin
         Net::SFTP.start(fulcrum_sftp["sftp"], fulcrum_sftp["user"], password: fulcrum_sftp["password"]) do |sftp|
+          maybe_move_old_kbarts(sftp, group_key, file_root)
           Rails.logger.info("Uploading #{kbart + ".csv"} to #{remote_file(kbart, group_key, ".csv")}")
           sftp.upload!(kbart + ".csv", remote_file(kbart, group_key, ".csv"))
           Rails.logger.info("Uploading #{kbart + ".csv"} to #{remote_file(kbart, group_key, ".txt")}")
@@ -86,6 +87,28 @@ class BuildKbartJob < ApplicationJob
       end
     else
       Rails.logger.error("No SFTP configuration file found, '#{kbart}' will not be sent!")
+    end
+  end
+
+  # HELIO-4531
+  # fulcimen can only handle building marcs reliably if there is a single kbart per product
+  # Not all kbarts get marc files generated only UMPEBC, BAR, Amherst and Lever
+  def maybe_move_old_kbarts(sftp, group_key, file_root)
+    return unless ['umpebc', 'bar', 'amherst', 'leverpress', 'test_product'].include?(group_key)
+
+    old_kbart_dir = if group_key == "umpebc"
+                      File.join(group_key_ftp_dir_map[group_key], "UMPEBC_old")
+                    else
+                      File.join(group_key_ftp_dir_map[group_key], "#{group_key}_old")
+                    end
+
+    # You can't move, only "rename", https://stackoverflow.com/a/22260984 which makes this annoying
+    sftp.dir.entries(group_key_ftp_dir_map[group_key]).each do |entry|
+      match = entry.name.match(/#{file_root}_\d\d\d\d-\d\d-\d\d\.\w{3}$/)
+      if match.present? && match[0].present?
+        Rails.logger.info("Moving old kbart: #{File.join(group_key_ftp_dir_map[group_key], entry.name)} to #{File.join(old_kbart_dir, entry.name)}")
+        sftp.rename(File.join(group_key_ftp_dir_map[group_key], entry.name), File.join(old_kbart_dir, entry.name))
+      end
     end
   end
 

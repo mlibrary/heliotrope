@@ -75,12 +75,14 @@ RSpec.describe BuildKbartJob, type: :job do
 "C Book Italic","","C987654321","","","","","","","https://doi.org/10.3998/mpub.C","Cassidy","10.3998/mpub.C","","fulltext","","C Press","monograph","","2023-01-10","","","","","","F"
     KBART
     end
-    let(:sftp) { double('sftp') }
+    let(:sftp) { double('sftp', dir: dir, rename: true) }
     let(:login) { { fulcrum_sftp_credentials: { sftp: 'fake', user: 'fake', password: 'fake', root: '/' } }.with_indifferent_access }
+    let(:dir) { double("dir") }
 
     before do
       allow_any_instance_of(BuildKbartJob).to receive(:yaml_config).and_return(login)
       allow(Net::SFTP).to receive(:start).and_yield(sftp)
+      allow(dir).to receive(:entries).and_return([])
     end
 
     context "without components" do
@@ -293,6 +295,56 @@ RSpec.describe BuildKbartJob, type: :job do
         expect(config["user"]).to eq "username"
         expect(config["password"]).to eq "password"
         expect(config["root"]).to eq "/"
+      end
+    end
+  end
+
+  describe "#maybe_move_old_kbarts" do
+    # I'd rather not actually connect to sftp from rspec so mocks it is. Hope it's good enough.
+    let(:sftp) { double("sftp", dir: dir, rename: true) }
+    let(:dir) { double("dir") }
+
+    context "umpebc" do
+      let(:group_key) { "umpebc" }
+      let(:file_root) { "UMPEBC_2018" }
+      let(:entry1) { double("entry", name: "UMPEBC_2018_2022-01-01.csv") }
+      let(:entry2) { double("entry", name: "UMPEBC_2018_2022-01-01.txt") }
+      let(:bad_entry) { double("entry", name: "UMPEBC_2018-but-then-something-wrong.txt") }
+      let(:entries) do
+        [ entry1, entry2, bad_entry ]
+      end
+
+      before do
+        allow(sftp.dir).to receive(:entries).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART").and_return(entries)
+      end
+
+      it "renames (moves) the old kbarts to UMPEBC_old" do
+        subject.maybe_move_old_kbarts(sftp, group_key, file_root)
+        expect(sftp).to have_received(:rename).exactly(2).times
+        expect(sftp).to have_received(:rename).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_2018_2022-01-01.csv", "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old/UMPEBC_2018_2022-01-01.csv")
+        expect(sftp).to have_received(:rename).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_2018_2022-01-01.txt", "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old/UMPEBC_2018_2022-01-01.txt")
+      end
+    end
+
+    context "amherst" do
+      let(:group_key) { "amherst" }
+      let(:file_root) { "amherst" }
+      let(:entry1) { double("entry", name: "amherst_2023-04-04.csv") }
+      let(:entry2) { double("entry", name: "amherst_2023-04-04.txt") }
+      let(:bad_entry) { double("entry", name: "amherst_deleted.txt") }
+      let(:entries) do
+        [entry1, entry2, bad_entry]
+      end
+
+      before do
+        allow(sftp.dir).to receive(:entries).with("/home/fulcrum_ftp/ftp.fulcrum.org/Amherst_College_Press/KBART").and_return(entries)
+      end
+
+      it "renames (moves) the old kbarts amherst_old" do
+        subject.maybe_move_old_kbarts(sftp, group_key, file_root)
+        expect(sftp).to have_received(:rename).exactly(2).times
+        expect(sftp).to have_received(:rename).with("/home/fulcrum_ftp/ftp.fulcrum.org/Amherst_College_Press/KBART/amherst_2023-04-04.csv", "/home/fulcrum_ftp/ftp.fulcrum.org/Amherst_College_Press/KBART/amherst_old/amherst_2023-04-04.csv")
+        expect(sftp).to have_received(:rename).with("/home/fulcrum_ftp/ftp.fulcrum.org/Amherst_College_Press/KBART/amherst_2023-04-04.txt", "/home/fulcrum_ftp/ftp.fulcrum.org/Amherst_College_Press/KBART/amherst_old/amherst_2023-04-04.txt")
       end
     end
   end
