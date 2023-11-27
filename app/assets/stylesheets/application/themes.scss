@@ -166,7 +166,7 @@ button:focus {
 
   // buttons
 
-  .btn-default {
+  .btn-default, .btn {
     @include button-background-color($heb-accent-color);
     @include button-font-color($heb-brand-color);
     border-color: #91a3b0;
@@ -175,7 +175,7 @@ button:focus {
   }
 
   .download {
-    .btn-default {
+    .btn-default, .btn {
     @include button-background-color($heb-accent-color);
     @include button-font-color($heb-brand-color);
     border-color: #91a3b0;
@@ -185,7 +185,9 @@ button:focus {
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color(#7b90a0);
     @include button-hover-font-color(#fff);
     border-color: #738a9b;
@@ -1828,19 +1830,23 @@ $atg-black-80: #342f2e;
 
   // buttons
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($atg-brand-color);
     @include button-font-color($atg-white);
   }
 
   .download {
-    .btn-default {
+    .btn-default,
+    .btn {
       @include button-background-color($atg-brand-color);
     }
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($atg-grey-4);
     @include button-hover-font-color($atg-brand-color);
   }
@@ -1848,8 +1854,18 @@ $atg-black-80: #342f2e;
   // navigation menu
   .navbar-default .navbar-nav > .open > a,
   .navbar-default .navbar-nav > .open > a:hover,
-  .navbar-default .navbar-nav > .open > a:focus {
-    background-color: $atg-grey-2;
+  .navbar-default .navbar-nav > .open > a:focus,
+  .navbar-light .navbar-nav .dropdown .nav-link {
+    color: $atg-white;
+    padding-top: 0;
+  }
+
+  .navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+
+  .navbar-light .navbar-toggler {
+    border-color: $atg-white;
   }
 
   #brand-bar {
@@ -2035,6 +2051,14 @@ $atg-black-80: #342f2e;
   #sort-dropdown .dropdown-toggle:active,
   #per_page-dropdown .dropdown-toggle:active {
     color: $atg-brand-color;
+  }
+
+  .blacklight-icons svg {
+    fill: $atg-white;
+  }
+
+  .blacklight-icons svg:hover {
+    fill: $atg-brand-color;
   }
 
   .constraints-container {
@@ -2267,7 +2291,8 @@ $amherst-grey-3: #dee2e6;
     @include brandon;
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($amherst-secondary-color);
     @include button-font-color($amherst-white);
     border-color: $amherst-secondary-color;
@@ -2275,7 +2300,9 @@ $amherst-grey-3: #dee2e6;
 
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($amherst-button-hover);
     @include button-font-color($amherst-white);
     border-color: $amherst-button-hover-border-color;
@@ -2348,10 +2375,10 @@ $amherst-grey-3: #dee2e6;
       margin: 3rem 1.8rem;
     }
 
-  }
+    #brand-bar-nav {
+      flex-direction: row-reverse;
+    }
 
-  .navbar-right {
-    margin-right: 0;
   }
 
   .navbar-default .navbar-nav {
@@ -2447,6 +2474,10 @@ $amherst-grey-3: #dee2e6;
       color: $amherst-white;
     }
 
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: $amherst-white;
   }
 
   // search resources
@@ -2828,7 +2859,8 @@ $bigten-black: #000;
     font-weight: 600;
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($bigten-accent-color);
     @include button-font-color($bigten-white);
     border-color: $bigten-accent-color;
@@ -2836,7 +2868,8 @@ $bigten-black: #000;
   }
 
   .download {
-    .btn-default {
+    .btn-default,
+    .btn {
     @include button-background-color($bigten-accent-color);
     @include button-font-color($bigten-white);
     border-color: $bigten-accent-color;
@@ -2845,7 +2878,9 @@ $bigten-black: #000;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($bigten-brand-color);
     @include button-hover-font-color(#fff);
     border-color: $bigten-brand-color;
@@ -2991,7 +3026,7 @@ $bigten-black: #000;
     }
 
     .navbar-brand-logo {
-      padding-right: 8.5rem;
+      padding-right: 5.3rem;
     }
 
     .navbar-brand h1 {
@@ -3050,6 +3085,10 @@ $bigten-black: #000;
   // monograph catalog
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
     color: $bigten-white;
+  }
+
+  .blacklight-icons svg {
+    fill: $bigten-white;
   }
 
   // monograph
@@ -3421,6 +3460,11 @@ $bridwell-black-80: #342f2e;
     margin-left: 0;
   }
 
+  #brand-bar-nav {
+    justify-content: space-between;
+    flex-direction: row-reverse;
+  }
+
   #brand-bar {
     background-color: $bridwell-brand-color;
     border-color: $bridwell-brand-color;
@@ -3429,7 +3473,7 @@ $bridwell-black-80: #342f2e;
 
     .navbar-brand {
       color: $bridwell-white;
-      padding: 11px 15px 15px 15px;
+      padding: 11px 15px 15px 0px;
 
       img {
         height: 30px;
@@ -3478,6 +3522,9 @@ $bridwell-black-80: #342f2e;
   }
 
   // press catalog
+  #main {
+    padding-top: 2rem;
+  }
 
   // jumbotron
   .jumbotron {
@@ -3849,7 +3896,8 @@ $barpublishing-white: #fff;
     }
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($barpublishing-grey-3);
     @include button-font-color($barpublishing-white);
     border-color: $barpublishing-grey-3;
@@ -3857,7 +3905,9 @@ $barpublishing-white: #fff;
 
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active  {
     @include button-hover-background-color($barpublishing-brand-color);
     @include button-font-color($barpublishing-white);
     text-decoration: none;
@@ -3882,6 +3932,10 @@ $barpublishing-white: #fff;
       height: auto;
     }
 
+    #brand-bar-nav {
+      justify-content: flex-end;
+    }
+
     .navbar-nav {
       a#add-content,
       a.login,
@@ -3901,7 +3955,7 @@ $barpublishing-white: #fff;
       background-color: $barpublishing-grey-3;
       border-color: $barpublishing-grey-3;
       color: $barpublishing-white;
-      height: 34px;
+      height: auto;
     }
 
     form.search-form {
@@ -3911,7 +3965,6 @@ $barpublishing-white: #fff;
 
     .custom-nav {
       display: inline-block;
-      padding-top: 5em;
 
       li::after {
         content: "|";
@@ -4002,12 +4055,6 @@ $barpublishing-white: #fff;
     }
   }
 
-
-  .alert-dismissible .close {
-    top: -18px;
-    right: -16px;
-  }
-
   .press {
     .results-container {
 
@@ -4065,23 +4112,23 @@ $barpublishing-white: #fff;
     border-radius: 0px;
   }
 
-  .panel-heading {
+  .card-heading {
     padding-top: 15px;
   }
 
-  .panel-group .panel + .panel {
+  .card-group .card + .card {
     margin-top: 0px;
   }
 
-  h3.panel-title a, a.more_facets_link {
+  h3.card-title a, a.more_facets_link {
     color: #000;
   }
 
-  .panel-heading.collapse-toggle .panel-title::after {
+  .card-heading.collapse-toggle .card-title::after {
     color: #000;
   }
 
-  .panel-body {
+  .card-body {
     background-color: #fafafa;
 
   }
@@ -4110,6 +4157,10 @@ $barpublishing-white: #fff;
       color: $barpublishing-white;
     }
 
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: $barpublishing-white;
   }
 
   // book pages
@@ -6454,7 +6505,7 @@ $gabii-link-hover:    #1e5667;
   }
 
   // buttons and alerts
-  .btn {
+  .btn, .btn-default {
     @include lato;
     color: $gabii-white;
     background-color: $gabii-brand-color;
@@ -6464,9 +6515,6 @@ $gabii-link-hover:    #1e5667;
       background-color: $gabii-accent-color;
     }
   }
-
-  .btn-default,
-  .btn
 
   // navigation menu
   .navbar-default .navbar-nav > .open > a,
@@ -6479,11 +6527,6 @@ $gabii-link-hover:    #1e5667;
     @include lato;
     border-bottom: none;
     height: unset;
-
-    .container {
-      padding: 0 !important;
-      max-width: unset;
-    }
 
     .nav-browse {
       display: inline-block;
@@ -6550,7 +6593,16 @@ $gabii-link-hover:    #1e5667;
       @include lato;
     }
 
+    #brand-bar-nav {
+      justify-content: space-between;
+      flex-direction: row-reverse;
+    }
+
   }
+
+  .navbar-light .navbar-toggler-icon {  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); 
+  }
+  .navbar-light .navbar-toggler { border-color: #FFF; }
 
   // breadcrumbs
   .breadcrumbs {
@@ -6904,8 +6956,7 @@ $gabii-link-hover:    #1e5667;
     height: unset;
 
     .container {
-      padding: 0 !important;
-      max-width: unset;
+      padding: 0 !important;      
     }
 
     .nav-browse {
@@ -8275,6 +8326,23 @@ $a2ru-white: #fafafa;
 ///////////////////////////////////////////////
 //
 // Michigan Publishing Services
+// Dialogue (dialogue)
+//
+///////////////////////////////////////////////
+.dialogue {
+  #brand-bar .navbar-brand {
+    display: flex;
+    width: 30%;
+    white-space: pre-wrap;
+    flex-grow: 1;
+    font-size: 1.2rem;
+  }
+}
+
+
+///////////////////////////////////////////////
+//
+// Michigan Publishing Services
 // Free Electrical Engineering Textbook Initiative (ee)
 //
 ///////////////////////////////////////////////
@@ -8392,6 +8460,10 @@ $fia-teal-100: #e9f2f5;
   }
 
   // navigation menu
+  header {
+    border-bottom: 2px solid  $fia-blue-400;
+  }
+
   .navbar-default .navbar-nav > .open > a,
   .navbar-default .navbar-nav > .open > a:hover,
   .navbar-default .navbar-nav > .open > a:focus {
@@ -8413,9 +8485,9 @@ $fia-teal-100: #e9f2f5;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: unset;
-      font-size: 1.8em;
+      font-size: 1.5em;
       height: auto;
-      padding: 20px 20px 19px 15px;
+      padding-left: 0;
     }
 
     .navbar-brand > img {

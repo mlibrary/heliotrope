@@ -122,6 +122,21 @@ $gray-60: #686868;
   margin-bottom: 0 !important;
 }
 
+.navbar-light .navbar-nav {
+  .dropdown {
+    .nav-link {
+      color: $base-color-color;
+    }
+  }
+}
+
+.navbar-nav {
+  background-color: transparent;
+  .nav-link {
+    padding-bottom: 0;
+  }
+}
+
 // skip links
 div.skip {
   position: absolute;
@@ -233,7 +248,16 @@ div.skip {
     text-decoration: underline !important;
   }
 }
-
+//////////////////////////////////
+// PAGINATION
+///////////////////////////////////
+.pagination {
+  .page-item {
+    a {
+      text-decoration: none;
+    }
+  }
+}
 //////////////////////////////////
 // SURVEY
 ///////////////////////////////////
@@ -368,6 +392,7 @@ footer.press {
   .platform {
     padding-top: 30px;
     color: #FFFFFF;
+    font-size: .9rem;
   }
 
   .press-block-c {
@@ -558,29 +583,40 @@ footer.press {
     // this comes from blacklight and we don't use it.
     display: none;
   }
-
   .card {
     margin-bottom: 0px;
+    border-radius: 0;
 
     .card-header {
       margin-top: 0px;
       .btn {
         font-weight: 700;
-        margin-top: .5em;
-        margin-bottom: .5em;
+        border-radius: 0;
+        background-color: rgba(0, 0, 0, 0.03);
+        color: rgb(33, 37, 41);
+        border-color: rgba(0, 0, 0, 0.125);
       }
     }
   }
 
   .access-legend {
-    margin-top: 1em;
+    margin-top: 1rem;
 
     .card-header {
-      text-align: left;
-      padding-left: .5rem;
-      font-size: 1rem;
-      line-height: 1.5;
-      border-radius: .25rem;
+      font-size: 1.2rem;
+
+      h3 {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+
+    .list-group {
+      font-size: .9rem;
+      
+      img {
+        vertical-align: sub;
+      }
     }
   }
 }
