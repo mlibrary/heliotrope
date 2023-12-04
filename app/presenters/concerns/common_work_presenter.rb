@@ -128,4 +128,34 @@ module CommonWorkPresenter
     link_content = '<img alt="' + term + '" style="border-width:0" src="' + link_content + '"/>'
     link_content.html_safe # rubocop:disable Rails/OutputSafety
   end
+
+  # HELIO-4508 for pdf watermarks
+  def license_abbreviated
+    # I don't know how to properly get abbreviated CC licenses so we'll do the best we can by parsing the url
+    # of possible licenses in config/authorities/license.yml and "converting" them.
+    return unless license?
+    url = solr_document.license.first.sub('http:', 'https:')
+    return "All Rights Reserved" if /all-rights-reserved/.match?(url)
+    return "CC0 1.0 DEED" if /publicdomain\/zero\/1\.0/.match?(url)
+    return "PDM 1.0 DEED" if /publicdomain\/mark\/1\.0/.match?(url)
+
+    # The rest of the licenses are CC licenses and seem to be like:
+    # https://creativecommons.org/licenses/by-nc-nd/3.0/
+    # or
+    # https://creativecommons.org/licenses/by-sa/2.1/jp/
+    # so
+    # license/RIGHTS/VERSION/COUNTRY(optional)/
+    abbrv = nil
+    if /licenses/.match?(url)
+      parts = url.delete_prefix("https://creativecommons.org/licenses/").split("/")
+      rights = parts[0].upcase
+      version = parts[1]
+      country = parts[2]&.upcase
+
+      abbrv = "CC #{rights} #{version}"
+      abbrv += " #{country}" if country.present?
+      abbrv += " DEED"
+    end
+    abbrv
+  end
 end

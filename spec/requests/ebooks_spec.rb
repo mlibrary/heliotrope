@@ -77,6 +77,7 @@ RSpec.describe "PDF EBooks", type: :request do
                                               authors: '',
                                               epub?: false,
                                               pdf_ebook?: true,
+                                              license?: false,
                                               creator: [],
                                               title: 'title',
                                               date_created: nil,
@@ -102,10 +103,14 @@ RSpec.describe "PDF EBooks", type: :request do
           end
 
           context 'presenter has all citation metadata needed for the watermark/stamp' do
+            let(:solr_document) { double("solr_document", license: ["http://url.for.cc.license.com"]) }
             let(:presenter) { instance_double(Hyrax::MonographPresenter, id: 'validnoid', citations_ready?: true,
                                               authors: 'Ann Author and Ann Other',
                                               epub?: false,
                                               pdf_ebook?: true,
+                                              license?: true,
+                                              license_abbreviated: "CC BY 4.0 DEED",
+                                              solr_document: solr_document,
                                               creator: ['Doe, A. Deer'],
                                               title: 'title',
                                               date_created: ['created'],

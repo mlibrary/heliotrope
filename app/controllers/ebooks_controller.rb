@@ -23,6 +23,7 @@ class EbooksController < CheckpointController
       send_data watermark_pdf(@ebook, @ebook.filename, ebook_file_path), type: 'application/pdf', filename: @ebook.filename
     rescue StandardError => e
       Rails.logger.error "EbooksController.download raised #{e}"
+      Rails.logger.error(e.backtrace.join("\n"))
       head :no_content
     end
   end

@@ -31,7 +31,13 @@ module Watermark
         create_watermark_pdf(fmt, stamp_file_path)
         stamped_file_path = File.join(watermark_pdfs_dir, "watermark_pdf_stamped_#{suffix}.pdf")
 
-        command = "pdftk #{file_path} stamp #{stamp_file_path} output #{stamped_file_path}"
+        # HELIO-4508 version 3.2.2 of pdftk can't do hyperlinks in watermark stamps
+        # command = "pdftk #{file_path} stamp #{stamp_file_path} output #{stamped_file_path}"
+        # qpdf can add watermakrks with hyperlinks so we'll use that.
+        # qpdf sends warnings to stderr (and there are a lot of warnings) so --warning-exit-0 to send an exit code 0 for warnings
+        # command = "qpdf --warning-exit-0 --overlay #{stamp_file_path} --repeat=1 -- #{file_path} #{stamped_file_path}"
+        # Unfortunatly circle ci is stuck on verion 9 of qpdf so we can't use --warning-exit-0 yet. See HELIO-4508
+        command = "qpdf --overlay #{stamp_file_path} --repeat=1 -- #{file_path} #{stamped_file_path}"
 
         run_command_with_timeout(command, 120) # Timout in seconds see HELIO-4530, HELIO-4534
         IO.binread(stamped_file_path)
@@ -69,25 +75,65 @@ module Watermark
     # Returns Prawn::Text::Formatted compatible structure
     def watermark_formatted_text
       struct = export_as_mla_structure(parent_presenter)
-      wrapped = wrap_text(struct[:author] + '___' + struct[:title], 150)
+      # We don't really know how wide things should be, we just want them less then the total width of the pdf margin box
+      # inside of an A3. But, that box can be different depending on the pdf (I think).
+      # So it's trial and error hence the magic width number which is used to add newlines inside really long text
+      # values that need to be broken up in order to fit in the box.
+      magic_max_char_width_number = 160 # 150
+      wrapped = wrap_text(struct[:author] + '___' + struct[:title], magic_max_char_width_number)
       parts = wrapped.split('___')
-      [{ text: parts[0] },
-       { text: parts[1], styles: [:italic] },
-       { text: "\n" + wrap_text(struct[:publisher], 150) },
-       { text: "\nDownloaded on behalf of #{request_origin}" }
-      ]
+      fmt_txt =  []
+      fmt_txt << { text: parts[0] }
+      fmt_txt << { text: parts[1], styles: [:italic] }
+
+      link_citation(wrap_text(struct[:publisher], magic_max_char_width_number)).each do |result|
+        fmt_txt << result
+      end
+
+      if parent_presenter.license?
+        fmt_txt << { text: "\n" }
+        fmt_txt << {
+                     text: parent_presenter.license_abbreviated,
+                     link: parent_presenter.solr_document.license.first.sub('http:', 'https:')
+                   }
+      end
+      fmt_txt << { text: "\nDownloaded on behalf of #{request_origin}" }
+      fmt_txt
+    end
+
+    def link_citation(publisher_string)
+      citation = []
+      citation << { text: "\n" }
+      if /https/.match?(publisher_string)
+        match = /^.*(https:\/\/.*).$/.match(publisher_string)
+        link = match[1]
+        text = publisher_string.gsub("#{link}", "")
+        text.chomp!(".") # remove that trailing period
+        citation << { text: text }
+        citation << { link: link, text: link }
+        citation << { text: "." }
+      else
+        citation << { text: publisher_string }
+      end
+
+      citation
     end
 
     instrument_method
     def create_watermark_pdf(formatted_text, output_file_path)
-      size = 10
+      size = 10 # font size
       text = formatted_text.pluck(:text).join('')
-      height = (text.lines.count + 1) * size
-      width = 0
+      height = (text.lines.count + 1) * size # height of the bounding box
+      width = 0 # width of the bounding box
       text.lines.each do |line|
         width = (width < line.size) ? line.size : width
       end
-      width *= (size / 2.0)
+      # This is a guess. Font width and spacing vs. font height is complicated.
+      # PDF margins are variable. This is trail and error.
+      # The number below was 2, and some letters probably are half as wide as they are tall, but not all of them.
+      # We're not using a monospace font so this is not consistent.
+      width *= (size / 2.1)
+
       # we are no longer examining the page size and the stamp auto-sizing of command line tools like qpdf or pdftk...
       # is neater if the stamp is being shrunk, keeping the watermark in what would be considered the "footer" area.
       # Hence A3 with a text size of 10 on the stamp. Cause we have a variety of page sizes but none should be...
@@ -98,8 +144,29 @@ module Watermark
             italic: Rails.root.join('app', 'assets', 'fonts', 'OpenSans-Italic.ttf'),
         })
 
+        # Uncomment these to help see what's going on with layout
+        # stroke_axis
+        # stroke_circle [0, 0], 10
+
+        # bounding_box_height is used to position the watermark based on number of lines in the watermark, keeping it low on the page
+        # without falling off while not obscuring the acutal book text.
+        # A pdf with no license and no long titles or other text is normally 3 lines. This is most of them.
+        # With a license it's 4 lines.
+        # With long text it could be broken up into an unknown number, but this is very unusual.
+        bounding_box_height = if text.lines.count <= 4
+                                size
+                              elsif text.lines.count == 5
+                                size * 2
+                              elsif text.lines.count == 6
+                                size * 3
+                              else
+                                size * 4
+                              end
+
         font('OpenSans', size: size) do
-          bounding_box([0, size], width: width, height: height) do
+          bounding_box([0, bounding_box_height], width: width, height: height) do
+            # Uncomment to help see layout
+            # stroke_bounds
             transparent(0.5) do
               fill_color "ffffff"
               stroke_color "ffffff"
@@ -138,6 +205,17 @@ module Watermark
           Process.kill('HUP', pid)
           fail
         end
+
+        # qpdf fails all the time because it considers warnings to be errors. It writes warnings to stderr which
+        # is kind of annoying. In newer versions, 10+ I think, you can pass the "-warning-exit-0" flag which stops this from happening.
+        # Unfortunatly even though we have 10+ in development and production, we don't have it in circle ci.
+        # See HELIO-4508. For now we do some bad string matching to see if this is a "real" error
+        # Error warnings will look like this:
+        #
+        # "WARNING: /home/sethajoh/apps/heliotrope/spec/fixtures/0.pdf: reported number of objects (17) is not one plus the highest object number (134)\n
+        # qpdf: operation succeeded with warnings; resulting file may have some problems\n"
+
+        return if err.match?("warning") && err.match("operation succeeded")
         raise "Unable to execute command \"#{cmd}\"\n#{err}\n#{out}" unless exit_status.success?
       end
     end
