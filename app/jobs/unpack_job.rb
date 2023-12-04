@@ -167,6 +167,9 @@ class UnpackJob < ApplicationJob
           # qpdf lineariztion VERY OFTEN will produce an "error" even if linearization succeeds
           # It's really more of a warning... but just rescuing everything is bad.
           # TODO: a better way to handle this and maybe job errors generally
+          # UPDATE 2023: You can now use the --warning-exit-0 to stop warnings from producing an error code in stderr
+          # https://github.com/qpdf/qpdf/issues/232
+          # So we could do that, but this has been working as is for a few years so I'll leave it as is for now.
           Rails.logger.error("[PDF LINEARIZE ERROR] #{e.message}")
           # make sure we've pulled the pdf out of fedora even if lineariztion has failed
           FileUtils.copy(file, "#{root_path}.pdf") unless File.exist? "#{root_path}.pdf"

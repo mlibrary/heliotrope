@@ -143,6 +143,7 @@ class EPubsController < CheckpointController
     send_data watermark_pdf(@entity, chapter_title, chapter_file_path, chapter_index), type: "application/pdf", filename: chapter_download_name, disposition: "inline"
   rescue StandardError => e
     Rails.logger.error "EPubsController.download_interval raised #{e}"
+    Rails.logger.error(e.backtrace.join("\n"))
     head :no_content
   end
 

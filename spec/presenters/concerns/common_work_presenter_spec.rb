@@ -304,4 +304,46 @@ RSpec.describe CommonWorkPresenter do
       end
     end
   end
+
+  describe "#license_abbreviated" do
+    subject { presenter.license_abbreviated }
+    let(:solr_document) { instance_double(SolrDocument, 'solr_document', license: [license]) }
+    let(:license) { }
+
+    context "https://www.press.umich.edu/about/licenses#all-rights-reserved" do
+      let(:license) { "https://www.press.umich.edu/about/licenses#all-rights-reserved" }
+
+      it { is_expected.to eq "All Rights Reserved" }
+    end
+
+    context "https://creativecommons.org/publicdomain/zero/1.0/" do
+      let(:license) { "https://creativecommons.org/publicdomain/zero/1.0/" }
+
+      it { is_expected.to eq "CC0 1.0 DEED" }
+    end
+
+    context "https://creativecommons.org/publicdomain/mark/1.0/" do
+      let(:license) { "https://creativecommons.org/publicdomain/mark/1.0/" }
+
+      it { is_expected.to eq "PDM 1.0 DEED" }
+    end
+
+    context "https://creativecommons.org/licenses/by/4.0/" do
+      let(:license) { "https://creativecommons.org/licenses/by/4.0/" }
+
+      it { is_expected.to eq "CC BY 4.0 DEED" }
+    end
+
+    context "https://creativecommons.org/licenses/by-nc-sa/3.0/" do
+      let(:license) { "https://creativecommons.org/licenses/by-nc-sa/3.0/" }
+
+      it { is_expected.to eq "CC BY-NC-SA 3.0 DEED" }
+    end
+
+    context "https://creativecommons.org/licenses/by-sa/2.1/jp/" do
+      let(:license) { "https://creativecommons.org/licenses/by-sa/2.1/jp/" }
+
+      it { is_expected.to eq "CC BY-SA 2.1 JP DEED" }
+    end
+  end
 end
