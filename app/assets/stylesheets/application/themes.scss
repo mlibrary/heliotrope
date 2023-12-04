@@ -771,6 +771,619 @@ button:focus {
 }
 ///////////////////////////////////////////////
 //
+// Aperio
+//
+///////////////////////////////////////////////
+// colors
+$aperio-brand-color: #E57200;
+$aperio-accent-color: #272822;
+$aperio-accent-color-light: #E5E9ED;
+$aperio-headings: rgb(33, 43, 54);
+//$aperio-link: #4500E6;
+$aperio-link: #005679;
+$aperio-black: #000000;
+$aperio-white: #fff;
+
+// typography
+@mixin gibson {
+  font-family: "canada-type-gibson", sans-serif;
+}
+
+.gibson {
+  @include gibson;
+}
+
+@mixin garamond {
+  font-family: adobe-garamond-pro, serif;
+}
+
+.garamond {
+  @include garamond;
+}
+
+.aperio {
+
+  // svgicon
+  #documents, #resource-page-svgicon {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(38%) sepia(20%) saturate(1106%) hue-rotate(165deg) brightness(93%) contrast(96%); // $um-accent-link: rgb(29, 116, 145);
+
+    }
+
+  }
+
+  // typography
+  @include garamond;
+
+  h1 {
+    @include gibson;
+    font-weight: 600;
+    color: $aperio-headings;
+    font-size: 2em;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include gibson;
+    font-weight: 500;
+    color: $aperio-headings;
+  }
+
+  h2 {
+    margin-top: 2em;
+    font-size: 1.85em;
+  }
+
+  h3 {
+    font-size: 1.45em;
+  }
+
+  h4 {
+    font-size: 1.2em;
+  }
+
+  h3,
+  h4,
+  h5 {
+    margin-top: 1rem;
+  }
+
+  .bold {
+    font-weight: 500;
+  }
+
+  .text-light {
+    color: #f8f9fa !important;
+  }
+
+  p, ul li, ol li, span {
+    font-weight: 300;
+    font-size: 1.375em;
+  }
+
+  // links
+  a:focus,
+  button:focus,
+  .form-control:focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px $aperio-brand-color,0 0 0 3px $aperio-accent-color;
+    border-radius: 0px !important;
+  }
+
+  a, .link {
+    color: $aperio-link;
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  button:hover,
+  button:active,
+  .link:hover {
+    color: $aperio-link;
+    text-decoration-thickness: 2px;
+  }
+
+  a.btn, a.previous, a.next {
+    text-decoration: none;
+  }
+
+  // buttons
+  .btn, .btn-group {
+    @include gibson;
+    font-weight: 500;
+  }
+
+  .btn-default {
+    @include button-background-color($aperio-accent-color);
+    @include button-font-color(#fff);
+    border-color: $aperio-accent-color;
+    font-weight: 500;
+    @include gibson;
+  }
+
+  .download {
+    .btn-default {
+    @include button-background-color($aperio-accent-color);
+    @include button-font-color(#fff);
+    border-color: $aperio-accent-color;
+    font-weight: 500;
+    @include gibson;
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active {
+    @include button-hover-background-color(#131310);
+    @include button-hover-font-color(#fff);
+    border-color: #0c0c0b;
+    font-weight: 500;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: #fff;
+  }
+
+  // navigation menu
+
+  .nav,
+  header {
+    @include gibson;
+  }
+
+  header {
+    background-color: $aperio-accent-color;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    hgroup {
+      height: auto;
+    }
+    .container {
+      padding: 16px 15px !important;
+      height: 94px;
+      max-width: 1140px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end !important;
+
+      // search box and links
+      .col-md-4.pt-3 {
+        display: flex;
+        flex-direction: column;
+        padding-top: 16px;
+
+        form.navbar-form {
+          margin: 0;
+          padding: 0;
+        }
+
+        form {
+          @include garamond;
+
+          .input-group {
+            display: flex;
+            position: relative;
+            width: 80%;
+            align-items: stretch;
+
+            .form-control {
+              position: relative;
+              flex: 1 1 auto;
+              width: 1%;
+              margin-bottom: 0;
+              display: block;
+              padding: 6px 12px;
+              font-size: 16px;
+              line-height: 1.5;
+              background-clip: padding-box;
+              border: 1px solid $aperio-black;
+              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+              color: rgb(73, 80, 87) !important;
+            }
+          }
+
+          input.search-query {
+            background-color: #F3F3F3;
+            border-right: none !important;
+            color: rgb(73, 80, 87) !important;
+            height: 38px;
+          }
+
+          button.search-submit {
+            background-color: $aperio-brand-color;
+            border-top: $aperio-black 1px solid;
+            border-right: $aperio-black 1px solid;
+            border-bottom: $aperio-black 1px solid;
+            border-left: none !important;
+            height: 100%;
+            padding: 0;
+            text-transform: none;
+            overflow: visible;
+            border-radius: 0;
+            margin: 0;
+            width: 53px;
+            height: 38px;
+
+            svg {
+              height: auto;
+              width: auto;
+              fill: $aperio-brand-color;
+              stroke-width: 2;
+              color: $aperio-accent-color;
+            }
+          }
+        }
+      }
+    }
+
+    .navbar-brand-logo {
+      display: inline-block;
+      padding-right: 1rem;
+    }
+
+    .navbar-brand h1 {
+      font-weight: 400;
+      letter-spacing: 1.2px;
+      display: inline-block;
+      margin: 0;
+      font-size: 50px;
+      @include gibson;
+      color: $aperio-brand-color;
+
+    }
+
+    .navbar-brand {
+      float: none !important;
+      padding: 8px 0;
+      display: inline-block;
+      margin-right: 13px;
+    }
+    
+    span {
+      font-size: 16px;
+    }
+  }
+
+  // container on all pages
+  #main.container {
+    max-width: 1140px;
+    padding-top: 1.5em;
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include gibson;
+  }
+
+  // press catalog
+
+  .press .document {
+    a {
+      display: block;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  #facets a {
+    text-decoration: none;
+  }
+
+  #facets a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: #fff;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include garamond;
+      }
+    }
+
+    .authors, .copyright {
+      @include gibson;
+    }
+
+    button.search-submit {
+      background-color: $aperio-accent-color;
+      border-color: $aperio-accent-color;
+      color: #fff;
+      height: 34px;
+    }
+  }
+
+  // pagination
+  .page_links {
+    @include gibson;
+  }
+
+  .pagination {
+    @include gibson;
+     li a, li span {
+       color: #fff;
+       background-color: $aperio-accent-color;
+       border-color: $aperio-accent-color;
+     }
+
+     li a:hover, li span:hover {
+      color: $aperio-black;
+      background-color: $aperio-brand-color;
+      border-color: $aperio-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $aperio-brand-color;
+       border-color: $aperio-brand-color;
+       color: $aperio-black;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include gibson;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include gibson;
+    }
+
+    .able-transcript-area {
+      .panel-title {
+        margin: 0;
+        color: #fff;
+        font-size: 1em;
+      }
+    }
+  }
+
+  //footer
+  footer.press {
+    background-color: $aperio-black !important;
+    padding: 48px 0 16px;
+
+
+    img.fulcrum {
+      height: 27px !important;
+      width: auto !important;
+    }
+
+    .press-block-c {
+      padding: 0;
+      margin-top: 16px;
+    }
+  }
+
+  footer.press .press-block-a, footer.press .press-block-b {
+    background-color: $aperio-black !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 5px;
+  }
+
+  footer {
+    .container {
+      max-width: 1140px;
+    }
+
+    .row {
+      display: flex;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #dae0e5 !important;
+      text-decoration: none;
+    }
+
+    .press
+    .press-block-a,
+    .press-block-b,
+    .press-block-c {
+      background-color:  $aperio-black !important;
+
+      small {
+        font-size: 12.8px;
+      }
+
+    }
+
+    .press-block-c {
+      font-size: 16px;
+      a {
+        color: #f8f9fa !important;
+      }
+    }
+
+    .admin {
+      vertical-align: middle;
+    }
+
+    section {
+      ul {
+        font-size: 16px;
+      }
+    }
+
+    h2 {
+      font-size: 17px;
+      @include gibson;
+      text-transform: uppercase;
+      margin-top: 0;
+    }
+
+    .block {
+      display: block;
+    }
+
+    .contact  {
+      .d-block {
+        display: block;
+        font-size: 16px;
+      }
+
+      a {
+        color: $aperio-brand-color;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: #994c00 !important;
+        text-decoration: underline;
+      }
+
+      a.logo {
+        display: block;
+        font-weight: 400;
+        letter-spacing: 1.2px;
+        margin: 0;
+        font-size: 50px;
+        font-family: canada-type-gibson,sans-serif;
+        color: #e57200;
+        text-decoration: none;
+      }
+
+      .logo-img img {
+        height: auto;
+        width: 200px;
+      }
+
+      .footer-email {
+        margin-left: 9.6px;
+      }
+    
+    }
+
+    .links {
+      ul {
+        padding-top: 24px;
+        margin-bottom: 16px;
+      }
+      ul li {
+        font-size: 19.6px;
+      }
+    }
+  }
+
+  // e-book reader
+  #reader {
+
+    .cozy-control .cozy-h1 {
+      font-size: 1.5em;
+    }
+
+    .button {
+      @include epub-button-background-color($aperio-accent-color,$aperio-brand-color,$aperio-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($aperio-accent-color,$aperio-brand-color,$aperio-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($aperio-accent-color,$aperio-brand-color,$aperio-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($aperio-accent-color,$aperio-brand-color,$aperio-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color(#f1f1f1,$aperio-brand-color,$aperio-white);
+      color: $aperio-brand-color;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($aperio-accent-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($aperio-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      background: $aperio-accent-color;
+      height: 46.6px;
+      width: 36px;
+      overflow: hidden;
+
+      img {
+        height: 36px;
+        margin-top: 6px;
+        margin-left: 11px;
+      }
+    }
+
+    .modal__footer {
+      background-color: $aperio-brand-color;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $aperio-brand-color;
+    }
+
+  }
+
+  @media(max-width: 768px) {
+
+    header {
+      height: 160px;
+    }
+  
+    header .row .col-md-4.pt-3 {
+      flex-grow: 1;
+    }
+  
+    header .row .col-md-4.pt-3 form.navbar-form {
+      width: 100%;
+      box-shadow: none;
+    }
+  
+    header .row {
+      justify-content: unset !important;
+      margin: 0 auto;
+      width: 95%;
+    }
+
+    footer .row {
+      flex-direction: column;
+    }
+  
+
+  }
+}
+
+
+///////////////////////////////////////////////
+//
 // Art History Publication Initiative
 //
 ///////////////////////////////////////////////
