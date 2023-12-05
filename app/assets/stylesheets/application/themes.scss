@@ -835,11 +835,13 @@ $aperio-white: #fff;
 
   h2 {
     margin-top: 2em;
-    font-size: 1.85em;
+    //font-size: 1.85em;
+    font-size: 25.6px;
   }
 
   h3 {
-    font-size: 1.45em;
+    //font-size: 1.45em;
+    font-size: 20px;
   }
 
   h4 {
@@ -862,7 +864,7 @@ $aperio-white: #fff;
 
   p, ul li, ol li, span {
     font-weight: 300;
-    font-size: 1.375em;
+    font-size: 16px;
   }
 
   // links
@@ -1099,6 +1101,7 @@ $aperio-white: #fff;
 
     .authors, .copyright {
       @include gibson;
+      font-weight: 500;
     }
 
     button.search-submit {
@@ -1156,6 +1159,13 @@ $aperio-white: #fff;
         color: #fff;
         font-size: 1em;
       }
+    }
+  }
+
+  // tabs
+  #tabs {
+    h2 {
+      font-size: 16px;
     }
   }
 
@@ -1293,8 +1303,8 @@ $aperio-white: #fff;
   // e-book reader
   #reader {
 
-    .cozy-control .cozy-h1 {
-      font-size: 1.5em;
+    .cozy-control .cozy-h1 span {
+      font-size: 24px;
     }
 
     .button {
@@ -1314,8 +1324,8 @@ $aperio-white: #fff;
     }
 
     .button--sm.cozy-preferences {
-      @include epub-button-background-color(#f1f1f1,$aperio-brand-color,$aperio-white);
-      color: $aperio-brand-color;
+      @include epub-button-background-color($aperio-accent-color,$aperio-brand-color,$aperio-white);
+      color: $aperio-white;
     }
 
     i[class^='icon-chevron-'] {
@@ -1326,6 +1336,16 @@ $aperio-white: #fff;
     i[class^='icon-chevron-']:hover {
       @include epub-hover-prev-next-color($aperio-brand-color);
       transition: 0.2s ease-in;
+    }
+
+    .modal__header,
+    .modal__title {
+      color: $aperio-white;
+    }
+
+    button.modal__close,
+    button.modal__close::before {
+      color: $aperio-white;
     }
 
     .cozy-control .logo {
