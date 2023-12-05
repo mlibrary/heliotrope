@@ -27,9 +27,15 @@ class PsiReportJob < ApplicationJob
       yaml = YAML.safe_load(File.read(config))
       psi_sftp = yaml['psi_credentials']
 
-      ftp = Net::FTP.open(psi_sftp["ftp"], username: psi_sftp["user"], password: psi_sftp["password"], ssl: true)
-      ftp.put(file_path)
-      ftp.close
+      begin
+        Net::SFTP.start(psi_sftp["ftp"], psi_sftp["user"], password: psi_sftp["password"]) do |sftp|
+          remote_file_path = File.join("/imports", File.basename(file_path))
+          Rails.logger.info("PSI_REPORT: uploading #{file_path} to #{remote_file_path}")
+          sftp.upload!(file_path, remote_file_path)
+        end
+      rescue RuntimeError, Net::SFTP::StatusException => e
+        Rails.logger.error("SFTP ERROR: #{e}")
+      end
     else
       Rails.logger.info("PSI_REPORT: #{config} credentials not present, #{file_path} report not sent")
     end

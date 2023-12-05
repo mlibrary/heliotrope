@@ -9,19 +9,22 @@ RSpec.describe PsiReportJob, type: :job do
     context "with given start and end dates" do
       let(:report_time) { PsiReport::ReportTime.new("2022-02-14", "2022-06-11") }
       let(:file_path) { "/tmp/fulcrum_michigan_psi_report_2022-02-14_2022-06-11.ready.csv" }
+      let(:remote_file_path) { "/imports/fulcrum_michigan_psi_report_2022-02-14_2022-06-11.ready.csv" }
       let(:report_sender) { double("report_sender", send_report: true) }
-      let(:login) { { psi_credentials: { ftp: 'fake', user: 'fake', password: 'fake', root: '/' } }.with_indifferent_access }
-      let(:ftp) { double('ftp', put: true, close: true) }
+      let(:login) { { psi_credentials: { ftp: 'fake', user: 'fake', password: 'fake', root: '/imports' } }.with_indifferent_access }
+      let(:sftp) { double('sftp') }
 
       it "builds and sends the report" do
         allow(File).to receive(:exist?).and_return(true)
         allow(File).to receive(:read).and_return(true)
         allow(YAML).to receive(:safe_load).and_return(login)
-        allow(Net::FTP).to receive(:open).and_return(ftp)
-
-        expect(ftp).to receive(:put).with(file_path).and_return(true)
+        allow(Net::SFTP).to receive(:start).and_yield(sftp)
+        allow(sftp).to receive(:upload!).and_return(true)
 
         described_class.perform_now(press.subdomain, "2022-02-14", "2022-06-11")
+
+        expect(Net::SFTP).to have_received(:start)
+        expect(sftp).to have_received(:upload!).with(file_path, remote_file_path)
       end
     end
   end
