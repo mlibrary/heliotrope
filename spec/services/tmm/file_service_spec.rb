@@ -17,7 +17,6 @@ RSpec.describe Tmm::FileService do
     let(:cover) { Rails.root.join(fixture_path, 'csv', 'import', 'shipwreck.jpg') }
     let(:epub) { Rails.root.join(fixture_path, 'moby-dick.epub') }
 
-
     it "adds files" do
       described_class.add(doc: doc, file: cover, kind: :cover)
       described_class.add(doc: doc, file: epub, kind: :epub)
@@ -28,6 +27,11 @@ RSpec.describe Tmm::FileService do
 
       expect(ordered_members.to_a.size).to eq 3
       expect(ordered_members.to_a[0].label).to eq 'shipwreck.jpg'
+      expect(ordered_members.to_a[0].depositor).to eq monograph.depositor
+      expect(ordered_members.to_a[0].read_users).to match_array(monograph.read_users)
+      expect(ordered_members.to_a[0].edit_users).to match_array(monograph.edit_users)
+      expect(ordered_members.to_a[0].read_groups).to match_array(monograph.read_groups)
+      expect(ordered_members.to_a[0].edit_groups).to match_array(monograph.edit_groups)
 
       expect(ordered_members.to_a[1].label).to eq 'moby-dick.epub'
       expect(ordered_members.to_a[1].allow_download).to eq nil

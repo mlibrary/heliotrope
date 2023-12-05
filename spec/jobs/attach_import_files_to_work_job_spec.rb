@@ -31,6 +31,13 @@ RSpec.describe AttachImportFilesToWorkJob do
       expect(monograph.visibility).to eq monograph_attributes[:visibility]
       expect(monograph.file_sets.count).to eq n
       expect(monograph.file_sets.map(&:visibility)).to all(eq monograph.visibility)
+      monograph.ordered_members.to_a.each do |f|
+        expect(f.depositor).to eq monograph.depositor
+        expect(f.read_users).to match_array(monograph.read_users)
+        expect(f.edit_users).to match_array(monograph.edit_users)
+        expect(f.read_groups).to match_array(monograph.read_groups)
+        expect(f.edit_groups).to match_array(monograph.edit_groups)
+      end
       expect(monograph.ordered_members.to_a.map(&:uri).map(&:to_s)).to eq files.map(&:file_set_uri)
       expect(monograph.representative_id).to be_nil
       expect(monograph.thumbnail_id).to be_nil
