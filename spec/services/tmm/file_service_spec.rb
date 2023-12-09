@@ -46,6 +46,7 @@ RSpec.describe Tmm::FileService do
   describe "#replace?" do
     let(:file1) { Rails.root.join(fixture_path, 'csv', 'shipwreck.jpg') }
     let(:file2) { Rails.root.join(fixture_path, 'csv', 'miranda.jpg') }
+    let(:file3) { Rails.root.join(fixture_path, 'shipwreck_copy.jpg') }
     let(:file_set) { create(:file_set, content: File.open(file1)) }
 
     before do
@@ -55,13 +56,17 @@ RSpec.describe Tmm::FileService do
       allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:probable_image?).and_return(true)
     end
 
-    context "with the same file" do
-      it "returns false" do
+    context "with a file which has the same checksum" do
+      it "returns false when the names also match" do
         expect(described_class.replace?(file_set_id: file_set.id, new_file_path: file1)).to be false
+      end
+
+      it "returns true when the names do not match" do
+        expect(described_class.replace?(file_set_id: file_set.id, new_file_path: file3)).to be true
       end
     end
 
-    context "with a different file" do
+    context "with a file which has a different checksum" do
       # With files from TMM they will actually have the same name (based on isbn), but
       # for this test it's a different name. It doesn't really matter though, we only
       # care about the checksum.
