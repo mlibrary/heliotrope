@@ -296,14 +296,12 @@ class BuildKbartJob < ApplicationJob
   end
 
   def title_url(monograph)
-    # prefer DOI, otherwise return the handle
-    return "https://doi.org/" + monograph.doi if monograph.doi.present?
-
-    # We've got some values in hdl like "2027/spo.13469761.0014.001" so some non-fulcrum handles
-    # I guess prefer whatever is in hdl
-    return "https://hdl.handle.net/" + monograph.hdl if monograph.hdl.present?
-    # Otherwise use the generic fulcrum handle that everything is supposed to get but that isn't stored
-    "https://hdl.handle.net/" + HandleNet::FULCRUM_HANDLE_PREFIX + monograph.id
+    # If there's a doi, use that
+    # If it's HEB, use the heb handle
+    # If it has a handle in the hdl field, use that
+    # Otherwise, use the default fulcrum handle
+    # The CitableLinkPresenter should work for all of those scenarios
+    monograph.citable_link
   end
 
   def first_author_last_name(monograph)

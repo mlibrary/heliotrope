@@ -535,6 +535,14 @@ RSpec.describe BuildKbartJob, type: :job do
       end
     end
 
+    context "if the press is heb" do
+      let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(id: "123456789", press_tesim: "heb", identifier_tesim: ["heb_id:heb00001.0001.001"]), nil) }
+
+      it "returns the heb handle" do
+        expect(subject.title_url(monograph)).to eq "https://hdl.handle.net/2027/heb00001.0001.001"
+      end
+    end
+
     context "if there's a hdl property on the monograph" do
       let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(hdl_ssim: "2027/spo.13469761.0014.001"), nil) }
 

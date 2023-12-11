@@ -205,6 +205,19 @@ describe Import::Importer do
         expect(file_sets[0].visibility).to eq monograph.visibility
         expect(file_sets[8].visibility).to eq monograph.visibility
 
+        # new filesets should have the same user/group permissions as the parent
+        expect(file_sets[0].depositor).to eq monograph.depositor
+        expect(file_sets[0].read_users).to match_array(monograph.read_users)
+        expect(file_sets[0].edit_users).to match_array(monograph.edit_users)
+        expect(file_sets[0].read_groups).to match_array(monograph.read_groups)
+        expect(file_sets[0].edit_groups).to match_array(monograph.edit_groups)
+
+        expect(file_sets[1].depositor).to eq monograph.depositor
+        expect(file_sets[1].read_users).to match_array(monograph.read_users)
+        expect(file_sets[1].edit_users).to match_array(monograph.edit_users)
+        expect(file_sets[1].read_groups).to match_array(monograph.read_groups)
+        expect(file_sets[1].edit_groups).to match_array(monograph.edit_groups)
+
         # ******************************************************
         # *************** Start "reimport" tests ***************
         # ******************************************************
@@ -249,6 +262,19 @@ describe Import::Importer do
         # new filesets should have the same visibility as the parent monograph
         expect(file_sets[12].visibility).to eq monograph.visibility
         expect(file_sets[13].visibility).to eq monograph.visibility
+
+        # new filesets should have the same user/group permissions as the parent monograph
+        expect(file_sets[12].depositor).to eq monograph.depositor
+        expect(file_sets[12].read_users).to match_array(monograph.read_users)
+        expect(file_sets[12].edit_users).to match_array(monograph.edit_users)
+        expect(file_sets[12].read_groups).to match_array(monograph.read_groups)
+        expect(file_sets[12].edit_groups).to match_array(monograph.edit_groups)
+
+        expect(file_sets[13].depositor).to eq monograph.depositor
+        expect(file_sets[13].read_users).to match_array(monograph.read_users)
+        expect(file_sets[13].edit_users).to match_array(monograph.edit_users)
+        expect(file_sets[13].read_groups).to match_array(monograph.read_groups)
+        expect(file_sets[13].edit_groups).to match_array(monograph.edit_groups)
       end
     end
 

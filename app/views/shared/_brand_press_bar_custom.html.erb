@@ -47,6 +47,23 @@
         </div> 
       </div>
     </div>
+  <% elsif %w[aperio].include? press_presenter.subdomain %>
+    <div class="container py-3">
+      <div class="row">
+        <div class="col-md-8">
+          <a class="navbar-brand" href="<%= press_presenter.url %>">
+            <h1>aperio</h1>
+          </a>
+          <span class="text-light garamond"><em>A service of the University of Virginia</em></span>
+        </div>
+        <div class="col-md-4 pt-3">
+          <%= render 'shared/brand_site_search' %>
+          <% if press_presenter.navigation_block.present? %>
+            <%= press_presenter.navigation_block.html_safe %>
+          <% end %>
+        </div> 
+      </div>
+    </div>
   <% else %>
     <% if %w[leverpress amherst].include? press_presenter.subdomain %>
       <nav id="brand-bar" class="navbar navbar-default navbar-fixed-top">
