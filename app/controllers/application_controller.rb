@@ -73,9 +73,15 @@ class ApplicationController < ActionController::Base
 
   def default_url_options
     if @except_locale
+      # this is for WAYFless URLs and such
       super.except(:locale)
     else
-      super
+      super.merge(
+        # gallery/list 'view' is not added here because it's stored in session variables,...
+        # see HyraxHelper.document_index_view_type()
+        per_page: params[:per_page],
+        sort: params[:sort]
+      )
     end
   end
 
