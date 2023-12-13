@@ -7,7 +7,7 @@ class EPubPolicy < ApplicationPolicy
   end
 
   def show?
-    return true if ebook.published? && !ebook.tombstone? && share
+    return true if !ebook.tombstone? && share
 
     EbookReaderOperation.new(actor, ebook).allowed?
   end

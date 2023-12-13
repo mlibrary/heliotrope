@@ -103,12 +103,37 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
     end
 
     # HELIO-4501 Override to use the Hyrax 3.4 version of this with no workflow related code.
-    # We really only depend on allow_download? above for this.
     def authorize_download!
+      return true if authorize_embeds_for_epub_share_link?
+
       authorize! :download, params[asset_param_key]
     rescue CanCan::AccessDenied
       unauthorized_image = Rails.root.join("app", "assets", "images", "unauthorized.png")
       send_file unauthorized_image, status: :unauthorized
+    end
+
+    def authorize_embeds_for_epub_share_link?
+      # adding some logic to allow *draft* FileSet "downloads" to work when a session holds the sibling EPUB's share link.
+      # This is specifically so that draft embedded video, jpeg (video poster), audio and animated gif resources will display in CSB.
+      # Images will work anyway seeing as RIIIF tiles get served regardless of the originating FileSet's publication status.
+
+      if presenter.visibility == 'restricted' && presenter&.parent&.epub? && (jpeg? || video? || sound? || animated_gif? || closed_captions? || visual_descriptions?)
+        # I think the link could only be in the session here, but will check for `params[:share]` anyway
+        share_link = params[:share] || session[:share_link]
+        session[:share_link] = share_link
+
+        if share_link.present?
+          begin
+            decoded = JsonWebToken.decode(share_link)
+
+            return true if decoded[:data] == presenter&.parent&.epub_id
+          rescue JWT::ExpiredSignature
+            false
+          end
+        end
+      else
+        false
+      end
     end
 
     def thumbnail?
