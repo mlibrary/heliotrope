@@ -23,10 +23,12 @@ RSpec.describe EbookDownloadOperation do
 
     it { is_expected.to be false }
 
+    # HELIO-4264: you can't download an EPUB or watermarked PDF from the Monograph catalog page just because you're...
+    # an editor. It causes QC mistakes and confusion over "downloadability" for that button to be present and working.
     context 'when can update' do
       let(:can_update) { true }
 
-      it { is_expected.to be true }
+      it { is_expected.to be false }
     end
 
     context 'when accessible offline' do
