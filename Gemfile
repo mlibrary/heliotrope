@@ -120,6 +120,9 @@ gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', ref: 'baed402
 
 gem 'hyrax', '3.5.0'
 
+# Best solution for a yanked gem while we're still on Ruby 2.x, see https://github.com/dryruby/json-canonicalization/issues/2#issuecomment-1841772415
+gem 'json-canonicalization', '~>0.4', '>= 0.4'
+
 # pinned for Jekyll
 gem 'i18n', '~> 0.7'
 
