@@ -3,10 +3,12 @@
 class EbooksController < CheckpointController
   include Watermark::Watermarkable
   include IrusAnalytics::Controller::AnalyticsBehaviour
+  include Skylight::Helpers
 
   before_action :setup
   before_action :wayfless_redirect_to_shib_login, only: %i[download]
 
+  instrument_method
   def download
     raise NotAuthorizedError unless EbookDownloadOperation.new(current_actor, @ebook).allowed?
     return redirect_to(hyrax.download_path(params[:id])) unless @ebook.watermarkable? && @ebook.publisher.watermark?

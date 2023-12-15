@@ -6,6 +6,7 @@ module Watermark
   module Watermarkable
     extend ActiveSupport::Concern
     include Hyrax::CitationsBehavior
+    include Skylight::Helpers
 
     def run_watermark_checks(file_path)
       # checking `citations_ready?` may seem worthwhile, but we can occasionally have public "pre-publication content"...
@@ -16,6 +17,7 @@ module Watermark
       raise "PDFtk not present on machine" unless system("which pdftk > /dev/null 2>&1")
     end
 
+    instrument_method
     def watermark_pdf(entity, title, file_path = nil, chapter_index = nil)
       fmt = watermark_formatted_text
 
@@ -31,7 +33,7 @@ module Watermark
 
         command = "pdftk #{file_path} stamp #{stamp_file_path} output #{stamped_file_path}"
 
-        run_command_with_timeout(command, 90) # hopefully 90 seconds is enough :-) see HELIO-4530
+        run_command_with_timeout(command, 120) # Timout in seconds see HELIO-4530, HELIO-4534
         IO.binread(stamped_file_path)
       end
     end
@@ -76,6 +78,7 @@ module Watermark
       ]
     end
 
+    instrument_method
     def create_watermark_pdf(formatted_text, output_file_path)
       size = 10
       text = formatted_text.pluck(:text).join('')
@@ -115,6 +118,7 @@ module Watermark
       "pdfwm:#{entity.noid}-#{Digest::MD5.hexdigest(text)}-#{cache_key_timestamp}"
     end
 
+    instrument_method
     def run_command_with_timeout(cmd, time_limit)
       Open3.popen3(cmd) do |_, stdout, stderr, wait_thr|
         out = ''
