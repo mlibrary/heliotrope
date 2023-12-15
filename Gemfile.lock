@@ -529,7 +529,7 @@ GEM
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
     json (2.6.3)
-    json-canonicalization (0.3.2)
+    json-canonicalization (0.4.0)
     json-ld (3.1.10)
       htmlentities (~> 4.3)
       json-canonicalization (~> 0.2)
@@ -1216,6 +1216,7 @@ DEPENDENCIES
   jekyll (~> 3.9.0)
   jquery-rails
   jquery-turbolinks
+  json-canonicalization (~> 0.4, >= 0.4)
   json_schemer
   jwt
   keycard (~> 0.2.4)
