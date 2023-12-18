@@ -173,7 +173,7 @@ gem 'redcarpet', '~> 3.5.1'
 # see HELIO-4484 and https://github.com/samvera/hyrax/pull/5961
 gem 'redlock', '>= 0.1.2', '< 2.0'
 
-gem 'resque', '~> 2.4.0'
+gem 'resque', '~> 2.6.0'
 gem 'resque-pool'
 gem 'resque-web', '~> 0.0.12', require: 'resque_web'
 
