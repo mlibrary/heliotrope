@@ -30,10 +30,11 @@ RSpec.describe EbookIntervalDownloadOperation do
 
       it { is_expected.to be false }
 
-      context 'when can update' do
+      # HELIO-4264: you can't download PDF chapters from the Monograph catalog page just because you're an editor.
+      context 'when can edit' do
         let(:can_update) { true }
 
-        it { is_expected.to be true }
+        it { is_expected.to be false }
       end
 
       context 'when online access' do
