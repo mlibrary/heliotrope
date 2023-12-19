@@ -675,7 +675,7 @@ RSpec.describe EPubsController, type: :controller do
         Greensub::Institution.create!(identifier: Settings.world_institution_identifier, name: "Unknown Insitution", display_name: "Unknown Institution")
       end
 
-      context "A restricted epub with an anonymous user" do
+      context "A restricted epub" do
         let(:valid_share_token) do
           JsonWebToken.encode(data: file_set.id, exp: Time.now.to_i + 48 * 3600)
         end
@@ -692,31 +692,68 @@ RSpec.describe EPubsController, type: :controller do
           Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid)
         end
 
-        it "with a valid share_link" do
-          get :show, params: { id: file_set.id, share: valid_share_token }
-          expect(response).to have_http_status(:success)
-          expect(response).to render_template(:show)
-          expect(ShareLinkLog.count).to eq 1
-          expect(ShareLinkLog.last.action).to eq 'use'
-          expect(ShareLinkLog.last.title).to eq monograph.title.first
-          expect(ShareLinkLog.last.noid).to eq file_set.id
-          expect(ShareLinkLog.last.token).to eq valid_share_token
+        context 'an anonymous user' do
+          it "with a valid share_link" do
+            get :show, params: { id: file_set.id, share: valid_share_token }
+            expect(response).to have_http_status(:success)
+            expect(response).to render_template(:show)
+            expect(ShareLinkLog.count).to eq 1
+            expect(ShareLinkLog.last.action).to eq 'use'
+            expect(ShareLinkLog.last.user).to be_nil
+            expect(ShareLinkLog.last.title).to eq monograph.title.first
+            expect(ShareLinkLog.last.noid).to eq file_set.id
+            expect(ShareLinkLog.last.token).to eq valid_share_token
+          end
+
+          it "with an expired share_link" do
+            get :show, params: { id: file_set.id, share: expired_share_token }
+            expect(response).to have_http_status(:found)
+            expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+            expect(CounterReport.first.turnaway).to eq "No_License"
+            expect(ShareLinkLog.count).to eq 0
+          end
+
+          it "with the wrong share link" do
+            get :show, params: { id: file_set.id, share: wrong_share_token }
+            expect(response).to have_http_status(:found)
+            expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+            expect(CounterReport.first.turnaway).to eq "No_License"
+            expect(ShareLinkLog.count).to eq 0
+          end
         end
 
-        it "with an expired share_link" do
-          get :show, params: { id: file_set.id, share: expired_share_token }
-          expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(monograph_authentication_url(monograph.id))
-          expect(CounterReport.first.turnaway).to eq "No_License"
-          expect(ShareLinkLog.count).to eq 0
-        end
+        context 'a signed-in user' do
+          let(:user) { create(:user) }
 
-        it "with the wrong share link" do
-          get :show, params: { id: file_set.id, share: wrong_share_token }
-          expect(response).to have_http_status(:found)
-          expect(response).to redirect_to(monograph_authentication_url(monograph.id))
-          expect(CounterReport.first.turnaway).to eq "No_License"
-          expect(ShareLinkLog.count).to eq 0
+          before { sign_in user }
+
+          it "with a valid share_link" do
+            get :show, params: { id: file_set.id, share: valid_share_token }
+            expect(response).to have_http_status(:success)
+            expect(response).to render_template(:show)
+            expect(ShareLinkLog.count).to eq 1
+            expect(ShareLinkLog.last.action).to eq 'use'
+            expect(ShareLinkLog.last.user).to eq user.email
+            expect(ShareLinkLog.last.title).to eq monograph.title.first
+            expect(ShareLinkLog.last.noid).to eq file_set.id
+            expect(ShareLinkLog.last.token).to eq valid_share_token
+          end
+
+          it "with an expired share_link" do
+            get :show, params: { id: file_set.id, share: expired_share_token }
+            expect(response).to have_http_status(:found)
+            expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+            expect(CounterReport.first.turnaway).to eq "No_License"
+            expect(ShareLinkLog.count).to eq 0
+          end
+
+          it "with the wrong share link" do
+            get :show, params: { id: file_set.id, share: wrong_share_token }
+            expect(response).to have_http_status(:found)
+            expect(response).to redirect_to(monograph_authentication_url(monograph.id))
+            expect(CounterReport.first.turnaway).to eq "No_License"
+            expect(ShareLinkLog.count).to eq 0
+          end
         end
       end
     end
@@ -759,6 +796,20 @@ RSpec.describe EPubsController, type: :controller do
         expect(response.body).to eq "http://test.host/epubs/222222222?share=#{JsonWebToken.encode(data: '222222222', exp: now.to_i + share_link_expiration_time)}"
         expect(ShareLinkLog.count).to eq 1
         expect(ShareLinkLog.last.action).to eq 'create'
+      end
+
+      context 'with a signed-in user' do
+        let(:user) { create(:press_editor, press: press) }
+
+        before { sign_in user }
+
+        it 'logs the user' do
+          get :share_link, params: { id: '222222222' }
+          expect(response).to have_http_status(:success)
+          expect(ShareLinkLog.count).to eq 1
+          expect(ShareLinkLog.last.action).to eq 'create'
+          expect(ShareLinkLog.last.user).to eq user.email
+        end
       end
 
       context 'with a user with institutions' do

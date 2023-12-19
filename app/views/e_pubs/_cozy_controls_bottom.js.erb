@@ -72,8 +72,11 @@ cozy.control.download({
 }).addTo(reader);
 <% end %>
 
-// Restricted Share Link widget
-<% if @component.present? && @press.allow_share_links? && !@parent_presenter.open_access? && @share_link.nil? %>
+// Restricted Share Link widget. If the press allows share links, then logged-in editors/admins can share draft...
+// content (e.g. with authors) while regular readers can share published, restricted content forward
+<% if @press.allow_share_links? &&
+     (@presenter.visibility == 'restricted' && (current_user.present? && (current_user.editor_presses | current_user.admin_presses)&.include?(@press)) ||
+     (@presenter.visibility == 'open' && @component.present? && !@parent_presenter.open_access? && @share_link.nil?)) %>
 modal = reader.modal({
         region: 'left',
         title: 'Share Temporary Access to this Book',

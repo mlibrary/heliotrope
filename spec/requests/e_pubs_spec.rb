@@ -364,6 +364,7 @@ RSpec.describe "EPubs", type: :request do
                 ip_address: request.ip,
                 institution: institution.name,
                 press: press.subdomain,
+                user: nil,
                 title: monograph.title.first,
                 noid: epub.id,
                 token: token,

@@ -393,6 +393,107 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
         end
       end
     end
+
+    context "share links for derivative files" do
+      let(:monograph) { create(:monograph) }
+
+      let(:published_resource_file_set) {
+        create(:file_set,
+               allow_download: 'no',
+               visibility: 'open',
+               content: File.open(File.join(fixture_path, 'it.mp4')))
+      }
+
+      let(:draft_resource_file_set) {
+        create(:file_set,
+               allow_download: 'no',
+               visibility: 'restricted',
+               content: File.open(File.join(fixture_path, 'it.mp4')))
+      }
+
+      let(:draft_closed_captions_file_set) {
+        create(:file_set,
+               allow_download: 'no',
+               visibility: 'restricted')
+      }
+
+      let(:draft_visual_descriptions_file_set) {
+        create(:file_set,
+               allow_download: 'no',
+               visibility: 'restricted')
+      }
+
+      let(:draft_epub_file_set) {
+        create(:file_set,
+               allow_download: 'no',
+               visibility: 'restricted',
+               content: File.open(File.join(fixture_path, 'fake_epub01.epub')))
+      }
+
+      let(:valid_share_token) do
+        JsonWebToken.encode(data: draft_epub_file_set.id, exp: Time.now.to_i + 48 * 3600)
+      end
+
+      before do
+        monograph.ordered_members << draft_resource_file_set << draft_epub_file_set << draft_closed_captions_file_set
+        monograph.ordered_members << draft_visual_descriptions_file_set << published_resource_file_set
+        monograph.save!
+        draft_resource_file_set.save!
+        draft_epub_file_set.save!
+        published_resource_file_set.save!
+        FeaturedRepresentative.create(work_id: monograph.id, file_set_id: draft_epub_file_set.id, kind: "epub")
+
+        allow(Hyrax::DerivativePath).to receive(:derivative_path_for_reference).and_call_original
+        allow(Hyrax::DerivativePath).to receive(:derivative_path_for_reference)
+                                          .with(published_resource_file_set.id, 'mp4')
+                                          .and_return(File.join(fixture_path, 'it.mp4'))
+        allow(Hyrax::DerivativePath).to receive(:derivative_path_for_reference)
+                                          .with(draft_resource_file_set.id, 'mp4')
+                                          .and_return(File.join(fixture_path, 'it.mp4'))
+
+        allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:closed_captions).and_return('CLOSED CAPTIONS!!')
+        allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:visual_descriptions).and_return('VISUAL DESCRIPTIONS!!!')
+      end
+
+      it "the published resource's derivative can be downloaded with no share link" do
+        get :show, params: { id: published_resource_file_set.id, use_route: 'downloads', file: 'mp4' }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq IO.binread(File.join(fixture_path, 'it.mp4'))
+      end
+
+      it "the draft resource's derivative cannot be downloaded with no share link" do
+        get :show, params: { id: draft_resource_file_set.id, use_route: 'downloads', file: 'mp4' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it "the draft closed_captions cannot be downloaded with no share link" do
+        get :show, params: { id: draft_closed_captions_file_set.id, use_route: 'downloads', file: 'captions_vtt' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it "the draft visual_descriptions cannot be downloaded with no share link" do
+        get :show, params: { id: draft_visual_descriptions_file_set.id, use_route: 'downloads', file: 'descriptions_vtt' }
+        expect(response).to have_http_status(:unauthorized)
+      end
+
+      it "the draft resource's derivative can be downloaded with its monograph's EPUB share link" do
+        get :show, params: { id: draft_resource_file_set.id, use_route: 'downloads', file: 'mp4', share: valid_share_token }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq IO.binread(File.join(fixture_path, 'it.mp4'))
+      end
+
+      it "the draft closed_captions can be downloaded with its monograph's EPUB share link" do
+        get :show, params: { id: draft_closed_captions_file_set.id, use_route: 'downloads', file: 'captions_vtt', share: valid_share_token }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq 'CLOSED CAPTIONS!!'
+      end
+
+      it "the draft visual_descriptions can be downloaded with its monograph's EPUB share link" do
+        get :show, params: { id: draft_visual_descriptions_file_set.id, use_route: 'downloads', file: 'descriptions_vtt', share: valid_share_token }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq 'VISUAL DESCRIPTIONS!!!'
+      end
+    end
   end
 
   describe "#mime_type_for" do
