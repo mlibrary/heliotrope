@@ -111,17 +111,20 @@ module Crossref
     private
 
       def save_dois_to_file_sets
-        # Can you imagine how long this would take for a work with 2000+ file_sets?
-        # It could be hours. Pass to a job I guess.
-        #
-        # Also: HELIO-3378 we're NOT going to save resource/file_set DOIs if the Monograph
+        # HELIO-3378 we're NOT going to save resource/file_set DOIs if the Monograph
         # has an UNREGISTERED DOI. We're still going to go through the steps and run the submission,
         # but that submission will FAIL at Crossref since the Monograph does not have a REGISTERED DOI.
         # So: if the monograph DOI is unregistered, still run the submission and let it fail.
         # But don't save the resource DOIs. The error will be obvious in the crossref_log, so
         # once the monograph doi is sorted out this whole file_set_metadata DOI creation process
         # will need to be re-run. Which is fine.
-        BatchSaveJob.perform_later(file_sets_to_save) if monograph_doi_is_registered?
+        #
+        # note the `perform_now` here (see HELIO-4551). Details:
+        # Because the trigger for this service is publication, the group of FileSets being worked on is being saved...
+        # again around this time and, in the absence of reasonable computing speed and reliable locking, it's not...
+        # safe to do both of these asynchronously. This defies the point of BatchSaveJob, alas, until/unless we...
+        # use it to both set the DOI and publish the FileSet. Anyhoo, Valkyrie may one day change all this!
+        BatchSaveJob.perform_now(file_sets_to_save) if monograph_doi_is_registered?
       end
 
       def presenters_for(hyrax_presenter, noids)

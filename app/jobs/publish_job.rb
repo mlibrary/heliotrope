@@ -19,11 +19,22 @@ class PublishJob < ApplicationJob
 
     curation_concern.save!
 
+    # We want to avoid showing objects to users until their citable links are squared away, so setting DOIs should...
+    # always come before publication. If this is a Monograph that requires automatic DOI creation for its FileSets
+    # we'll do that step now.
+
+    # NB: Triggering async jobs that loop over and save the same group of FileSets is a bad idea in ActiveFedora, see...
+    # HELIO-4551, which is a home-grown problem similar to https://github.com/samvera/hyrax/issues/5827 (HELIO-4325)
+    # which is why `BatchSaveJob`, called on the Monograph's FileSets here through `Crossref::FileSetMetadata.build()`...
+    # _must_ be inline (`perform_now`). The save done on the same FileSets below, through the recursive call to this...
+    # job can then safely be asynchronous (`perform_later`)
     maybe_create_file_set_dois(curation_concern) if curation_concern.is_a? Monograph
 
     # Publish all the children too
-    curation_concern.members.each do |member|
-      PublishJob.perform_later(member)
+    if curation_concern.is_a?(Monograph)
+      curation_concern.members.each do |member|
+        PublishJob.perform_later(member)
+      end
     end
   end
 
