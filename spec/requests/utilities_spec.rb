@@ -55,8 +55,8 @@ RSpec.describe "Utilities", type: :request do
   describe "GET /status" do
     let(:solr_url) { YAML.load(ERB.new(File.read(Rails.root.join('config', 'solr.yml'))).result)[Rails.env]['url'].sub('/solr/', '/solr/admin/cores?action=STATUS&core=') }
     let(:fedora_url) { YAML.load(ERB.new(File.read(Rails.root.join('config', 'fedora.yml'))).result)[Rails.env]['url'] }
-    let(:platform_admin) { create(:platform_admin) }
     let(:redis) { double('redis', ping: "PONG", quit: true) }
+    let(:current_institutions) { [build(:institution, identifier: '1')] }
 
     context 'all good' do
       before do
@@ -75,53 +75,64 @@ RSpec.describe "Utilities", type: :request do
 
         # some stuff I'm just going to stub on StatusPageService because what's the difference?
         # the required `Net::HTTP` checks are too egregious to mock and I want to make sure this doesn't hit Shibboleth
+        allow_any_instance_of(StatusPageService).to receive(:shib_process).and_return('currently running')
         allow_any_instance_of(StatusPageService).to receive(:shib_check_redirecting).and_return('UP')
         # some of these won't exist in test, no point stubbing `File.exist?`, `File.read`, or `YAML.load` here
         allow_any_instance_of(StatusPageService).to receive(:check_config_file).and_return('OK')
       end
 
-      it 'shows non-server info to anonymous users' do
-        get status_utility_path
-        expect(response).to have_http_status(:success)
-
-        expect(response.body).to include('Redis ................. UP')
-        expect(response.body).to include('Resque workers .......... 5 registered, 3 working')
-        expect(response.body).to include('MySQL ................. UP')
-
-        expect(response.body).to include('database.yml .......... OK')
-        expect(response.body).to include('fedora.yml ............ OK')
-        expect(response.body).to include('secrets.yml ........... OK')
-        expect(response.body).to include('solr.yml .............. OK')
-        expect(response.body).to include('analytics.yml ......... OK')
-        expect(response.body).to include('aptrust.yml ........... OK')
-        expect(response.body).to include('blacklight.yml ........ OK')
-        expect(response.body).to include('box.yml ............... OK')
-        expect(response.body).to include('crossref.yml .......... OK')
-        expect(response.body).to include('redis.yml ............. OK')
-        expect(response.body).to include('resque-pool.yml ....... OK')
-        expect(response.body).to include('role_map.yml .......... OK')
-        expect(response.body).to include('skylight.yml .......... OK')
-
-        expect(response.body).to include('Fedora ................ UP')
-        expect(response.body).to include('Solr .................. UP - core found')
-        expect(response.body).to include('Shibboleth ............ UP')
-
-        expect(response.body).to include('FITS .................. build.version=1.3.0')
-
-        expect(response.body).to_not include('Server Uptime')
-        expect(response.body).to_not include("15:44  up 9 days,  1:06, 21 users, load averages: 2.98 3.41 3.23")
-        expect(response.body).to_not include('Processes - Puma workers')
-        expect(response.body).to_not include('processy puma stuff line 1')
-        expect(response.body).to_not include('Processes - Resque workers')
-        expect(response.body).to_not include('processy resque workers stuff line 2')
-      end
-
-      context 'platform admin' do
-        before { sign_in platform_admin }
-
-        it 'shows everything' do
+      context 'non-UofM-IP users' do
+        it 'shows no status details, other than shib process "currently running", and a login message' do
           get status_utility_path
           expect(response).to have_http_status(:success)
+
+          expect(response.body).to include('Please connect from a University of Michigan IP to see more details!')
+          expect(response.body).to include('note: The Shibboleth process is currently running.')
+
+          expect(response.body).to_not include('Redis ................. UP')
+          expect(response.body).to_not include('Resque workers .......... 5 registered, 3 working')
+          expect(response.body).to_not include('MySQL ................. UP')
+
+          expect(response.body).to_not include('database.yml .......... OK')
+          expect(response.body).to_not include('fedora.yml ............ OK')
+          expect(response.body).to_not include('secrets.yml ........... OK')
+          expect(response.body).to_not include('solr.yml .............. OK')
+          expect(response.body).to_not include('analytics.yml ......... OK')
+          expect(response.body).to_not include('aptrust.yml ........... OK')
+          expect(response.body).to_not include('blacklight.yml ........ OK')
+          expect(response.body).to_not include('box.yml ............... OK')
+          expect(response.body).to_not include('crossref.yml .......... OK')
+          expect(response.body).to_not include('redis.yml ............. OK')
+          expect(response.body).to_not include('resque-pool.yml ....... OK')
+          expect(response.body).to_not include('role_map.yml .......... OK')
+          expect(response.body).to_not include('skylight.yml .......... OK')
+
+          expect(response.body).to_not include('Fedora ................ UP')
+          expect(response.body).to_not include('Solr .................. UP - core found')
+          expect(response.body).to_not include('Shibboleth redirect ... UP')
+
+          expect(response.body).to_not include('FITS .................. build.version=1.3.0')
+
+          expect(response.body).to_not include('Server Uptime')
+          expect(response.body).to_not include("15:44  up 9 days,  1:06, 21 users, load averages: 2.98 3.41 3.23")
+          expect(response.body).to_not include('Processes - Puma workers')
+          expect(response.body).to_not include('processy puma stuff line 1')
+          expect(response.body).to_not include('Processes - Resque workers')
+          expect(response.body).to_not include('processy resque workers stuff line 2')
+        end
+      end
+
+      context 'UofM-IP users' do
+        before do
+          allow_any_instance_of(UtilitiesController).to receive(:current_institutions).and_return(current_institutions)
+        end
+
+        it 'shows all status details, with no login message' do
+          get status_utility_path
+          expect(response).to have_http_status(:success)
+
+          expect(response.body).to_not include('Please connect from a University of Michigan IP to see more details!')
+          expect(response.body).to_not include('note: The Shibboleth process is currently running.')
 
           expect(response.body).to include('Redis ................. UP')
           expect(response.body).to include('Resque workers .......... 5 registered, 3 working')
@@ -143,7 +154,7 @@ RSpec.describe "Utilities", type: :request do
 
           expect(response.body).to include('Fedora ................ UP')
           expect(response.body).to include('Solr .................. UP - core found')
-          expect(response.body).to include('Shibboleth ............ UP')
+          expect(response.body).to include('Shibboleth redirect ... UP')
 
           expect(response.body).to include('FITS .................. build.version=1.3.0')
 
@@ -174,51 +185,59 @@ RSpec.describe "Utilities", type: :request do
 
         # some stuff I'm just going to stub on StatusPageService because what's the difference?
         # the required `Net::HTTP` checks are too egregious to mock and I want to make sure this doesn't hit Shibboleth
+        allow_any_instance_of(StatusPageService).to receive(:shib_process).and_return('not currently running')
         allow_any_instance_of(StatusPageService).to receive(:shib_check_redirecting).and_return('DOWN')
         # some of these won't exist in test, no point stubbing `File.exist?`, `File.read`, or `YAML.load` here
         allow_any_instance_of(StatusPageService).to receive(:check_config_file).and_return('NOT FOUND')
       end
 
-      it 'shows non-server info to anonymous users' do
-        get status_utility_path
-        expect(response).to have_http_status(:success)
+      context 'non-UofM-IP users' do
+        it 'shows no status details, other than shib process "not currently running", and a login message' do
+          get status_utility_path
+          expect(response).to have_http_status(:success)
 
-        expect(response.body).to include('Redis ................. DOWN')
-        expect(response.body).to include('Resque workers .......... 0 registered, 0 working')
-        expect(response.body).to include('MySQL ................. DOWN')
+          expect(response.body).to include('Please connect from a University of Michigan IP to see more details!')
+          expect(response.body).to include('note: The Shibboleth process is not currently running.')
 
-        expect(response.body).to include('database.yml .......... NOT FOUND')
-        expect(response.body).to include('fedora.yml ............ NOT FOUND')
-        expect(response.body).to include('secrets.yml ........... NOT FOUND')
-        expect(response.body).to include('solr.yml .............. NOT FOUND')
-        expect(response.body).to include('analytics.yml ......... NOT FOUND')
-        expect(response.body).to include('aptrust.yml ........... NOT FOUND')
-        expect(response.body).to include('blacklight.yml ........ NOT FOUND')
-        expect(response.body).to include('box.yml ............... NOT FOUND')
-        expect(response.body).to include('crossref.yml .......... NOT FOUND')
-        expect(response.body).to include('redis.yml ............. NOT FOUND')
-        expect(response.body).to include('resque-pool.yml ....... NOT FOUND')
-        expect(response.body).to include('role_map.yml .......... NOT FOUND')
-        expect(response.body).to include('skylight.yml .......... NOT FOUND')
+          expect(response.body).to_not include('Redis ................. DOWN')
+          expect(response.body).to_not include('Resque workers .......... 0 registered, 0 working')
+          expect(response.body).to_not include('MySQL ................. DOWN')
 
-        expect(response.body).to include('Fedora ................ DOWN')
-        expect(response.body).to include('Solr .................. DOWN')
-        expect(response.body).to include('Shibboleth ............ DOWN')
+          expect(response.body).to_not include('database.yml .......... NOT FOUND')
+          expect(response.body).to_not include('fedora.yml ............ NOT FOUND')
+          expect(response.body).to_not include('secrets.yml ........... NOT FOUND')
+          expect(response.body).to_not include('solr.yml .............. NOT FOUND')
+          expect(response.body).to_not include('analytics.yml ......... NOT FOUND')
+          expect(response.body).to_not include('aptrust.yml ........... NOT FOUND')
+          expect(response.body).to_not include('blacklight.yml ........ NOT FOUND')
+          expect(response.body).to_not include('box.yml ............... NOT FOUND')
+          expect(response.body).to_not include('crossref.yml .......... NOT FOUND')
+          expect(response.body).to_not include('redis.yml ............. NOT FOUND')
+          expect(response.body).to_not include('resque-pool.yml ....... NOT FOUND')
+          expect(response.body).to_not include('role_map.yml .......... NOT FOUND')
+          expect(response.body).to_not include('skylight.yml .......... NOT FOUND')
 
-        expect(response.body).to include('FITS .................. NOT FOUND')
+          expect(response.body).to_not include('Fedora ................ DOWN')
+          expect(response.body).to_not include('Solr .................. DOWN')
+          expect(response.body).to_not include('Shibboleth redirect ... DOWN')
 
-        expect(response.body).to_not include('Server Uptime')
-        expect(response.body).to_not include('Server out to lunch!')
-        expect(response.body).to_not include('Processes - Puma workers')
-        expect(response.body).to_not include('processy puma stuff line 1')
-        expect(response.body).to_not include('Processes - Resque workers')
-        expect(response.body).to_not include('processy resque workers stuff line 2')
+          expect(response.body).to_not include('FITS .................. NOT FOUND')
+
+          expect(response.body).to_not include('Server Uptime')
+          expect(response.body).to_not include('Server out to lunch!')
+          expect(response.body).to_not include('Processes - Puma workers')
+          expect(response.body).to_not include('processy puma stuff line 1')
+          expect(response.body).to_not include('Processes - Resque workers')
+          expect(response.body).to_not include('processy resque workers stuff line 2')
+        end
       end
 
-      context 'platform admin' do
-        before { sign_in platform_admin }
+      context 'UofM-IP users' do
+        before do
+          allow_any_instance_of(UtilitiesController).to receive(:current_institutions).and_return(current_institutions)
+        end
 
-        it 'shows everything' do
+        it 'shows all status details, with no login message' do
           get status_utility_path
           expect(response).to have_http_status(:success)
 
@@ -242,7 +261,7 @@ RSpec.describe "Utilities", type: :request do
 
           expect(response.body).to include('Fedora ................ DOWN')
           expect(response.body).to include('Solr .................. DOWN')
-          expect(response.body).to include('Shibboleth ............ DOWN')
+          expect(response.body).to include('Shibboleth redirect ... DOWN')
 
           expect(response.body).to include('FITS .................. NOT FOUND')
 

@@ -62,12 +62,18 @@ class UtilitiesController < ApplicationController
   def status
     hash_tag_line = ''
     130.times { hash_tag_line += '#' }
-    app_status = <<~APP_STATUS
+
+    output = <<~STATUS_HEADER
       #{hash_tag_line}
       #
       # Fulcrum.org App and Environment status page
       #
       #{hash_tag_line}
+    STATUS_HEADER
+
+    # The "University of Michigan, Ann Arbor" institution has `identifier` == "1"
+    if Rails.env.eql?('development') || current_institutions&.map(&:identifier)&.include?('1')
+      output += <<~APP_STATUS
 
       Application Checks
 
@@ -92,16 +98,17 @@ class UtilitiesController < ApplicationController
 
       Environment Status
 
-          Shibboleth ............ #{shib_check_redirecting}
+          Shibboleth redirect ... #{shib_check_redirecting}
           MySQL ................. #{check_active_record}
           Fedora ................ #{fedora}
           Solr .................. #{solr}
           Redis ................. #{redis}
           FITS .................. #{fits_version}
-    APP_STATUS
 
-    if current_ability&.current_user&.platform_admin?
-      app_status += <<~APP_STATUS
+
+      Server
+
+        #{Socket.gethostname}
 
 
       Server Uptime
@@ -124,10 +131,16 @@ class UtilitiesController < ApplicationController
         #{ActiveFedora::Fedora.instance.authorized_connection.options}
 
       APP_STATUS
+    else
+      output += <<~STATUS_LOGIN
+
+      Please connect from a University of Michigan IP to see more details!
+      note: The Shibboleth process is #{shib_process}.
+      STATUS_LOGIN
     end
 
-    app_status += "\n#{hash_tag_line}"
+    output += "\n#{hash_tag_line}"
 
-    render plain: app_status
+    render plain: output
   end
 end
