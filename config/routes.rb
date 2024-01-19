@@ -173,6 +173,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :job_status, only: %i[show update]
+
   resources :epub_ebooks, only: %i[show] do
     member do
       get :search

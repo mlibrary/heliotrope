@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class EPubsController < CheckpointController
-  include Watermark::Watermarkable
   include IrusAnalytics::Controller::AnalyticsBehaviour
 
   protect_from_forgery except: :file
@@ -136,11 +135,11 @@ class EPubsController < CheckpointController
     chapter_dir_path = UnpackService.root_path_from_noid(@noid, chapter_dir)
 
     chapter_file_path = File.join(chapter_dir_path, chapter_file_name)
-    run_watermark_checks(chapter_file_path)
+    watermarker = WatermarkService.new(@entity, chapter_title, chapter_file_path, request_origin, chapter_index)
 
     CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter_title)
     send_irus_analytics_request
-    send_data watermark_pdf(@entity, chapter_title, chapter_file_path, chapter_index), type: "application/pdf", filename: chapter_download_name, disposition: "inline"
+    send_data watermarker.watermark_pdf, type: "application/pdf", filename: chapter_download_name, disposition: "inline"
   rescue StandardError => e
     Rails.logger.error "EPubsController.download_interval raised #{e}"
     head :no_content

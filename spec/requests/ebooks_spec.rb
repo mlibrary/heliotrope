@@ -9,7 +9,8 @@ RSpec.describe "PDF EBooks", type: :request do
     let(:noid) { 'validnoid' }
     let(:ebook) { instance_double(Sighrax::Ebook, 'ebook', noid: noid, data: {}, valid?: true, title: 'title', watermarkable?: watermarkable, publisher: publisher) }
     let(:watermarkable) { false }
-    let(:publisher) { instance_double(Sighrax::Publisher, 'publisher', watermark?: watermark) }
+    let(:press) { create(:press) }
+    let(:publisher) { instance_double(Sighrax::Publisher, 'publisher', watermark?: watermark, press: press) }
     let(:watermark) { false }
     let(:ebook_download_op) { instance_double(EbookDownloadOperation, 'ebook_download_op', allowed?: allowed) }
     let(:allowed) { false }

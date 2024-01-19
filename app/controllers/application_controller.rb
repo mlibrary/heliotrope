@@ -96,6 +96,10 @@ class ApplicationController < ActionController::Base
       @request_attributes ||= Services.request_attributes.for(request)
     end
 
+    def request_origin
+      @request_origin ||= current_institution&.name || request.remote_ip
+    end
+
     def checkpoint_controller?
       false # Overridden in CheckpointController to return true
     end

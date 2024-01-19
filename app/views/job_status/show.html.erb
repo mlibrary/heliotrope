@@ -1,0 +1,70 @@
+<% provide :page_title, "Processing Download" %>
+<% provide :head do %>
+<script>
+$(document).on('turbolinks:load', function () {
+  var POLL_INTERVAL = 200; // ms
+
+  var updateStatus = async function() {
+    const url = "/job_status/<%= @job_status.id %> /?download_redirect=<%= @download_redirect %>&press_id=<%= @press.id %>"
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (data.completed == true && data.error == false) {
+        $('#progress').html("<p><a href=" + data.redirect + ">Download Link</a></p>");
+        // window.location = data.redirect;
+        document.location.href = data.redirect;
+      } else if (data.completed == true && data.error == true) {
+        $('#progress').html("<p>Download Failed with error message: " + data.error_message + "</p>");
+      } else {
+        setTimeout(updateStatus, POLL_INTERVAL);
+      }
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
+  updateStatus();
+});
+
+</script>
+<style type="text/css">
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid red;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+<% end %>
+
+<% provide :body do %>
+<div class="row">
+  <div id="progress" class="col-sm-12">
+    <p>Processing download</p>
+    <span class="loader"></span>
+  </div>
+</div>
+<% end %>
+
+<%= render template: 'layouts/boilerplate' %>
