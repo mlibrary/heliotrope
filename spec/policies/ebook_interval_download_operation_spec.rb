@@ -34,7 +34,7 @@ RSpec.describe EbookIntervalDownloadOperation do
       context 'when can edit' do
         let(:can_update) { true }
 
-        it { is_expected.to be false }
+        it { is_expected.to be true }
       end
 
       context 'when online access' do

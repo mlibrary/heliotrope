@@ -28,7 +28,7 @@ RSpec.describe EbookDownloadOperation do
     context 'when can update' do
       let(:can_update) { true }
 
-      it { is_expected.to be false }
+      it { is_expected.to be true }
     end
 
     context 'when accessible offline' do
