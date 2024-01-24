@@ -7,6 +7,10 @@
     <% if @presenter.doi.present? %>
         <span class="__dimensions_badge_embed__" data-doi="<%= @presenter.doi_path %>" data-hide-zero-citations="true" data-legend="never" data-style="large_rectangle"></span><script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
     <% end %>
+<!--    we want the IRUS "badge" widget to display here as well but they do not allow configuration of the div id and we can't use the same one here and on the stats tab -->
+<!--    I recommend an IRUS feature request (for the div id to be optionally added as a URL parameter to the widget script) before we add this -->
+<!--    <div id="irus_widget_container"></div>-->
+<!--    <script id="irus_ir_widget" src="https://irus.jisc.ac.uk/r5/js/irus_ir_widget.js?requestor_id=fa0fac24cd80e67e01322928b4a6f58d&platform=235&item_id=oai:fulcrum.org:<%= @presenter.id %>&show_badge_only"></script>-->
   </div>
     <% if @presenter&.previous_edition_presenter&.doi_path&.present? || @presenter&.previous_edition_presenter&.isbn_noformat&.first&.present? %>
       <div class="previous-edition-metrics">

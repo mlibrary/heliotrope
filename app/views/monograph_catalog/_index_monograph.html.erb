@@ -138,14 +138,11 @@
             </h2>
           </li>
         <% end %>
-        <%# HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution %>
-        <% if false %>
-          <li role="presentation">
-            <h2>
-              <a id="tab-stats" href="#stats" aria-controls="stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a>
-            </h2>
-          </li>
-        <% end %>
+        <li role="presentation">
+          <h2>
+            <a id="tab-stats" href="#stats" aria-controls="stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a>
+          </h2>
+        </li>
       </ul>
       <!-- BOOK INFORMATION TABS - CONTENT -->
       <div id="tabs-content" class="tab-content monograph-info-content" aria-live="polite">
@@ -210,14 +207,10 @@
             </div>
           </section>
         <% end %>
-        <!-- BOOK STATS -->
-        <%# HELIO-4115 - deactivate stats tabs but keep the code around as inspiration for the next solution %>
-        <% if false %>
-          <section id="stats" class="tab-pane fade stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
-            <%= render 'stats' %>
-          </section>
-        <% end %>
-      </div>
+        <section id="stats" class="tab-pane fade stats row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-stats" tabindex="0">
+          <%= render 'stats' %>
+        </section>
+    </div>
     </div>
   </div>
   <!-- BOOK COVER AND ADDITIONAL METADATA -->
