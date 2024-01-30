@@ -74,7 +74,7 @@ RSpec.describe MonographCatalogController, type: :controller do
   end
 
   describe '#index' do
-    context 'triggers COUNTER, local and IRUS' do
+    context 'Monograph with ebook representative' do
       let(:monograph) { create(:public_monograph) }
       let(:counter_service) { double('counter_service') }
       let(:file_set) { create(:file_set, content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
@@ -90,10 +90,30 @@ RSpec.describe MonographCatalogController, type: :controller do
         allow(controller).to receive(:send_irus_analytics_investigation)
       end
 
-      it 'counts' do
-        get :index, params: { id: monograph.id }
-        expect(counter_service).to have_received(:count)
-        expect(controller).to have_received(:send_irus_analytics_investigation)
+      context 'triggers COUNTER, local and IRUS' do
+        it 'counts' do
+          get :index, params: { id: monograph.id }
+          expect(counter_service).to have_received(:count)
+          expect(controller).to have_received(:send_irus_analytics_investigation)
+        end
+      end
+
+      context 'show_read_button' do
+        context 'draft ebook FeaturedRepresentative FileSet' do
+          it "doesn't show the read button" do
+            get :index, params: { id: monograph.id }
+            expect(assigns(:show_read_button)).to eq false
+          end
+        end
+
+        context 'public ebook FeaturedRepresentative FileSet' do
+          let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
+
+          it "shows the read button" do
+            get :index, params: { id: monograph.id }
+            expect(assigns(:show_read_button)).to eq true
+          end
+        end
       end
     end
 
@@ -108,6 +128,9 @@ RSpec.describe MonographCatalogController, type: :controller do
         it 'shows 404 page' do
           expect(response.status).to equal 404
           expect(response.body).to have_title("404 - The page you were looking for doesn't exist")
+        end
+        it 'does not set show_read_button' do
+          expect(assigns(:show_read_button)).to eq nil
         end
       end
 
@@ -130,6 +153,9 @@ RSpec.describe MonographCatalogController, type: :controller do
         it 'shows 404 page' do
           expect(response.status).to equal 404
           expect(response.body).to have_title("404 - The page you were looking for doesn't exist")
+        end
+        it 'does not set show_read_button' do
+          expect(assigns(:show_read_button)).to eq nil
         end
       end
     end
@@ -155,6 +181,9 @@ RSpec.describe MonographCatalogController, type: :controller do
         it 'sets search_ongoing to false' do
           expect(assigns(:search_ongoing)).to eq false
         end
+        it 'sets show_read_button to false' do
+          expect(assigns(:show_read_button)).to eq false
+        end
       end
 
       context 'when a monograph is draft/private' do
@@ -168,6 +197,9 @@ RSpec.describe MonographCatalogController, type: :controller do
           it 'response is not successful' do
             expect(response).not_to be_successful
             expect(response).not_to render_template('monograph_catalog/index')
+          end
+          it 'does not set show_read_button' do
+            expect(assigns(:show_read_button)).to eq nil
           end
           it 'redirects to login page' do
             expect(response).to redirect_to(new_user_session_path)
@@ -198,12 +230,18 @@ RSpec.describe MonographCatalogController, type: :controller do
           it 'sets search_ongoing to false' do
             expect(assigns(:search_ongoing)).to eq false
           end
+          it 'sets show_read_button to false' do
+            expect(assigns(:show_read_button)).to eq false
+          end
 
           context 'textbox search term in play' do
             before { get :index, params: { id: monograph.id, q: 'blah' } }
 
             it 'sets search_ongoing to true' do
               expect(assigns(:search_ongoing)).to eq true
+            end
+            it 'sets show_read_button to false' do
+              expect(assigns(:show_read_button)).to eq false
             end
           end
         end
