@@ -72,7 +72,7 @@ class UtilitiesController < ApplicationController
     STATUS_HEADER
 
     # The "University of Michigan, Ann Arbor" institution has `identifier` == "1"
-    if Rails.env.eql?('development') || current_institutions&.map(&:identifier)&.include?('1')
+    if Rails.env.eql?('development') || current_ability&.current_user&.platform_admin? || current_institutions&.map(&:identifier)&.include?('1')
       output += <<~APP_STATUS
 
       Application Checks
