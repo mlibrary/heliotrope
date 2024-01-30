@@ -1213,15 +1213,6 @@ footer.press {
       }
     }
 
-    .stats-container.usage {
-      width: 80%;
-    }
-
-    .stats-container.overview {
-      width: 80%;
-      height: 150px;
-    }
-
     #unity-container {
       // `position: absolute;` is set in the WebGL's TemplateData/style.css, which is included in all the WebGL views,...
       // meaning the `position: relative;` needed in the #webgl tab (and in CSB) has to go in-line on #unity-container

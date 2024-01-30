@@ -63,13 +63,6 @@ $(document).on('turbolinks:load', function() {
       }
     };
 
-    var drawStats = function drawStats(tab) {
-      if (tab.hash === '#stats') {
-        throttleHeliotropeStatFlot(250);
-        heliotropeStatsAlreadyDrawn = true;
-      }
-    };
-
     var selectTab = function selectTab(tab) {
       $(tab).tab('show');
       // Make the active tab focusable by the user (Tab key)
@@ -82,7 +75,6 @@ $(document).on('turbolinks:load', function() {
       panels[index].setAttribute('aria-hidden', 'false');
       // HELIO-3093
       googleMapRefresh(tab);
-      drawStats(tab);
     };
 
     var unselectTab = function unselectTab(tab, index) {
