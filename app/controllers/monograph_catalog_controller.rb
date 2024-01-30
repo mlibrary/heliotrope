@@ -106,6 +106,10 @@ class MonographCatalogController < ::CatalogController
       # For Access Icons HELIO-3346
       @actor_product_ids = current_actor.products.pluck(:id)
       @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
+
+      # The monograph catalog page is completely user-facing, apart from a small admin menu. The "Read" button should...
+      # never show up if there is no published ebook for CSB to use! This is important for the "Forthcoming" workflow.
+      @show_read_button = @presenter.reader_ebook? && @presenter&.reader_ebook['visibility_ssi'] == 'open'
       @disable_read_button = disable_read_button?
     rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http => e
       Rails.logger.error(%Q|[RSOLR ERROR TRY:#{retries}] #{e} #{e.backtrace.join("\n")}|)

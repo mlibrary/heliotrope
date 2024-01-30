@@ -1,6 +1,6 @@
 <div class="btn-toolbar" role="toolbar">
   <div class="btn-group btn-group-lg" role="group">
-    <% if @presenter.reader_ebook? %>
+    <% if @show_read_button %>
       <% if @disable_read_button || @presenter.tombstone? %>
         <a id="monograph-read-btn"
            href=""
