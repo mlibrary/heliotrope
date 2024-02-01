@@ -1,5 +1,25 @@
 <% # main container for facets/limits menu -%>
 <% if has_facet_values?  %>
+
+<!--
+<div id="facets" class="facets sidenav">
+
+  <div class="top-panel-heading panel-heading">
+    <button type="button" class="facets-toggle" data-toggle="collapse" data-target="#facet-panel-collapse">
+      <span class="sr-only">Toggle facets</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+  </div>
+
+  <div id="facet-panel-collapse" class="collapse panel-group">
+-->
+
+  <% if params['controller'] == "press_catalog" %>
+    <%= render 'user_access_fake_facet' %>
+  <% end %>
+  <% # render_facet_partials %>
   <% # container for facet groups -%>
   <% Deprecation.silence(Blacklight::Facet) { facet_group_names }.each do |groupname| %>
     <%= render 'facet_group', groupname: groupname %>
