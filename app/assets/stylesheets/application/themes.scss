@@ -4793,14 +4793,17 @@ $lever-black-80: #342f2e;
 
   // buttons
 
-  .btn-default {
+  .btn-default, 
+  .btn {
     @include button-background-color($lever-brand-color);
     @include button-font-color($lever-white);
     @include scala-sans;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($lever-button-hover);
     @include button-hover-font-color($lever-white);
   }
@@ -4823,7 +4826,7 @@ $lever-black-80: #342f2e;
   #brand-bar {
     background-color: $lever-grey-3;
     border-bottom: 1px solid $lever-grey-4;
-    min-height: 6.9rem;
+    height: 6em;
 
     .navbar-brand {
       color: $lever-nav-brand;
@@ -4831,7 +4834,7 @@ $lever-black-80: #342f2e;
       font-size: 1.8em;
       height: unset;
       line-height: unset;
-      padding: 1.3rem 1.6rem 1.3rem 1.5rem;
+      padding: 0;
 
       img {
         display: inline;
@@ -4839,6 +4842,10 @@ $lever-black-80: #342f2e;
         vertical-align: middle;
 
       }
+    }
+
+    .navbar-nav {
+      @include scala-sans;
     }
 
 
@@ -4864,11 +4871,9 @@ $lever-black-80: #342f2e;
     margin-right: 0;
   }
 
-  .navbar-default .navbar-nav {
+  .navbar-nav {
     @include scala-sans;
     list-style: none;
-    font-size: 1.64rem;
-    padding-top: 3.5rem;
     padding-right: 1.45rem;
 
     a {
@@ -4957,6 +4962,10 @@ $lever-black-80: #342f2e;
   #sort-dropdown .dropdown-toggle:active .caret,
   #per_page-dropdown .dropdown-toggle:active .caret {
     color: $lever-white;
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: $lever-white;
   }
 
   .open > .dropdown-menu {
@@ -7661,6 +7670,10 @@ $mps-teal-100: #e9f2f5;
     color: white;
   }
 
+  .btn-group .blacklight-icons svg {
+    fill: white;
+  }
+
   // monograph
   .monograph {
     .documentHeader {
@@ -9166,8 +9179,7 @@ $maize-black-80: #342f2e;
         -moz-transition: .3s;
         -webkit-transition: .3s;
         transition: .3s;
-      padding: 15px 15px 15px 15px;
-      height: 50px;
+      padding: 15px 15px 15px 0px;
     }
 
     .search-form {
@@ -9279,6 +9291,10 @@ $maize-black-80: #342f2e;
   #sort-dropdown .dropdown-toggle:active .caret,
   #per_page-dropdown .dropdown-toggle:active .caret {
     color: $maize-brand-color;
+  }
+
+  .btn-group .blacklight-icons:hover svg {
+    fill: $maize-brand-color;
   }
 
   // monograph

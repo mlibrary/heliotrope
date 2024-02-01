@@ -996,6 +996,12 @@ footer.press {
 
   }
 
+  // DOWNLOAD dropdown
+  #monograph-download-btn + .dropdown-menu {
+    border-radius: 0;
+    padding-left: 10px;
+  }
+
   // PURCHASE
   &-purchase {
     .back-link {
