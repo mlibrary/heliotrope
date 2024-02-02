@@ -196,7 +196,7 @@ gem 'sinatra', '>= 0.9.2'
 gem 'sprockets', '~> 3.7'
 
 # sqlite for epub indexing
-gem 'sqlite3'
+gem 'sqlite3', '1.4.2'
 
 # SwaggerClient - the Ruby gem for the COUNTER_SUSHI5_0 API
 gem 'swagger_client', git: 'https://github.com/mlibrary/swagger_client', branch: 'master'
@@ -244,10 +244,10 @@ group :development, :test do
   gem 'rspec_junit_formatter'
   gem 'rspec-rails', '~> 5.0'
   gem 'rspec-repeat', '~> 1.0.2'
-  gem 'rubocop', '~> 1.22'
-  gem 'rubocop-rails', '~> 2.11', '>= 2.11.3'
-  gem 'rubocop-rails_config', '~> 1.7', '>= 1.7.1'
-  gem 'rubocop-rspec', '~> 2.5'
+  gem 'rubocop', '1.22'
+  gem 'rubocop-rails', '2.12.2'
+  gem 'rubocop-rails_config', '1.7.3'
+  gem 'rubocop-rspec', '2.5.0'
   gem 'ruumba', '0.1.2'
   gem 'simple_solr_client', '0.2.0'
   gem 'solr_wrapper', '>= 1.1', '< 3.0'
