@@ -45,7 +45,7 @@ describe 'Press Catalog' do
     fill_in 'q', with: 'Smith'
     click_button 'Search'
     expect(page.title).to eq "#{umich.name} results - page 1 of 1"
-    expect(page).to have_selector('#documents .document .document', count: 1)
+    expect(page).to have_selector('#documents .document', count: 1)
     expect(page).to have_content("Your search has returned 1 book from #{umich.name}")
     expect(page).to     have_link green.title.first
     expect(page).not_to have_link red.title.first

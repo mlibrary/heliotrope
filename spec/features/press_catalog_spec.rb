@@ -24,7 +24,7 @@ describe 'Press Catalog' do
         expect(page).to_not have_content("Your search has returned")
 
         # I should see only the public monographs for this press
-        expect(page).to have_selector('#documents .document .document', count: 2)
+        expect(page).to have_selector('#documents .document', count: 2)
         expect(page).to     have_link red.title.first
         expect(page).to     have_link blue.title.first
         expect(page).not_to have_link invisible.title.first
@@ -80,7 +80,7 @@ describe 'Press Catalog' do
       it 'visits the catalog page for a press with the press name capitalized' do
         visit "/#{umich.subdomain.upcase}"
         # I should see only the public monographs for this press
-        expect(page).to have_selector('#documents .document .document', count: 2)
+        expect(page).to have_selector('#documents .document', count: 2)
         expect(page).to_not have_content("Your search has returned")
         expect(page).to     have_link red.title.first
         expect(page).to     have_link blue.title.first
@@ -99,7 +99,7 @@ describe 'Press Catalog' do
         it 'visits the catalog page for a press' do
           visit "/#{umich.subdomain}"
           # I should see only the public monographs for umich press and its children
-          expect(page).to have_selector('#documents .document .document', count: 4)
+          expect(page).to have_selector('#documents .document', count: 4)
           expect(page).to_not have_content("Your search has returned")
           expect(page).to     have_link red.title.first
           expect(page).to     have_link blue.title.first
@@ -143,7 +143,7 @@ describe 'Press Catalog' do
             creators = name1
           end
 
-          date = Faker::Time.between(DateTime.now - 9999, DateTime.now)
+          date = Faker::Time.between(from: DateTime.now - 9999, to: DateTime.now)
           doc = ::SolrDocument.new(
             id: Random.rand(999_999_999),
             has_model_ssim: 'Monograph',
@@ -156,7 +156,7 @@ describe 'Press Catalog' do
             creator_full_name_si: name1,
             date_created_si: date.year,
             date_uploaded_dtsi: date,
-            subject_sim: Faker::Pokemon.name,
+            subject_sim: Faker::Job.field,
             publisher_sim: Faker::Book.publisher,
             open_access_sim: open_access, # facetable
             suppressed_bsi: false,
@@ -189,7 +189,7 @@ describe 'Press Catalog' do
 
         find('a.facet-select', match: :first).click
         expect(page.title).to eq "#{heb.name} results - page 1 of 1"
-        expect(page).to have_selector('#documents .document .document', count: 1)
+        expect(page).to have_selector('#documents .document', count: 1)
         expect(page).to have_content("Your search has returned 1 book from #{heb.name}")
       end
     end
