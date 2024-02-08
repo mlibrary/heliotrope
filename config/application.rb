@@ -112,7 +112,9 @@ module Heliotrope
     config.cozy_epub_engine = 'epubjs'
 
     # See https://github.com/mlibrary/umrdr/commit/4aa4e63349d6f3aa51d76f07aa20faeae6712719
-    config.skylight.probes -= ['middleware']
+    # commented out during Hyrax 4 upgrade (see HELIO-4582)
+    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
+    # config.skylight.probes -= ['middleware']
 
     # Prometheus monitoring, see HELIO-3388
     ENV["PROMETHEUS_MONITORING_DIR"] = ENV["PROMETHEUS_MONITORING_DIR"] || Settings.prometheus_monitoring.dir || File.join(Settings.scratch_space_path, 'prometheus')

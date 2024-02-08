@@ -6,10 +6,14 @@
 # see HELIO-3277
 
 class RemoveMeEPubIntervalPresenter < ApplicationPresenter
-  include Skylight::Helpers
+  # commented out during Hyrax 4 upgrade (see HELIO-4582)
+  # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
+  # include Skylight::Helpers
   delegate :title, :level, :cfi, :downloadable?, to: :@interval
 
-  instrument_method
+  # commented out during Hyrax 4 upgrade (see HELIO-4582)
+  # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
+  # instrument_method
   def initialize(interval)
     @interval = interval
   end
