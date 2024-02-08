@@ -26,8 +26,8 @@
     end
     %>
 
-    <%= link_to(content_tag(:span, '', class: 'fa fa-minus') + accessible_remove_label,
-                options[:remove], class: 'btn btn-default btn-sm remove dropdown-toggle', role: 'button'
+    <%= link_to(content_tag(:span, '', class: 'fa fa-close') + accessible_remove_label,
+                options[:remove], class: 'btn btn-default btn-sm remove', role: 'button'
         ) %>
   <%- end -%>
 </span>
