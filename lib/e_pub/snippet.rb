@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 require 'pragmatic_segmenter'
-require "skylight"
+
+# commented out during Hyrax 4 upgrade (see HELIO-4582)
+# TODO: put Skylight back in action post-upgrade (see HELIO-4589)
+# require "skylight"
 
 # This class is supposed to show the search term in context, so surrounded
 # by sentences (not sentence fragments). It's unfortunatly a little involved...
@@ -10,7 +13,9 @@ module EPub
   class Snippet
     private_class_method :new
     attr_accessor :node, :pos0, :pos1
-    include Skylight::Helpers
+    # commented out during Hyrax 4 upgrade (see HELIO-4582)
+    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
+    # include Skylight::Helpers
 
     # This is not an "exact" length, but will be used as sort of a
     # guideline. Weird snippets might still sneak through...
@@ -28,7 +33,9 @@ module EPub
       SnippetNullObject.send(:new)
     end
 
-    instrument_method
+    # commented out during Hyrax 4 upgrade (see HELIO-4582)
+    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
+    # instrument_method
     def snippet
       original_text = node.text
       # mark the hit without using markup in a really dumb way
