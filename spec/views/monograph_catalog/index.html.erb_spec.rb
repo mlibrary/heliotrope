@@ -242,6 +242,7 @@ RSpec.describe "monograph_catalog/index.html.erb" do
         context 'normal Monograph that does not require Google Form registration to access' do
           before do
             allow(presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
+            assign(:show_read_button, true)
             render
           end
 
