@@ -461,7 +461,7 @@ footer.press {
 
   }
 
-  .page_links {
+  .page-links {
     font-size: 14px;
   }
 
@@ -582,7 +582,7 @@ footer.press {
 ///////////////////////////////////
 
 // press catalog
-.facets-container {
+.facets-container, #facets {
   padding-top: 15px;
 
   .facets .facets-header {
@@ -653,6 +653,12 @@ footer.press {
 
 // monograph catalog
 .fulcrum_sidebar {
+
+  #resources-search-submit {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
   .facets .facets-header {
     // this comes from blacklight and we don't use it.
     display: none;
@@ -676,8 +682,6 @@ footer.press {
       margin-top: 0px;
       .btn {
         font-weight: 700;
-        margin-top: .5em;
-        margin-bottom: .5em;
       }
     }
   }
@@ -754,7 +758,7 @@ footer.press {
     font-size: 1.2em;
   }
 
-  .page_links {
+  .page-links {
     display: inline-block;
     vertical-align: middle;
     margin-top: .4em;
@@ -2338,7 +2342,7 @@ footer.press {
 ///////////////////////////////////
 @media only screen and (max-width: 992px) {
   .press {
-    .page_links {
+    .page-links {
       display: block;
       float: right;
       padding: 10px 12px;
