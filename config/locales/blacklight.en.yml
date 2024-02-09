@@ -3,6 +3,12 @@ en:
     application_name: 'Fulcrum'
 
     search:
+      per_page:
+        # use different breakpoint for per page dropdown: d-lg-inline
+        button_label_html: '%{count}<span class="d-none d-lg-inline"> per page</span>'
+      sort:
+        # use different breakpoint for sort dropdown: d-lg-inline
+        label_html: 'Sort<span class="d-none d-lg-inline"> by %{field}</span>'
       facets:
         resources_title: 'Search and Filter Resources'
       fields:
