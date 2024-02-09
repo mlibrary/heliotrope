@@ -11,7 +11,9 @@ module Hyrax
     include TitlePresenter
     include TombstonePresenter
     include ActionView::Helpers::UrlHelper
-    include Skylight::Helpers
+    # commented out during Hyrax 4 upgrade (see HELIO-4582)
+    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
+    # include Skylight::Helpers
 
     delegate :date_modified, :date_uploaded, :location, :description,
              :creator_display, :creator_full_name, :contributor, :content_warning, :content_warning_information,
@@ -44,7 +46,9 @@ module Hyrax
       Array(location)
     end
 
-    instrument_method
+    # commented out during Hyrax 4 upgrade (see HELIO-4582)
+    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
+    # instrument_method
     def ordered_section_titles
       # FileSets store their section_title as ActiveTriples::Relation, which does not preserve order.
       # As a result they can't be relied on to give the correct order for their own sections, or sections as a whole.
@@ -267,7 +271,9 @@ module Hyrax
     #
     # @param [Array] allow_product_ids {  current_actor.products.pluck(:id) }
     # @param [Array] allow_read_product_ids {  Sighrax.allow_read_products.pluck(:id) }
-    instrument_method
+    # commented out during Hyrax 4 upgrade (see HELIO-4582)
+    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
+    # instrument_method
     def access_level(actor_product_ids, allow_read_product_ids) # rubocop:disable Metrics/PerceivedComplexity
       # Open Access
       return access_indicators(:open_access)  if /yes/i.match?(solr_document.open_access)
@@ -283,7 +289,9 @@ module Hyrax
       access_indicators(:restricted)
     end
 
-    instrument_method
+    # commented out during Hyrax 4 upgrade (see HELIO-4582)
+    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
+    # instrument_method
     def access_indicators(level)
       case level
       when :open_access

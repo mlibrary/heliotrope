@@ -215,7 +215,9 @@ gem 'oauth2', '~> 1.2'
 gem 'signet'
 
 # performance profiling
-gem 'skylight', '~> 5.3.4'
+# commented out during Hyrax 4 upgrade (see HELIO-4582)
+# TODO: put Skylight back in action post-upgrade (see HELIO-4589)
+# gem 'skylight', '~> 5.3.4'
 
 # Rails Webpack Tool
 gem 'webpacker', '~> 5.4.2'
