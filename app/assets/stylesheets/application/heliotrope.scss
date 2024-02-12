@@ -92,6 +92,10 @@ $base-color-footer-link-hover: #73d2f4;
 }
 
 .alert {
+  // Hyrax margin styles are breaking the centering here on Bootstrap 4
+  margin-right: auto !important;
+  margin-left: auto !important;
+
   a.close {
     color: #31708f;
     opacity: .85;
