@@ -241,7 +241,7 @@ RSpec.describe "monograph_catalog/index.html.erb" do
 
         context 'normal Monograph that does not require Google Form registration to access' do
           before do
-            allow(presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
+            allow(monograph_presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
             assign(:show_read_button, true)
             render
           end
@@ -250,7 +250,6 @@ RSpec.describe "monograph_catalog/index.html.erb" do
             debug_puts subject.to_s
             is_expected.to render_template(partial: '_read_download_buy')
             is_expected.to_not render_template(partial: '_read_download_buy_registration_required')
-            byebug
             is_expected.to match 'monograph_catalog.index.read_book'
             is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
             is_expected.to match 'toc-link'
