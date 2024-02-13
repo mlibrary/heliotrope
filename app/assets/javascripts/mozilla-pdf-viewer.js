@@ -4,8 +4,9 @@
 // needed to load Google Analytics Event Tracking
 //= require turbolinks
 //= require js.cookie
-// needed by social media share links widget (data-toggle="dropdown")
-//= require bootstrap/dropdown
+// bootstrap/popper needed by social media share links widget (data-toggle="dropdown")
+//= require popper
+//= require bootstrap
 // needed by Google Analytics
 //= require application/ga_event_tracking
 // needed to set cookies and open/close the alert box for our Open Access/"free to read" survey in the PDF reader
