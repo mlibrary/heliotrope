@@ -230,6 +230,8 @@ div.skip {
 .breadcrumbs {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
   font-size: .9rem;
   .active {
     color: $gray-60 !important;
@@ -704,9 +706,18 @@ footer.press {
     padding: 10px 15px 0 15px;
   }
 
+  .facet_pagination {
+    display: flex;
+    justify-content: space-between;
+  }
+
   #helio-facet-modal-close {
     display: block;
     overflow: auto;
+  }
+
+  .modal-footer {
+    display: block;
   }
 }
 
@@ -737,8 +748,8 @@ footer.press {
 .monograph {
 
   .platform-admin {
-    float: right;
-    margin-top: -2.8em;
+    justify-content: end;
+    padding-bottom: 1.5em;
 
     a {
       padding-right: 25px;
@@ -1807,6 +1818,10 @@ footer.press {
       background-position: 0;
       transition: 0.2s ease-in;
     }
+  }
+
+  #shareMenuButton {
+    height: 100%;
   }
 }
 

@@ -102,7 +102,7 @@ describe "Monograph Catalog Facets" do
       expect(keyword_facet_counts[5]).to have_content '1'
 
       # HELIO-3688
-      expect(page).to have_css(".sort_options.btn-group.pull-right[role=tablist]")
+      expect(page).to have_css(".sort_options.btn-group[role=tablist]")
       expect(page).to have_css("span.active.numeric.btn.btn-default[role=tab][aria-selected=true]")
       expect(page).to have_css("a.sort_change.az.btn.btn-default[href*='keyword_sim?facet.sort=index'][role=tab][aria-selected=false]")
 
@@ -129,7 +129,7 @@ describe "Monograph Catalog Facets" do
       expect(keyword_facet_counts[5]).to have_content '1'
 
       # HELIO-3688
-      expect(page).to have_css(".sort_options.btn-group.pull-right[role=tablist]")
+      expect(page).to have_css(".sort_options.btn-group[role=tablist]")
       expect(page).to have_css("span.active.az.btn.btn-default[role=tab][aria-selected=true]")
       expect(page).to have_css("a.sort_change.numeric.btn.btn-default[href*='keyword_sim?facet.sort=count'][role=tab][aria-selected=false]")
     end
