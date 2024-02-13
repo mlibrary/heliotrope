@@ -78,7 +78,7 @@ describe "Monograph Catalog Facets" do
       expect(keyword_facet_counts[4]).to have_content '1'
 
       # somehow this expect gets the find afterwards to work more consistently, in the system specs anyway
-      expect(page).to have_css("div#facet-keyword_sim a.more_facets_link")
+      expect(page).to have_css("div#facet-keyword_sim a.more_facets_link[data-blacklight-modal='trigger']")
       # click "more" link to open full-screen facet modal overlay
       find("a[href='#{monograph_catalog_facet_path(id: 'keyword_sim', monograph_id: monograph.id, locale: 'en')}']")
           .click
