@@ -901,7 +901,8 @@ $aperio-white: #fff;
     font-weight: 500;
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($aperio-accent-color);
     @include button-font-color(#fff);
     border-color: $aperio-accent-color;
@@ -910,7 +911,8 @@ $aperio-white: #fff;
   }
 
   .download {
-    .btn-default {
+    .btn-default, 
+    .btn {
     @include button-background-color($aperio-accent-color);
     @include button-font-color(#fff);
     border-color: $aperio-accent-color;
@@ -920,7 +922,9 @@ $aperio-white: #fff;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color(#131310);
     @include button-hover-font-color(#fff);
     border-color: #0c0c0b;
@@ -930,6 +934,10 @@ $aperio-white: #fff;
   #sort-dropdown .dropdown-toggle .caret,
   #per_page-dropdown .dropdown-toggle .caret {
     color: #fff;
+  }
+
+  .blacklight-icons svg {
+    fill: $aperio-white;
   }
 
   // navigation menu
@@ -2729,10 +2737,6 @@ $amherst-grey-3: #dee2e6;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
     }
 
-    .navbar-collapse.collapse {
-      display: none!important;
-    }
-
     .navbar-default .navbar-nav {
       padding-top: 0;
       padding-right: 0;
@@ -2746,7 +2750,7 @@ $amherst-grey-3: #dee2e6;
     .navbar-nav>li>a {
       padding-top: 10px;
       padding-bottom: 10px;
-      line-height: 3.5rem;
+      line-height: unset;
     }
 
     .navbar-collapse.collapse.in {
@@ -2757,7 +2761,7 @@ $amherst-grey-3: #dee2e6;
       overflow: hidden!important;
     }
 
-    #brand-bar form.search-form, .navbar-form {
+    #brand-bar #brand-bar-nav form {
       padding: 10px 0;
       margin: 0;
       width: 100%;
@@ -2770,13 +2774,6 @@ $amherst-grey-3: #dee2e6;
     }
 
   }
-
-  @media only screen and (max-width : 768px) {
-    .navbar-nav {
-      float: right;
-    }
-  }
-
 
 }
 ///////////////////////////////////////////////
@@ -4022,6 +4019,16 @@ $barpublishing-white: #fff;
 
   }
 
+  #brand-bar.navbar-light {
+    .navbar-toggler {
+      color: #fff;
+      border-color: #fff;
+    }
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+  }
+
   // press catalog
 
   // jumbotron
@@ -4443,10 +4450,6 @@ $barpublishing-white: #fff;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
     }
 
-    .navbar-collapse.collapse {
-      display: none!important;
-    }
-
     .barpublishing #brand-bar .custom-nav {
       padding-top: 1em;
       padding-left: 1em;
@@ -4470,14 +4473,6 @@ $barpublishing-white: #fff;
       padding-top: 10px;
       padding-bottom: 10px;
       line-height: 3.5rem;
-    }
-
-    .navbar-collapse.collapse.in {
-      display: block!important;
-    }
-
-    .collapsing {
-      overflow: hidden!important;
     }
 
     #brand-bar form.search-form, .navbar-form {
@@ -5261,17 +5256,12 @@ $lever-black-80: #342f2e;
 
     .navbar-collapse {
       border-top: 1px solid transparent;
+      border-right: 1px solid $lever-grey-4;
+      border-bottom: 1px solid $lever-grey-4;
+      border-left: 1px solid $lever-grey-4;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-    }
-
-    .navbar-collapse.collapse {
-      display: none!important;
-    }
-
-    .navbar-default .navbar-nav {
-      padding-top: 0;
-      padding-right: 0;
-      margin-top: 0;
+      margin-top: 18px;
+      background-color: $lever-grey-3;
     }
 
     .navbar-nav>li {
@@ -5281,20 +5271,12 @@ $lever-black-80: #342f2e;
     .navbar-nav>li>a {
       padding-top: 10px;
       padding-bottom: 10px;
-      line-height: 3.5rem;
+      line-height: unset;
     }
 
-    .navbar-collapse.collapse.in {
-      display: block!important;
-    }
-
-    .collapsing {
-      overflow: hidden!important;
-    }
-
-    #brand-bar form.search-form, .navbar-form {
+    #brand-bar-nav form {
       padding: 10px 0;
-      margin: 0;
+      margin: 0 20px;
       width: 100%;
       border: 0;
       float: none !important;
@@ -5304,12 +5286,6 @@ $lever-black-80: #342f2e;
       width: 1%;
     }
 
-  }
-
-  @media only screen and (max-width : 768px) {
-    .navbar-nav {
-      float: right;
-    }
   }
 
 }
@@ -12236,9 +12212,7 @@ $psu-gray-1: #3F4550;
         top: 0;
         border-width: 0 0 1px;
     }
-    .navbar-collapse.collapse {
-        display: none!important;
-    }
+
     .navbar-nav {
         float: none!important;
         margin-top: 7.5px;
