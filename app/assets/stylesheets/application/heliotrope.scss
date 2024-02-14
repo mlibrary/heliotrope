@@ -450,6 +450,10 @@ footer.press {
 }
 .press {
 
+  h2 {
+    margin-top: 0px !important;
+  }
+
   // reduce standard button size for dropdowns/sorts
   .search-widgets {
     font-size: 14px;
@@ -1357,6 +1361,7 @@ footer.press {
 
       .external-resource-link {
         text-align: center;
+        word-break: break-word;
       }
 
       .index-document-functions {
