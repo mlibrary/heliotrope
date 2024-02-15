@@ -275,8 +275,13 @@ div.skip {
 ///////////////////////////////////
 // Modal survey on monograph page
 .modal.survey {
-  h4 {
-    font-size: 2rem;
+
+  .modal-dialog {
+    max-width: 600px;
+  }
+
+  h4.modal-title {
+    font-size: 20px;
   }
 
   .close {
@@ -290,7 +295,7 @@ div.skip {
       height: 170px;
     }
     p {
-      font-size: 1.85rem;
+      font-size: 1.2em;
     }
   }
   .modal-footer {
@@ -312,16 +317,22 @@ div.skip {
   }
 }
 
+// Alert/Non-Modal survey in EReader
+
+.alert.survey.fade:not(.show) {
+  opacity: 1;
+}
+
 .alert.survey {
   position: fixed;
   z-index: 5001;
   bottom: 0px;
-  right: 0px;
+  right: 35px;
   padding: 0;
   margin-bottom: 0;
 
   .modal-dialog {
-    width: 450px;
+    max-width: 525px;
   }
 
   h4 {
