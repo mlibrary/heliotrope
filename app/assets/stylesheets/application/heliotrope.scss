@@ -147,6 +147,11 @@ body  {
   }
 }
 
+/* Overwrite Hyrax 4 hiding icon */
+.navbar-toggler-icon {
+  display: inline-block !important;
+}
+
 // skip links
 div.skip {
   position: absolute;
@@ -1258,6 +1263,7 @@ footer.press {
 
           .external-resource-link {
             text-align: center;
+            word-break: break-word;
           }
 
         }

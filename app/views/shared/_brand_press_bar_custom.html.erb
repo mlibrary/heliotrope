@@ -98,11 +98,11 @@
             <%= image_tag "bridwell-press-logo-white.svg", class: 'navbar-brand-logo', alt: '', height: '67', width: 'auto' %><div class="sr-only"><%= press_presenter.name %></div>
           </a>
         <% end %>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#brand-bar-nav" aria-controls="brand-bar-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#brand-bar-nav" aria-controls="brand-bar-nav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
 
-      <div class="collapse navbar-collapse" id="brand-bar-nav">
+      <div class="navbar-collapse collapse" id="brand-bar-nav">
           <% if press_presenter.navigation_block.present? %>
             <%= press_presenter.navigation_block.html_safe %>
           <% end %>
