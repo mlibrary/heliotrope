@@ -4,7 +4,7 @@
     <a class="nav-link dropdown-toggle" id="adminDropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" href="#">
       Admin
     </a>
-    <div class="dropdown-menu" aria-labelledby="adminDropdown">      
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="adminDropdown">      
       <% show_fulcrum_link = current_user&.platform_admin? %>
       <% show_dashboard_link = current_user.groups.length.positive? %>
       <% include_collections_link ||= can?(:create, Collection) %>
