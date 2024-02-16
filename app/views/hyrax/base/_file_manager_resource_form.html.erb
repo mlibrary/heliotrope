@@ -1,0 +1,10 @@
+<%# 
+HELIOTROPE OVERRIDE SEE HELIO-4598, https://github.com/samvera/hyrax/issues/6361
+With Hyrax 5 we can get remove this entire file
+%>
+<div class="resource-form-container">
+  <%= simple_form_for [main_app, @form], remote: true, authenticity_token: true, html: { id: 'resource-form', 'data-type': 'json' } do |f| %>
+    <%= f.input :thumbnail_id, as: :hidden, input_html: { data: {member_link: 'thumbnail_id'}} %>
+    <%= f.input :representative_id, as: :hidden, input_html: { data: {member_link: 'representative_id'}} %>
+  <% end %>
+</div>
