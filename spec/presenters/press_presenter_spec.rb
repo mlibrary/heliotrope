@@ -52,6 +52,26 @@ RSpec.describe PressPresenter do
       end
     end
 
+    describe "#show_irus_stats?" do
+      context "is set to true" do
+        let(:press) { create(:press, show_irus_stats: true) }
+
+        it { expect(subject.show_irus_stats?).to be true }
+      end
+
+      context "is set to false" do
+        let(:press) { create(:press, show_irus_stats: false) }
+
+        it { expect(subject.show_irus_stats?).to be false }
+      end
+
+      context "defaults to true" do
+        let(:press) { create(:press) }
+
+        it { expect(subject.show_irus_stats?).to be true }
+      end
+    end
+
     describe "when a child press has a parent" do
       let(:parent_press) {
         create(:press, subdomain: "blue",
