@@ -25,7 +25,7 @@
 //= require_tree ./application
 //= require application_survey
 //= require hyrax
-// rails new <app> defaults ...
-// require rails-ujs
-// require turbolinks
-// require_tree .
+//
+// [heliotrope override]
+// HELIO-4598, https://github.com/samvera/hyrax/issues/6361
+//= require hyrax/heliotrope_member_override
