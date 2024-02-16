@@ -95,6 +95,11 @@ class PressPresenter < ApplicationPresenter
     @press&.content_warning_information.presence || ''
   end
 
+  def show_irus_stats?
+    return false if press.show_irus_stats == false
+    true
+  end
+
   private
 
     def initialize(subdomain, press)

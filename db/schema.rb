@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_12_18_205001) do
+ActiveRecord::Schema.define(version: 2024_02_15_200557) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.integer "user_id"
@@ -440,6 +440,7 @@ ActiveRecord::Schema.define(version: 2023_12_18_205001) do
     t.boolean "default_list_view", default: false
     t.boolean "aboutware", default: false
     t.boolean "interval", default: false
+    t.boolean "show_irus_stats", default: true
     t.text "tombstone_message"
     t.string "google_analytics_4"
     t.text "content_warning_information"

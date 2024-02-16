@@ -79,7 +79,8 @@ class PressesController < ApplicationController
                                     :aboutware,
                                     :interval,
                                     :tombstone_message,
-                                    :content_warning_information
+                                    :content_warning_information,
+                                    :show_irus_stats
                                    )
     end
 end
