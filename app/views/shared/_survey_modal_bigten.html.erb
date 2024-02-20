@@ -1,5 +1,4 @@
 <!-- survey -->
-<% presenter = @presenter %>
 <div id="surveyBigTenModal" class="modal fade survey" tabindex="-1" role="dialog" aria-labelledby="surveyModalLabel">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -23,7 +22,7 @@
 <script type="text/javascript">
   function survey_button_yes(){
     Cookies.set('survey_bigten', 'clicked', { expires: 365<%= ', secure: true' if Rails.env == 'production' %> });
-    window.open("https://umich.qualtrics.com/jfe/form/SV_72nTB41pi7pzn9A?publisher=<%= @presenter.subdomain %>&title=<%= @presenter.title %>", "_blank");
+    window.open("https://umich.qualtrics.com/jfe/form/SV_72nTB41pi7pzn9A?publisher=<%= @monograph_presenter.subdomain %>&title=<%= @monograph_presenter.title %>", "_blank");
   }
   function survey_button_no(){
     Cookies.set('survey_bigten', 'ignore', { expires: 180<%= ', secure: true' if Rails.env == 'production' %> });
