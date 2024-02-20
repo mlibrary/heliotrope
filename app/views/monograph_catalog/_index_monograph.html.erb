@@ -152,8 +152,7 @@
         <% if press_presenter.show_irus_stats? %>
           <li role="presentation">
             <h2>
-              <%# NB: `data-turbolinks="false"` here as the JS on this tab is not cacheable in `<head>`, yet we cannot turn turbolinks off for the entire Monograph catalog page!  %>
-              <a id="tab-stats" href="#stats" data-turbolinks="false" aria-controls="stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a>
+              <a id="tab-stats" href="#stats" aria-controls="stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a>
             </h2>
           </li>
         <% end %>
