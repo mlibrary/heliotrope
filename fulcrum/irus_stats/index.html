@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <link href="/irus_stats/irus_stats.css" rel="stylesheet">
+    <link href="https://irus.jisc.ac.uk/r5/css/irus_r5_widget.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="irus_widget_container"></div>
+
+    <script>
+      /* The reason for this MutationObserver stuff is to detect if the IRUS widget is going to show a nasty...
+         `Exception 3030: blah blah...` message when no activity/"Investigations" have happened for this item yet...
+         (or within the time frame used in the table, at least). With that in place I figured I'd shoehorn our...
+          privacy link in here as well, plus some text stolen from the badge legend, which we are not using. */
+
+      const targetNode = document.getElementById("irus_widget_container");
+      const config = { childList: true };
+
+      const maybe_show_irus_table = (mutationList, observer) => {
+        for (const mutation of mutationList) {
+          if (mutation.type === "childList") {
+            for (const record of mutation.addedNodes) {
+              if (record.id == "irus_widget_results") {
+                if (document.querySelector("#irus_widget_counts > table") === null) {
+                  // no table found, so we delete the 3030 exception message here, then adding Fulcrum-specific text
+                  document.querySelector("#irus_widget_counts").innerHTML = 'IRUS represents COUNTER usage on the Fulcrum platform only, not through other channels.';
+                  document.querySelector("#irus_widget_counts").innerHTML += "<br />This item has no recent usage data recorded.";
+                } else {
+                  // table found, just add our text
+                  document.querySelector("#irus_widget_counts").innerHTML += '<br/>IRUS represents COUNTER usage on the Fulcrum platform only, not through other channels.';
+                }
+
+                document.getElementById("irus_widget_counts").innerHTML += '<br/>Note the IRUS badge above shows total views (no date range) of full content for this item (Total_Item_Requests).';
+                document.getElementById("irus_widget_counts").innerHTML += '<br/>For an explanation of Metric_Types, please see the <a href="https://irus.jisc.ac.uk/r5/support/guides/understanding_r5/" target="_blank">IRUS guide</a>.';
+                document.getElementById("irus_widget_counts").innerHTML += '<br/>For more information on how we and partners treat your usage data, <a href="/privacy#usage_info_irus" target="_blank">see our privacy policy</a>.';
+                document.getElementById("irus_widget_counts").style.display = "block";
+
+                observer.disconnect();
+              }
+            }
+          }
+        }
+      };
+      const observer = new MutationObserver(maybe_show_irus_table);
+      observer.observe(targetNode, config);
+
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const noid = urlParams.get('noid')
+
+      const irus_widget_script = document.createElement('script');
+      const irus_widget_url = 'https://irus.jisc.ac.uk/r5/js/irus_ir_widget.js?requestor_id=fa0fac24cd80e67e01322928b4a6f58d&platform=235&show_all_metric_types&item_id=oai:fulcrum.org:' + noid;
+      irus_widget_script.setAttribute('id','irus_ir_widget');
+      irus_widget_script.setAttribute('src', irus_widget_url);
+      document.body.appendChild(irus_widget_script);
+    </script>
+  </body>
+</html>
