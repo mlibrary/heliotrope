@@ -1,8 +1,14 @@
 <% content_for :head do %>
+  <%# This works to prevent Turbolinks breaking the IRUS widget load, at the expense of disabling Turbolinks on any... %>
+  <%# monograph catalog which uses this IRUS widget tab, as this is injected into <head> for the overall page. %>
+  <meta name="turbolinks-visit-control" content="reload">
   <link href="https://irus.jisc.ac.uk/r5/css/irus_r5_widget.css" rel="stylesheet">
 <% end %>
 
 <div id="irus_widget_container"></div>
+<%# The fact that this script needs its ID to be set and needs to be loaded after the doc exists makes things a... %>
+<%# bit difficult for Rails/Turbolinks. Were we to put in the asset pipeline and edit it to make it "Turbolinks...
+<%# aware" we would also need to edit its code references to its own id. %>
 <script id="irus_ir_widget" src="https://irus.jisc.ac.uk/r5/js/irus_ir_widget.js?requestor_id=fa0fac24cd80e67e01322928b4a6f58d&platform=235&item_id=oai:fulcrum.org:<%= @presenter.id %>&show_all_metric_types"></script>
 
 <%# The reason for this MutationObserver is to detect if the IRUS widge is going to show a nasty `Exception 3030: blah blah...` message when... %>
