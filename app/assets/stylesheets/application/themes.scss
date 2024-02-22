@@ -9768,6 +9768,10 @@ $pccn-black-80: #342f2e;
     color: #054a92;
   }
 
+  .blacklight-icons svg {
+    fill: rgb(0, 39, 76);
+  }
+
   // monograph
   .monograph {
     .documentHeader {
@@ -10182,6 +10186,12 @@ $seas-black-80: #342f2e;
   #per_page-dropdown .dropdown-toggle:active .caret {
     color: #054a92;
   }
+
+  .blacklight-icons svg {
+    fill: #054a92;
+  }
+
+  
 
   // monograph
   .monograph {
@@ -10690,7 +10700,8 @@ $unc-black-80: #342f2e;
 
   // buttons
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($unc-brand-color);
     @include button-font-color($unc-white);
     @include alegreya-sans;
@@ -10703,7 +10714,9 @@ $unc-black-80: #342f2e;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($unc-accent-color);
     @include button-hover-font-color($unc-white);
   }
@@ -10863,6 +10876,10 @@ $unc-black-80: #342f2e;
   #sort-dropdown .dropdown-toggle:active .caret,
   #per_page-dropdown .dropdown-toggle:active .caret {
     color: $unc-white;
+  }
+
+  .blacklight-icons svg {
+    fill: $unc-white;
   }
 
   .constraints-container {
@@ -11666,14 +11683,17 @@ $nyu-gray-2: #342f2e;
     @include adelle-sans;
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     background-color: $nyu-brand-color;
     border-color: $nyu-brand-color;
     color: $nyu-brand-accent;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     background-color: $nyu-brand-color-2;
     border-color: $nyu-brand-color-2;
     color: $nyu-brand-color;
@@ -11781,6 +11801,19 @@ $nyu-gray-2: #342f2e;
     background-color: $nyu-brand-color;
     border-color: $nyu-brand-color;
   }
+
+  .caret {
+    color: $nyu-white;
+  }
+
+  .blacklight-icons svg {
+    fill: $nyu-white;
+  }
+
+  a.btn:hover .blacklight-icons svg {
+    fill: $nyu-brand-color;
+  }
+
   // pagination
 
   .pagination {
@@ -12348,19 +12381,23 @@ $reki-black-80: #342f2e;
 
   // buttons
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($reki-brand-color);
     @include button-font-color($reki-white);
   }
 
   .download {
-    .btn-default {
+    .btn-default,
+    .btn {
       @include button-background-color($reki-brand-color);
     }
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($reki-link-hover);
     @include button-hover-font-color($reki-white);
   }
@@ -12442,7 +12479,7 @@ $reki-black-80: #342f2e;
     .logo {
 
       img {
-        width: 280px;
+        width: 220px;
         margin-right: 3em;
       }
 
@@ -12516,6 +12553,14 @@ $reki-black-80: #342f2e;
   #sort-dropdown .dropdown-toggle:active,
   #per_page-dropdown .dropdown-toggle:active {
     color: $reki-white;
+  }
+
+  .caret {
+    color: $reki-white;
+  }
+
+  .blacklight-icons svg {
+    fill: $reki-white;
   }
 
   .constraints-container {
