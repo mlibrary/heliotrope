@@ -3,18 +3,20 @@
 <% tabs ||= %w[metadata files relationships] # default tab order %>
 <div class="row">
   <div class="col-xs-12 col-sm-8">
-    <div class="panel panel-default tabs" role="main">
+    <div class="tabs" role="main">
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="nav-item">
         <% tabs.each_with_index do |tab, i| %>
           <% if i.zero? %>
-            <li role="presentation" class="active">
-          <% else %>
-            <li role="presentation">
-          <% end %>
-          <a href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
+          <a class="nav-link active" href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
             <i class="fa icon-<%= tab %>"></i> <%= t("hyrax.works.form.tab.#{tab}") %>
           </a>
+          <% else %>
+          <a class="nav-link" href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
+            <i class="fa icon-<%= tab %>"></i> <%= t("hyrax.works.form.tab.#{tab}") %>
+          </a>
+          <% end %>
           </li>
         <% end %>
 
