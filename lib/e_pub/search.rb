@@ -1,14 +1,10 @@
 # frozen_string_literal: true
 
-# commented out during Hyrax 4 upgrade (see HELIO-4582)
-# TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-# require "skylight"
+require "skylight"
 
 module EPub
   class Search
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # include Skylight::Helpers
+    include Skylight::Helpers
 
     # 30 second time out, see HELIO-3890
     # This is really more of a "begin timing out now" then
@@ -25,9 +21,7 @@ module EPub
       results_from_chapters(db_results, query)
     end
 
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # instrument_method
+    instrument_method
     def node_query_match(node, query, offset = 0)
       # node.content.downcase.index(query.downcase, offset)
       # As per #1363, people want us to: "Develop exact term matching"
@@ -43,9 +37,7 @@ module EPub
 
     private
 
-      # commented out during Hyrax 4 upgrade (see HELIO-4582)
-      # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-      # instrument_method
+      instrument_method
       def find_selection(node, query)
         matches = []
         offset = 0
@@ -82,9 +74,7 @@ module EPub
         matches
       end
 
-      # commented out during Hyrax 4 upgrade (see HELIO-4582)
-      # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-      # instrument_method
+      instrument_method
       def find_targets(node, query)
         targets = []
         return nil unless node_query_match(node, query)
@@ -101,9 +91,7 @@ module EPub
         targets.compact
       end
 
-      # commented out during Hyrax 4 upgrade (see HELIO-4582)
-      # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-      # instrument_method
+      instrument_method
       def results_from_chapters(db_results, query) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         results = {}
         results[:q] = query
