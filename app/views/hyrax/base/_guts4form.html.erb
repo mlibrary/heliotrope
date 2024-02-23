@@ -6,8 +6,8 @@
     <div class="tabs" role="main">
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="nav-item">
         <% tabs.each_with_index do |tab, i| %>
+        <li role="presentation" class="nav-item">
           <% if i.zero? %>
           <a class="nav-link active" href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
             <i class="fa icon-<%= tab %>"></i> <%= t("hyrax.works.form.tab.#{tab}") %>
@@ -19,12 +19,6 @@
           <% end %>
           </li>
         <% end %>
-
-<!--        <li role="presentation" id="tab-share" class="hidden">-->
-<!--          <a href="#share" aria-controls="share" role="tab" data-toggle="tab">-->
-<!--            <i class="fa icon-share"></i> <%#= t("hyrax.works.form.tab.share") %>-->
-<!--          </a>-->
-<!--        </li>-->
       </ul>
 
       <!-- Tab panes -->
@@ -42,12 +36,6 @@
           </div>
           </div>
         <% end %>
-
-<!--        <div role="tabpanel" class="tab-pane" id="share" data-param-key="<%#= f.object.model_name.param_key %>">-->
-<!--          <div class="form-tab-content">-->
-            <%#= render "form_share", f: f %>
-<!--          </div>-->
-<!--        </div>-->
         </div>
       </div>
     </div>
