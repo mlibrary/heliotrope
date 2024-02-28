@@ -1,0 +1,156 @@
+@import 'bootstrap';
+
+// Brand colors
+$danger: #d33a35 !default;
+$success: #387f38 !default;
+$info: #2c76c7 !default;
+$warning: #565653 !default;
+
+// Overrides for accessibility compliance
+// Testing: WAVE evaluation tool: http://wave.webaim.org/
+// Chrome has a WAVE extension that you can toggle on/off for testing
+
+// Bootsrap upto v4.0 has poor styling for color-contrast that causes the WAVE
+// tool to throw contrast errors
+// Read more: https://getbootstrap.com/docs/4.0/getting-started/accessibility/#color-contrast
+// These changes meet WCAG AA and AAA compliance standard
+// I'm passing values to bootstrap variables as listed here:
+// https://getbootstrap.com/docs/3.3/customize/#less-variables
+// * Darkens the text for active breadcrumb on every page. Meets WCAG AA and AAA
+// * Darkens the text for disabled pagination buttons on every page.
+$breadcrumb-active-color: #4c4c4c;
+$pagination-disabled-color: #4c4c4c;
+
+// Date picker on safari placeholder text was misaligned
+@media screen {
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    input[type="date"].form-control {
+      line-height: 16px;
+    }
+  }
+}
+
+
+// We no longer use bootstrap-sass in hyrax 4
+// so these definition have been copied out of bootstrap-sass 3.4.1
+// or otherwise made to work with bootstrap 4
+$border-radius-base: 4px !default;
+$nav-link-padding: 10px 15px !default;
+$nav-tabs-active-link-hover-color: #6c757d !default;
+$nav-tabs-active-link-hover-bg: #fff !default;
+$nav-tabs-active-link-hover-border-color: #ddd !default;
+
+
+// Give the tabs something to sit on
+.nav-tabs {
+
+  // beging heliotrope overrides
+  border-bottom: 1px solid $nav-tabs-border-color;
+
+  h2 {
+    margin: 0;
+    font-size: $font-size-base;
+    padding: 10px 0px;
+    margin: 0;
+    font-weight: normal;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  // from bootstrap-sass-3.4.1/assets/stylesheets/bootstrap/_navs.scss (heliotrope changes commented)
+  > li {
+    float: left;
+    // Make the list-items overlay the bottom border
+    margin-bottom: -1px;
+    // Actual tabs (as links)
+    > h2 > a { // heliotrope changed from `> a`
+      margin-right: 2px;
+      line-height: $line-height-base;
+      border: 1px solid transparent;
+      border-radius: $border-radius-base $border-radius-base 0 0;
+      padding: $nav-link-padding; // heliotrope added
+      &:hover {
+        background-color: #EEEEEE; // heliotrope added
+        border-color: $nav-tabs-link-hover-border-color $nav-tabs-link-hover-border-color $nav-tabs-border-color;
+      }
+    }
+    // Active state, and its :hover to override normal :hover
+    &.active > h2 > a { // heliotrope changed from `&.active > a`
+      &,
+      &:hover,
+      &:focus {
+        color: $nav-tabs-active-link-hover-color;
+        cursor: default;
+        background-color: $nav-tabs-active-link-hover-bg;
+        border: 1px solid $nav-tabs-active-link-hover-border-color;
+        border-bottom-color: transparent;
+      }
+    }
+  }
+  // pulling this in mainly for less shorthand
+  &.nav-justified {
+    @extend .nav-justified;
+    @extend .nav-tabs-justified !optional;
+  }
+}
+
+// pagination.scss, used in file_set next/prev buttons
+.pager .active a {
+  background-color: $pagination-border-color;
+  color: $pagination-bg;
+}
+
+// search_results.scss
+// bootstrap 4 needs:
+$padding-base-vertical: ($spacer * .5);
+
+#documents .document {
+  border-top: 1px solid $gray-400;
+  margin-top: $padding-base-vertical;
+  padding-top: $padding-base-vertical;
+
+  @extend .clearfix;
+  .document-title-heading {
+    @extend h5;
+  }
+
+  &:before {
+    //Overwrite blacklight
+    content: none;
+  }
+  &:first-child {
+    border-top:none;
+    margin-top:0;
+    padding-top:0;
+  }
+
+  .document-thumbnail {
+    //@include make-xs-column(4);
+    //@include make-sm-column(2);
+    @include make-col(4)
+  }
+
+  .document-metadata {
+    //@include make-xs-column(8);
+    @include make-col(8)
+  }
+
+  .canonical-image {
+    width: 100%; // no bigger than the parent
+  }
+
+  .resource-type {
+    margin-bottom:0;
+    position:absolute;
+    right:0;
+    text-align:center;
+    top:0;
+    width:80%;
+  }
+
+  .modal {
+    text-align:left;
+  }
+}

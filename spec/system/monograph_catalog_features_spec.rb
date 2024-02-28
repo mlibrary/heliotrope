@@ -55,26 +55,26 @@ RSpec.describe "Monograph Catalog TOC", type: :system, browser: true do
       find("div[data-target='#facet-keyword_sim'").click
       expect(page).to have_css("a[data-ga-event-action='facet_keyword']", count: 5)
 
-      # `ajax_modal_ex.js` actually sticks `hidden` on all children of <body> - script tags, cookie consent n'all - but...
+      # `blacklight_modal_a11y_additions.js` actually sticks `hidden` on all children of <body> - script tags, cookie consent n'all - but...
       # that's too egregious to test, especially with Capybara's own perceived visibility in play. FYI, the cookie...
       # consent div can actually be visible with "hidden" applied to it. Just verify the main div is behaving as expected.
       expect(page).to have_css("div#main", visible: true)
       expect(page).not_to have_css("div#main[hidden='hidden']", visible: true) # verify lack of `hidden` attribute
-      expect(page).to have_css("div#ajax-modal[hidden='hidden']", visible: false)
+      expect(page).to have_css("div#blacklight-modal[hidden='hidden']", visible: false)
 
       # somehow this expect gets the find afterwards to work more consistently. Bah. Timing errors.
       expect(page).to have_css("div#facet-keyword_sim a.more_facets_link")
       # click "more" link to open full-screen facet modal overlay
       find("a[href='#{monograph_catalog_facet_path(id: 'keyword_sim', monograph_id: monograph.id, locale: 'en')}']").click
       expect(page).to have_css("div#main[hidden='hidden']", visible: false)
-      expect(page).to have_css("div#ajax-modal", visible: true)
-      expect(page).not_to have_css("div#ajax-modal[hidden='hidden']", visible: true) # verify lack of `hidden` attribute
+      expect(page).to have_css("div#blacklight-modal", visible: true)
+      expect(page).not_to have_css("div#blacklight-modal[hidden='hidden']", visible: true) # verify lack of `hidden` attribute
 
       # close out the full-screen facet modal
-      find("button.ajax-modal-close").click
+      find("button.blacklight-modal-close").click
       expect(page).to have_css("div#main", visible: true)
       expect(page).not_to have_css("div#main[hidden='hidden']", visible: true) # verify lack of `hidden` attribute
-      expect(page).to have_css("div#ajax-modal[hidden='hidden']", visible: false)
+      expect(page).to have_css("div#blacklight-modal[hidden='hidden']", visible: false)
     end
   end
 end

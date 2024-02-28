@@ -4,14 +4,12 @@ class PDFEbookPresenter < ApplicationPresenter
   attr_reader :id
   include Skylight::Helpers
 
-  instrument_method
   def initialize(id)
     @id = id
     @cached = EbookTableOfContentsCache.find_by(noid: @id)
     load_pdf if @cached.blank?
   end
 
-  instrument_method
   def load_pdf
     # HELIO-4467
     # Parsing the entire pdf can be very expensive so don't do it unless we need it
@@ -25,7 +23,6 @@ class PDFEbookPresenter < ApplicationPresenter
     false
   end
 
-  instrument_method
   def intervals?
     return true if @cached.present?
     @pdf_ebook&.intervals&.count&.positive?

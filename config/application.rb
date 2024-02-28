@@ -111,8 +111,12 @@ module Heliotrope
     # Set the epub engine for cozy-sun-bear
     config.cozy_epub_engine = 'epubjs'
 
-    # See https://github.com/mlibrary/umrdr/commit/4aa4e63349d6f3aa51d76f07aa20faeae6712719
-    config.skylight.probes -= ['middleware']
+    # Prior to Hyrax 4 we removed the middleware probe. In Hyrax 4 this no longer works, but will leave here for now commented out.
+    # See HELIO-4589, HELIO-5482 and https://github.com/mlibrary/umrdr/commit/4aa4e63349d6f3aa51d76f07aa20faeae6712719
+    # config.skylight.probes -= ['middleware']
+    #
+    # If you need to test Sklight in development, uncomment this
+    # config.skylight.environments << "development" if Rails.env.development?
 
     # Prometheus monitoring, see HELIO-3388
     ENV["PROMETHEUS_MONITORING_DIR"] = ENV["PROMETHEUS_MONITORING_DIR"] || Settings.prometheus_monitoring.dir || File.join(Settings.scratch_space_path, 'prometheus')

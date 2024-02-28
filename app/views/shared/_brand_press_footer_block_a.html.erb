@@ -3,7 +3,7 @@
     <%= render_markdown press_presenter.footer_block_a %>
   <% else %>
     <div class="crop">
-      <%= image_tag press_presenter.logo, alt: press_presenter.name + ' logo', class: 'img-responsive' %><br /><br />
+      <%= image_tag press_presenter.logo, alt: press_presenter.name + ' logo', class: 'img-fluid' %><br /><br />
     </div>
     <p>
       <a class="brand" href="<%= press_presenter.url %>"><%= press_presenter.name %></a>

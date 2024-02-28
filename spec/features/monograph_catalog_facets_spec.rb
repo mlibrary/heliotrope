@@ -47,22 +47,22 @@ describe "Monograph Catalog Facets" do
 
       expect(page).to_not have_content("Your search has returned")
 
-      expect(page).to have_selector('#facet-section_title_sim a.facet_select')
+      expect(page).to have_selector('#facet-section_title_sim a.facet-select')
 
-      expect(page).to have_selector('#facet-creator_sim a.facet_select', count: 3)
-      expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'McTesterson, Testy')
-      expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'Coauthorson, Timmy')
-      expect(page).to have_selector('#facet-creator_sim a.facet_select', text: 'Bloggs, Joe')
+      expect(page).to have_selector('#facet-creator_sim a.facet-select', count: 3)
+      expect(page).to have_selector('#facet-creator_sim a.facet-select', text: 'McTesterson, Testy')
+      expect(page).to have_selector('#facet-creator_sim a.facet-select', text: 'Coauthorson, Timmy')
+      expect(page).to have_selector('#facet-creator_sim a.facet-select', text: 'Bloggs, Joe')
 
-      expect(page).to have_selector('#facet-resource_type_sim a.facet_select', text: 'image')
-      expect(page).to have_selector('#facet-resource_type_sim a.facet_select', text: 'video')
+      expect(page).to have_selector('#facet-resource_type_sim a.facet-select', text: 'image')
+      expect(page).to have_selector('#facet-resource_type_sim a.facet-select', text: 'video')
 
-      expect(page).to have_selector('#facet-search_year_sim a.facet_select', count: 2)
-      expect(page).to have_selector('#facet-exclusive_to_platform_sim a.facet_select')
+      expect(page).to have_selector('#facet-search_year_sim a.facet-select', count: 2)
+      expect(page).to have_selector('#facet-exclusive_to_platform_sim a.facet-select')
 
-      keyword_facet_labels = page.all('#facet-keyword_sim a.facet_select .facet-label')
+      keyword_facet_labels = page.all('#facet-keyword_sim a.facet-select')
       expect(keyword_facet_labels.count).to eq 5 # facet limit is 5
-      keyword_facet_counts = page.all('#facet-keyword_sim a.facet_select > span:nth-of-type(2)')
+      keyword_facet_counts = page.all('#facet-keyword_sim .facet-count')
       expect(keyword_facet_counts.count).to eq 5 # facet limit is 5
 
       # default 'count' sort with fall back to case-insensitive alphabetic 'index' sort
@@ -78,14 +78,14 @@ describe "Monograph Catalog Facets" do
       expect(keyword_facet_counts[4]).to have_content '1'
 
       # somehow this expect gets the find afterwards to work more consistently, in the system specs anyway
-      expect(page).to have_css("div#facet-keyword_sim a.more_facets_link")
+      expect(page).to have_css("div#facet-keyword_sim a.more_facets_link[data-blacklight-modal='trigger']")
       # click "more" link to open full-screen facet modal overlay
       find("a[href='#{monograph_catalog_facet_path(id: 'keyword_sim', monograph_id: monograph.id, locale: 'en')}']")
           .click
 
-      keyword_facet_labels = page.all('a.facet_select .facet-label')
+      keyword_facet_labels = page.all('.facet-select')
       expect(keyword_facet_labels.count).to eq 6
-      keyword_facet_counts = page.all('a.facet_select > span:nth-of-type(2)')
+      keyword_facet_counts = page.all('.facet-count')
       expect(keyword_facet_counts.count).to eq 6
 
       expect(keyword_facet_labels[0]).to have_content 'stuff'
@@ -102,7 +102,7 @@ describe "Monograph Catalog Facets" do
       expect(keyword_facet_counts[5]).to have_content '1'
 
       # HELIO-3688
-      expect(page).to have_css(".sort_options.btn-group.pull-right[role=tablist]")
+      expect(page).to have_css(".sort_options.btn-group[role=tablist]")
       expect(page).to have_css("span.active.numeric.btn.btn-default[role=tab][aria-selected=true]")
       expect(page).to have_css("a.sort_change.az.btn.btn-default[href*='keyword_sim?facet.sort=index'][role=tab][aria-selected=false]")
 
@@ -110,9 +110,9 @@ describe "Monograph Catalog Facets" do
       # of sort buttons, with the upper ones hidden in the modal
       find('.facet_pagination.bottom .sort_options a.sort_change.az.btn.btn-default').click
 
-      keyword_facet_labels = page.all('a.facet_select .facet-label')
+      keyword_facet_labels = page.all('.facet-select')
       expect(keyword_facet_labels.count).to eq 6
-      keyword_facet_counts = page.all('a.facet_select > span:nth-of-type(2)')
+      keyword_facet_counts = page.all('.facet-count')
       expect(keyword_facet_counts.count).to eq 6
 
       expect(keyword_facet_labels[0]).to have_content 'aardvark'
@@ -129,7 +129,7 @@ describe "Monograph Catalog Facets" do
       expect(keyword_facet_counts[5]).to have_content '1'
 
       # HELIO-3688
-      expect(page).to have_css(".sort_options.btn-group.pull-right[role=tablist]")
+      expect(page).to have_css(".sort_options.btn-group[role=tablist]")
       expect(page).to have_css("span.active.az.btn.btn-default[role=tab][aria-selected=true]")
       expect(page).to have_css("a.sort_change.numeric.btn.btn-default[href*='keyword_sim?facet.sort=count'][role=tab][aria-selected=false]")
     end

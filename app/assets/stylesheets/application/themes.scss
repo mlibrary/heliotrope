@@ -166,7 +166,7 @@ button:focus {
 
   // buttons
 
-  .btn-default {
+  .btn-default, .btn {
     @include button-background-color($heb-accent-color);
     @include button-font-color($heb-brand-color);
     border-color: #91a3b0;
@@ -175,7 +175,7 @@ button:focus {
   }
 
   .download {
-    .btn-default {
+    .btn-default, .btn {
     @include button-background-color($heb-accent-color);
     @include button-font-color($heb-brand-color);
     border-color: #91a3b0;
@@ -185,7 +185,9 @@ button:focus {
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color(#7b90a0);
     @include button-hover-font-color(#fff);
     border-color: #738a9b;
@@ -735,7 +737,7 @@ button:focus {
     height: 194px;
   }
   .heb .container {
-    overflow: auto;
+    overflow: unset;
   }
   .heb header .row.justify-content-end .col-md-4.pt-3 {
     flex-grow: 1;
@@ -899,7 +901,8 @@ $aperio-white: #fff;
     font-weight: 500;
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($aperio-accent-color);
     @include button-font-color(#fff);
     border-color: $aperio-accent-color;
@@ -908,7 +911,8 @@ $aperio-white: #fff;
   }
 
   .download {
-    .btn-default {
+    .btn-default, 
+    .btn {
     @include button-background-color($aperio-accent-color);
     @include button-font-color(#fff);
     border-color: $aperio-accent-color;
@@ -918,7 +922,9 @@ $aperio-white: #fff;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color(#131310);
     @include button-hover-font-color(#fff);
     border-color: #0c0c0b;
@@ -928,6 +934,10 @@ $aperio-white: #fff;
   #sort-dropdown .dropdown-toggle .caret,
   #per_page-dropdown .dropdown-toggle .caret {
     color: #fff;
+  }
+
+  .blacklight-icons svg {
+    fill: $aperio-white;
   }
 
   // navigation menu
@@ -1111,7 +1121,7 @@ $aperio-white: #fff;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include gibson;
   }
 
@@ -1523,6 +1533,20 @@ $ahpi-white: #fff;
 
   }
 
+  #brand-bar.navbar-light {
+    .navbar-nav .dropdown .nav-link {
+      color: #fff;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:active {
+      color: #e5e5e5;
+    }
+
+    .navbar-nav .show > .nav-link {
+      color: #e5e5e5;
+    }
+  }
+
   // press catalog
 
   // jumbotron
@@ -1828,19 +1852,23 @@ $atg-black-80: #342f2e;
 
   // buttons
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($atg-brand-color);
     @include button-font-color($atg-white);
   }
 
   .download {
-    .btn-default {
+    .btn-default,
+    .btn {
       @include button-background-color($atg-brand-color);
     }
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($atg-grey-4);
     @include button-hover-font-color($atg-brand-color);
   }
@@ -1848,8 +1876,18 @@ $atg-black-80: #342f2e;
   // navigation menu
   .navbar-default .navbar-nav > .open > a,
   .navbar-default .navbar-nav > .open > a:hover,
-  .navbar-default .navbar-nav > .open > a:focus {
-    background-color: $atg-grey-2;
+  .navbar-default .navbar-nav > .open > a:focus,
+  .navbar-light .navbar-nav .dropdown .nav-link {
+    color: $atg-white;
+    padding-top: 0;
+  }
+
+  .navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  }
+
+  .navbar-light .navbar-toggler {
+    border-color: $atg-white;
   }
 
   #brand-bar {
@@ -2035,6 +2073,14 @@ $atg-black-80: #342f2e;
   #sort-dropdown .dropdown-toggle:active,
   #per_page-dropdown .dropdown-toggle:active {
     color: $atg-brand-color;
+  }
+
+  .blacklight-icons svg {
+    fill: $atg-white;
+  }
+
+  .blacklight-icons svg:hover {
+    fill: $atg-brand-color;
   }
 
   .constraints-container {
@@ -2267,7 +2313,8 @@ $amherst-grey-3: #dee2e6;
     @include brandon;
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($amherst-secondary-color);
     @include button-font-color($amherst-white);
     border-color: $amherst-secondary-color;
@@ -2275,7 +2322,9 @@ $amherst-grey-3: #dee2e6;
 
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($amherst-button-hover);
     @include button-font-color($amherst-white);
     border-color: $amherst-button-hover-border-color;
@@ -2295,7 +2344,7 @@ $amherst-grey-3: #dee2e6;
 
   // .container
   #main {
-    margin-top: 7.5em;
+    margin-top: 9em;
   }
 
   // navigation menu
@@ -2348,10 +2397,19 @@ $amherst-grey-3: #dee2e6;
       margin: 3rem 1.8rem;
     }
 
-  }
+    #brand-bar-nav {
+      justify-content: end;
 
-  .navbar-right {
-    margin-right: 0;
+      .navbar-nav {
+        padding-bottom: 5px;
+      }
+
+      form {
+        width: 200px;
+        padding-left: 2em;
+      }
+    }
+
   }
 
   .navbar-default .navbar-nav {
@@ -2447,6 +2505,10 @@ $amherst-grey-3: #dee2e6;
       color: $amherst-white;
     }
 
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: $amherst-white;
   }
 
   // search resources
@@ -2649,6 +2711,14 @@ $amherst-grey-3: #dee2e6;
 
   }
 
+  @media only screen and (max-width : 1200px) {
+    #brand-bar #brand-bar-nav {
+      form {
+        width: 175px;
+      }
+    }
+  }
+
   @media only screen and (max-width : 992px) {
     #main {
       margin-top: 11.5em;
@@ -2667,10 +2737,6 @@ $amherst-grey-3: #dee2e6;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
     }
 
-    .navbar-collapse.collapse {
-      display: none!important;
-    }
-
     .navbar-default .navbar-nav {
       padding-top: 0;
       padding-right: 0;
@@ -2684,7 +2750,7 @@ $amherst-grey-3: #dee2e6;
     .navbar-nav>li>a {
       padding-top: 10px;
       padding-bottom: 10px;
-      line-height: 3.5rem;
+      line-height: unset;
     }
 
     .navbar-collapse.collapse.in {
@@ -2695,7 +2761,7 @@ $amherst-grey-3: #dee2e6;
       overflow: hidden!important;
     }
 
-    #brand-bar form.search-form, .navbar-form {
+    #brand-bar #brand-bar-nav form {
       padding: 10px 0;
       margin: 0;
       width: 100%;
@@ -2708,13 +2774,6 @@ $amherst-grey-3: #dee2e6;
     }
 
   }
-
-  @media only screen and (max-width : 768px) {
-    .navbar-nav {
-      float: right;
-    }
-  }
-
 
 }
 ///////////////////////////////////////////////
@@ -2828,7 +2887,8 @@ $bigten-black: #000;
     font-weight: 600;
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($bigten-accent-color);
     @include button-font-color($bigten-white);
     border-color: $bigten-accent-color;
@@ -2836,7 +2896,8 @@ $bigten-black: #000;
   }
 
   .download {
-    .btn-default {
+    .btn-default,
+    .btn {
     @include button-background-color($bigten-accent-color);
     @include button-font-color($bigten-white);
     border-color: $bigten-accent-color;
@@ -2845,7 +2906,9 @@ $bigten-black: #000;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($bigten-brand-color);
     @include button-hover-font-color(#fff);
     border-color: $bigten-brand-color;
@@ -2991,7 +3054,7 @@ $bigten-black: #000;
     }
 
     .navbar-brand-logo {
-      padding-right: 8.5rem;
+      padding-right: 5.3rem;
     }
 
     .navbar-brand h1 {
@@ -3052,6 +3115,10 @@ $bigten-black: #000;
     color: $bigten-white;
   }
 
+  .blacklight-icons svg {
+    fill: $bigten-white;
+  }
+
   // monograph
   .monograph {
     .documentHeader {
@@ -3073,7 +3140,7 @@ $bigten-black: #000;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include pt-sans;
   }
 
@@ -3279,7 +3346,7 @@ $bigten-black: #000;
     height: 194px;
   }
   .bigten .container {
-    overflow: auto;
+    overflow: unset;
   }
   .bigten header .row.justify-content-end .col-md-4.pt-3 {
     flex-grow: 1;
@@ -3421,6 +3488,11 @@ $bridwell-black-80: #342f2e;
     margin-left: 0;
   }
 
+  #brand-bar-nav {
+    justify-content: space-between;
+    flex-direction: row-reverse;
+  }
+
   #brand-bar {
     background-color: $bridwell-brand-color;
     border-color: $bridwell-brand-color;
@@ -3429,7 +3501,7 @@ $bridwell-black-80: #342f2e;
 
     .navbar-brand {
       color: $bridwell-white;
-      padding: 11px 15px 15px 15px;
+      padding: 11px 15px 15px 0px;
 
       img {
         height: 30px;
@@ -3478,6 +3550,9 @@ $bridwell-black-80: #342f2e;
   }
 
   // press catalog
+  #main {
+    padding-top: 2rem;
+  }
 
   // jumbotron
   .jumbotron {
@@ -3570,7 +3645,7 @@ $bridwell-black-80: #342f2e;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include trade-gothic;
   }
 
@@ -3849,7 +3924,8 @@ $barpublishing-white: #fff;
     }
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($barpublishing-grey-3);
     @include button-font-color($barpublishing-white);
     border-color: $barpublishing-grey-3;
@@ -3857,7 +3933,9 @@ $barpublishing-white: #fff;
 
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active  {
     @include button-hover-background-color($barpublishing-brand-color);
     @include button-font-color($barpublishing-white);
     text-decoration: none;
@@ -3882,6 +3960,14 @@ $barpublishing-white: #fff;
       height: auto;
     }
 
+    #brand-bar-nav {
+      justify-content: flex-end;
+
+      form {
+        padding-left: 2em;
+      }
+    }
+
     .navbar-nav {
       a#add-content,
       a.login,
@@ -3901,7 +3987,7 @@ $barpublishing-white: #fff;
       background-color: $barpublishing-grey-3;
       border-color: $barpublishing-grey-3;
       color: $barpublishing-white;
-      height: 34px;
+      height: auto;
     }
 
     form.search-form {
@@ -3911,7 +3997,6 @@ $barpublishing-white: #fff;
 
     .custom-nav {
       display: inline-block;
-      padding-top: 5em;
 
       li::after {
         content: "|";
@@ -3932,6 +4017,16 @@ $barpublishing-white: #fff;
       }
     }
 
+  }
+
+  #brand-bar.navbar-light {
+    .navbar-toggler {
+      color: #fff;
+      border-color: #fff;
+    }
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
   }
 
   // press catalog
@@ -4002,12 +4097,6 @@ $barpublishing-white: #fff;
     }
   }
 
-
-  .alert-dismissible .close {
-    top: -18px;
-    right: -16px;
-  }
-
   .press {
     .results-container {
 
@@ -4050,7 +4139,7 @@ $barpublishing-white: #fff;
     padding-left: 0px;
   }
 
-  .panel-group {
+  #facets .card {
     padding-left: 0px;
     a {
       color: $barpublishing-grey-3;
@@ -4065,23 +4154,23 @@ $barpublishing-white: #fff;
     border-radius: 0px;
   }
 
-  .panel-heading {
+  .card-heading {
     padding-top: 15px;
   }
 
-  .panel-group .panel + .panel {
+  .card-group .card + .card {
     margin-top: 0px;
   }
 
-  h3.panel-title a, a.more_facets_link {
+  h3.card-title a, a.more_facets_link {
     color: #000;
   }
 
-  .panel-heading.collapse-toggle .panel-title::after {
+  .card-heading.collapse-toggle .card-title::after {
     color: #000;
   }
 
-  .panel-body {
+  .card-body {
     background-color: #fafafa;
 
   }
@@ -4110,6 +4199,10 @@ $barpublishing-white: #fff;
       color: $barpublishing-white;
     }
 
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: $barpublishing-white;
   }
 
   // book pages
@@ -4357,10 +4450,6 @@ $barpublishing-white: #fff;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
     }
 
-    .navbar-collapse.collapse {
-      display: none!important;
-    }
-
     .barpublishing #brand-bar .custom-nav {
       padding-top: 1em;
       padding-left: 1em;
@@ -4384,14 +4473,6 @@ $barpublishing-white: #fff;
       padding-top: 10px;
       padding-bottom: 10px;
       line-height: 3.5rem;
-    }
-
-    .navbar-collapse.collapse.in {
-      display: block!important;
-    }
-
-    .collapsing {
-      overflow: hidden!important;
     }
 
     #brand-bar form.search-form, .navbar-form {
@@ -4545,6 +4626,20 @@ $iu-midnight: #006298;
       color: $iu-brand-color;
     }
 
+  }
+
+  #brand-bar.navbar-light {
+    .navbar-nav .dropdown .nav-link {
+      color: #fff;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:active {
+      color: #e5e5e5;
+    }
+
+    .navbar-nav .show > .nav-link {
+      color: #e5e5e5;
+    }
   }
 
   // breadcrumbs
@@ -4742,14 +4837,17 @@ $lever-black-80: #342f2e;
 
   // buttons
 
-  .btn-default {
+  .btn-default, 
+  .btn {
     @include button-background-color($lever-brand-color);
     @include button-font-color($lever-white);
     @include scala-sans;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($lever-button-hover);
     @include button-hover-font-color($lever-white);
   }
@@ -4772,7 +4870,7 @@ $lever-black-80: #342f2e;
   #brand-bar {
     background-color: $lever-grey-3;
     border-bottom: 1px solid $lever-grey-4;
-    min-height: 6.9rem;
+    height: 6em;
 
     .navbar-brand {
       color: $lever-nav-brand;
@@ -4780,7 +4878,7 @@ $lever-black-80: #342f2e;
       font-size: 1.8em;
       height: unset;
       line-height: unset;
-      padding: 1.3rem 1.6rem 1.3rem 1.5rem;
+      padding: 0;
 
       img {
         display: inline;
@@ -4788,6 +4886,15 @@ $lever-black-80: #342f2e;
         vertical-align: middle;
 
       }
+    }
+
+    #brand-bar-nav {
+      justify-content: end;
+      padding-bottom: 5px;
+    }
+
+    .navbar-nav {
+      @include scala-sans;
     }
 
 
@@ -4813,11 +4920,9 @@ $lever-black-80: #342f2e;
     margin-right: 0;
   }
 
-  .navbar-default .navbar-nav {
+  .navbar-nav {
     @include scala-sans;
     list-style: none;
-    font-size: 1.64rem;
-    padding-top: 3.5rem;
     padding-right: 1.45rem;
 
     a {
@@ -4906,6 +5011,10 @@ $lever-black-80: #342f2e;
   #sort-dropdown .dropdown-toggle:active .caret,
   #per_page-dropdown .dropdown-toggle:active .caret {
     color: $lever-white;
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: $lever-white;
   }
 
   .open > .dropdown-menu {
@@ -5124,6 +5233,14 @@ $lever-black-80: #342f2e;
 
   }
 
+  @media only screen and (max-width: 1200px) {
+
+    #brand-bar-nav form {
+      width: 170px;
+    }
+
+  }
+
   @media only screen and (max-width : 992px) {
     #main {
       margin-top: 11.5em;
@@ -5139,17 +5256,12 @@ $lever-black-80: #342f2e;
 
     .navbar-collapse {
       border-top: 1px solid transparent;
+      border-right: 1px solid $lever-grey-4;
+      border-bottom: 1px solid $lever-grey-4;
+      border-left: 1px solid $lever-grey-4;
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-    }
-
-    .navbar-collapse.collapse {
-      display: none!important;
-    }
-
-    .navbar-default .navbar-nav {
-      padding-top: 0;
-      padding-right: 0;
-      margin-top: 0;
+      margin-top: 18px;
+      background-color: $lever-grey-3;
     }
 
     .navbar-nav>li {
@@ -5159,20 +5271,12 @@ $lever-black-80: #342f2e;
     .navbar-nav>li>a {
       padding-top: 10px;
       padding-bottom: 10px;
-      line-height: 3.5rem;
+      line-height: unset;
     }
 
-    .navbar-collapse.collapse.in {
-      display: block!important;
-    }
-
-    .collapsing {
-      overflow: hidden!important;
-    }
-
-    #brand-bar form.search-form, .navbar-form {
+    #brand-bar-nav form {
       padding: 10px 0;
-      margin: 0;
+      margin: 0 20px;
       width: 100%;
       border: 0;
       float: none !important;
@@ -5182,12 +5286,6 @@ $lever-black-80: #342f2e;
       width: 1%;
     }
 
-  }
-
-  @media only screen and (max-width : 768px) {
-    .navbar-nav {
-      float: right;
-    }
   }
 
 }
@@ -5319,7 +5417,8 @@ $um-white: #fff;
     font-weight: 600;
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($um-accent-color);
     @include button-font-color($um-white);
     border-color: $um-accent-color;
@@ -5328,7 +5427,8 @@ $um-white: #fff;
   }
 
   .download {
-    .btn-default {
+    .btn-default, 
+    .btn {
     @include button-background-color($um-accent-color);
     @include button-font-color($um-white);
     border-color: $um-accent-color;
@@ -5338,7 +5438,9 @@ $um-white: #fff;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($um-brand-color);
     @include button-hover-font-color(#fff);
     border-color: $um-brand-color;
@@ -5538,6 +5640,21 @@ $um-white: #fff;
     text-decoration-thickness: 2px;
   }
 
+  .btn-group .blacklight-icons svg {
+    fill: $um-white;
+  }
+
+  #facet-panel-collapse {
+    h3 {
+      margin-top: 0;
+    }
+
+    button {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
   // monograph catalog
   #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
     color: $um-white;
@@ -5559,12 +5676,12 @@ $um-white: #fff;
       background-color: $um-accent-color;
       border-color: $um-accent-color;
       color: $um-white;
-      height: 34px;
+      height: 38px;
     }
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include muli;
   }
 
@@ -5770,7 +5887,7 @@ $um-white: #fff;
     height: 194px;
   }
   .michigan .container {
-    overflow: auto;
+    overflow: unset;
   }
   .michigan header .row.justify-content-end .col-md-4.pt-3 {
     flex-grow: 1;
@@ -5933,7 +6050,8 @@ $um-white: #fff;
     font-weight: 600;
   }
 
-  .btn-default {
+  .btn-default, 
+  .btn {
     @include button-background-color($um-accent-color);
     @include button-font-color($um-white);
     border-color: $um-accent-color;
@@ -5942,7 +6060,8 @@ $um-white: #fff;
   }
 
   .download {
-    .btn-default {
+    .btn-default,
+    .btn {
     @include button-background-color($um-accent-color);
     @include button-font-color($um-white);
     border-color: $um-accent-color;
@@ -5952,7 +6071,9 @@ $um-white: #fff;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($um-brand-color);
     @include button-hover-font-color(#fff);
     border-color: $um-brand-color;
@@ -5969,6 +6090,10 @@ $um-white: #fff;
   #sort-dropdown .dropdown-toggle .caret,
   #per_page-dropdown .dropdown-toggle .caret {
     color: $um-white;
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: white;
   }
 
   .nav,
@@ -5989,10 +6114,9 @@ $um-white: #fff;
   
   }
 
-  .navbar-default {
+  .navbar {
     border-radius: 0;
     background-color: $um-brand-color;
-    border: 0;
   }
 
   form {
@@ -6011,7 +6135,7 @@ $um-white: #fff;
   // container on all pages
   #main.container {
     max-width: 1140px;
-    padding-top: 1.5em;
+    padding-top: 2.5em;
   }
 
   // breadcrumbs
@@ -6034,6 +6158,12 @@ $um-white: #fff;
     a:hover {
       text-decoration: underline;
       text-decoration-thickness: 2px;
+    }
+  }
+
+  #facet-panel-collapse {
+    h3 {
+      margin-top: 0;
     }
   }
 
@@ -6072,7 +6202,7 @@ $um-white: #fff;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include muli;
   }
 
@@ -6313,7 +6443,7 @@ $um-white: #fff;
     height: 194px;
   }
   .michelt .container {
-    overflow: auto;
+    overflow: unset;
   }
   .michelt header .row.justify-content-end .col-md-4.pt-3 {
     flex-grow: 1;
@@ -6429,7 +6559,7 @@ $gabii-link-hover:    #1e5667;
   }
 
   // buttons and alerts
-  .btn {
+  .btn, .btn-default {
     @include lato;
     color: $gabii-white;
     background-color: $gabii-brand-color;
@@ -6439,9 +6569,6 @@ $gabii-link-hover:    #1e5667;
       background-color: $gabii-accent-color;
     }
   }
-
-  .btn-default,
-  .btn
 
   // navigation menu
   .navbar-default .navbar-nav > .open > a,
@@ -6454,11 +6581,6 @@ $gabii-link-hover:    #1e5667;
     @include lato;
     border-bottom: none;
     height: unset;
-
-    .container {
-      padding: 0 !important;
-      max-width: unset;
-    }
 
     .nav-browse {
       display: inline-block;
@@ -6525,7 +6647,30 @@ $gabii-link-hover:    #1e5667;
       @include lato;
     }
 
+    #brand-bar-nav {
+      justify-content: space-between;
+      flex-direction: row-reverse;
+    }
+
   }
+
+  #brand-bar.navbar-light {
+    .navbar-nav .dropdown .nav-link {
+      color: #fff;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:active {
+      color: #e5e5e5;
+    }
+
+    .navbar-nav .show > .nav-link {
+      color: #e5e5e5;
+    }
+  }
+
+  .navbar-light .navbar-toggler-icon {  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); 
+  }
+  .navbar-light .navbar-toggler { border-color: #FFF; }
 
   // breadcrumbs
   .breadcrumbs {
@@ -6602,7 +6747,7 @@ $gabii-link-hover:    #1e5667;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include lato;
   }
 
@@ -6879,8 +7024,7 @@ $gabii-link-hover:    #1e5667;
     height: unset;
 
     .container {
-      padding: 0 !important;
-      max-width: unset;
+      padding: 0 !important;      
     }
 
     .nav-browse {
@@ -6904,6 +7048,7 @@ $gabii-link-hover:    #1e5667;
   }
 
   #brand-bar {
+    border-bottom: 1px solid #e5e9ed;
 
     .navbar-brand {
       font-weight: 700;
@@ -6937,6 +7082,7 @@ $gabii-link-hover:    #1e5667;
   .jumbotron {
     background-color: $um-accent-color;
     color: #fff;
+    border-radius: 0;
 
     .logo {
 	    img {
@@ -7146,7 +7292,6 @@ $gabii-link-hover:    #1e5667;
 
     .container {
       padding: 0 !important;
-      max-width: unset;
     }
 
     .nav-browse {
@@ -7164,6 +7309,7 @@ $gabii-link-hover:    #1e5667;
 
   .navbar {
     min-height: 90px;
+    border-bottom: 1px solid #e5e9ed;
   }
 
   #brand-bar .navbar-brand {
@@ -7202,6 +7348,8 @@ $gabii-link-hover:    #1e5667;
   .jumbotron {
     background-color: $um-accent-color;
     color: #fff;
+    border-radius: 0;
+
     p.lead {
       font-size: 14px;
     }
@@ -7463,7 +7611,7 @@ $mps-teal-100: #e9f2f5;
 
   #brand-bar {
     background-color: white;
-    border-color: $mps-neutral-100;
+    border-bottom: 1px solid $mps-neutral-100;
 
     .navbar-brand {
       color: $mps-blue-500;
@@ -7585,6 +7733,10 @@ $mps-teal-100: #e9f2f5;
     color: white;
   }
 
+  .btn-group .blacklight-icons svg {
+    fill: white;
+  }
+
   // monograph
   .monograph {
     .documentHeader {
@@ -7608,7 +7760,7 @@ $mps-teal-100: #e9f2f5;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include muli;
   }
 
@@ -8060,7 +8212,7 @@ $a2ru-white: #fafafa;
     }
 
   // pagination
-  .page_links {
+  .page-links {
     @include rubik;
   }
   .pagination {
@@ -8250,6 +8402,23 @@ $a2ru-white: #fafafa;
 ///////////////////////////////////////////////
 //
 // Michigan Publishing Services
+// Dialogue (dialogue)
+//
+///////////////////////////////////////////////
+.dialogue {
+  #brand-bar .navbar-brand {
+    display: flex;
+    width: 30%;
+    white-space: pre-wrap;
+    flex-grow: 1;
+    font-size: 1.2rem;
+  }
+}
+
+
+///////////////////////////////////////////////
+//
+// Michigan Publishing Services
 // Free Electrical Engineering Textbook Initiative (ee)
 //
 ///////////////////////////////////////////////
@@ -8258,6 +8427,7 @@ $a2ru-white: #fafafa;
     font-size: 1.5em;
     max-width: 600px;
     line-height: 1.2em;
+    white-space: initial;
   }
 
   footer .press-block-a img {
@@ -8367,6 +8537,10 @@ $fia-teal-100: #e9f2f5;
   }
 
   // navigation menu
+  header {
+    border-bottom: 2px solid  $fia-blue-400;
+  }
+
   .navbar-default .navbar-nav > .open > a,
   .navbar-default .navbar-nav > .open > a:hover,
   .navbar-default .navbar-nav > .open > a:focus {
@@ -8388,9 +8562,9 @@ $fia-teal-100: #e9f2f5;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: unset;
-      font-size: 1.8em;
+      font-size: 1.5em;
       height: auto;
-      padding: 20px 20px 19px 15px;
+      padding-left: 0;
     }
 
     .navbar-brand > img {
@@ -8524,7 +8698,7 @@ $fia-teal-100: #e9f2f5;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include proxima-nova;
   }
 
@@ -9069,8 +9243,7 @@ $maize-black-80: #342f2e;
         -moz-transition: .3s;
         -webkit-transition: .3s;
         transition: .3s;
-      padding: 15px 15px 15px 15px;
-      height: 50px;
+      padding: 15px 15px 15px 0px;
     }
 
     .search-form {
@@ -9107,6 +9280,21 @@ $maize-black-80: #342f2e;
       color: $maize-brand-color;
     }
 
+
+  }
+
+  #brand-bar.navbar-light {
+    .navbar-nav .dropdown .nav-link {
+      color: #fff;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:active {
+      color: #e5e5e5;
+    }
+
+    .navbar-nav .show > .nav-link {
+      color: #e5e5e5;
+    }
   }
 
   // breadcrumbs
@@ -9184,6 +9372,10 @@ $maize-black-80: #342f2e;
     color: $maize-brand-color;
   }
 
+  .btn-group .blacklight-icons:hover svg {
+    fill: $maize-brand-color;
+  }
+
   // monograph
   .monograph {
     .documentHeader {
@@ -9207,7 +9399,7 @@ $maize-black-80: #342f2e;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include benton;
   }
 
@@ -9468,6 +9660,7 @@ $pccn-black-80: #342f2e;
       font-size: 18px;
       height: auto;
       padding: 15px 15px 15px 15px;
+      white-space: initial;
     }
 
     .navbar-nav {
@@ -9497,6 +9690,20 @@ $pccn-black-80: #342f2e;
       color: $pccn-brand-color;
     }
 
+  }
+
+  #brand-bar.navbar-light {
+    .navbar-nav .dropdown .nav-link {
+      color: #fff;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:active {
+      color: #e5e5e5;
+    }
+
+    .navbar-nav .show > .nav-link {
+      color: #e5e5e5;
+    }
   }
 
   // breadcrumbs
@@ -9561,6 +9768,10 @@ $pccn-black-80: #342f2e;
     color: #054a92;
   }
 
+  .btn-group .blacklight-icons svg {
+    fill: rgb(0, 39, 76);
+  }
+
   // monograph
   .monograph {
     .documentHeader {
@@ -9585,7 +9796,7 @@ $pccn-black-80: #342f2e;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include roboto;
   }
 
@@ -9878,6 +10089,7 @@ $seas-black-80: #342f2e;
       font-size: 18px;
       height: auto;
       padding: 15px 15px 15px 15px;
+      white-space: initial;
     }
 
     .navbar-nav {
@@ -9975,6 +10187,12 @@ $seas-black-80: #342f2e;
     color: #054a92;
   }
 
+  .btn-group .blacklight-icons svg {
+    fill: #054a92;
+  }
+
+  
+
   // monograph
   .monograph {
     .documentHeader {
@@ -9999,7 +10217,7 @@ $seas-black-80: #342f2e;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include montserrat;
   }
 
@@ -10276,6 +10494,20 @@ $umn-white: #fff;
 
   }
 
+  #brand-bar.navbar-light {
+    .navbar-nav .dropdown .nav-link {
+      color: #fff;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:active {
+      color: #e5e5e5;
+    }
+
+    .navbar-nav .show > .nav-link {
+      color: #e5e5e5;
+    }
+  }
+
   // breadcrumbs
   .breadcrumbs {
     @include brandon;
@@ -10324,7 +10556,7 @@ $umn-white: #fff;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include brandon;
   }
 
@@ -10468,7 +10700,8 @@ $unc-black-80: #342f2e;
 
   // buttons
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($unc-brand-color);
     @include button-font-color($unc-white);
     @include alegreya-sans;
@@ -10481,7 +10714,9 @@ $unc-black-80: #342f2e;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($unc-accent-color);
     @include button-hover-font-color($unc-white);
   }
@@ -10641,6 +10876,10 @@ $unc-black-80: #342f2e;
   #sort-dropdown .dropdown-toggle:active .caret,
   #per_page-dropdown .dropdown-toggle:active .caret {
     color: $unc-white;
+  }
+
+  .blacklight-icons svg {
+    fill: $unc-white;
   }
 
   .constraints-container {
@@ -10880,6 +11119,20 @@ $fulcrum-light-2: #bec4cc;
 
   }
 
+  #brand-bar.navbar-light {
+    .navbar-nav .dropdown .nav-link {
+      color: #fff;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:active {
+      color: #e5e5e5;
+    }
+
+    .navbar-nav .show > .nav-link {
+      color: #e5e5e5;
+    }
+  }
+
   // breadcrumbs
   .breadcrumbs {
     @include freight-sans-book;
@@ -10927,7 +11180,7 @@ $fulcrum-light-2: #bec4cc;
     }
 
     // pagination
-    .page_links {
+    .page-links {
       @include freight-sans-book;
     }
 
@@ -11232,7 +11485,7 @@ $ncid-black-80: #342f2e;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include proxima-nova;
   }
 
@@ -11430,14 +11683,17 @@ $nyu-gray-2: #342f2e;
     @include adelle-sans;
   }
 
-  .btn-default {
+  .btn-default,
+  .btn {
     background-color: $nyu-brand-color;
     border-color: $nyu-brand-color;
     color: $nyu-brand-accent;
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     background-color: $nyu-brand-color-2;
     border-color: $nyu-brand-color-2;
     color: $nyu-brand-color;
@@ -11503,6 +11759,20 @@ $nyu-gray-2: #342f2e;
 
   }
 
+  #brand-bar.navbar-light {
+    .navbar-nav .dropdown .nav-link {
+      color: #fff;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:active {
+      color: #e5e5e5;
+    }
+
+    .navbar-nav .show > .nav-link {
+      color: #e5e5e5;
+    }
+  }
+
   // press catalog
 
   // jumbotron
@@ -11531,6 +11801,19 @@ $nyu-gray-2: #342f2e;
     background-color: $nyu-brand-color;
     border-color: $nyu-brand-color;
   }
+
+  .caret {
+    color: $nyu-white;
+  }
+
+  .blacklight-icons svg {
+    fill: $nyu-white;
+  }
+
+  a.btn:hover .blacklight-icons svg {
+    fill: $nyu-brand-color;
+  }
+
   // pagination
 
   .pagination {
@@ -11802,6 +12085,20 @@ $psu-gray-1: #3F4550;
 
   }
 
+  #brand-bar.navbar-light {
+    .navbar-nav .dropdown .nav-link {
+      color: #fff;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:active {
+      color: #e5e5e5;
+    }
+
+    .navbar-nav .show > .nav-link {
+      color: #e5e5e5;
+    }
+  }
+
   // breadcrumbs
   .breadcrumbs {
     @include proxima-nova;
@@ -11851,7 +12148,7 @@ $psu-gray-1: #3F4550;
   }
 
   // pagination
-  .page_links {
+  .page-links {
     @include proxima-nova;
   }
 
@@ -11948,9 +12245,7 @@ $psu-gray-1: #3F4550;
         top: 0;
         border-width: 0 0 1px;
     }
-    .navbar-collapse.collapse {
-        display: none!important;
-    }
+
     .navbar-nav {
         float: none!important;
         margin-top: 7.5px;
@@ -12086,19 +12381,23 @@ $reki-black-80: #342f2e;
 
   // buttons
 
-  .btn-default {
+  .btn-default,
+  .btn {
     @include button-background-color($reki-brand-color);
     @include button-font-color($reki-white);
   }
 
   .download {
-    .btn-default {
+    .btn-default,
+    .btn {
       @include button-background-color($reki-brand-color);
     }
   }
 
   .btn-default:hover,
-  .btn-default:active {
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
     @include button-hover-background-color($reki-link-hover);
     @include button-hover-font-color($reki-white);
   }
@@ -12145,6 +12444,20 @@ $reki-black-80: #342f2e;
 
   }
 
+  #brand-bar.navbar-light {
+    .navbar-nav .dropdown .nav-link {
+      color: #fff;
+    }
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:active {
+      color: #e5e5e5;
+    }
+
+    .navbar-nav .show > .nav-link {
+      color: #e5e5e5;
+    }
+  }
+
   // press catalog
 
   // jumbotron
@@ -12166,7 +12479,7 @@ $reki-black-80: #342f2e;
     .logo {
 
       img {
-        width: 280px;
+        width: 220px;
         margin-right: 3em;
       }
 
@@ -12240,6 +12553,14 @@ $reki-black-80: #342f2e;
   #sort-dropdown .dropdown-toggle:active,
   #per_page-dropdown .dropdown-toggle:active {
     color: $reki-white;
+  }
+
+  .caret {
+    color: $reki-white;
+  }
+
+  .blacklight-icons svg {
+    fill: $reki-white;
   }
 
   .constraints-container {
@@ -12586,6 +12907,14 @@ $sussex-black-80: #342f2e;
     .caret {
       color: $sussex-white;
     }
+
+  .blacklight-icons svg {
+    fill: $sussex-link;
+  }
+
+  a:hover .blacklight-icons svg {
+    color: $sussex-white;
+  } 
 
   }
 

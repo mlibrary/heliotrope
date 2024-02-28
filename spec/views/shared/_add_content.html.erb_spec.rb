@@ -15,7 +15,7 @@ describe 'shared/_my_actions.html.erb' do
     before { render }
 
     it "shows the add content button" do
-      expect(rendered).to have_link("New Monograph")
+      expect(rendered).to have_link("Create Monograph")
     end
   end
 
@@ -26,7 +26,7 @@ describe 'shared/_my_actions.html.erb' do
     before { render }
 
     it "shows the monograph add content button" do
-      expect(rendered).to have_link("New Monograph")
+      expect(rendered).to have_link("Create Monograph")
     end
   end
 
@@ -36,7 +36,7 @@ describe 'shared/_my_actions.html.erb' do
     before { render }
 
     it "does not show the add content button" do
-      expect(rendered).not_to have_link("New Monograph")
+      expect(rendered).not_to have_link("Create Monograph")
     end
   end
 end

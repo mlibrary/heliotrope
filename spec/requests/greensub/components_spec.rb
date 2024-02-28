@@ -142,6 +142,11 @@ RSpec.describe "Greensub::Components", type: :request do
 
     let(:component_params) { { identifier: new_noid, name: new_noid, noid: new_noid } }
     let(:new_noid) { 'noid_noid' }
+    let(:new_monograph) { double('monograph', id: new_noid, update_index: true) }
+
+    before do
+      allow(Monograph).to receive(:find).with(new_noid).and_return(new_monograph)
+    end
 
     it { expect { subject }.to raise_error(ActionController::RoutingError) }
 
@@ -253,6 +258,12 @@ RSpec.describe "Greensub::Components", type: :request do
     let(:component) { create(:component) }
     let(:post_component) { post greensub_product_components_path(product.id), params: { id: component.id } }
     let(:delete_component) { delete greensub_product_component_path(product.id, component.id) }
+
+    let(:new_monograph) { double('monograph', id: component.noid, update_index: true) }
+
+    before do
+      allow(Monograph).to receive(:find).with(component.noid).and_return(new_monograph)
+    end
 
     it do
       expect(component.products.count).to eq 0

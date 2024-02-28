@@ -1,0 +1,62 @@
+<%# The press_catalog "user_access" "fake facet", HELIO-3347, HELIO-4517 %>
+<%# I think using the unsafe .permit! method here is ok. There is no "update" or mass assignment in blacklight... %>
+<%# Also: reset the page to 0 if these change, otherwise it's possible to land on empty results with no navigation! %>
+<%# This is pretty much directly lifted from blacklight 7.33 app/components/blacklight/facet_field_component.html.erb (except for all the user_acess stuff of course) %>
+<div class="card facet-limit blacklight-<%= @facet_field.key %> <%= 'facet-limit-active' if @facet_field.active? %>">
+  <h3 class="card-header p-0 facet-field-heading" id="<%= @facet_field.html_id %>-header">
+    <button
+      type="button"
+      class="btn w-100 d-block btn-block p-2 text-start text-left collapse-toggle <%= "collapsed" if @facet_field.collapsed? %>"
+      data-toggle="collapse"
+      data-bs-toggle="collapse"
+      data-target="#<%= @facet_field.html_id %>"
+      data-bs-target="#<%= @facet_field.html_id %>"
+      aria-expanded="<%= @facet_field.collapsed? ? 'false' : 'true' %>"
+    >
+      Access
+    </button>
+  </h3>
+  <div id="<%= @facet_field.html_id %>" aria-labelledby="<%= @facet_field.html_id %>-header" class="panel-collapse facet-content collapse <%= "show" unless @facet_field.collapsed? %>">
+    <div class="card-body">
+    <ul class="facet-values list-unstyled">
+      <ul class="facet-values list-unstyled">
+        <li>
+          <a class="facet-anchor facet_select" href="<%= url_for(params.deep_dup.except("user_access").except("page").permit!) %>">
+            <span class="facet-label">
+              <% if params["user_access"].nil? %>
+                <input type="radio" aria-label="View all content" name="user_access" checked> All content
+              <% else %>
+                <input type="radio" aria-label="View all content" name="user_access"> All content
+              <% end %>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a class="facet-anchor facet_select" href="<%= url_for(params.deep_dup.merge(user_access: "true").except("page").permit!) %>">
+            <span class="facet-label">
+              <% if params["user_access"] == "true" %>
+                <input type="radio" aria-label="View only content I can access" name="user_access" checked> Only content I can access
+              <% else %>
+                <input type="radio" aria-label="View only content I can access" name="user_access"> Only content I can access
+              <% end %>
+            </span>
+          </a>
+        </li>
+        <% if controller.has_open_access? %>
+        <li>
+          <a class="facet-anchor facet_select" href="<%= url_for(params.deep_dup.merge(user_access: "oa").except("page").permit!) %>">
+            <span class="facet-label">
+              <% if params["user_access"] == "oa" %>
+                <input type="radio" aria-label="View only open access content" name="user_access" checked> Only open access content
+              <% else %>
+                <input type="radio" aria-label="View only open access content" name="user_access"> Only open access content
+              <% end %>
+            </span>
+          </a>
+        </li>
+        <% end %>
+      </ul>
+    </ul>
+    </div>
+  </div>
+</div>

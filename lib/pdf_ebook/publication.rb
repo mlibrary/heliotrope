@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "skylight"
+
 module PDFEbook
   class Publication
     include Skylight::Helpers

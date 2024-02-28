@@ -130,7 +130,7 @@ jobs:
         default: '2.1.4'
       rails_version:
         type: string
-        default: '5.2.8.1'
+        default: '6.0.6.1'
     executor:
       name: 'ruby'
       ruby_version: << parameters.ruby_version >>
@@ -174,7 +174,7 @@ jobs:
         default: '2.1.4'
       rails_version:
         type: string
-        default: '5.2.8.1'
+        default: '6.0.6.1'
     executor:
       name: 'ruby'
       ruby_version: << parameters.ruby_version >>
@@ -338,18 +338,18 @@ executors:
 
 workflows:
   version: 2
-  ruby2-7rails5-2:
+  ruby2-7rails6-0:
     jobs:
       - bundle:
           ruby_version: '2.7.4'
-          rails_version: '5.2.8.1'
+          rails_version: '6.0.6.1'
       - build:
           ruby_version: '2.7.4'
-          rails_version: '5.2.8.1'
+          rails_version: '6.0.6.1'
           requires:
             - bundle
       - test:
-          name: "rails5-2"
+          name: "rails6-0"
           ruby_version: '2.7.4'
           requires:
             - build

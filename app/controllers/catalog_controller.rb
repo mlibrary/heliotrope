@@ -266,6 +266,11 @@ class CatalogController < ApplicationController
         set_fields: [{ label: 'Press', solr_field: 'press_name_ssim' }]
       }
     }
+
+    # Blacklight 7
+    config.add_results_collection_tool(:sort_widget)
+    config.add_results_collection_tool(:per_page_widget)
+    config.add_results_collection_tool(:view_type_group)
   end
 
   def show_site_search?
