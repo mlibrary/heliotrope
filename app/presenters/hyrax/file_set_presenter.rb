@@ -14,18 +14,13 @@ module Hyrax
     include TombstonePresenter
     include Rails.application.routes.url_helpers
     include ActionView::Helpers::TagHelper
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # include Skylight::Helpers
+    include Skylight::Helpers
 
     attr_accessor :solr_document, :current_ability, :request, :monograph_presenter, :file_set
 
     # @param [SolrDocument] solr_document
     # @param [Ability] current_ability
     # @param [ActionDispatch::Request] request the http request context
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # instrument_method
     def initialize(solr_document, current_ability, request = nil)
       @solr_document = solr_document
       @current_ability = current_ability
@@ -212,16 +207,12 @@ module Hyrax
       solr_document['original_name_tesim']
     end
 
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # instrument_method
+    instrument_method
     def file_set
       @file_set ||= ::FileSet.find(id)
     end
 
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # instrument_method
+    instrument_method
     def file
       # Get the original file from Fedora
       file = file_set&.original_file
@@ -229,16 +220,12 @@ module Hyrax
       file
     end
 
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # instrument_method
+    instrument_method
     def extracted_text_file
       file_set&.extracted_text
     end
 
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # instrument_method
+    instrument_method
     def extracted_text?
       # TODO: remove this line when we have some extracted text in place that's worth offering for download...
       # and/or a disclaimer as outlined in https://github.com/mlibrary/heliotrope/issues/1429
@@ -372,9 +359,7 @@ module Hyrax
 
     private
 
-      # commented out during Hyrax 4 upgrade (see HELIO-4582)
-      # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-      # instrument_method
+      instrument_method
       def fetch_parent_presenter
         @parent_document ||= ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}", rows: 1).first
         return nil if @parent_document.blank?

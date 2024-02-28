@@ -2,9 +2,6 @@
 
 module CommonWorkPresenter
   extend ActiveSupport::Concern
-  # commented out during Hyrax 4 upgrade (see HELIO-4582)
-  # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-  # include Skylight::Helpers
 
   # yes, I need this and `assets?` is completely geared towards whether the "resources" tab should show or not
   # so this is `ordered_file_sets_ids` with the visibility and permissions removed
@@ -43,9 +40,6 @@ module CommonWorkPresenter
     @ordered_file_sets_ids = file_sets_ids
   end
 
-  # commented out during Hyrax 4 upgrade (see HELIO-4582)
-  # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-  # instrument_method
   def ordered_member_docs
     return @ordered_member_docs if @ordered_member_docs
 

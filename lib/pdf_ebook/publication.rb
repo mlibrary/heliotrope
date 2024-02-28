@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
+require "skylight"
+
 module PDFEbook
   class Publication
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # include Skylight::Helpers
+    include Skylight::Helpers
     private_class_method :new
     attr_reader :id
 
@@ -24,18 +24,14 @@ module PDFEbook
 
     private
 
-      # commented out during Hyrax 4 upgrade (see HELIO-4582)
-      # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-      # instrument_method
+      instrument_method
       def initialize(file, id)
         @pdf = Origami::PDF.read(file, verbosity: Origami::Parser::VERBOSE_QUIET, lazy: true)
         @id = id
         @obj_to_page = {}
       end
 
-      # commented out during Hyrax 4 upgrade (see HELIO-4582)
-      # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-      # instrument_method
+      instrument_method
       def extract_intervals
         # Map of PDF page object number to a page number (pages start from 1)
         if @obj_to_page.empty?
@@ -47,9 +43,7 @@ module PDFEbook
       end
 
       # Takes Origami::OutlineItem and 1-based depth
-      # commented out during Hyrax 4 upgrade (see HELIO-4582)
-      # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-      # instrument_method
+      instrument_method
       def iterate_outlines(outline, depth) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         intervals = []
         index = 0

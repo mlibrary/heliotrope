@@ -25,15 +25,13 @@ end
 module Riiif
   def Image.cache_key(id, options)
     # How expensive is this...? maybe skylight can help here
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # Skylight.instrument title: "Riiif CacheKey" do
-    str = options.to_h.merge(id: id).delete_if { |_, v| v.nil? }.to_s
-    # Add md5 of the file itself to invalidate the cache if the file has been changed (by reversioning or whatever)
-    filemd5 = Digest::MD5.file(Riiif::Image.file_resolver.find(id).path)
-    Rails.logger.debug { "[RIIIF] FILE MD5: #{filemd5}" }
-    'riiif:' + Digest::MD5.hexdigest(str) + filemd5.to_s
-    # end
+    Skylight.instrument title: "Riiif CacheKey" do
+      str = options.to_h.merge(id: id).delete_if { |_, v| v.nil? }.to_s
+      # Add md5 of the file itself to invalidate the cache if the file has been changed (by reversioning or whatever)
+      filemd5 = Digest::MD5.file(Riiif::Image.file_resolver.find(id).path)
+      Rails.logger.debug { "[RIIIF] FILE MD5: #{filemd5}" }
+      'riiif:' + Digest::MD5.hexdigest(str) + filemd5.to_s
+    end
   end
 end
 

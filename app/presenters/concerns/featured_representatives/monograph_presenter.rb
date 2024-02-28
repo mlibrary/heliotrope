@@ -2,9 +2,6 @@
 
 module FeaturedRepresentatives
   module MonographPresenter # rubocop:disable Metrics/ModuleLength
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # include Skylight::Helpers
     extend ActiveSupport::Concern
     attr_reader :frs
 
@@ -68,9 +65,6 @@ module FeaturedRepresentatives
       featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'epub' }.first
     end
 
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # instrument_method
     def epub_presenter
       @epub_presenter ||= EPubPresenter.new(EPub::Publication.from_directory(UnpackService.root_path_from_noid(epub_id, 'epub')))
     end
@@ -155,9 +149,6 @@ module FeaturedRepresentatives
       featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'pdf_ebook' }.first
     end
 
-    # commented out during Hyrax 4 upgrade (see HELIO-4582)
-    # TODO: put Skylight back in action post-upgrade (see HELIO-4589)
-    # instrument_method
     def pdf_ebook_presenter
       @pdf_ebook_presenter ||= PDFEbookPresenter.new(pdf_ebook_id)
     end
