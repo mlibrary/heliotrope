@@ -378,6 +378,38 @@ RSpec.describe BuildKbartJob, type: :job do
       expect(monographs[1].page_title).to eq "B Book Italic"
       expect(monographs[2].page_title).to eq "C Book Italic"
     end
+
+    context "with a tombstoned work" do
+      let(:doc_e) do
+        SolrDocument.new(id: 'eeeeeeeee',
+                         has_model_ssim: "Monograph",
+                         title_tesim: ["E Book _Italic_"],
+                         creator_tesim: ["Egbert, Firstname"],
+                         isbn_tesim: ["D123456789 (hardcover)", "D987654321 (ebook)"],
+                         doi_ssim: "10.3998/mpub.E",
+                         publisher_tesim: ["E Press"],
+                         visibility_ssi: 'open',
+                         date_published_dtsim: ["2020-01-01T15:04:53Z"],
+                         date_created_tesim: ["2020"],
+                         products_lsim: [product.id],
+                         tombstone_ssim: ["yes"])
+      end
+
+      before do
+        ActiveFedora::SolrService.add(doc_e.to_h)
+        ActiveFedora::SolrService.commit
+      end
+
+      it "does not return the tombstoned work" do
+        monographs = subject.published_sorted_monographs(product)
+
+        expect(monographs.count).to eq 3
+        expect(monographs[0]).to be_an_instance_of(Hyrax::MonographPresenter)
+        expect(monographs[0].page_title).to eq "A Book Italic"
+        expect(monographs[1].page_title).to eq "B Book Italic"
+        expect(monographs[2].page_title).to eq "C Book Italic"
+      end
+    end
   end
 
   describe "#most_recent_kbart" do

@@ -124,7 +124,7 @@ class BuildKbartJob < ApplicationJob
 
   def published_sorted_monographs(product)
     monographs = []
-    ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +products_lsim:#{product.id}", rows: 100_000).each do |doc|
+    ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND +products_lsim:#{product.id} AND -tombstone_ssim:[* TO *]", rows: 100_000).each do |doc|
       next unless doc["visibility_ssi"] == 'open' # only those marked public/published
       monographs << Hyrax::MonographPresenter.new(SolrDocument.new(doc), nil)
     end
