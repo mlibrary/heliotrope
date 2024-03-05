@@ -3104,9 +3104,9 @@ $bigten-black: #000;
     text-decoration-thickness: 2px;
   }
 
-  // HELIO-4474 
+  // HELIO-4474, HELIO-4622
   // hide the access legend on big ten's publisher catalog
-  #facets .access-legend {
+  .facets-container .access-legend {
     display: none;
   }
 
