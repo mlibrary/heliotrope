@@ -17,3 +17,9 @@
 @import "blacklight_gallery/osd_viewer";
 //@import "hyrax/blacklight_gallery";
 @import 'hyrax/hyrax';
+
+// TODO: remove this once we're on a Hyrax with this PR merged:
+// https://github.com/samvera/hyrax/pull/6735
+.fade.in {
+  opacity: 1
+}
