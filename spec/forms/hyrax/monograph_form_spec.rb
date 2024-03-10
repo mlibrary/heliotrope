@@ -24,7 +24,6 @@ describe Hyrax::MonographForm do
                            date_created
                            subject
                            language
-                           bibliographic_citation
                            representative_id
                            thumbnail_id
                            rendering_ids
@@ -92,7 +91,6 @@ describe Hyrax::MonographForm do
                            creator_display
                            subject
                            language
-                           bibliographic_citation
                            series
                            buy_url
                            isbn
