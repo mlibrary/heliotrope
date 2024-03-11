@@ -16,6 +16,9 @@ class BuildKbartJob < ApplicationJob
       Rails.logger.error("No mapping avilable for group_key: #{product.group_key} KBART WILL NOT BE CREATED") unless group_key_ftp_dir_map.key?(product.group_key)
       next unless group_key_ftp_dir_map.key?(product.group_key)
 
+      # HELIO-4528 Set the timezone just for this job to get "accurate" date stamped file names
+      Time.zone = 'Eastern Time (US & Canada)'
+
       new_kbart_csv = make_kbart_csv(published_sorted_monographs(product))
 
       kbart_root_dir = kbart_root(product)

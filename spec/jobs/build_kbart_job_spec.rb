@@ -95,7 +95,7 @@ RSpec.describe BuildKbartJob, type: :job do
       end
 
       it "does not create a new kbart file" do
-        travel_to("2022-02-02") do
+        travel_to(Time.zone.local(2022, 02, 02, 12, 00, 00)) do
           expect(Net::SFTP).not_to receive(:start)
 
           subject.perform_now
@@ -132,7 +132,7 @@ RSpec.describe BuildKbartJob, type: :job do
         end
 
         it "does not create a new kbart file" do
-          travel_to("2022-02-02") do
+          travel_to(Time.zone.local(2022, 02, 02, 12, 00, 00)) do
             FileUtils.mkdir_p(test_root)
 
             expect(Net::SFTP).not_to receive(:start)
@@ -168,7 +168,7 @@ RSpec.describe BuildKbartJob, type: :job do
           end
 
           it "does not create a new kbart file" do
-            travel_to("2022-02-02") do
+            travel_to(Time.zone.local(2022, 02, 02, 12, 00, 00)) do
               expect(Net::SFTP).not_to receive(:start)
 
               subject.perform_now
@@ -213,7 +213,7 @@ RSpec.describe BuildKbartJob, type: :job do
           end
 
           it "creates new kbart files, .csv and .txt" do
-            travel_to("2022-02-02") do
+            travel_to(Time.zone.local(2022, 02, 02, 12, 00, 00)) do
               subject.perform_now
 
               expect(Net::SFTP).to have_received(:start)
@@ -235,6 +235,27 @@ RSpec.describe BuildKbartJob, type: :job do
               expect(tsv[4][0]).to eq "E Book Italic"
             end
           end
+
+          context "with explicitly set Eastern time zone" do
+            it "creates a kbart file with the correct date" do
+              # Time zone problems and confusion with the date in the file name mean we need to explicitly
+              # set the timezone to Eastern in the job. See HELIO-4528
+              # GMT time is the fulcrum default, so we go to 2022-02-03 at 1 AM GMT
+              travel_to(Time.zone.local(2022, 02, 03, 01, 00, 00)) do
+                expect(Time.zone.name).to eq "UTC"
+                expect(Time.zone.now.strftime "%Y-%m-%d").to eq "2022-02-03"
+                # We set the time zone to "Eastern Time (US & Canada)" in the job itself so the generated
+                # KBART file should have the previous date 2022-02-02, not 2022-02-03 as Eastern is 4 or 5 hours
+                # before GMT/UTC. The whole point of this is so we can build KBARTs at 21:00 Eastern and have the file name
+                # date reflect that day, not the next day, without having to change the timezone for all of Fulcrum.
+                subject.perform_now
+
+                expect(File.exist?(File.join(test_root, "test_product_2022-01-01.csv"))).to be true
+                expect(File.exist?(File.join(test_root, "test_product_2022-02-02.csv"))).to be true
+                expect(File.exist?(File.join(test_root, "test_product_2022-02-03.csv"))).to be false
+              end
+            end
+          end
         end
 
         context "when there are no existing kbart files" do
@@ -249,7 +270,7 @@ RSpec.describe BuildKbartJob, type: :job do
           end
 
           it "creates new kbart files (csv and txt)" do
-            travel_to("2022-02-02") do
+            travel_to(Time.zone.local(2022, 02, 02, 12, 00, 00)) do
               subject.perform_now
 
               expect(Net::SFTP).to have_received(:start)
