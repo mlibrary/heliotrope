@@ -66,24 +66,6 @@
       Grants
     </a>
   </li>
-  <li <%= active?(partials.to_s, :monographs.to_s) %>>
-    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :monographs) %>">
-      <span class="fa fa-book" aria-hidden="true"></span> 
-      Books
-    </a>
-  </li>
-  <li <%= active?(partials.to_s, :items.to_s) %>>
-    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :resources) %>">
-      <span class="fa fa-tags" aria-hidden="true"></span> 
-      Items
-    </a>
-  </li>
-  <li <%= active?(partials.to_s, :pages.to_s) %>>
-    <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :pages) %>">
-      <span class="fa fa-file" aria-hidden="true"></span> 
-      Pages
-    </a>
-  </li>
   <li <%= active?(partials.to_s, :reports.to_s) %>>
     <a class="nav-link" href="<%= main_app.fulcrum_partials_path(partials: :reports) %>">
       <span class="fa fa-line-chart" aria-hidden="true"></span> 
