@@ -3,50 +3,49 @@
 <% else %>
   <% if @presenter.content_warning.present? %>
     <script>
-            function showContent() {
-                document.getElementById('content-warning-media-consent').style.display = 'none';
-                document.getElementById('content-warning-media').style.visibility = 'visible';
-        }
+      function showContent() {
+          document.getElementById('content-warning-media-consent').style.display = 'none';
+          document.getElementById('content-warning-media').style.visibility = 'visible';
+      }
     </script>
   <% end %>
-
-  <figure title="<%= @presenter.alt_text.first %>">
-    <% if @presenter.content_warning.present? %>
-      <div role="dialog" id="content-warning-media-consent" aria-label="Content Warning Consent Dialog">
-          <div id="content-warning-icon-text">
-              <%= image_tag "exclamation-triangle-fill.svg", alt: "Warning Icon", 'aria-hidden': "true" %><%= @presenter.content_warning %>
-          </div>
-        <div id="content-warning-buttons">
-          <input type="button" class="btn btn-primary" value="Go back" aria-label="Go back" onclick="history.back()" tabindex="0">
-          <input type="button" class="btn btn-primary" value="Display content" aria-label="Show the sensitive content" onclick="showContent()" tabindex="0">
-        </div>
+  <% if @presenter.content_warning.present? %>
+    <div role="dialog" id="content-warning-media-consent" aria-label="Content Warning Consent Dialog">
+      <div id="content-warning-icon-text">
+        <%= image_tag "exclamation-triangle-fill.svg", alt: "Warning Icon", 'aria-hidden': "true" %><%= @presenter.content_warning %>
       </div>
-      <div id="content-warning-media" style="visibility:hidden">
-    <% end %>
-    <%= render partial: @presenter.heliotrope_media_partial, locals: { file_set: @presenter } %>
-    <figcaption<%= ' class="text-center"'.html_safe if @presenter.center_caption? %>><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
-    <div class="text-center">
-    <% if @resource_download_operation_allowed %>
-      <a class="btn btn-default btn-lg btn-heliotrope-download" href="<%= hyrax.download_path(@presenter) %>" target="_blank">
-        <%= @presenter.download_button_label %>
-      </a>
-      <% if @presenter.extracted_text? %>
-        <a class="btn btn-default btn-lg btn-heliotrope-download" href="<%= hyrax.download_path(@presenter, file: 'extracted_text', filename: @presenter.extracted_text_download_filename) %>" target="_blank">
-          <%= @presenter.extracted_text_download_button_label %>
-        </a>
-      <% end %>
-    <% end %>
-      <div class="btn-group share">
-        <button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Share <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="http://twitter.com/intent/tweet?text=<%= @presenter.url_title %>&url=<%= @presenter.citable_link %>" target="_blank">Twitter</a></li>
-          <li><a class="dropdown-item" href="http://www.facebook.com/sharer.php?u=<%= @presenter.citable_link %>&t=<%= @presenter.url_title %>" target="_blank">Facebook</a></li>
-          <li><a class="dropdown-item" href="http://www.reddit.com/submit?url=<%= @presenter.citable_link %>" target="_blank">Reddit</a></li>
-          <li><a class="dropdown-item" href="http://www.mendeley.com/import/?url=<%= @presenter.citable_link %>" target="_blank">Mendeley</a></li>
-        </ul>
+      <div id="content-warning-buttons">
+        <input type="button" class="btn btn-primary" value="Go back" aria-label="Go back" onclick="history.back()" tabindex="0">
+        <input type="button" class="btn btn-primary" value="Display content" aria-label="Show the sensitive content" onclick="showContent()" tabindex="0">
       </div>
     </div>
-  </figure> <!-- /.image/media -->
+    <div id="content-warning-media" style="visibility:hidden">
+  <% end %>
+      <figure title="<%= @presenter.alt_text.first %>">
+        <%= render partial: @presenter.heliotrope_media_partial, locals: { file_set: @presenter } %>
+        <figcaption<%= ' class="text-center"'.html_safe if @presenter.center_caption? %>><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
+        <div class="text-center">
+        <% if @resource_download_operation_allowed %>
+          <a class="btn btn-default btn-lg btn-heliotrope-download" href="<%= hyrax.download_path(@presenter) %>" target="_blank">
+            <%= @presenter.download_button_label %>
+          </a>
+          <% if @presenter.extracted_text? %>
+            <a class="btn btn-default btn-lg btn-heliotrope-download" href="<%= hyrax.download_path(@presenter, file: 'extracted_text', filename: @presenter.extracted_text_download_filename) %>" target="_blank">
+              <%= @presenter.extracted_text_download_button_label %>
+            </a>
+          <% end %>
+        <% end %>
+          <div class="btn-group share">
+            <button type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Share <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="http://twitter.com/intent/tweet?text=<%= @presenter.url_title %>&url=<%= @presenter.citable_link %>" target="_blank">Twitter</a></li>
+              <li><a class="dropdown-item" href="http://www.facebook.com/sharer.php?u=<%= @presenter.citable_link %>&t=<%= @presenter.url_title %>" target="_blank">Facebook</a></li>
+              <li><a class="dropdown-item" href="http://www.reddit.com/submit?url=<%= @presenter.citable_link %>" target="_blank">Reddit</a></li>
+              <li><a class="dropdown-item" href="http://www.mendeley.com/import/?url=<%= @presenter.citable_link %>" target="_blank">Mendeley</a></li>
+            </ul>
+          </div>
+        </div>
+      </figure> <!-- /.image/media -->
   <% if !@presenter.audio? && @presenter.transcript.present? %>
       <div class="panel panel-default transcript">
         <div class="panel-heading">
@@ -59,14 +58,14 @@
   <% end %>
 
   <% if @presenter.translation.present? %>
-  <div class="panel panel-default translation">
-    <div class="panel-heading">
-      <h3 class="panel-title">Translation</h3>
-    </div>
-    <div class="panel-body fixed" tabindex="0">
-      <p><%= presenter.attribute_to_html(:translation, render_as: :markdown, label: '') %></p>
-    </div>
-  </div><!-- /.translation panel -->
+      <div class="panel panel-default translation">
+        <div class="panel-heading">
+          <h3 class="panel-title">Translation</h3>
+        </div>
+        <div class="panel-body fixed" tabindex="0">
+          <p><%= presenter.attribute_to_html(:translation, render_as: :markdown, label: '') %></p>
+        </div>
+      </div><!-- /.translation panel -->
   <% end %>
   <% if @presenter.content_warning.present? %>
     </div> <!-- #content-warning-media -->
