@@ -6,7 +6,7 @@
 <% individual = Greensub::Individual.find_by(email: current_user.email) %>
 <li>Individual:<%= (individual.present?) ? "#{individual.id} (#{individual.name})" : 'n/a' %></li>
 </ul>
-<h2>Instituions</h2>
+<h2>Institutions</h2>
 <ul>
   <% current_institutions.each do |institution| %>
     <li>Institution:<%= "#{institution.id} (#{institution.identifier} - #{institution.name})" %></li>

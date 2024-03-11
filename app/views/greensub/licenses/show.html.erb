@@ -1,12 +1,17 @@
 <p id="notice"><%= notice %></p>
 <div id="maincontent">
   <h1>License</h1>
-  <div class="col-md-1"><em>ID</em></div>
-  <div class="col-md-11">&nbsp;<%= @license.id %></div>
-  <div class="col-md-1"><em>Type</em></div>
-  <div class="col-md-11">&nbsp;<%= @license.label %></div>
-  <div class="col-md-1"><em>Licensee</em></div>
-  <div class="col-md-11">
+  <div class="row">
+    <div class="col-md-1"><em>ID</em></div>
+    <div class="col-md-11">&nbsp;<%= @license.id %></div>
+  </div>
+  <div class="row">
+    <div class="col-md-1"><em>Type</em></div>
+    <div class="col-md-11">&nbsp;<%= @license.label %></div>
+  </div>
+  <div class="row">
+    <div class="col-md-1"><em>Licensee</em></div>
+    <div class="col-md-11">
     <% if @license.individual? %>
       <%= link_to "#{@license.licensee.identifier}", greensub_individual_path(@license.licensee) %>
     <% elsif @license.institution? %>
@@ -16,10 +21,13 @@
     <% else %>
       &nbsp;
   <% end %>
+    </div>
   </div>
-  <div class="col-md-1"><em>Product</em></div>
-  <div class="col-md-11">&nbsp;<%= link_to "#{@license.product.identifier}", greensub_product_path(@license.product)  %></div>
-  <div class="col-md-12"><br/></div>
+  <div class="row">
+    <div class="col-md-1"><em>Product</em></div>
+    <div class="col-md-11">&nbsp;<%= link_to "#{@license.product.identifier}", greensub_product_path(@license.product)  %></div>
+  </div>
+
   <h2>Type</h2>
   <%= form_with(model: @license, url: type_greensub_license_path, scope: :greensub_license) do |f| %>
   <div class="col-md-12">
