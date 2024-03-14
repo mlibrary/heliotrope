@@ -36,6 +36,9 @@ RSpec.describe "monograph_catalog/index.html.erb" do
     allow(monograph_presenter).to receive(:date_uploaded).and_return(DateTime.now)
     allow(monograph_presenter).to receive(:creator).and_return([])
     allow(ebook_download_presenter).to receive(:downloadable_ebooks?).and_return(false)
+
+    # see `ApplicationController::auth_for()`
+    assign(:auth, Auth.new(Anonymous.new({}), Sighrax.from_presenter(monograph_presenter)))
   end
 
   describe 'provide: page_title' do
@@ -237,6 +240,8 @@ RSpec.describe "monograph_catalog/index.html.erb" do
                                                                                         title: 'Foreword | Timmy B. Wright',
                                                                                         level: 1, cfi: 'page=8',
                                                                                         'downloadable?': true)])
+
+          allow_any_instance_of(Auth).to receive(:actor_unauthorized?).and_return(false)
         end
 
         context 'normal Monograph that does not require Google Form registration to access' do
@@ -287,6 +292,53 @@ RSpec.describe "monograph_catalog/index.html.erb" do
               is_expected.to match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
               is_expected.to_not match 'toc-link'
             end
+          end
+        end
+      end
+
+      describe 'chapter links' do
+        let(:pdf_ebook_presenter) { instance_double("pdf_ebook_presenter", id: 'validnoid') }
+
+        before do
+          allow(view).to receive(:current_actor).and_return(Anonymous.new({}))
+          allow_any_instance_of(EbookIntervalDownloadOperation).to receive(:allowed?).and_return(true)
+          allow(monograph_presenter).to receive(:reader_ebook?).and_return(true)
+          allow(monograph_presenter).to receive(:reader_ebook).and_return({ id: 'validnoid', 'visibility_ssi' => 'open' })
+          allow(monograph_presenter).to receive(:epub?).and_return(false)
+          allow(monograph_presenter).to receive(:toc?).and_return(true)
+          allow(monograph_presenter).to receive(:pdf_ebook_presenter).and_return(pdf_ebook_presenter)
+          allow(pdf_ebook_presenter).to receive(:intervals).and_return([instance_double(EBookIntervalPresenter,
+                                                                                        title: 'Contents',
+                                                                                        level: 1,
+                                                                                        cfi: "page=6",
+                                                                                        'downloadable?': true),
+                                                                        instance_double(EBookIntervalPresenter,
+                                                                                        title: 'Foreword | Timmy B. Wright',
+                                                                                        level: 1, cfi: 'page=8',
+                                                                                        'downloadable?': true)])
+        end
+
+        context 'user is authed' do
+          before do
+            allow_any_instance_of(Auth).to receive(:actor_unauthorized?).and_return(false)
+            render
+          end
+
+          it 'links ToC entries' do
+            debug_puts subject.to_s
+            is_expected.to match 'toc-link'
+          end
+        end
+
+        context 'user is not authed' do
+          before do
+            allow_any_instance_of(Auth).to receive(:actor_unauthorized?).and_return(true)
+            render
+          end
+
+          it 'does not link ToC entries' do
+            debug_puts subject.to_s
+            is_expected.to_not match 'toc-link'
           end
         end
       end

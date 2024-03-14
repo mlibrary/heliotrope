@@ -37,7 +37,7 @@
       <% end %>
     <% end %>
     <div class="section-container">
-      <% if @monograph_presenter.tombstone? %>
+      <% if @monograph_presenter.tombstone? || @auth.actor_unauthorized? %>
         <span><%= interval.title %></span>
       <% else %>
         <% if oa_registration_required %>
