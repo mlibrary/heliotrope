@@ -14,7 +14,7 @@
   <%= f.input :subdomain, label: 'fulcrum.org Subdomain', required: true %>
   <%= f.input :description, required: true %>
   <div class="form-group string logo_path">
-    <label class="control-label string required" for="logo_path">* Upload a Logo</label>
+    <label class="col-form-label string required" for="logo_path">* Upload a Logo</label>
     <%= f.file_field :logo_path %>
     <% if @press.logo_path? %>
       <label>

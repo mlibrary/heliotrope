@@ -29,6 +29,9 @@
     function clear_errors(element) {
       element.find('.has-error')
              .removeClass('has-error')
+             // HELIO-4516
+             // if this .find() no longer works, it is because .help-block
+             // has been replaced with .form-text in BS4
              .find('.help-block')
              .remove(); // Remove the error messages
     }

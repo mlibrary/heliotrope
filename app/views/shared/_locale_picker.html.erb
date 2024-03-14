@@ -6,7 +6,7 @@
     </button>
     <ul class="dropdown-menu" role="menu">
         <li role="presentation" class="dropdown-header"><%= t('hyrax.toolbar.language_switch') %></li>
-        <li role="presentation" class="divider"></li>
+        <li role="presentation" class="dropdown-divider"></li>
         <% available_translations.each do |language, label| %>
             <li role="presentation" lang="<%= language %>">
                 <%= link_to label, "?locale=#{language}", class: 'dropdown-item', role: 'menuitem', tabindex: '-1' %>
