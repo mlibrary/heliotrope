@@ -92,7 +92,10 @@ gem 'canister', '~> 0.9.0'
 gem 'carrierwave', '~> 1.3.2'
 
 # Checkpoint provides authorization support
-gem 'checkpoint', '~> 1.1.0'
+# HELIO-4626 try pinning to 1.1.0
+gem 'checkpoint', '1.1.0'
+# HELIO-4626 really we want to pin  sequel (from checkpoint) too
+gem 'sequel', '5.45'
 
 # clamav only in production
 gem 'clamby', group: :production
