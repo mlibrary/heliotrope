@@ -6,6 +6,7 @@ require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
+
 Bundler.require(*Rails.groups)
 
 module Heliotrope
@@ -50,6 +51,14 @@ module Heliotrope
     # For properly generating URLs and minting DOIs - the app may not by default
     # Outside of a request context the hostname needs to be provided.
     config.hostname = Settings.host
+
+    # HELIO-4632 Deprecation warnings in production fill up systemd logs pointlessly
+    if Rails.env.production?
+      # Most depcrecations
+      ActiveSupport::Deprecation.behavior = :silence
+      # Blacklight specific
+      Deprecation.default_deprecation_behavior = :silence
+    end
 
     # Set default host
     Rails.application.routes.default_url_options[:host] = config.hostname
