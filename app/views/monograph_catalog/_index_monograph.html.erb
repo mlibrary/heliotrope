@@ -1,10 +1,13 @@
 <% princess_de_cleves = @monograph_presenter.subdomain == 'leverpress' && (@monograph_presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }) %>
 <% oa_registration_required = @monograph_presenter.subdomain == 'ee' %>
-<!-- ADMIN TOOLS -->
+<!-- ADMIN TOOLS (in spite of the CSS class name, these are necessary, not only for platform admins, but also for Press admins, editors and analysts) -->
 <div class="row platform-admin">
-  <% if can? :edit, @monograph_presenter %>
-    <a href="<%= main_app.edit_hyrax_monograph_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
-    <a href="<%= main_app.monograph_show_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
+  <%# The outer conditional is to catch all roles... from Press analyst on up. Dunno if there's a better way. This seems to work (see view spec). %>
+  <% if can? :read, :stats_dashboard %>
+    <% if can? :edit, @monograph_presenter %>
+      <a href="<%= main_app.edit_hyrax_monograph_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.edit_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.edit_page_button') %></a>
+      <a href="<%= main_app.monograph_show_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
+    <% end %>
     <% if @monograph_presenter.reader_ebook? %>
       <a href="<%= princess_de_cleves ? epub_ebook_path(@monograph_presenter.reader_ebook) : epub_path(@monograph_presenter.reader_ebook) %>" title="<%= t('monograph_catalog.index.read_book') %>" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
     <% end %>
