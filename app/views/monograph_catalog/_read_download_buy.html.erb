@@ -35,7 +35,7 @@
         <ul class="dropdown-menu monograph-catalog-rep-downloads">
           <% @ebook_download_presenter.ebook_presenters.each do |ebook| %>
             <% if @ebook_download_presenter.downloadable?(ebook) %>
-              <li><a data-rep-type="<%= ebook.ebook_format.downcase %>" href="<%= download_ebook_path(ebook.id) %>" <% if @monograph_presenter.open_access? || @monograph_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %> <% if @monograph_presenter.subdomain == 'bigten' %> onclick="displayBigTenModalSurvey();" <% else %> onclick="displayModalSurvey();" <% end %> <% end %> target="_blank"><%= ebook.ebook_format %> (<%= number_to_human_size(ebook.file_size) %>)</a></li>
+              <li><a data-rep-type="<%= ebook.ebook_format.downcase %>" href="<%= download_ebook_path(ebook.id) %>" <% if @monograph_presenter.open_access? || @monograph_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %> <% if @monograph_presenter.subdomain == 'bigten' %> onclick="displayBigTenModalSurvey();" <% elsif @monograph_presenter.subdomain == 'aberdeenunipress' %> onclick="displayAberdeenModalSurvey();" <% else %> onclick="displayModalSurvey();" <% end %> <% end %> target="_blank"><%= ebook.ebook_format %> (<%= number_to_human_size(ebook.file_size) %>)</a></li>
             <% end %>
           <% end %>
         </ul>

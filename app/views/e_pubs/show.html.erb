@@ -66,6 +66,8 @@
       <%= render 'shared/survey_nonmodal_gabii' %>
     <% elsif %w[bigten].include? @subdomain %>
       <%= render 'shared/survey_nonmodal_bigten' %>
+    <% elsif %w[aberdeenunipress].include? @subdomain %>
+      <%= render 'shared/survey_nonmodal_aberdeenunipress' %>
     <% else %>
       <%= render 'shared/survey_nonmodal' %>
     <% end %>
