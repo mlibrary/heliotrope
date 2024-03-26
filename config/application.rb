@@ -54,6 +54,17 @@ module Heliotrope
     # Set default host
     Rails.application.routes.default_url_options[:host] = config.hostname
 
+    # HELIO-4632 Deprecation warnings in production fill up systemd logs pointlessly
+    if Rails.env.production?
+      # We try to silence most deprecations with this. However, I suspect that gems are actually
+      # loaded before this so I'm unsure how well it's going to work. Might be more effective in
+      # config/environment.rg or something. But, really the problem we're running into is blacklight.
+      ActiveSupport::Deprecation.behavior = :silence
+      # Blacklight specific which is like 99% of "read" deprecation warnings
+      # Putting this here works to silence in blacklight deprecation warnings
+      Deprecation.default_deprecation_behavior = :silence
+    end
+
     # Affirmative login means that we only log someone into the application
     # when they actively initiate a login, even if they have an SSO session
     # that we recognize and could log them in automatically.
