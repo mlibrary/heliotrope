@@ -75,6 +75,687 @@ $heliotrope-highlight-background: #002c63;
 
 ///////////////////////////////////////////////
 //
+// Aberdeen University Press
+//
+///////////////////////////////////////////////
+// colors
+// colors
+$aberdeenunipress-brand-color: #111D2F;
+$aberdeenunipress-primary-navy: #00374E;
+$aberdeenunipress-primary-green: #0E434B;
+$aberdeenunipress-primary-violet: #51129B;
+$aberdeenunipress-secondary-green: #00A18C;
+$aberdeenunipress-secondary-blue: #005BE0;
+$aberdeenunipress-secondary-sea: #75E0AA;
+$aberdeenunipress-secondary-cirrus: #00cccf;
+$aberdeenunipress-accent-color-light: #E5E5E5;
+$aberdeenunipress-headings: #212B36;
+$aberdeenunipress-link: $aberdeenunipress-secondary-blue;
+$aberdeenunipress-black: #000000;
+
+// typography
+@mixin navigo {
+  font-family: navigo, sans-serif;
+}
+
+.navigo {
+  @include navigo;
+}
+
+@mixin source-serif {
+  font-family: source-serif-pro, serif;
+}
+
+.source-serif {
+  @include source-serif;
+}
+
+
+.aberdeenunipress {
+
+  // svgicon
+  #documents, #resource-page-svgicon {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(38%) sepia(20%) saturate(1106%) hue-rotate(165deg) brightness(93%) contrast(96%); // $um-accent-link: rgb(29, 116, 145);
+
+    }
+
+  }
+
+  // typography
+  @include source-serif;
+
+  h1 {
+    @include navigo;
+    font-weight: 700;
+    color: $aberdeenunipress-headings;
+    font-size: 2em;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include navigo;
+    font-weight: 700;
+    color: $aberdeenunipress-headings;
+  }
+
+  h2 {
+    margin-top: 2em;
+    font-size: 25.6px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  h4 {
+    font-size: 1.2em;
+  }
+
+  h3,
+  h4,
+  h5 {
+    margin-top: 1rem;
+  }
+
+  .bold {
+    font-weight: 700;
+  }
+
+  .text-light {
+    color: #f8f9fa !important;
+  }
+
+  p, ul li, ol li, span {
+    font-weight: 300;
+    font-size: 16px;
+  }
+
+  // links
+  a:focus,
+  button:focus,
+  .form-control:focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px $aberdeenunipress-link,0 0 0 3px $aberdeenunipress-link;
+    border-radius: 0px !important;
+  }
+
+  a, .link {
+    color: $aberdeenunipress-link;
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  button:hover,
+  button:active,
+  .link:hover {
+    color: $aberdeenunipress-link;
+    text-decoration-thickness: 2px;
+  }
+
+  a.btn, a.previous, a.next {
+    text-decoration: none;
+  }
+
+  // buttons
+  .btn, .btn-group {
+    @include navigo;
+    font-weight: 500;
+  }
+
+  .btn-default,
+  .btn {
+    @include button-background-color($aberdeenunipress-secondary-cirrus);
+    @include button-font-color($aberdeenunipress-brand-color);
+    border-color: $aberdeenunipress-secondary-cirrus;
+    font-weight: 500;
+    @include navigo;
+  }
+
+  .download {
+    .btn-default, 
+    .btn {
+    @include button-background-color($aberdeenunipress-secondary-cirrus);
+    @include button-font-color($aberdeenunipress-brand-color);
+    border-color: $aberdeenunipress-secondary-cirrus;
+    font-weight: 500;
+    @include navigo;
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
+    @include button-hover-background-color(#00a6a9);
+    @include button-hover-font-color(#03060a !important);
+    border-color: $aberdeenunipress-secondary-cirrus;
+    font-weight: 500;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $aberdeenunipress-brand-color;
+  }
+
+  .show > .btn-outline-secondary.dropdown-toggle {
+    background-color: $aberdeenunipress-link;
+    border-color: $aberdeenunipress-link;
+    color: #fff !important;
+  }
+
+  .blacklight-icons svg {
+    fill: $aberdeenunipress-brand-color;
+  }
+
+  // navigation menu
+
+  .nav,
+  header {
+    @include navigo;
+  }
+
+  header {
+    background-color: $aberdeenunipress-brand-color;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    hgroup {
+      height: auto;
+    }    
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end !important;
+
+      // search box and links
+      .col-md-4.pt-3 {
+        display: flex;
+        flex-direction: column;
+        padding-top: 16px;
+
+        form.navbar-form {
+          margin: 0;
+          padding: 0;
+        }
+
+        form {
+          @include navigo;
+
+          .input-group {
+            display: flex;
+            position: relative;
+            width: 80%;
+            align-items: stretch;
+
+            .form-control {
+              position: relative;
+              flex: 1 1 auto;
+              width: 1%;
+              margin-bottom: 0;
+              display: block;
+              padding: 6px 12px;
+              font-size: 14px;
+              line-height: 1.5;
+              background-clip: padding-box;
+              border: 1px solid $aberdeenunipress-black;
+              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+              color: rgb(73, 80, 87) !important;
+            }
+          }
+
+          input.search-query {
+            background-color: #F3F3F3;
+            border-right: none !important;
+            color: rgb(73, 80, 87) !important;
+            height: 38px;
+          }
+
+          button.search-submit {
+            background-color: $aberdeenunipress-secondary-cirrus;
+            border-top: $aberdeenunipress-secondary-cirrus 1px solid;
+            border-right: $aberdeenunipress-secondary-cirrus 1px solid;
+            border-bottom: $aberdeenunipress-secondary-cirrus 1px solid;
+            border-left: none !important;
+            height: 100%;
+            padding: 0;
+            text-transform: none;
+            overflow: visible;
+            border-radius: 0;
+            margin-top: 1px;
+            width: 53px;
+            height: 36px;
+
+            svg {
+              height: auto;
+              width: auto;
+              fill: $aberdeenunipress-secondary-cirrus;
+              stroke-width: 2;
+              color: $aberdeenunipress-brand-color;
+            }
+          }
+        }
+      }
+    }
+
+    .navbar-brand-logo {
+      display: inline-block;      
+      padding-right: 1rem;
+    }
+
+    .navbar-brand {
+      display: inline-block;
+      padding-top: .3125rem;
+      padding-bottom: .3125rem;
+      margin-right: 1rem;
+      font-size: 1.25rem;
+      line-height: inherit;
+      white-space: nowrap;
+    }
+    
+    span {
+      font-size: 16px;
+    }
+  }
+
+  // container on all pages
+  #main.container {
+    max-width: 1140px;
+    padding-top: 1.5em;
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include navigo;
+  }
+
+  // press catalog
+
+  .press .document {
+    a {
+      display: block;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  #facets a {
+    text-decoration: none;
+  }
+
+  #facets a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $aberdeenunipress-brand-color;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include source-serif;
+      }
+    }
+
+    .authors, .copyright {
+      @include navigo;
+      font-weight: 500;
+    }
+
+    button.search-submit {
+      background-color: $aberdeenunipress-secondary-cirrus;
+      border-color: $aberdeenunipress-secondary-cirrus;
+      color: $aberdeenunipress-brand-color;
+      height: 34px;
+    }
+
+    .monograph-metadata #tabs .nav-tabs h2 {
+      font-size: .85rem;
+    }
+  }
+
+  // pagination
+  .page-links {
+    @include navigo;
+  }
+
+  .pagination {
+    @include navigo;
+     li a, li span {
+       color: $aberdeenunipress-brand-color;
+       background-color: $aberdeenunipress-secondary-cirrus;
+       border-color: $aberdeenunipress-secondary-cirrus;
+     }
+
+     li a:hover, li span:hover {
+      color: $aberdeenunipress-accent-color-light;
+      background-color: $aberdeenunipress-brand-color;
+      border-color: $aberdeenunipress-brand-color;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $aberdeenunipress-brand-color;
+       border-color: $aberdeenunipress-brand-color;
+       color: $aberdeenunipress-accent-color-light;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include navigo;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include navigo;
+    }
+
+    .able-transcript-area {
+      .panel-title {
+        margin: 0;
+        color: #fff;
+        font-size: 1em;
+      }
+    }
+  }
+
+  // tabs
+  #tabs {
+    h2 {
+      font-size: 16px;
+    }
+  }
+
+  //footer
+  footer.press {
+    border-top: .2rem solid $aberdeenunipress-secondary-cirrus;
+    background-color: $aberdeenunipress-brand-color;
+    padding: 3rem 0 1rem;
+    box-shadow: -3px 5px 0px #AFAFAF;
+
+    img {
+      height: auto;
+      width: 225px;
+    }
+
+    img.fulcrum {
+      height: 20px !important;
+      width: auto !important;
+    }
+
+    .press-block-c {
+      padding: 0;
+      margin-top: 16px;
+    }
+  }
+
+  footer.press .press-block-a, footer.press .press-block-b {
+    background-color: $aberdeenunipress-brand-color !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 5px;
+  }
+
+  footer {
+    
+    .container {
+      max-width: 1140px;
+    }
+
+    .row {
+      display: flex;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #dae0e5 !important;
+      text-decoration: none;
+    }
+
+    .contact {
+      a.logo {
+        display: block;
+        font-weight: 400;
+        letter-spacing: 1.2px;
+        margin: 0;
+        font-size: 50px;
+        @include navigo;
+        text-decoration: none;
+      }
+  
+      .logo-img img {
+        height: auto;
+        width: 200px;
+      }
+  
+      .twitter {
+        display: inline-block;
+      }
+
+      .youtube img {
+        height: 18px;
+        width: auto;
+      }
+  
+      .footer-email {
+        margin-left: .6rem;
+      }
+    }
+
+    .press
+    .press-block-a,
+    .press-block-b,
+    .press-block-c {
+      background-color:  $aberdeenunipress-brand-color !important;
+
+      small {
+        font-size: 12.8px;
+      }     
+
+    }
+
+    .press-block-c {
+      font-size: 16px;
+      a {
+        color: #f8f9fa !important;
+      }
+    }
+
+    .admin {
+      vertical-align: middle;
+    }
+
+    section {
+      ul {
+        font-size: 16px;
+      }
+    }
+
+    h2 {
+      font-size: 17px;
+      @include navigo;
+      text-transform: uppercase;
+      margin-top: 0;
+    }
+
+    .block {
+      display: block;
+    }
+
+    .contact  {
+      .d-block {
+        display: block;
+        font-size: 16px;
+      }
+
+      a {
+        color: $aberdeenunipress-secondary-cirrus;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: #00a6a9 !important;
+        text-decoration: underline;
+      }
+
+      a.logo {
+        display: block;
+        font-weight: 400;
+        letter-spacing: 1.2px;
+        margin: 0;
+        font-size: 50px;
+        color: #fff;
+        text-decoration: none;
+        @include navigo;
+      }
+
+      .logo-img img {
+        height: auto;
+        width: 200px;
+      }
+
+      .footer-email {
+        margin-left: 9.6px;
+      }
+    
+    }
+
+    .links {
+      ul {
+        padding-top: 24px;
+        margin-bottom: 16px;
+      }
+      ul li {
+        font-size: 19.6px;
+      }
+    }
+  }
+
+  // e-book reader
+  #reader {
+
+    .cozy-control .cozy-h1 span {
+      font-size: 24px;
+    }
+
+    .button {
+      @include epub-button-background-color($aberdeenunipress-brand-color,#070c13,#fff);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($aberdeenunipress-brand-color,#070c13,#fff);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($aberdeenunipress-brand-color,#070c13,#fff);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($aberdeenunipress-brand-color,#070c13,#fff);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($aberdeenunipress-brand-color,#070c13,#fff);
+      color: #fff;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($aberdeenunipress-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color(#070c13);
+      transition: 0.2s ease-in;
+    }
+
+    .modal__header,
+    .modal__title {
+      color: #fff;
+    }
+
+    button.modal__close,
+    button.modal__close::before {
+      color: #fff;
+    }
+
+    .cozy-control .logo {
+      background: $aberdeenunipress-brand-color;
+      height: 46.6px;
+      width: 36px;
+      overflow: hidden;
+
+      img {
+        height: 36px;
+        margin-top: 6px;
+        margin-left: 11px;
+      }
+    }
+
+    .modal__footer {
+      background-color: $aberdeenunipress-brand-color;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $aberdeenunipress-brand-color;
+    }
+
+  }
+
+  @media(max-width: 768px) {
+
+    header {
+      height: 160px;
+    }
+  
+    header .row .col-md-4.pt-3 {
+      flex-grow: 1;
+    }
+  
+    header .row .col-md-4.pt-3 form.navbar-form {
+      width: 100%;
+      box-shadow: none;
+    }
+  
+    header .row {
+      justify-content: unset !important;
+      margin: 0 auto;
+      width: 95%;
+    }
+
+    footer .row {
+      flex-direction: column;
+    }
+  
+
+  }
+}
+
+
+
+
+///////////////////////////////////////////////
+//
 // ACLS Humanities E-Book
 //
 ///////////////////////////////////////////////

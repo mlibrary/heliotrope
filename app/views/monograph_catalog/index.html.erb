@@ -4,6 +4,8 @@
     <!-- survey -->
   <% if @monograph_presenter.subdomain == 'bigten' %>
     <%= render 'shared/survey_modal_bigten' %>
+  <% elsif @monograph_presenter.subdomain == 'aberdeenunipress' %>
+    <%= render 'shared/survey_modal_aberdeenunipress' %>
   <% else %>
     <%= render 'shared/survey_modal' %>
   <% end %>
