@@ -255,7 +255,7 @@ class CatalogController < ApplicationController
     config.oai = {
       provider: {
         repository_name: 'Fulcrum',
-        repository_url: 'https://fulcrum.org/catalog/oai',
+        repository_url: 'https://www.fulcrum.org/catalog/oai',
         record_prefix: 'oai:fulcrum.org',
         admin_email: 'fulcrum-info@umich.edu',
         sample_id: '9s1616317'
