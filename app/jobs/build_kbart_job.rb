@@ -61,6 +61,7 @@ class BuildKbartJob < ApplicationJob
   # Unfortunatly it means if we get a new group_key we need to add it here.
   def group_key_ftp_dir_map
     {
+      "aberdeen" => "/home/fulcrum_ftp/ftp.fulcrum.org/aberdeen/KBART",
       "amherst" => "/home/fulcrum_ftp/ftp.fulcrum.org/Amherst_College_Press/KBART",
       "bar" => "/home/fulcrum_ftp/ftp.fulcrum.org/BAR/KBART",
       "bigten" => "/home/fulcrum_ftp/ftp.fulcrum.org/bigten/KBART",
@@ -97,7 +98,7 @@ class BuildKbartJob < ApplicationJob
   # fulcimen can only handle building marcs reliably if there is a single kbart per product
   # Not all kbarts get marc files generated only UMPEBC, BAR, Amherst and Lever
   def maybe_move_old_kbarts(sftp, group_key, file_root)
-    return unless ['umpebc', 'bar', 'amherst', 'leverpress', 'test_product'].include?(group_key)
+    return unless ['aberdeen', 'umpebc', 'bar', 'amherst', 'leverpress', 'test_product'].include?(group_key)
 
     old_kbart_dir = if group_key == "umpebc"
                       File.join(group_key_ftp_dir_map[group_key], "UMPEBC_old")
