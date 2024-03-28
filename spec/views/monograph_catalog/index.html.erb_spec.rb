@@ -152,16 +152,58 @@ RSpec.describe "monograph_catalog/index.html.erb" do
         end
       end
 
-      context 'can? :edit' do
+      context 'admin menu' do
         before do
-          allow(view).to receive(:can?).and_return(true)
-          render
+          allow(view).to receive(:can?).and_call_original
+          allow(monograph_presenter).to receive(:reader_ebook?).and_return(true)
+          allow(monograph_presenter).to receive(:reader_ebook).and_return({ id: 'validnoid' })
         end
 
-        it do
-          debug_puts subject.to_s
-          is_expected.to match t('monograph_catalog.index.show_page_button')
-          is_expected.to match t('monograph_catalog.index.edit_page_button')
+        context 'can? :read (i.e. just the Monograph itself)' do
+          before do
+            allow(view).to receive(:can?).with(:read).and_return(true)
+            render
+          end
+
+          it 'shows no admin menu (i.e. an empty one, see comment)' do
+            debug_puts subject.to_s
+            # note the div itself is always present, probably for spacing reasons, albeit empty sometimes, like here
+            is_expected.to have_css('.row.platform-admin', count: 1)
+            is_expected.not_to match t('monograph_catalog.index.show_page_button')
+            is_expected.not_to match t('monograph_catalog.index.edit_page_button')
+            is_expected.not_to have_link(t('monograph_catalog.index.read_book'), href: epub_path('validnoid'), count: 1)
+          end
+        end
+
+        context 'can? :read, stats_dashboard' do
+          before do
+            allow(view).to receive(:can?).with(:read, :stats_dashboard).and_return(true)
+            render
+          end
+
+          it 'shows a limited admin menu with a read link' do
+            debug_puts subject.to_s
+            is_expected.to have_css('.row.platform-admin', count: 1)
+            is_expected.not_to match t('monograph_catalog.index.show_page_button')
+            is_expected.not_to match t('monograph_catalog.index.edit_page_button')
+            is_expected.to have_link(t('monograph_catalog.index.read_book'), href: epub_path('validnoid'), count: 1)
+          end
+        end
+
+        context 'can? :edit' do
+          before do
+            # can do everything, i.e. analyst stuff, as well as edit the Monograph
+            allow(view).to receive(:can?).and_return(true)
+            render
+          end
+
+          it 'shows a full admin menu with a manage, edit and read links' do
+            debug_puts subject.to_s
+            is_expected.to have_css('.row.platform-admin', count: 1)
+            is_expected.to match t('monograph_catalog.index.show_page_button')
+            is_expected.to match t('monograph_catalog.index.edit_page_button')
+            is_expected.to have_link(t('monograph_catalog.index.read_book'), href: epub_path('validnoid'), count: 1)
+          end
         end
       end
 
