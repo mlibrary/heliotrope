@@ -78,6 +78,10 @@ RSpec.describe Hyrax::FileSetPresenter do
     it "has the monograph's creator" do
       expect(presenter.parent.creator).to match_array(creator)
     end
+
+    it "deletegates member_of_collection_ids to monograph parent" do
+      expect(presenter.member_of_collection_ids).to eq []
+    end
   end
 
   describe '#allow_high_res_display?' do
