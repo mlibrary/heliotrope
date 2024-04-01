@@ -6,7 +6,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
   let(:press) { create(:press) }
   let(:monograph) { create(:monograph, press: press.subdomain, user: User.batch_user, visibility: "open", representative_id: cover.id) }
   let(:cover) { create(:file_set, visibility: "open", content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
-  let(:file_set) { create(:file_set, visibility: "open", keyword: ['one'], content: File.open(File.join(fixture_path, 'csv', 'shipwreck.jpg'))) }
+  let(:file_set) { create(:file_set, visibility: "open", keyword: ['one single keyword'], content: File.open(File.join(fixture_path, 'csv', 'shipwreck.jpg'))) }
   let(:epub) { create(:file_set, visibility: "open", allow_download: 'no', content: File.open(File.join(fixture_path, 'moby-dick.epub'))) }
   let(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
 
@@ -79,21 +79,21 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       find("#resources-search-submit").click
 
       # clear last search
-      find("span.glyphicon.glyphicon-remove").click
+      find("span.fa.fa-close").click
 
       # test facet search
       # open the facet panel
-      find("div[data-target='#facet-keyword_sim']").click
+      find("button[data-bs-target='#facet-keyword_sim']").click
       # click the keyword facet search link
-      find("a.facet-anchor.facet_select[href='/concern/monographs/#{monograph.id}?f%5Bkeyword_sim%5D%5B%5D=one&locale=en']").click
+      click_on("one single keyword")
 
       # Facets cause two of these 'x' icons. Clear last search by clicking the one in the sidebar (facet panel)
-      find("span.glyphicon.glyphicon-remove", match: :first).click
-      expect(page).to_not have_css("span.glyphicon.glyphicon-remove")
+      find("span.remove-icon[aria-hidden='true']").click
+      expect(page).to_not have_css("span.remove-icon[aria-hidden='true']")
 
       click_button "Sort by First Appearance"
-      expect(page).to have_css("button.btn.btn-default.dropdown-toggle[aria-expanded='true']")
-      expect(page).to have_css("ul.dropdown-menu", visible: true)
+      expect(page).to have_css("button.btn.btn-outline-secondary.dropdown-toggle[aria-expanded='true']")
+      expect(page).to have_css("div.dropdown-menu", visible: true)
       click_link "Year (Oldest First)"
 
       # the preceding page load and checks seem to regularly be able to happen faster than the JS can bind...
@@ -101,14 +101,15 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       visit monograph_catalog_path(monograph)
 
       click_button "20 per page"
-      expect(page).to have_css("button.btn.btn-default.dropdown-toggle[aria-expanded='true']")
-      expect(page).to have_css("ul.dropdown-menu", visible: true)
+      expect(page).to have_css("button.btn.btn-outline-secondary.dropdown-toggle[aria-expanded='true']")
+      expect(page).to have_css("div.dropdown-menu", visible: true)
       # interestingly, the " per page" bit is in a `<span class="sr-only">`
       click_link "50 per page"
       # alternate link click used for testing
       # find("a[href='#{hyrax_monograph_path(monograph.id, locale: 'en', per_page: 50)}'").click
 
-      find("span.glyphicon.glyphicon-list.view-icon-list").click
+      # find("span.glyphicon.glyphicon-list.view-icon-list").click
+      find("a.btn.btn-outline-secondary.btn-icon.view-type-list").click
     end
   end
 

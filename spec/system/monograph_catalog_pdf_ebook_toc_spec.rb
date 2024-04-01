@@ -38,8 +38,6 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           click_on("Contents")
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
-            # expect(page).not_to have_xpath(".//span[@title='Read section']")
-            # expect(page).not_to have_xpath(".//i[@title='Download section']")
             expect(page).not_to have_content("Download")
           end
         end
@@ -54,8 +52,6 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           click_on("Contents")
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
-            # expect(page).not_to have_xpath(".//span[@title='Read section']")
-            # expect(page).not_to have_xpath(".//i[@title='Download section']")
             expect(page).not_to have_content("Download")
           end
         end
@@ -71,8 +67,6 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           click_on("Contents")
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
-            # expect(page).not_to have_xpath(".//span[@title='Read section']")
-            # expect(page).not_to have_xpath(".//i[@title='Download section']")
             expect(page).not_to have_content("Download")
           end
         end
@@ -82,13 +76,11 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
         let(:parent) { Sighrax.from_noid(monograph.id) }
         before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
 
-        it 'has links but no buttons' do
+        it 'has no links and no buttons' do
           visit monograph_catalog_path(monograph)
           click_on("Contents")
           within("#toc") do
-            expect(page).to have_xpath(".//a[@class='toc-link']")
-            # expect(page).not_to have_xpath(".//span[@title='Read section']")
-            # expect(page).not_to have_xpath(".//i[@title='Download section']")
+            expect(page).not_to have_xpath(".//a[@class='toc-link']")
             expect(page).not_to have_content("Download")
           end
         end
@@ -108,8 +100,6 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           click_on("Contents")
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
-            # expect(page).to have_xpath(".//span[@title='Read section']")
-            # expect(page).to have_xpath(".//i[@title='Download section']")
             expect(page).to have_content("Download")
           end
         end
@@ -124,8 +114,6 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           click_on("Contents")
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
-            # expect(page).to have_xpath(".//span[@title='Read section']")
-            # expect(page).to have_xpath(".//i[@title='Download section']")
             expect(page).to have_content("Download")
           end
         end
@@ -141,8 +129,6 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
           click_on("Contents")
           within("#toc") do
             expect(page).to have_xpath(".//a[@class='toc-link']")
-            # expect(page).to have_xpath(".//span[@title='Read section']")
-            # expect(page).to have_xpath(".//i[@title='Download section']")
             expect(page).to have_content("Download")
           end
         end
@@ -152,13 +138,11 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
         let(:parent) { Sighrax.from_noid(monograph.id) }
         before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
 
-        it 'has links but no buttons' do
+        it 'has no links and no buttons' do
           visit monograph_catalog_path(monograph)
           click_on("Contents")
           within("#toc") do
-            expect(page).to have_xpath(".//a[@class='toc-link']")
-            # expect(page).not_to have_xpath(".//span[@title='Read section']")
-            # expect(page).not_to have_xpath(".//i[@title='Download section']")
+            expect(page).not_to have_xpath(".//a[@class='toc-link']")
             expect(page).not_to have_content("Download")
           end
         end
