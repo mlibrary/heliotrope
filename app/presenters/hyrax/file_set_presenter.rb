@@ -50,6 +50,9 @@ module Hyrax
              :article_display_date, :article_title, :article_volume,
              to: :solr_document
 
+    # HELIO-4634
+    delegate :member_of_collection_ids, to: :parent
+
     def monograph_id
       Array(solr_document['monograph_id_ssim']).first
     end
