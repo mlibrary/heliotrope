@@ -1,0 +1,11 @@
+<% if @parent_presenter.open_access? || @parent_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :free %>
+  <% if @subdomain == 'gabii' %>
+    <%= render 'shared/survey_nonmodal_gabii' %>
+  <% elsif @subdomain == 'bigten' %>
+    <%= render 'shared/survey_nonmodal_bigten' %>
+  <% elsif @subdomain == 'aberdeenunipress' %>
+    <%= render 'shared/survey_nonmodal_aberdeenunipress' %>
+  <% else %>
+    <%= render 'shared/survey_nonmodal' %>
+  <% end %>
+<% end %>
