@@ -150,7 +150,8 @@ gem "kramdown-parser-gfm"
 gem 'mimemagic', '~> 0.3.7'
 
 # Use MySQL as the database for Active Record
-gem 'mysql2'
+# HELIO-4630, HELIO-4633, HELIO-4626
+gem 'mysql2', '0.4.10'
 
 # CVE-2019-5477
 # CVE-2020-7595
@@ -186,6 +187,10 @@ gem "rubyzip", ">= 1.3.0"
 
 # to connect to Fulcrum and Firebrand's SFTP servers
 gem 'net-sftp', '~> 4.0'
+
+# HELIO-4626, HELIO-4633
+# pin sequel (used by checkpoint and keycard)
+gem 'sequel', '5.45'
 
 gem 'sitemap_generator', '~> 6.1.2'
 
