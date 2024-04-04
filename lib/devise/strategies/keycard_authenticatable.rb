@@ -6,6 +6,7 @@ module Devise
     # to the application, not just authenticating for reading purposes. This
     # uses Keycard to resolve the user EID.
     class KeycardAuthenticatable < ::Devise::Strategies::Base
+      include Skylight::Helpers
       # NOTE: This is a workaround...
       # Two elements would make for a more pleasant experience and implementation:
       # 1. Automatically logging in users who have an SP/SSO session
@@ -65,8 +66,14 @@ module Devise
           identity[:user_eid]
         end
 
+        instrument_method
         def identity_provider
+          retries ||= 0
           request_attributes[:identity_provider]
+        rescue  StandardError => e
+          Rails.logger.error(%Q|KeycardAuthenticatable.identity_provider RETRY #{retries}: #{e} #{e.backtrace.join("\n")}|)
+          retries += 1
+          retry if retries < 3
         end
 
         def request_attributes

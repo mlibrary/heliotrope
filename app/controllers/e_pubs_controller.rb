@@ -166,7 +166,7 @@ class EPubsController < CheckpointController
       head :no_content
     end
   rescue StandardError => e
-    Rails.logger.error "EPubsController.share_link raised #{e}"
+    Rails.logger.error(%Q|EPubsController.share_link raised #{e} #{e.backtrace.join("\n")}|)
     head :no_content
   end
 
