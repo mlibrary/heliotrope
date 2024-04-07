@@ -1,14 +1,14 @@
-<% doc_presenter = index_presenter(document) %>
 <% file_set_presenter = Hyrax::FileSetPresenter.new(document, nil) %>
+
 <%# default partial to display solr document fields in catalog index view -%>
   <div class="document-metadata">
     <% if file_set_presenter.article_resource? %>
       <p class="blacklight-vol_issue_date"><%= file_set_presenter.article_volume_issue_date %></p>
       <p class="blacklight-article_title_tesim"><%= file_set_presenter.article_title %></p>
     <% else %>
-      <% index_fields(document).each do |field_name, field| -%>
-        <% if should_render_index_field? document, field %>
-          <p class="blacklight-<%= field_name.parameterize %>"><%= render_markdown doc_presenter.field_value field %></p>
+      <% document_presenter(document).field_presenters.each do |field_presenter| %>
+        <% if field_presenter.render_field? %>
+          <p class="blacklight-<%= field_presenter.label.parameterize %>"><%= render_markdown field_presenter.values.first %></p>
         <% end -%>
       <% end -%>
     <% end %>

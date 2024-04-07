@@ -1,5 +1,6 @@
 <% fs_presenter = Hyrax::FileSetPresenter.new(document, nil, nil) %>
-<%- if has_thumbnail?(document) && tn = render_thumbnail_tag(document, {alt: fs_presenter.alt_text}, counter: document_counter_with_offset(document_counter)) %>
+<% docp = document_presenter(document) %>
+<%- if docp.thumbnail.exists? && tn = docp.thumbnail.thumbnail_tag({alt: fs_presenter.alt_text.first}, counter: document_counter_with_offset(document_counter)) %>
   <div class="document-thumbnail col-sm-3">
     <%=
       if fs_presenter.use_riiif_for_icon?
@@ -9,15 +10,7 @@
       elsif fs_presenter.use_svgicon?
         image_tag(fs_presenter.svgicon_type, class: 'svgicon', alt: fs_presenter.svgicon_alt, sizes: "(max-width: 100%)", width: "200px", height: "auto")
       else
-        # Render the thumbnail, if available, for a document and link it to the document record.
-        # def render_thumbnail_tag document, image_options = {}, url_options = {}
-        #   Params:
-        #     document (SolrDocument)
-        #   image_options (Hash) — to pass to the image tag
-        #   url_options (Hash) — to pass to #link_to_document
-        #   Returns:
-        #     (String)
-        render_thumbnail_tag(document, { alt: fs_presenter.alt_text.first || '' }, { suppress_link: true })
+        docp.thumbnail.thumbnail_tag({ alt: fs_presenter.alt_text.first || ''}, { suppress_link: true })
       end
     %>
     <% if fs_presenter.external_resource? %>

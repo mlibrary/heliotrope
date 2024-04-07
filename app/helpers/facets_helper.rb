@@ -36,7 +36,7 @@ module FacetsHelper # rubocop:disable Metrics/ModuleLength
       end
       monograph_catalog_path(params[:monograph_id]) + "&f%5B#{facet_field}%5D%5B%5D=#{item.value}#{previous_param_string}"
     else
-      search_action_path(search_state.add_facet_params_and_redirect(facet_field, item))
+      search_action_path(search_state.filter(facet_field).add(item))
     end
   end
 

@@ -1,7 +1,7 @@
 <% fs_presenter = Hyrax::FileSetPresenter.new(document, nil, nil) %>
 <div class="document col-xs-6 col-md-3">
   <div class="thumbnail">
-    <%= link_to url_for_document(document) do %>
+    <%= link_to search_state.url_for_document(document) do %>
       <%=
         if fs_presenter.use_riiif_for_icon?
           riiif_icon = "/image-service/#{fs_presenter.id + fs_presenter&.browser_cache_breaker}/full/200,/0/default.png"
