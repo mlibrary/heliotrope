@@ -4,7 +4,7 @@
 
 <% # container for document in index gallery view -%>
 <div class="book">
-  <%= link_to(url_for_document(document), document_link_params(document, counter: counter)) do %>
+  <%= link_to(search_state.url_for_document(document), document_link_params(document, counter: counter)) do %>
     <div class="thumbnail">
       <%= presenter.thumbnail_tag(145, class: "img-fluid", alt: "") %>
     </div>
