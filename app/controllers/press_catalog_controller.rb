@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PressCatalogController < ::CatalogController
+  include Skylight::Helpers
   before_action :load_press
   before_action :load_actor_product_ids
   before_action :load_allow_read_product_ids
@@ -32,6 +33,7 @@ class PressCatalogController < ::CatalogController
     true
   end
 
+  instrument_method
   def facet
     super
   end
@@ -50,12 +52,14 @@ class PressCatalogController < ::CatalogController
     super
   end
 
+  instrument_method
   def has_open_access?
     @has_open_access ||= display_works.select { |doc| doc['open_access_tesim'] == ['yes'] }.count > 0
   end
 
   private
 
+    instrument_method
     def load_press
       @press = Press.find_by(subdomain: params['press'])
       auth_for(Sighrax::Publisher.from_press(@press))
@@ -64,28 +68,34 @@ class PressCatalogController < ::CatalogController
       render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false
     end
 
+    instrument_method
     def load_actor_product_ids
       @actor_product_ids = current_actor.products.pluck(:id)
     end
 
+    instrument_method
     def load_allow_read_product_ids
       @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
     end
 
+    instrument_method
     def all_works
       children = @press.children.pluck(:subdomain)
       presses = children.push(@press.subdomain).uniq
-      ActiveFedora::SolrService.query("{!terms f=press_sim}#{presses.map(&:downcase).join(',')}", rows: 100_000)
+      ActiveFedora::SolrService.query("{!terms f=press_sim}#{presses.map(&:downcase).join(',')}", fl: ['suppressed_bsi', 'visibility_ssi', 'open_access_tesim'], rows: 100_000)
     end
 
+    instrument_method
     def active_works
       @active_works ||= all_works.select { |doc| doc["suppressed_bsi"] == false }
     end
 
+    instrument_method
     def open_works
       @open_works ||= all_works.select { |doc| doc["suppressed_bsi"] == false && doc["visibility_ssi"] == "open" }
     end
 
+    instrument_method
     def display_works
       if Sighrax.platform_admin?(current_actor) || Sighrax.press_admin?(current_actor, @press) || Sighrax.press_editor?(current_actor, @press)
         active_works
@@ -94,6 +104,7 @@ class PressCatalogController < ::CatalogController
       end
     end
 
+    instrument_method
     def conditional_blacklight_configuration # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       if display_works.count >= 9
         # per page
@@ -168,6 +179,7 @@ class PressCatalogController < ::CatalogController
       blacklight_config.add_sort_field 'title desc', sort: "title_si desc", label: "Title (Z-A)"
     end
 
+    instrument_method
     def add_counter_stat
       CounterService.for_press(self, @press).count(search: 1) if @search_ongoing
     end
