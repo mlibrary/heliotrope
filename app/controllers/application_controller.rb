@@ -59,6 +59,7 @@ class ApplicationController < ActionController::Base
     @current_institutions ||= current_actor.institutions
   end
 
+  instrument_method
   def auth_for(entity)
     @auth ||= Auth.new(current_actor, entity) # rubocop:disable Naming/MemoizedInstanceVariableName
   end
