@@ -1,7 +1,10 @@
 <% provide :page_title, @search_ongoing ? "#{@press.name} results - page #{@response.current_page} of #{@response.total_pages}" : @press.name %>
 <% provide :page_class, 'press' %>
 <div id="maincontent">
-  <% if has_facet_values?(facet_field_names, @response)  %>
+  <%# To keep the press landing pages looking tidy we don't show the facet sidebar when a press has very few books (results) to begin with. %>
+  <%# But obviously the sidebar needs to be shown when any facet query is in use, be it our custom `user_access` "fake facet", or a Blacklight `_sim` facet field. %>
+  <%# To achieve this we've add all the logic after Blacklight's `has_facet_values?(facet_field_names, @response)` %>
+  <% if has_facet_values?(facet_field_names, @response) && (@response['response']['numFound'] >= 9 || params[:user_access].present? || params[:f]&.keys&.any? { |key| key.end_with?('_sim') } ) %>
   <div class="row">
     <div class="col-sm-12"><h2>Search and Browse Books</h2></div>
   </div>
