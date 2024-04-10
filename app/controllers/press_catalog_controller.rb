@@ -3,8 +3,8 @@
 class PressCatalogController < ::CatalogController
   include Skylight::Helpers
   before_action :load_press
-  before_action :load_actor_product_ids
-  before_action :load_allow_read_product_ids
+  before_action :load_actor_product_ids, except: %i[facet]
+  before_action :load_allow_read_product_ids, except: %i[facet]
   before_action :conditional_blacklight_configuration
   before_action :wayfless_redirect_to_shib_login, only: %i[index]
   after_action :add_counter_stat, only: %i[index]
@@ -63,7 +63,9 @@ class PressCatalogController < ::CatalogController
     instrument_method
     def load_press
       @press = Press.find_by(subdomain: params['press'])
-      auth_for(Sighrax::Publisher.from_press(@press))
+      # HELIO-4636 Don't do auth_for for facets since it's expensive and not needs (probably)
+      # Oddly :before_action wasn't working in specs for this so awkwardly match on action_name instead
+      auth_for(Sighrax::Publisher.from_press(@press)) unless self.action_name == "facet"
       return @press if @press.present?
 
       render file: Rails.root.join('public', '404.html'), status: :not_found, layout: false

@@ -2,6 +2,8 @@
 
 module Sighrax
   class Publisher
+    include Skylight::Helpers
+
     private_class_method :new
 
     attr_reader :subdomain
@@ -57,6 +59,7 @@ module Sighrax
       children
     end
 
+    instrument_method
     def work_noids(recursive = false)
       subdomains = recursive ? press.children.pluck(:subdomain) : []
       subdomains = subdomains.push(subdomain).uniq
@@ -64,6 +67,7 @@ module Sighrax
       docs.map { |doc| doc['id'] }.uniq
     end
 
+    instrument_method
     def resource_noids(recursive = false)
       resource_noids = []
       work_noids(recursive).each do |noid|
