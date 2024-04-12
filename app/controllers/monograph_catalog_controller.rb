@@ -2,12 +2,13 @@
 
 class MonographCatalogController < ::CatalogController
   include IrusAnalytics::Controller::AnalyticsBehaviour
+  include Skylight::Helpers
 
   before_action :load_presenter, only: %i[index facet purchase]
+  before_action :monograph_auth_for, only: %i[index purchase]
   before_action :load_press_presenter, only: %i[index purchase]
   before_action :wayfless_redirect_to_shib_login, only: %i[index]
   after_action :add_counter_stat, only: %i[index]
-  # after_action :send_irus_analytics_investigation, only: %i[index]
 
   self.theme = 'hyrax'
   with_themed_layout 'catalog'
@@ -99,12 +100,21 @@ class MonographCatalogController < ::CatalogController
 
   private
 
+    instrument_method
     def load_presenter
       retries ||= 0
       monograph_id = params[:monograph_id] || params[:id]
       @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
       raise PageNotFoundError if @monograph_presenter.nil?
       raise CanCan::AccessDenied unless current_ability&.can?(:read, @monograph_presenter)
+    rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http => e
+      Rails.logger.error(%Q|[RSOLR ERROR TRY:#{retries}] #{e} #{e.backtrace.join("\n")}|)
+      retries += 1
+      retry if retries < 3
+    end
+
+    instrument_method
+    def monograph_auth_for
       auth_for(Sighrax.from_presenter(@monograph_presenter))
       @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
       # For Access Icons HELIO-3346
@@ -115,21 +125,19 @@ class MonographCatalogController < ::CatalogController
       # never show up if there is no published ebook for CSB to use! This is important for the "Forthcoming" workflow.
       @show_read_button = @monograph_presenter.reader_ebook? && @monograph_presenter&.reader_ebook['visibility_ssi'] == 'open'
       @disable_read_button = disable_read_button?
-    rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http => e
-      Rails.logger.error(%Q|[RSOLR ERROR TRY:#{retries}] #{e} #{e.backtrace.join("\n")}|)
-      retries += 1
-      retry if retries < 3
     end
 
     def load_press_presenter
       @press_presenter = PressPresenter.for(@monograph_presenter.subdomain)
     end
 
+    instrument_method
     def disable_read_button?
       return true if @monograph_presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? && @monograph_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :restricted
       false
     end
 
+    instrument_method
     def add_counter_stat
       # HELIO-2292
       return unless @monograph_presenter.epub? || @monograph_presenter.pdf_ebook? || @monograph_presenter.mobi?

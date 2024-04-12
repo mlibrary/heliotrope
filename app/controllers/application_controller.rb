@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  include Skylight::Helpers
   # Remember where a user is to redirect to on sign in and sign out
   # https://github.com/plataformatec/devise/wiki/How-To:-Redirect-back-to-current-page-after-sign-in,-sign-out,-sign-up,-update
   # The callback which stores the current location must be added before you authenticate the user
@@ -58,6 +59,7 @@ class ApplicationController < ActionController::Base
     @current_institutions ||= current_actor.institutions
   end
 
+  instrument_method
   def auth_for(entity)
     @auth ||= Auth.new(current_actor, entity) # rubocop:disable Naming/MemoizedInstanceVariableName
   end
@@ -90,6 +92,7 @@ class ApplicationController < ActionController::Base
 
   private
 
+    instrument_method
     def request_attributes
       @request_attributes ||= Services.request_attributes.for(request)
     end
