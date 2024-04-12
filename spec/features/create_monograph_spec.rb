@@ -37,6 +37,9 @@ describe 'Create a monograph' do
       fill_in 'Language', with: 'English'
       fill_in 'Series', with: 'The Cereal Series'
       fill_in 'Section Titles', with: 'Intro\nChapter 1\nChapter 2'
+      # HELIO-4536
+      expect(page).to_not have_css('input.monograph_buy_url.multi_value', count: 1)
+      expect(page).to have_css('input#monograph_buy_url', count: 1)
       fill_in 'Buy Book URL', with: 'http://www.example.com/buy'
       select 'Creative Commons Public Domain Mark 1.0', from: 'License'
       fill_in 'Rightsholder', with: 'Blahdy Blah Rightsholder'
