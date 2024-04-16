@@ -168,6 +168,8 @@ gem 'pragmatic_segmenter', '~> 0.3'
 # Turn page image epub chapters into pdfs
 gem 'prawn', '~> 2.2'
 
+gem 'rack-attack'
+
 gem 'redcarpet', '~> 3.5.1'
 
 # see HELIO-4484 and https://github.com/samvera/hyrax/pull/5961
