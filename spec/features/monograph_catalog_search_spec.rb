@@ -113,15 +113,15 @@ describe 'Monograph Catalog Search' do
 
     # Monograph catalog defaults to list view
     expect(page).to have_css(".view-type-group.btn-group[role=tablist]")
-    expect(page).to have_css("a.btn.btn-default.view-type-list.active[href*='view=list'][role=tab][aria-selected=true]")
-    expect(page).to have_css("a.btn.btn-default.view-type-gallery[href*='view=gallery'][role=tab][aria-selected=false]")
+    expect(page).to have_css("a.btn.btn-outline-secondary.btn-icon.view-type-list.active[href*='view=list'][role=tab][aria-selected=true]")
+    expect(page).to have_css("a.btn.btn-outline-secondary.btn-icon.view-type-gallery[href*='view=gallery'][role=tab][aria-selected=false]")
 
     # also check gallery view
     visit monograph_catalog_path id: monograph.id, view: 'gallery'
 
     expect(page).to have_css(".view-type-group.btn-group[role=tablist]")
-    expect(page).to have_css("a.btn.btn-default.view-type-list[href*='view=list'][role=tab][aria-selected=false]")
-    expect(page).to have_css("a.btn.btn-default.view-type-gallery.active[href*='view=gallery'][role=tab][aria-selected=true]")
+    expect(page).to have_css("a.btn.btn-outline-secondary.btn-icon.view-type-list[href*='view=list'][role=tab][aria-selected=false]")
+    expect(page).to have_css("a.btn.btn-outline-secondary.btn-icon.view-type-gallery.active[href*='view=gallery'][role=tab][aria-selected=true]")
 
     expect(page).to have_selector("#documents.row.documents-gallery")
     expect(page).to have_selector(".documents-gallery .document .thumbnail .caption")
