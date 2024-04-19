@@ -89,13 +89,45 @@ class Auth
   end
 
   instrument_method
-  def publisher_work_noids
-    @publisher_work_noids ||= @publisher.work_noids(true)
+  def product_ids_from_press
+    return @product_ids_from_press if @product_ids_from_press.present?
+
+    # Use facets to get unique product ids for all monographs in a press
+    solr_params = {
+      'facet.field' => 'products_lsim',
+      'facet' => 'on',
+      'facet.limit' => '-1', # no limit
+      'rows' => 0 # don't return any actual solr docs
+    }
+
+    # Include children presses
+    subdomains = @publisher.children.map(&:subdomain) || []
+    subdomains.push(@publisher.subdomain)
+    all_presses = '("' + subdomains.join('" OR "') + '")'
+
+    response = ActiveFedora::SolrService.get("+press_sim:#{all_presses} +has_model_ssim:Monograph", solr_params)
+    #
+    # response["facet_counts"]["facet_fields"]["products_lsim"] has key/values in an array like:
+    # ["24", 1570, "22", 597, "-1", 381, "90", 316, "0", 173...]
+    # It also includes product_lsim that have 0 values.
+    # Facets basically get all the products even if no books from this press are in that product.
+    #
+    # We don't need those "empty" products.
+    # We don't need the "-1" Open Access product because all OA books will have -1 which is not helpful for this
+    # We don't need "0" No Product product since those don't have components, it's just a placeholder product
+    #
+    products_lsim = response["facet_counts"]["facet_fields"]["products_lsim"]
+    @products_ids_from_press = products_lsim.each_slice(2).filter_map { |k, v| k if v != 0 && k != "-1" && k != "0" }.compact
+  end
+
+  instrument_method
+  def components_in_press?
+    @components_in_press ||= Greensub::ComponentsProduct.where(product_id: product_ids_from_press).present?
   end
 
   instrument_method
   def publisher_restricted_content?
-    @publisher_restricted_content ||= Greensub::Component.where(noid: publisher_work_noids).any? &&
+    @publisher_restricted_content ||= components_in_press? &&
                                       (publisher_subscribing_institutions - Greensub::Institution.where(identifier: Settings.world_institution_identifier)).present?
   end
 
@@ -117,7 +149,7 @@ class Auth
 
     return @publisher_subscribing_institutions = [] unless @publisher.valid?
 
-    @publisher_subscribing_institutions = subscribing_institutions(publisher_work_noids)
+    @publisher_subscribing_institutions = subscribing_institutions_from_product_ids(product_ids_from_press)
   end
 
   instrument_method
@@ -163,10 +195,9 @@ class Auth
   instrument_method
   def monograph_subscribing_institutions
     return @monograph_subscribing_institutions unless @monograph_subscribing_institutions.nil?
-
     return @monograph_subscribing_institutions = [] unless @monograph.valid?
 
-    @monograph_subscribing_institutions = subscribing_institutions(@monograph.noid)
+    @monograph_subscribing_institutions = subscribing_institutions_from_product_ids(@monograph.product_ids)
   end
 
   instrument_method
@@ -191,10 +222,7 @@ class Auth
 
   private
 
-    instrument_method
-    def subscribing_institutions(noids)
-      component_ids = Greensub::Component.where(noid: noids).pluck(:id).uniq
-      product_ids = Greensub::ComponentsProduct.where(component_id: component_ids).pluck(:product_id).uniq
+    def subscribing_institutions_from_product_ids(product_ids)
       institution_ids = Greensub::License.where(product_id: product_ids, licensee_type: Greensub::Institution.to_s).pluck(:licensee_id).uniq
       Greensub::Institution.where(id: institution_ids).to_a
     end

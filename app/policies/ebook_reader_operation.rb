@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class EbookReaderOperation < EbookOperation
+  include Skylight::Helpers
+
+  instrument_method
   def allowed?
     return true if can? :read
 

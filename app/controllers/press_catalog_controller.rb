@@ -37,6 +37,16 @@ class PressCatalogController < ::CatalogController
     super
   end
 
+  instrument_method
+  def index
+    super
+  end
+
+  instrument_method
+  def show
+    super
+  end
+
   # If the params specify a view, then store it in the session. If the params
   # do not specify the view, set the view parameter to the value stored in the
   # session. This enables a user with a session to do subsequent searches and have

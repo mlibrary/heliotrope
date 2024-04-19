@@ -72,6 +72,12 @@ module Sighrax
       Greensub::Product.containing_monograph(noid)
     end
 
+    def product_ids
+      # We could do this as above via Greensub::Product.containing_monograph(noid)
+      # but I think this works too and is faster since it's already on the monograph
+      vector('products_lsim')
+    end
+
     def publication_year
       match = /(\d{4})/.match(scalar('date_created_tesim'))
       return match[1] if match.present?

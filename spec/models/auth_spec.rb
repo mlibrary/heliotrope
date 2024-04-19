@@ -304,19 +304,19 @@ RSpec.describe Auth, type: :model do
     context 'subscribing institutions' do
       let(:press) { create(:press) }
       let(:publisher) { Sighrax::Publisher.from_press(press) }
-      let(:noids) { ['validnoid'] }
+      let(:product_ids) { [] }
       let(:institutions) { ['institution'] }
 
       before do
-        allow(publisher).to receive(:work_noids).with(true).and_return(noids)
-        allow_any_instance_of(Auth).to receive(:subscribing_institutions).and_return([])
-        allow_any_instance_of(Auth).to receive(:subscribing_institutions).with(noids).and_return(institutions)
+        allow_any_instance_of(Auth).to receive(:subscribing_institutions_from_product_ids).and_return(institutions)
+        allow_any_instance_of(Auth).to receive(:subscribing_institutions_from_product_ids).with(product_ids).and_return(institutions)
       end
 
       it { is_expected.to be_empty }
 
       context 'Publisher' do
         let(:entity) { publisher }
+        let(:product_ids) { ['1', '2'] }
 
         it { is_expected.to be institutions }
       end
@@ -388,14 +388,18 @@ RSpec.describe Auth, type: :model do
       let(:institutions) { ['institution'] }
 
       before do
-        allow_any_instance_of(Auth).to receive(:subscribing_institutions).and_return([])
-        allow_any_instance_of(Auth).to receive(:subscribing_institutions).with(monograph.noid).and_return(institutions)
+        allow_any_instance_of(Auth).to receive(:subscribing_institutions_from_product_ids).and_return([])
       end
 
       it { is_expected.to be_empty }
 
       context 'Monograph' do
         let(:entity) { monograph }
+
+        before do
+          allow(monograph).to receive(:product_ids)
+          allow_any_instance_of(Auth).to receive(:subscribing_institutions_from_product_ids).with(monograph.product_ids).and_return(institutions)
+        end
 
         it { is_expected.to be institutions }
       end
