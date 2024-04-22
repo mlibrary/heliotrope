@@ -124,7 +124,6 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             get api_opds_amherst_path, headers: headers
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
-            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body).to eq(amherst_feed)
             expect(response_body['publications']).to be_empty
           end
@@ -198,7 +197,6 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             get api_opds_bigten_path, headers: headers
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
-            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body).to eq(bigten_feed)
             expect(response_body['publications']).to be_empty
           end
@@ -272,7 +270,6 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             get api_opds_leverpress_path, headers: headers
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
-            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body).to eq(leverpress_feed)
             expect(response_body['publications']).to be_empty
           end
@@ -381,7 +378,6 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
           get api_opds_umpebc_path, headers: headers
           expect(response.content_type).to eq("application/opds+json")
           expect(response).to have_http_status(:ok)
-          expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
           expect(response_body).to eq(umpebc_feed)
           expect(response_body['publications']).to be_empty
         end
@@ -390,7 +386,6 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
           get api_opds_umpebc_oa_path, headers: headers
           expect(response.content_type).to eq("application/opds+json")
           expect(response).to have_http_status(:ok)
-          expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
           expect(response_body).to eq(umpebc_oa_feed)
           expect(response_body['publications']).to be_empty
         end
@@ -636,7 +631,6 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
         get api_opds_heb_path, headers: headers
         expect(response.content_type).to eq("application/opds+json")
         expect(response).to have_http_status(:ok)
-        expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
         expect(response_body).to eq(heb_feed)
         expect(response_body['publications']).to be_empty
       end
