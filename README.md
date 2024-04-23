@@ -43,7 +43,7 @@ In addition to the [features that come with Hyrax](https://github.com/samvera/hy
 * Integration with [Jekyll](https://jekyllrb.com/) static-site generator for "aboutware" static pages and blog.
 
 # Help/Contact
-For additional details and helpful hints [read our ever growing Wiki](https://github.com/mlibrary/heliotrope/wiki). To get in touch with us over e-mail, contact the [Fulcrum Developers List](mailto:fulcrum-dev@umich.edu). To stay updated with developments in Heliotrope and Fulcrum, [sign-up for our newsletter](https://www.fulcrum.org/#get-updates).
+For additional details and helpful hints [read our ever growing Wiki](https://github.com/mlibrary/heliotrope/wiki). To get in touch with us over e-mail, contact the [Fulcrum Developers List](mailto:fulcrum-dev@umich.edu).
 
 # Getting started
 
