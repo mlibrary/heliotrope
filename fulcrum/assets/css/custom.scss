@@ -161,7 +161,7 @@ p.blurb {
   }
 
   img.vertical {
-    max-height: 245px;
+    max-height: 150px;
     width: auto;
   }
 
@@ -194,6 +194,7 @@ hr.brand {
 // case studies
 .case-study {
   padding-bottom: 4rem;
+  padding-top: 2rem;
 
   .row {
     margin-bottom: 5em;
@@ -234,6 +235,11 @@ hr.brand {
 
   .project-info h3 {
     font-style: italic;
+
+    em {
+      font-style: normal;
+      color: #002C63;
+    }
   }
 
   a.btn-large {
@@ -253,7 +259,8 @@ hr.brand {
 }
 
 .sponsor a {
-  color: #002C63;
+  color: #FFF;
+  border-bottom: 2px solid #fff;  
 }
 
 // Terms
@@ -286,11 +293,14 @@ footer.page-footer {
 
 // About
 .team {
-  ul li {
+  ul {
+   padding-left: 1em !important;
+
+   li {
     list-style: none !important;
-    text-align: center;
-    margin-bottom: 2em !important;
-    font-size: .9em;
+    text-align: left;
+    margin-bottom: 1em !important;
+    font-size: 1em;
 
     span.image {
       display: block;
@@ -319,6 +329,7 @@ footer.page-footer {
       font-weight: 300;
       font-size: .8em;
     }
+  }
   }
 }
 
