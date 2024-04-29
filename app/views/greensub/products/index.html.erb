@@ -1,6 +1,6 @@
 <div id="maincontent">
-  <% index = true %>
-  <% if @component.present? %>
+<% index = true %>
+<% if @component.present? %>
     <h1><%= link_to @component.identifier, greensub_component_path(@component) %> Products</h1>
     <form name="filter" method="get" action="<%= greensub_component_products_path(@component) %>">
 <% elsif @individual.present? %>
@@ -14,18 +14,22 @@
     <h1>Products</h1>
     <form name="filter" method="get" action="<%= greensub_products_path %>">
 <% end %>
-    <% if index %>
+<% if index %>
     <span><%= link_to "Index", greensub_products_path %></span>
-    <% end %>
+<% end %>
     <b>
-      <div class="col-md-12"><hr/></div>
-      <div class="col-md-10">
-        <div class="col-md-1">
+      <div class="row">
+        <div class="col-md-12"><hr/></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
           <div>ID</div>
           <div>&nbsp;</div>
           <div><button name="submit" type="submit" value="filter">Filter</button></div>
         </div>
-        <div class="col-md-9">
+      </div>
+      <div class="row">
+        <div class="col-md-12">
           <% size = 24 %>
           <div class="col-md-3">Identifier</div><div class="col-md-9"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div>
           <div class="col-md-3">Name</div><div class="col-md-9"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div>
@@ -33,42 +37,51 @@
           <div class="col-md-3">Needs KBART</div><div class="col-md-9"><input type="text" name="needs_kbart_like" value="<%= params[:needs_kbart_like] %>" size="<%= size %>" aria-label="needs_kbart_like"></div>
           <div class="col-md-3">Group Key</div><div class="col-md-9"><input type="text" name="group_key_like" value="<%= params[:group_key_like] %>" size="<%= size %>" aria-label="group_key_like"></div>
         </div>
-        <div class="col-md-2">
-          <div>Components</div>
-          <div>Individuals</div>
-          <div>Institutions</div>
-          <div>Licenses</div>
-        </div>
       </div>
-      <div class="col-md-2"><%= link_to 'New Product', new_greensub_product_path %></div>
-      <div class="col-md-12"><hr/></div>
+      <div class="row">
+        <div class="col-md-12"><%= link_to 'New Product', new_greensub_product_path %></div>
+      </div>
+      </div class="row">
+      <div class="row">
+        <div class="col-md-12"><hr/></div>
+      </div>
     </b>
   </form>
 
-  <% @products.each do |product| %>
-    <div class="col-md-10">
-      <div class="col-md-1"><%= product.id %></div>
-      <div class="col-md-9">
-        <div><%= product.identifier %></div>
-        <div><%= product.name %></div>
-        <div><%= link_to product.purchase, product.purchase %>&nbsp;</div>
-        <div><%= product.needs_kbart %></div>
-        <div><%= product.group_key %></div>
-      </div>
-      <div class="col-md-2">
-        <div class="col-md-6">C</div><div class="col-md-6"><%= link_to product.components.count, greensub_product_components_path(product) %></div>
-        <div class="col-md-6">V</div><div class="col-md-6"><%= link_to product.individuals.count, greensub_product_individuals_path(product) %></div>
-        <div class="col-md-6">I</div><div class="col-md-6"><%= link_to product.institutions.count, greensub_product_institutions_path(product) %></div>
-        <div class="col-md-6">L</div><div class="col-md-6"><%= link_to product.licenses.count, greensub_product_licenses_path(product) %></div>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="col-md-4"><%= link_to 'Show', greensub_product_path(product) %></div>
-      <div class="col-md-4"><%= link_to_if product.update?, 'Edit', edit_greensub_product_path(product) %></div>
-      <div class="col-md-4"><%= link_to_if product.destroy?, 'Destroy', greensub_product_path(product), method: :delete, data: { confirm: 'Are you sure?' } %></div>
-    </div>
-    <div class="col-md-12"><hr/></div>
+<table class="table table-striped table-responsive" summary="Table of Products">
+  <thead>
+    <th>ID</th>
+    <th>Identifier</th>
+    <th>Name</th>
+    <th>Purchase Link</th>
+    <th>Needs Kbart</th>
+    <th>Group Key</th>
+    <th>Components</th>
+    <th>Individuals</th>
+    <th>Institutions</th>
+    <th>Licenses</th>
+    <th>Show</th>
+    <th>Edit</th>
+    <th>Delete</th>
+  </thead>
+  <tbody>
+<% @products.each do |product| %>
+    <tr>
+      <td><%= product.id %></td>
+      <td><%= product.identifier %></td>
+      <td><%= product.name %></td>
+      <td><%= link_to product.purchase, product.purchase %>&nbsp;</td>
+      <td><%= product.needs_kbart %></td>
+      <td><%= product.group_key %></td>
+      <td><%= link_to product.components.count, greensub_product_components_path(product) %></td>
+      <td><%= link_to product.individuals.count, greensub_product_individuals_path(product) %></td>
+      <td><%= link_to product.institutions.count, greensub_product_institutions_path(product) %></td>
+      <td><%= link_to product.licenses.count, greensub_product_licenses_path(product) %></td>
+      <td><%= link_to 'Show', greensub_product_path(product) %></td>
+      <td><%= link_to_if product.update?, 'Edit', edit_greensub_product_path(product) %></td>
+      <td><%= link_to_if product.destroy?, 'Destroy', greensub_product_path(product), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
 <% end %>
-
-  <div class="col-md-12"><%= paginate @products %>&nbsp;</div>
+  </tbody>
+</table>
 </div>

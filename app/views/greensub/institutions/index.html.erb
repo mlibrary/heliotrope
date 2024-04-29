@@ -7,52 +7,62 @@
     <form name="filter" method="get" action="<%= greensub_institutions_path %>">
   <% end %>
     <b>
-      <div class="col-md-12"><hr/></div>
-      <div class="col-md-10">
-        <div class="col-md-1">
-          <div>ID</div>
-          <div>&nbsp;</div>
-          <div><button name="submit" type="submit" value="filter">Filter</button></div>
-        </div>
-        <div class="col-md-9">
-          <% size = 24 %>
-          <div><div class="col-md-3">Identifier</div><div class="col-md-9"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div></div>
-          <div><div class="col-md-3">Name</div><div class="col-md-9"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div></div>
-          <div><div class="col-md-3">Display Name</div><div class="col-md-9"><input type="text" name="display_name_like" value="<%= params[:display_name_like] %>" size="<%= size %>" aria-label="display_name_like"></div></div>
-          <div><div class="col-md-3">Entity&nbsp;ID</div><div class="col-md-9"><input type="text" name="entity_id_like" value="<%= params[:entity_id_like] %>" size="<%= size %>" aria-label="entity_id_like"></div></div>
-        </div>
-        <div class="col-md-2">
-          <div>Affiliations</div>
-          <div>Licenses</div>
-          <div>Products</div>
+      <div class="row">
+        <div class="col-md-12"><hr/></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-2">
+            <div>ID</div>
+            <div>&nbsp;</div>
+            <div><button name="submit" type="submit" value="filter">Filter</button></div>
+          </div>
+          <div class="col-md-10">
+            <% size = 24 %>
+            <div><div class="col-md-3">Identifier</div><div class="col-md-9"><input type="text" name="identifier_like" value="<%= params[:identifier_like] %>" size="<%= size %>" aria-label="identifier_like"></div></div>
+            <div><div class="col-md-3">Name</div><div class="col-md-9"><input type="text" name="name_like" value="<%= params[:name_like] %>" size="<%= size %>" aria-label="name_like"></div></div>
+            <div><div class="col-md-3">Display Name</div><div class="col-md-9"><input type="text" name="display_name_like" value="<%= params[:display_name_like] %>" size="<%= size %>" aria-label="display_name_like"></div></div>
+            <div><div class="col-md-3">Entity&nbsp;ID</div><div class="col-md-9"><input type="text" name="entity_id_like" value="<%= params[:entity_id_like] %>" size="<%= size %>" aria-label="entity_id_like"></div></div>
+          </div>
         </div>
       </div>
-      <div class="col-md-2"><%= link_to 'New Institution', new_greensub_institution_path %></div>
+      <div class="row">
+        <div class="col-md-12"><%= link_to 'New Institution', new_greensub_institution_path %></div>
+      </div>
     </b>
-  <div class="col-md-12"><hr/></div>
   </form>
 
+<table class="table table-striped table-responsive" summary="Table of Products">
+  <thead>
+    <th>ID</th>
+    <th>Identifier</th>
+    <th>Name</th>
+    <th>Display Name</th>
+    <th>Entity ID</th>
+    <th>Institution Affiliations</th>
+    <th>Licenses</th>
+    <th>Products</th>
+    <th>Show</th>
+    <th>Edit</th>
+    <th>Destroy</th>
+  </thead>
+  <tbody>
   <% @institutions.each do |institution| %>
-    <div class="col-md-10">
-      <div class="col-md-1"><%= institution.id %></div>
-      <div class="col-md-9">
-        <div><%= institution.identifier %></div>
-        <div><%= institution.name %></div>
-        <div><%= institution.display_name %></div>
-        <div><%= institution.entity_id %></div>
-      </div>
-      <div class="col-md-2">
-        <div class="col-md-6">A</div><div class="col-md-6"><%= link_to institution.institution_affiliations.count, greensub_institution_inst_affiliations_path(institution) %></div>
-        <div class="col-md-6">L</div><div class="col-md-6"><%= link_to institution.licenses.count, greensub_institution_licenses_path(institution) %></div>
-        <div class="col-md-6">P</div><div class="col-md-6"><%= link_to institution.products.count, greensub_institution_products_path(institution) %></div>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="col-md-4"><%= link_to 'Show', greensub_institution_path(institution) %></div>
-      <div class="col-md-4"><%= link_to_if institution.update?, 'Edit', edit_greensub_institution_path(institution) %></div>
-      <div class="col-md-4"><%= link_to_if institution.destroy?, 'Destroy', greensub_institution_path(institution), method: :delete, data: { confirm: 'Are you sure?' } %></div>
-    </div>
-    <div class="col-md-12"><hr/></div>
+    <tr>
+      <td><%= institution.id %></td>
+      <td><%= institution.identifier %></td>
+      <td><%= institution.name %></td>
+      <td><%= institution.display_name %></td>
+      <td><%= institution.entity_id %></td>
+      <td><%= link_to institution.institution_affiliations.count, greensub_institution_inst_affiliations_path(institution) %></td>
+      <td><%= link_to institution.licenses.count, greensub_institution_licenses_path(institution) %></td>
+      <td><%= link_to institution.products.count, greensub_institution_products_path(institution) %></td>
+      <td><%= link_to 'Show', greensub_institution_path(institution) %></td>
+      <td><%= link_to_if institution.update?, 'Edit', edit_greensub_institution_path(institution) %></td>
+      <td><%= link_to_if institution.destroy?, 'Destroy', greensub_institution_path(institution), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
   <% end %>
-  <div class="col-md-12">&nbsp;<%= paginate @institutions %></div>
+  </tbody>
+</table>
+<div class="col-md-12">&nbsp;<%= paginate @institutions %></div>
 </div>

@@ -167,7 +167,7 @@ module Greensub
     end
 
     def products
-      Product.where(id: licenses.pluck(:product_id)).uniq
+      Product.where(id: licenses.pluck(:product_id)).distinct
     end
 
     def licenses?
