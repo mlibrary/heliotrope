@@ -22,6 +22,16 @@ describe 'Create a monograph' do
       expect(page).to have_css('input#monograph_date_published', count: 1)
       expect(page.find('input#monograph_date_published')['value']).to eq(nil)
 
+      # HELIO-4649: we only want Description (metadata) and Files tabs on the Monograph edit page
+      # tab links
+      expect(page).to have_link('Description', href: '#metadata')
+      expect(page).to have_link('Files', href: '#files')
+      expect(page).not_to have_link('Relationships', href: '#relationships')
+      # tab panels
+      expect(page).to have_css("#metadata[role='tabpanel']")
+      expect(page).to have_css("#files[role='tabpanel']")
+      expect(page).not_to have_css("#relationships[role='tabpanel']")
+
       # HELIO-3094
       expect(page).not_to have_selector '#monograph_visibility_authenticated' # institutional access
       expect(page).not_to have_selector '#monograph_visibility_embargo'

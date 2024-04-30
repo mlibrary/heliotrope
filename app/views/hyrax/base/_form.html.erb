@@ -1,6 +1,9 @@
-<%# Originally added because our Hyrax version lacks this https://github.com/samvera/hyrax/pull/4080 %>
-<%# but field validation errors are also missing from Hyrax (the `f.object.errors.full_messages.each` stuff) %>
-<%# TODO: maybe fold those back into Hyrax cause right now field validations result in an empty alert div %>
+<%# heliotrope needs a couple of changes in this file %>
+<%# 1) field validation errors not showing up (HELIO-3454, https://github.com/mlibrary/heliotrope/pull/2811) %>
+<%#   TODO: revisit these when we get to a Hyrax version with this commit (Hyrax 5+ perhaps?) %>
+<%#   https://github.com/samvera/hyrax/commit/68513e5784d9b4699d4e47b3a719fd1b1574b0e0 %>
+<%# 2) hide the relationships tab. We don't use that at all, and it has terrible performance problems (HELIO-4649) %>
+
 <%= simple_form_for [main_app, @form],
                     html: {
                       data: { behavior: 'work-form',
@@ -10,12 +13,14 @@
   <% if f.object.errors.any? %>
     <div class="alert alert-danger alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <%# *** START heliotrope form errors *** %>
       The form contains <%= pluralize(f.object.errors.count, "error") %>:
       <ul>
         <% f.object.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
         <% end %>
       </ul>
+      <%# *** END heliotrope form errors *** %>
 
       <%= f.object.errors.full_messages_for(:base).send(SimpleForm.error_method) %>
       <%= render 'form_in_works_error', f: f %>
@@ -29,7 +34,8 @@
       <p class="switch-upload-type">To create a separate work for each of the files, go to <%= link_to 'Batch upload', hyrax.new_batch_upload_path(payload_concern: @form.model.class) %></p>
     <% end %>
   <% end %>
-  <%= render 'hyrax/base/guts4form', f: f %>
+  <%# heliotrope change - don't show relationships tab %>
+  <%= render 'hyrax/base/guts4form', f: f, tabs: %w[metadata files] %>
 <% end %>
 
 <script type="text/javascript">
