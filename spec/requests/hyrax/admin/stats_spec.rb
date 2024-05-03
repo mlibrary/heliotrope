@@ -133,6 +133,36 @@ RSpec.describe "Hyrax Admin Stats", type: :request do
         end
       end
     end
+
+    context "partial=licenses" do
+      let(:other_press) { create(:press, subdomain: "maize") }
+      let(:blue_book) { create(:monograph, title: ["Blue"], press: press.subdomain) }
+      let(:maize_book) { create(:monograph, title: ["Maize"], press: other_press.subdomain) }
+      let!(:blue_component) { create(:component, identifier: blue_book.id, name: 'Blue', noid: blue_book.id) }
+      let!(:maize_component) { create(:component, identifier: maize_book.id, name: 'Maize', noid: maize_book.id) }
+      let(:blue_product) { create(:product, identifier: "blue", name: "Blue Product") }
+      let(:maize_product) { create(:product, identifier: "maize", name: "Maize Product") }
+      let(:institution) { create(:institution) }
+
+      before do
+        blue_product.components << blue_component
+        blue_product.save!
+        maize_product.components << maize_component
+        maize_product.save!
+        institution.create_product_license(blue_product, affiliation: 'member')
+        institution.create_product_license(maize_product, affiliation: 'member')
+        sign_in(press_admin)
+      end
+
+      it 'dropdown only shows products the logged in user has permissions for' do
+        get hyrax.admin_stats_path(partial: 'licenses')
+        expect(response).to have_http_status(:ok)
+        # This is sort of dumb since we're parsing ALL the html, but the dropdown has the Blue product in it
+        expect(response.body_parts.first.match?("Blue Product")).to be true
+        # and does not have the Maize product in it
+        expect(response.body_parts.first.match?("Maize Product")).to be false
+      end
+    end
   end
 
   context "a platform_admin" do

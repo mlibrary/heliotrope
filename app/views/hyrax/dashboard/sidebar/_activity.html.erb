@@ -6,15 +6,16 @@
                                id: 'collapseUserActivity',
                                open: menu.user_activity_section? do %>
     <%= menu.nav_link(hyrax.dashboard_profile_path(current_user),
+                      class: "nav-link",
                       also_active_for: hyrax.edit_dashboard_profile_path(current_user)) do %>
       <span class="fa fa-id-card"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.profile') %></span>
     <% end %>
 
-    <%= menu.nav_link(hyrax.notifications_path) do %>
+    <%= menu.nav_link(hyrax.notifications_path, class: "nav-link") do %>
       <span class="fa fa-bell"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.notifications') %></span>
     <% end %>
 
-    <%= menu.nav_link(hyrax.transfers_path) do %>
+    <%= menu.nav_link(hyrax.transfers_path, class: "nav-link") do %>
       <span class="fa fa-arrows-h"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.transfers') %></span>
     <% end %>
   <% end %>
@@ -27,24 +28,28 @@
                                icon_class: "fa fa-bar-chart",
                                id: 'collapseReports',
                                open: menu.report_section? do %>
-    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=analytics') do %>
+    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=analytics', class: "nav-link") do %>
       <span class="fa fa-google"></span> <span class="sidebar-action-text">Google Analytics</span>
     <% end %>
 
-    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=counter') do %>
+    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=counter', class: "nav-link") do %>
       <span class="fa fa-list-ol"></span> <span class="sidebar-action-text">COUNTER Reports</span>
     <% end %>
 
-    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=altmetric') do %>
+    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=altmetric', class: "nav-link") do %>
       <span class="fa fa-circle-o"></span> <span class="sidebar-action-text">Altmetric Reports</span>
     <% end %>
 
-    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=dimensions') do %>
+    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=dimensions', class: "nav-link") do %>
       <span class="fa fa-cubes"></span> <span class="sidebar-action-text">Dimensions Reports</span>
     <% end %>
 
-    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=institution') do %>
+    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=institution', class: "nav-link") do %>
       <span class="fa fa-graduation-cap"></span> <span class="sidebar-action-text">Institution Usage</span>
+    <% end %>
+
+    <%= menu.nav_link(hyrax.admin_stats_path + ';partial=licenses', class: "nav-link") do %>
+      <span class="fa fa-ticket"></span><span class="sidebar-action-text">Product Licenses</span>
     <% end %>
   <% end %>
 </li>
