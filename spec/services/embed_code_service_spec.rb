@@ -13,6 +13,7 @@ RSpec.describe EmbedCodeService do
     let(:image) { create(:file_set, label: 'image.jpg', caption: ['Image file caption in FileSet metadata']) }
     let(:audio) { create(:file_set, label: 'audio.mp3', caption: ['Audio file caption in FileSet metadata']) }
     let(:video) { create(:file_set, label: 'video.mp4') }
+    let(:interactive_application) { create(:file_set, label: 'interactive_application.zip', resource_type: ['interactive application']) }
     let(:interactive_map) { create(:file_set, label: 'interactive_map.zip', resource_type: ['interactive map']) }
 
     let(:cover_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + cover.id) }
@@ -20,6 +21,7 @@ RSpec.describe EmbedCodeService do
     let(:image_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + image.id) }
     let(:audio_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + audio.id) }
     let(:video_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + video.id) }
+    let(:interactive_application_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + interactive_application.id) }
     let(:interactive_map_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + interactive_map.id) }
 
     let(:cover_embed_attributes) { "div[@data-href=\"#{cover_embed_url}\"][@data-title=\"#{cover.title.first}\"][@data-resource-type=\"image\"]" }
@@ -27,6 +29,7 @@ RSpec.describe EmbedCodeService do
     let(:image_embed_attributes) { "[@data-href=\"#{image_embed_url}\"][@data-title=\"#{image.title.first}\"][@data-resource-type=\"image\"]" }
     let(:audio_embed_attributes) { "[@data-href=\"#{audio_embed_url}\"][@data-title=\"#{audio.title.first}\"][@data-resource-type=\"audio\"]" }
     let(:video_embed_attributes) { "[@data-href=\"#{video_embed_url}\"][@data-title=\"#{video.title.first}\"][@data-resource-type=\"video\"]" }
+    let(:interactive_application_embed_attributes) { "[@data-href=\"#{interactive_application_embed_url}\"][@data-title=\"#{interactive_application.title.first}\"][@data-resource-type=\"interactive-application\"]" }
     let(:interactive_map_embed_attributes) { "[@data-href=\"#{interactive_map_embed_url}\"][@data-title=\"#{interactive_map.title.first}\"][@data-resource-type=\"interactive-map\"]" }
 
     # mime_type is indexed by jobs that are not run here, these lines give presenters that delegate to Solr docs...
@@ -37,6 +40,7 @@ RSpec.describe EmbedCodeService do
     let(:audio_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(audio.to_solr.merge(mime_type_ssi: 'audio/mp3')), nil) }
     let(:video_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(video.to_solr.merge(mime_type_ssi: 'video/mp4')), nil) }
     # mime_type not needed here, the switch is on resource_type metadata value
+    let(:interactive_application_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(interactive_application.to_solr), nil) }
     let(:interactive_map_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(interactive_map.to_solr), nil) }
 
     before do
@@ -45,6 +49,7 @@ RSpec.describe EmbedCodeService do
       allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [image.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([image_presenter])
       allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [audio.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([audio_presenter])
       allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [video.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([video_presenter])
+      allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [interactive_application.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([interactive_application_presenter])
       allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [interactive_map.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([interactive_map_presenter])
     end
 
@@ -75,17 +80,19 @@ RSpec.describe EmbedCodeService do
         expect(doc.search("iframe[@src=\"#{audio_embed_url}\"]")).to be_empty
         expect(doc.search(video_embed_attributes)).to be_empty
         expect(doc.search("iframe[@src=\"#{video_embed_url}\"]")).to be_empty
+        expect(doc.search(interactive_application_embed_attributes)).to be_empty
+        expect(doc.search("iframe[@src=\"#{interactive_application_embed_url}\"]")).to be_empty
         expect(doc.search(interactive_map_embed_attributes)).to be_empty
         expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
         # the `display:none` for the data attribute (additional resource) embeds off-Fulcrum are still present
-        expect(doc.search("figure[@style]").size).to eq(6)
+        expect(doc.search("figure[@style]").size).to eq(8)
       end
     end
 
     context 'Monograph has non-representative resources matching those referenced in the EPUB' do
       before do
-        monograph.ordered_members << cover << epub << image << audio << video << interactive_map
-        [monograph, epub, image, audio, video, interactive_map].each { |item| item.save! }
+        monograph.ordered_members << cover << epub << image << audio << video << interactive_application << interactive_map
+        [monograph, epub, image, audio, video, interactive_application, interactive_map].each { |item| item.save! }
         UnpackJob.perform_now(epub.id, 'epub')
       end
 
@@ -110,9 +117,11 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("iframe[@src=\"#{video_embed_url}\"]").size).to eq(1)
         end
 
-        it "inserts CSB-modal embed codes for interactive maps" do
+        it "inserts CSB-modal embed codes for interactive JavaScript applications/maps" do
           expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
           doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
+          expect(doc.search(interactive_application_embed_attributes).size).to eq(2)
+          expect(doc.search("iframe[@src=\"#{interactive_application_embed_url}\"]")).to be_empty
           expect(doc.search(interactive_map_embed_attributes).size).to eq(2)
           expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
         end
@@ -138,11 +147,16 @@ RSpec.describe EmbedCodeService do
           # the video embed has a <figcaption> present in the EPUB XHTML file,...
           # and the FileSet metadata has no caption. Nothing is changed.
           expect(doc.search("figcaption:contains('Video file caption in the EPUB file')").size).to eq(1)
+          # the first interactive application embed doesn't have a <figcaption> present in the EPUB XHTML file,...
+          # and the FileSet metadata has no caption. A generic <figcaption> is inserted.
+          expect(doc.search("figcaption:contains('Additional Interactive Application Resource')").size).to eq(1)
+          # the second interactive application has a <figcaption> present in the EPUB, so this is left as-is
+          expect(doc.search("figcaption:contains('Fig. 1.5. An image representing the interactive application')").size).to eq(1)
           # the first interactive map embed doesn't have a <figcaption> present in the EPUB XHTML file,...
           # and the FileSet metadata has no caption. A generic <figcaption> is inserted.
           expect(doc.search("figcaption:contains('Additional Interactive Map Resource')").size).to eq(1)
           # the second interactive map has a <figcaption> present in the EPUB, so this is left as-is
-          expect(doc.search("figcaption:contains('Fig. 1.5. An image representing the interactive map')").size).to eq(1)
+          expect(doc.search("figcaption:contains('Fig. 1.7. An image representing the interactive map')").size).to eq(1)
         end
 
         it 'are always positioned after the iframe embeds or modal-embed-opening buttons' do
@@ -158,6 +172,12 @@ RSpec.describe EmbedCodeService do
           expect(figure.last_element_child.name).to eq('figcaption')
 
           figure = doc.search("figure[data-fulcrum-embed-filename='video.mp4']").first
+          expect(figure.last_element_child.name).to eq('figcaption')
+
+          expect(doc.search("figure[data-fulcrum-embed-filename='interactive_application.zip']").size).to eq(2)
+          figure = doc.search("figure[data-fulcrum-embed-filename='interactive_application.zip']")[0]
+          expect(figure.last_element_child.name).to eq('figcaption')
+          figure = doc.search("figure[data-fulcrum-embed-filename='interactive_application.zip']")[1]
           expect(figure.last_element_child.name).to eq('figcaption')
 
           expect(doc.search("figure[data-fulcrum-embed-filename='interactive_map.zip']").size).to eq(2)
@@ -183,9 +203,12 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("img[@alt=\"local image for video embed\"]")).to be_empty
         end
 
-        it "inserts CSB-modal embed codes for interactive maps, leaving their img tags in place" do
+        it "inserts CSB-modal embed codes for interactive JavaScript applications/maps, leaving their img tags in place" do
           expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml'))).to be true
           doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml')))
+          expect(doc.search(interactive_application_embed_attributes).size).to eq(1)
+          expect(doc.search("iframe[@src=\"#{interactive_application_embed_url}\"]")).to be_empty
+          expect(doc.search("img[@alt=\"local image for interactive application embed\"]").size).to eq(1)
           expect(doc.search(interactive_map_embed_attributes).size).to eq(1)
           expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
           expect(doc.search("img[@alt=\"local image for interactive map embed\"]").size).to eq(1)
@@ -194,7 +217,7 @@ RSpec.describe EmbedCodeService do
         it "Changes the imgs' parent p tags to div tags" do
           expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml'))).to be true
           doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_img_src_basenames.xhtml')))
-          expect(doc.search("div[@class='image']").count).to eq(4)
+          expect(doc.search("div[@class='image']").count).to eq(5)
         end
       end
 
@@ -207,23 +230,27 @@ RSpec.describe EmbedCodeService do
         expect(doc.search("iframe[@src=\"#{audio_embed_url}\"]")).to be_empty
         expect(doc.search(video_embed_attributes)).to be_empty
         expect(doc.search("iframe[@src=\"#{video_embed_url}\"]")).to be_empty
+        expect(doc.search(interactive_application_embed_attributes)).to be_empty
+        expect(doc.search("iframe[@src=\"#{interactive_application_embed_url}\"]")).to be_empty
         expect(doc.search(interactive_map_embed_attributes)).to be_empty
         expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
         # check parent `p.image` tags are *not* changed to <div> tags
-        expect(doc.search("p[@class='image']").count).to eq(4)
+        expect(doc.search("p[@class='image']").count).to eq(5)
         # check the img tags have *not* been removed
-        expect(doc.search("img").count).to eq(4)
+        expect(doc.search("img").count).to eq(5)
       end
 
       context "Monograph has more than one filename matching the EPUB file references" do
         let(:image_same_filename) { create(:file_set, label: 'image.jpg') }
         let(:audio_same_filename) { create(:file_set, label: 'audio.mp3') }
         let(:video_same_filename) { create(:file_set, label: 'video.mp4') }
+        let(:interactive_application_same_filename) { create(:file_set, label: 'interactive_application.zip', resource_type: ['interactive application']) }
         let(:interactive_map_same_filename) { create(:file_set, label: 'interactive_map.zip', resource_type: ['interactive map']) }
 
         before do
           ordered_members = [cover, epub, image, image_same_filename, audio, audio_same_filename, video,
-                             video_same_filename, interactive_map, interactive_map_same_filename]
+                             video_same_filename, interactive_application, interactive_application_same_filename,
+                             interactive_map, interactive_map_same_filename]
           monograph.ordered_members = ordered_members
           monograph.save!
           ordered_members.each { |item| item.save! }
@@ -239,10 +266,12 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("iframe[@src=\"#{audio_embed_url}\"]")).to be_empty
           expect(doc.search(video_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{video_embed_url}\"]")).to be_empty
+          expect(doc.search(interactive_application_embed_attributes)).to be_empty
+          expect(doc.search("iframe[@src=\"#{interactive_application_embed_url}\"]")).to be_empty
           expect(doc.search(interactive_map_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
           # the `display:none` for the data attribute (additional resource) embeds off-Fulcrum are still present
-          expect(doc.search("figure[@style]").size).to eq(6)
+          expect(doc.search("figure[@style]").size).to eq(8)
         end
 
         it "Does not insert embed codes for files referenced in the EPUB using img src basename matching" do
@@ -254,12 +283,14 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("iframe[@src=\"#{audio_embed_url}\"]")).to be_empty
           expect(doc.search(video_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{video_embed_url}\"]")).to be_empty
+          expect(doc.search(interactive_application_embed_attributes)).to be_empty
+          expect(doc.search("iframe[@src=\"#{interactive_application_embed_url}\"]")).to be_empty
           expect(doc.search(interactive_map_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
           # check parent `p.image` tags are *not* changed to <div> tags
-          expect(doc.search("p[@class='image']").count).to eq(4)
+          expect(doc.search("p[@class='image']").count).to eq(5)
           # check the img tags have *not* been removed
-          expect(doc.search("img").count).to eq(4)
+          expect(doc.search("img").count).to eq(5)
         end
       end
 
@@ -267,6 +298,7 @@ RSpec.describe EmbedCodeService do
         let(:image_same_basename) { create(:file_set, label: 'image.png') }
         let(:audio_same_basename) { create(:file_set, label: 'audio.ogg') }
         let(:video_same_basename) { create(:file_set, label: 'video.webm') }
+        let(:interactive_application_same_basename) { create(:file_set, label: 'interactive_application.zipx', resource_type: ['interactive application']) }
         let(:interactive_map_same_basename) { create(:file_set, label: 'interactive_map.zipx', resource_type: ['interactive map']) }
 
         # mime_type is indexed by jobs that are not run here, these lines give presenters that delegate to Solr docs...
@@ -275,16 +307,19 @@ RSpec.describe EmbedCodeService do
         let(:audio_same_basename_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(audio_same_basename.to_solr.merge(mime_type_ssi: 'audio/ogg')), nil) }
         let(:video_same_basename_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(video_same_basename.to_solr.merge(mime_type_ssi: 'video/webm')), nil) }
         # mime_type not needed here, the switch is on resource_type metadata value
+        let(:interactive_application_same_basename_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(interactive_application_same_basename.to_solr), nil) }
         let(:interactive_map_same_basename_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(interactive_map_same_basename.to_solr), nil) }
 
         before do
           allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [image.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([image_presenter])
           allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [audio.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([audio_presenter])
           allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [video.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([video_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [interactive_application.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([interactive_application_presenter])
           allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [interactive_map.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([interactive_map_presenter])
 
           ordered_members = [cover, epub, image, image_same_basename, audio, audio_same_basename, video,
-                             video_same_basename, interactive_map, interactive_map_same_basename]
+                             video_same_basename, interactive_application, interactive_application_same_basename,
+                             interactive_map, interactive_map_same_basename]
           monograph.ordered_members = ordered_members
           monograph.save!
           ordered_members.each { |item| item.save! }
@@ -305,9 +340,11 @@ RSpec.describe EmbedCodeService do
             expect(doc.search("figure[@data-fulcrum-embed-filename][@style]")).to be_empty
           end
 
-          it "Inserts CSB-modal embed codes for interactive maps" do
+          it "Inserts CSB-modal embed codes for interactive Javascript applications/maps" do
             expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
             doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
+            expect(doc.search(interactive_application_embed_attributes).size).to eq(2)
+            expect(doc.search("iframe[@src=\"#{interactive_application_embed_url}\"]")).to be_empty
             expect(doc.search(interactive_map_embed_attributes).size).to eq(2)
             expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
             # all styles removed from additional resources (especially targeting the `display:none` needed off-Fulcrum)
@@ -324,39 +361,46 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("iframe[@src=\"#{audio_embed_url}\"]")).to be_empty
           expect(doc.search(video_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{video_embed_url}\"]")).to be_empty
+          expect(doc.search(interactive_application_embed_attributes)).to be_empty
+          expect(doc.search("iframe[@src=\"#{interactive_application_embed_url}\"]")).to be_empty
           expect(doc.search(interactive_map_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{interactive_map_embed_url}\"]")).to be_empty
           # check parent `p.image` tags are *not* changed to <div> tags
-          expect(doc.search("p[@class='image']").count).to eq(4)
+          expect(doc.search("p[@class='image']").count).to eq(5)
           # check the img tags have *not* been removed
-          expect(doc.search("img").count).to eq(4)
+          expect(doc.search("img").count).to eq(5)
         end
       end
 
       context "EPUB embeds do not use correct casing on filenames or file basenames and/or have hyphens" do
         let(:weird_case_image) { create(:file_set, label: 'image1.jpg') } # referenced with incorrect casing in `fake_epub_with_embeds.epub`
         let(:hyphen_video) { create(:file_set, label: 'hyphen-video.mp4') }
+        let(:hyphen_weird_casing_interactive_application) { create(:file_set, label: 'hyphen-interactive-application.zip', resource_type: ['interactive application']) } # referenced with incorrect casing in `fake_epub_with_embeds.epub`
         let(:hyphen_weird_casing_interactive_map) { create(:file_set, label: 'hyphen-interactive-map.zip', resource_type: ['interactive map']) } # referenced with incorrect casing in `fake_epub_with_embeds.epub`
 
         let(:weird_case_image_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + weird_case_image.id) }
         let(:hyphen_video_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + hyphen_video.id) }
+        let(:hyphen_weird_casing_interactive_application_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + hyphen_weird_casing_interactive_application.id) }
         let(:hyphen_weird_casing_interactive_map_embed_url) { Rails.application.routes.url_helpers.embed_url(hdl: HandleNet::FULCRUM_HANDLE_PREFIX + hyphen_weird_casing_interactive_map.id) }
 
         let(:weird_case_image_embed_attributes) { "[@data-href=\"#{weird_case_image_embed_url}\"][@data-title=\"#{weird_case_image.title.first}\"][@data-resource-type=\"image\"]" }
         let(:hyphen_video_embed_attributes) { "[@data-href=\"#{hyphen_video_embed_url}\"][@data-title=\"#{hyphen_video.title.first}\"][@data-resource-type=\"video\"]" }
+        let(:hyphen_weird_casing_interactive_application_embed_attributes) { "[@data-href=\"#{hyphen_weird_casing_interactive_application_embed_url}\"][@data-title=\"#{hyphen_weird_casing_interactive_application.title.first}\"][@data-resource-type=\"interactive-application\"]" }
         let(:hyphen_weird_casing_interactive_map_embed_attributes) { "[@data-href=\"#{hyphen_weird_casing_interactive_map_embed_url}\"][@data-title=\"#{hyphen_weird_casing_interactive_map.title.first}\"][@data-resource-type=\"interactive-map\"]" }
 
         let(:weird_case_image_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(weird_case_image.to_solr.merge(mime_type_ssi: 'image/jpeg')), nil) }
         let(:hyphen_video_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(hyphen_video.to_solr.merge(mime_type_ssi: 'video/mp4')), nil) }
+        let(:hyphen_weird_casing_interactive_application_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(hyphen_weird_casing_interactive_application.to_solr), nil) }
         let(:hyphen_weird_casing_interactive_map_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(hyphen_weird_casing_interactive_map.to_solr), nil) }
 
         before do
           allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [weird_case_image.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([weird_case_image_presenter])
           allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [hyphen_video.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([hyphen_video_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [hyphen_weird_casing_interactive_application.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([hyphen_weird_casing_interactive_application_presenter])
           allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [hyphen_weird_casing_interactive_map.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([hyphen_weird_casing_interactive_map_presenter])
 
-          monograph.ordered_members << weird_case_image << audio << hyphen_video << hyphen_weird_casing_interactive_map
-          [monograph, weird_case_image, audio, hyphen_video, hyphen_weird_casing_interactive_map].each { |item| item.save! }
+          monograph.ordered_members << weird_case_image << audio << hyphen_video << hyphen_weird_casing_interactive_application << hyphen_weird_casing_interactive_map
+          [monograph, weird_case_image, audio, hyphen_video, hyphen_weird_casing_interactive_application, hyphen_weird_casing_interactive_map].each { |item| item.save! }
           UnpackJob.perform_now(epub.id, 'epub')
         end
 
@@ -371,6 +415,8 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("iframe[@src=\"#{audio_embed_url}\"]").size).to eq(2) # one is a no-local-image example
           expect(doc.search(hyphen_video_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{hyphen_video_embed_url}\"]").size).to eq(1)
+          expect(doc.search(hyphen_weird_casing_interactive_application_embed_attributes).size).to eq(1)
+          expect(doc.search("iframe[@src=\"#{hyphen_weird_casing_interactive_application_embed_url}\"]")).to be_empty
           expect(doc.search(hyphen_weird_casing_interactive_map_embed_attributes).size).to eq(1)
           expect(doc.search("iframe[@src=\"#{hyphen_weird_casing_interactive_map_embed_url}\"]")).to be_empty
           # all styles removed from additional resources (especially targeting the `display:none` needed off-Fulcrum)

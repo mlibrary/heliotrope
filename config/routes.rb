@@ -190,6 +190,7 @@ Rails.application.routes.draw do
   get 'webgl/:id', controller: :webgls, action: :show, as: :webgl
   get 'webgl/:id/*file', controller: :webgls, action: :file, as: :webgl_file
   get 'maps/:id/*file', controller: :maps, action: :file, as: :map_file
+  get 'jsapps/:id/*file', controller: :jsapps, action: :file, as: :jsapp_file
   post 'featured_representatives', controller: :featured_representatives, action: :save
   delete 'featured_representatives', controller: :featured_representatives, action: :delete
   get 'featured_representatives', controller: :featured_representatives, action: :unpack, as: :unpack_fr

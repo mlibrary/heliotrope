@@ -1,0 +1,25 @@
+<%# Whether or not this can *actually* go fullscreen depends on the configuration of the application that is in this FileSet's zip, i.e. %>
+<%# whether `fullscreenControl` etc is set. For applications destined to be embedded in epub.js/CSB, that probably won't be the case. %>
+<%# `fs=1` param right now targets external/non-CSB embed use cases only. CSB has issues with fullscreen. See HELIO-2961 and HELIO-4024. %>
+<iframe  id="iframe-<%= @presenter.id %>" title="<%= @presenter.title %>"
+         style="height:100%; width:100%; border:none; overflow:hidden; visibility:hidden"
+         src="<%= main_app.jsapp_file_url(file_set.id, file: 'index', format: 'html') %>" <%= 'allowfullscreen="true"' if params[:fs] == '1' %>>
+  Your browser doesn't support iframes!
+</iframe>
+
+<script>
+  document.getElementById('iframe-<%= @presenter.id %>').addEventListener('load', function() {
+    let that = this;
+
+    setTimeout(function () {
+      const iframeBody = that.contentWindow.document.body;
+      // height will be set to 100% for this, thanks to the inline style above _and_ the `full-height-embed` class...
+      // on the outer iframe's html/body (the document which loads this partial).
+      // In this way, we're taking all of the available height in the "pseudo-full-screen" modal in CSB
+
+      // This centering works for the initial use case JS app, and hopefully will be harmless if such a div cannot be found
+      iframeBody.querySelector('div').style.margin = 'auto';
+      that.style.visibility = 'visible';
+    }, 300);
+  });
+</script>

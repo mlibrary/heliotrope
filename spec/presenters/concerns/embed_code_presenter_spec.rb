@@ -38,6 +38,12 @@ RSpec.describe EmbedCodePresenter do
     let(:mime_type) { nil }
     let(:resource_type) { nil }
 
+    context 'generic JavaScript application' do
+      let(:resource_type) { 'interactive application' }
+
+      it { is_expected.to be true }
+    end
+
     context 'map' do
       let(:resource_type) { 'map' }
 
@@ -82,7 +88,7 @@ RSpec.describe EmbedCodePresenter do
   end
 
   # test the old-style (CSB-embed-targeting) embed codes with inline styles, as well as the equivalent CSS styles...
-  # targeting style-less (more uniform) embed codes being by external parties, especially Janeway articles.
+  # targeting style-less (more uniform) embed codes being used by external parties, especially Janeway articles.
   describe '#embed_code and #embed_code_css' do
     let(:map_embed_code) {
       <<~END
@@ -455,6 +461,19 @@ RSpec.describe EmbedCodePresenter do
       allow(presenter).to receive(:height).and_return(1080)
       allow(dimensionless_presenter).to receive(:width).and_return('')
       allow(dimensionless_presenter).to receive(:height).and_return('')
+    end
+
+    # these embed codes are the ones used by the exporter, provided by the API and, if you're an editor, the show...
+    # page "<html />" button.
+    # They are *not* used by EmbedCodeService for interactive applications and maps.
+    context 'JavaScript application FileSet' do
+      let(:resource_type) { 'interactive application' }
+
+      # no use case for this. Just use the map embed code for expediency.
+      it 'returns the expected embed codes and css' do
+        expect(presenter.embed_code).to eq map_embed_code
+        expect(presenter.embed_code_css).to eq map_embed_code_css
+      end
     end
 
     context 'map FileSet' do

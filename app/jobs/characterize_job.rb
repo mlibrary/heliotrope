@@ -39,6 +39,8 @@ class CharacterizeJob < Hyrax::ApplicationJob
 
     if kind.present? && ['epub', 'webgl', 'pdf_ebook'].include?(kind)
       UnpackJob.perform_later(file_set.id, kind)
+    elsif /^interactive application$/i.match?(file_set.resource_type.first)
+      UnpackJob.perform_later(file_set.id, 'interactive_application')
     elsif /^interactive map$/i.match?(file_set.resource_type.first)
       UnpackJob.perform_later(file_set.id, 'interactive_map')
     end

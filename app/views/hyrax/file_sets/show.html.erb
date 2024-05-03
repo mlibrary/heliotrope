@@ -47,8 +47,8 @@
       <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
     <% end %>
 
-    <% if @presenter.interactive_map? || @presenter.webgl? %>
-      <!-- map file_set -->
+    <% if @presenter.interactive_application? || @presenter.interactive_map? || @presenter.webgl? %>
+      <!-- JS application file_set (including maps and WebGLs) -->
       <%= render "stacked_layout", presenter: @presenter %>
     <% else %>
       <!-- image, a/v, doc, or external resource file_set -->
