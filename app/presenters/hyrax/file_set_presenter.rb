@@ -155,6 +155,10 @@ module Hyrax
       solr_document['height_is']
     end
 
+    def interactive_application?
+      /^interactive application$/i.match?(resource_type.first)
+    end
+
     def interactive_map?
       /^interactive map$/i.match?(resource_type.first)
     end
@@ -265,6 +269,8 @@ module Hyrax
         'svgicon/video.svg'
       when 'audio'
         'svgicon/audio.svg'
+      when 'interactive application'
+        'svgicon/app.svg'
       when 'map', 'interactive map'
         'svgicon/map.svg'
       else
@@ -333,6 +339,8 @@ module Hyrax
                   'epub'
                 elsif eps?
                   'image_service'
+                elsif interactive_application?
+                  'interactive_application'
                 elsif interactive_map?
                   'interactive_map'
                 elsif webgl?

@@ -4,7 +4,7 @@ module EmbedCodePresenter
   extend ActiveSupport::Concern
 
   def embeddable_type?
-    image? || video? || audio? || interactive_map?
+    image? || video? || audio? || interactive_application? || interactive_map?
   end
 
   def allow_embed?
@@ -12,7 +12,7 @@ module EmbedCodePresenter
   end
 
   def embed_code
-    if video? || image? || interactive_map?
+    if video? || image? || interactive_application? || interactive_map?
       responsive_embed_code
     elsif audio?
       audio_embed_code
@@ -21,7 +21,7 @@ module EmbedCodePresenter
 
   # all the styles from the relevant embed code, which we can make available as a CSS stylesheet through DownloadsController
   def embed_code_css
-    if video? || image? || interactive_map?
+    if video? || image? || interactive_application? || interactive_map?
       responsive_embed_code_css
     elsif audio?
       audio_embed_code_css

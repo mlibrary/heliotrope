@@ -467,6 +467,12 @@ RSpec.describe Hyrax::FileSetPresenter do
     end
     # rubocop:enable RSpec/EmptyExampleGroup
 
+    context "with a JavaScript application" do
+      let(:resource_type) { 'interactive application' }
+
+      it { is_expected.to eq 'hyrax/file_sets/media_display/interactive_application' }
+    end
+
     context "with a map" do
       let(:resource_type) { 'interactive map' }
 
@@ -577,6 +583,12 @@ RSpec.describe Hyrax::FileSetPresenter do
       end
     end
     # rubocop:enable RSpec/EmptyExampleGroup
+
+    context "with a JavaScript application" do
+      let(:resource_type) { 'interactive application' }
+
+      it { is_expected.to eq 'hyrax/file_sets/media_display_embedded/interactive_application' }
+    end
 
     context "with a map" do
       let(:resource_type) { 'interactive map' }

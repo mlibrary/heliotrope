@@ -1,5 +1,4 @@
-
-<!DOCTYPE html <%= 'class="embedded-leaflet-map"'.html_safe if @presenter.image? || @presenter.interactive_map? %>>
+<!DOCTYPE html <%= 'class="full-height-embed"'.html_safe if @presenter.image? || @presenter.interactive_application? || @presenter.interactive_map? %>>
   <head>
     <title><%= content_for?(:page_title) ? yield(:page_title) : yield %></title>
 
@@ -38,7 +37,7 @@
       <%= yield(:head) %>
     <% end %>
   </head>
-  <body <%= 'class="embedded-leaflet-map"'.html_safe if @presenter.image? || @presenter.interactive_map? %>>
+  <body <%= 'class="full-height-embed"'.html_safe if @presenter.image? || @presenter.interactive_application? || @presenter.interactive_map? %>>
     <% if Settings.host == "heliotrope-preview.hydra.lib.umich.edu" %>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PTZXSV7"

@@ -48,10 +48,12 @@ class UnpackJob < ApplicationJob
       create_epub_chapters(id, root_path) # has to come after cache_epub_toc()
       epub_webgl_bridge(id, root_path, kind)
     when 'webgl'
-      unpack_webgl(id, root_path, file)
+      unpack_zipped_js_app(id, kind, root_path, file)
       epub_webgl_bridge(id, root_path, kind)
+    when 'interactive_application'
+      unpack_zipped_js_app(id, kind, root_path, file)
     when 'interactive_map'
-      unpack_map(id, root_path, file)
+      unpack_zipped_js_app(id, kind, root_path, file)
     when 'pdf_ebook'
       pdf = linearize_pdf(root_path, file)
       create_pdf_chapters(id, pdf, root_path) if File.exist? pdf
@@ -220,13 +222,7 @@ class UnpackJob < ApplicationJob
       raise "EPUB #{id} is corrupt."
     end
 
-    def create_search_index(root_path)
-      sql_lite = EPub::SqlLite.from_directory(root_path)
-      sql_lite.create_table
-      sql_lite.load_chapters
-    end
-
-    def unpack_webgl(id, root_path, file)
+    def unpack_zipped_js_app(id, kind, root_path, file)
       Zip::File.open(file.path) do |zip_file|
         zip_file.each do |entry|
           # We don't want to include the root directory, it could be named anything.
@@ -237,7 +233,13 @@ class UnpackJob < ApplicationJob
         end
       end
     rescue Zip::Error
-      raise "Webgl #{id} is corrupt."
+      raise "#{kind.titleize} #{id} is corrupt."
+    end
+
+    def create_search_index(root_path)
+      sql_lite = EPub::SqlLite.from_directory(root_path)
+      sql_lite.create_table
+      sql_lite.load_chapters
     end
 
     def make_path_entry(root_path, file_entry)
@@ -247,19 +249,5 @@ class UnpackJob < ApplicationJob
         FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
         dir = File.join(dir, sub_dir)
       end
-    end
-
-    def unpack_map(id, root_path, file)
-      Zip::File.open(file.path) do |zip_file|
-        zip_file.each do |entry|
-          # We don't want to include the root directory, it could be named anything.
-          parts = entry.name.split(File::SEPARATOR)
-          without_parent = parts.slice(1, parts.length).join(File::SEPARATOR)
-          make_path_entry(root_path, without_parent)
-          entry.extract(File.join(root_path, without_parent))
-        end
-      end
-    rescue Zip::Error
-      raise "Map #{id} is corrupt."
     end
 end

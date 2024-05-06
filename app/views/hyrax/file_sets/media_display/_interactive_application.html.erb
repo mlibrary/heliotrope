@@ -1,0 +1,28 @@
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
+<iframe id="iframe-<%= @presenter.id %>" title="<%= @presenter.title %>"
+        style="height:300px; width:100%; border:none; overflow:hidden; visibility:hidden"
+        src="<%= "#{main_app.jsapp_file_url(file_set.id, file: 'index', format: 'html')}" %>"
+        allow="fullscreen">
+  Your browser doesn't support iframes!
+</iframe>
+
+<script>
+  document.getElementById('iframe-<%= @presenter.id %>').addEventListener('load', function() {
+    console.log('stuff');
+    let that = this;
+
+    setTimeout(function () {
+      const iframeBody = that.contentWindow.document.body;
+      // these heights never seem to be quite enough. Add 15px!
+      const height = Math.max(iframeBody.scrollHeight, iframeBody.offsetHeight) + 15;
+      that.style.height = `${height}px`;
+      // This works for the initial use case JS app, and hopefully will be harmless if such a div cannot be found
+      // I think centering an app on the show page makes it look a lot better. We'll see how it goes.
+      iframeBody.querySelector('div').style.margin = 'auto';
+      that.style.visibility = 'visible';
+    }, 300);
+  });
+</script>

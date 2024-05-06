@@ -45,6 +45,8 @@ module EmbedCodeService
       'video'
     elsif file_set_presenter.audio?
       'audio'
+    elsif file_set_presenter.interactive_application?
+      'interactive-application'
     elsif file_set_presenter.interactive_map?
       'interactive-map'
     else
@@ -69,7 +71,7 @@ module EmbedCodeService
 
       figcaption = node.at('figcaption')
 
-      if file_set_presenter.interactive_map?
+      if file_set_presenter.interactive_application? || file_set_presenter.interactive_map?
         # these data attributes prompt CSB to add a button that opens the embedded FileSet in a modal
         # see https://github.com/mlibrary/cozy-sun-bear/blob/51b7e4e62be0e4b0afb6c43b08fbbc46de312204/src/utils/manglers.js#L189
         node['data-href'] = file_set_presenter.embed_link
@@ -77,8 +79,8 @@ module EmbedCodeService
         node['data-resource-type'] = resource_type(file_set_presenter)
 
         # the `data-resource-trigger` element allows us to decide where the modal-opening button will go, so we'll...
-        # add it above the <figcaption>, if the interactive map already has one in the EPUB. Otherwise put it as the...
-        # last element in the <figure> for now, given that an automatic <figcaption> will come next.
+        # add it above the <figcaption>, if the interactive application/map already has one in the EPUB. Otherwise...
+        # put it as the last element in the <figure> for now, given that an automatic <figcaption> will come next.
         # see https://github.com/mlibrary/cozy-sun-bear/blob/8fb409d269b2e7cbdaf7bd3ac46055f357dc67ee/src/utils/manglers.js#L199-L202
         if figcaption.present?
           figcaption.add_previous_sibling("<div data-resource-trigger></div>")
@@ -114,7 +116,7 @@ module EmbedCodeService
       # both embed code methods require node's parents to hold new div elements, so the parent cannot be a p
       node.parent.name = 'div' if node.parent.name == 'p'
 
-      if file_set_presenter.interactive_map?
+      if file_set_presenter.interactive_application? || file_set_presenter.interactive_map?
         # these data attributes prompt CSB to add embed modal and button
         # see https://github.com/mlibrary/cozy-sun-bear/blob/51b7e4e62be0e4b0afb6c43b08fbbc46de312204/src/utils/manglers.js#L189
         node.add_next_sibling("<div data-href=\"#{file_set_presenter.embed_link}\" " \
