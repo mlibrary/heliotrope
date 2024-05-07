@@ -140,7 +140,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
     end
   end
 
-  describe '#open_access?, #products, and #unrestricted?' do
+  describe '#open_access?, #products, #product_ids, and #unrestricted?' do
     subject { Sighrax.from_noid(monograph.id) }
 
     let(:monograph) { create(:public_monograph) }
@@ -155,6 +155,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
 
       it 'has expected values' do
         expect(subject.products).to be_empty
+        expect(subject.product_ids).to eq [0] # 0 is the default fake No Product product
         expect(subject.restricted?).to be false
         expect(subject.open_access?).to be false
       end
@@ -170,6 +171,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
         it 'has expected values' do
           expect(subject.products).not_to be_empty
           expect(subject.products).to eq(Greensub::Product.containing_monograph(monograph.id))
+          expect(subject.product_ids).to eq [product.id]
           expect(subject.restricted?).to be true
           expect(subject.open_access?).to be false
         end
@@ -183,6 +185,7 @@ RSpec.describe Sighrax::Monograph, type: :model do
           it 'has expected values' do
             expect(subject.products).not_to be_empty
             expect(subject.products).to eq(Greensub::Product.containing_monograph(monograph.id))
+            expect(subject.product_ids).to eq [-1, product.id]  # -1 is the Open Access fake product
             expect(subject.restricted?).to be true
             expect(subject.open_access?).to be true
           end

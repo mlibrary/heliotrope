@@ -2,23 +2,28 @@
 
 class EbookOperation < ApplicationPolicy
   include AbilityHelpers
+  include Skylight::Helpers
 
   protected
 
     alias_attribute :ebook, :target
 
+    instrument_method
     def accessible_online?
       ebook.published? && !ebook.tombstone?
     end
 
+    instrument_method
     def accessible_offline?
       ebook.allow_download? && accessible_online?
     end
 
+    instrument_method
     def unrestricted?
       ebook.open_access? || !ebook.restricted?
     end
 
+    instrument_method
     def licensed_for?(entitlement) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       licenses = authority.licenses_for(actor, ebook)
 
