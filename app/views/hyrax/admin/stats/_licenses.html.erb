@@ -1,0 +1,65 @@
+<% provide :page_header do %>
+  <h1><span class="fa fa-ticket"></span>Subscriber Licenses by Product</h1>
+<% end %>
+
+<% if @show_report.present? %>
+  <table class="table table-striped table-responsive" summary="List of Licenses">
+    <thead>
+      <th>Product Identifier</th>
+      <th>Licensee</th>
+      <th>dlpsid</th>
+      <th>License Type</th>
+      <th>Affiliations</th>
+    </thead>
+    <tbody>
+      <%# This might be slow for products with lots of subscribers. We'll see if it's a problem or not %>
+      <% @products.each do |product| %>
+        <% product.institutions_ordered_by_name.each do |inst| %>
+        <tr>
+          <% license = product.licenses.where(licensee_id: inst.id).first %>
+          <td><%= product.identifier %></td>
+          <td><%= inst.name %></td>
+          <td><%= inst.identifier %></td>
+          <td><%= license.label %></td>
+          <td><%= license.affiliations.map(&:affiliation).join("|") %></td>
+        </tr>
+        <% end %>
+        <% product.individuals_ordered_by_email.each do |indv| %>
+        <tr>
+          <% license = product.licenses.where(licensee_id: indv.id).first %>
+          <td><%= product.identifier %></td>
+          <td><%= indv.email %></td>
+          <td>&nbsp;</td>
+          <td><%= license.label %></td>
+          <td><%= license.affiliations.map(&:affiliation).join("|") %></td>
+        </tr>
+        <% end %>
+        <tr>
+          <td colspan="5">&nbsp;</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <div class="form-group row">
+    <div class="col-sm-2">
+      <a href="/admin/stats?partial=licenses" class="btn btn-primary">Product List</a>
+    </div>
+  </div>
+<% else %>
+  <%= form_with(url: "/admin/stats?partial=licenses", method: "get", local: true) do %>
+    <div class="form-group row">
+      <label for="product_id" class="col-sm-2 col-form-label">Products</label>
+      <div class="col-sm-6">
+        <%= select_tag(:product_ids, options_for_select(@products.map { |i| [i.name, i.id] }), multiple: true, class: 'form-control') %>
+      </div>
+    </div>
+      <div class="form-group row">
+      <div class="col-sm-6">
+        <input type="hidden" name="partial" value="licenses">
+        <input type="hidden" name="show_report" value="true">
+        <button type="submit" class="btn btn-primary">Show Licenses</button>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+

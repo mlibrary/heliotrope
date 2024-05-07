@@ -60,12 +60,20 @@ module Greensub
       Individual.where(id: licenses.where(licensee_type: 'Greensub::Individual').pluck(:licensee_id)).compact
     end
 
+    def individuals_ordered_by_email
+      Individual.where(id: licenses.where(licensee_type: 'Greensub::Individual').pluck(:licensee_id)).order(:email).compact
+    end
+
     def institutions?
       institutions.present?
     end
 
     def institutions
       Institution.where(id: licenses.where(licensee_type: 'Greensub::Institution').pluck(:licensee_id)).compact
+    end
+
+    def institutions_ordered_by_name
+      Institution.where(id: licenses.where(licensee_type: 'Greensub::Institution').pluck(:licensee_id)).order(:name).compact
     end
 
     def licenses?

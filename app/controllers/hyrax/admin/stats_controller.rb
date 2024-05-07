@@ -9,12 +9,24 @@ module Hyrax
 
       def show
         @partial = params[:partial]
-        if ['analytics', 'counter', 'altmetric', 'dimensions', 'institution'].include?(@partial)
-          set_presses_and_institutions if @partial == 'counter'
-          render
-        else
-          render 'hyrax/base/unauthorized', status: :unauthorized
+        render 'hyrax/base/unauthorized', status: :unauthorized unless ['analytics', 'counter', 'altmetric', 'dimensions', 'institution', 'licenses'].include?(@partial)
+
+        if @partial == 'counter'
+          set_presses
+          set_institutions
         end
+
+        if @partial == 'licenses'
+          set_presses
+          if params[:product_ids].present?
+            @show_report = true if params[:show_report].present?
+            products_for_licenses_report
+          else
+            products_for_dropdown
+          end
+        end
+
+        render
       end
 
       def institution_report
@@ -81,6 +93,31 @@ module Hyrax
         redirect_to hyrax.admin_stats_path(partial: 'counter')
       end
 
+      # Show products that have licenses (so no leverpress here) that you have permisions for (press admin, editor or analyst)
+      # It's sort of dumb since the form is GET and in theory one could just add product ids to the url to see everything
+      # but we're not concerned about that. It's mostly keeping the list relevent to the user, not keeping anyone from seeing
+      # anything they're "not supposed to".
+      def products_for_dropdown
+        product_ids = []
+        ActiveFedora::SolrService.query("{!terms f=press_sim}#{@presses.map(&:subdomain).join(',')}", fl: ['products_lsim'], rows: 100_000).each do |doc|
+          doc["products_lsim"].each do |pid|
+            next if pid == 0
+            next if pid == -1
+            product_ids << pid unless product_ids.any?(pid)
+          end
+        end
+
+        @products = []
+        Greensub::Product.where(id: product_ids).order(:name).each do |product|
+          next if product.licenses.empty?
+          @products << product
+        end
+      end
+
+      def products_for_licenses_report
+        @products = Greensub::Product.where(id: params[:product_ids]).order(:name)
+      end
+
       private
 
         def only_elevated_users
@@ -88,9 +125,12 @@ module Hyrax
           render 'hyrax/base/unauthorized', status: :unauthorized
         end
 
-        def set_presses_and_institutions
+        def set_presses
           # Only presses the user is affiliated with (are an admin, editor, etc)
           @presses = (current_user&.admin_presses + current_user&.editor_presses + current_user&.analyst_presses).uniq
+        end
+
+        def set_institutions
           # Reports can be "all institutions" at once or each individual institution seperately
           @institutions = Greensub::Institution.order(:name).to_a.unshift(Greensub::Institution.new(name: "All Institutions", identifier: '*'))
         end
