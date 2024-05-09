@@ -58,6 +58,27 @@ module Greensub
       id
     end
 
+    def logo
+      # always prefer horizontal logo if set
+      expected_logo_path = if horizontal_logo.present?
+                             File.join('img', 'institutions', 'horizontal', horizontal_logo)
+                           elsif vertical_logo.present?
+                             File.join('img', 'institutions', 'vertical', vertical_logo)
+                           end
+
+      # Plenty of scope for the logo DB entries and actual images to be out-of-sync. Hence all the file checking here.
+      # The latter are uploaded to the GitHub repo while the former use the Fulcrum dashboard Institutions edit form.
+      # Maybe down the line we'll use CarrierWave for them, though that usually comes with its own issues.
+
+      if expected_logo_path.present? && File.exist?(Rails.root.join('public', expected_logo_path).to_s)
+        # adds a preceding slash, which is needed to use a public path in views
+        File.join('', expected_logo_path)
+      else
+        Rails.logger.info "Institution logo listed in DB does not exist in public folder: #{expected_logo_path}"
+        nil
+      end
+    end
+
     private
 
       def type

@@ -4,7 +4,9 @@ require 'rails_helper'
 
 RSpec.describe Greensub::Institution, type: :model do
   context 'instance' do
-    subject { described_class.new(id: id, identifier: identifier, name: name, display_name: display_name, entity_id: entity_id, in_common: in_common) }
+    subject { described_class.new(id: id, identifier: identifier, name: name, display_name: display_name,
+                                  entity_id: entity_id, in_common: in_common,
+                                  horizontal_logo: horizontal_logo, vertical_logo: vertical_logo) }
 
     let(:id) { 1 }
     let(:identifier) { 'identifier' }
@@ -12,6 +14,8 @@ RSpec.describe Greensub::Institution, type: :model do
     let(:display_name) { 'display_name' }
     let(:entity_id) { 'entity_id' }
     let(:in_common) { true }
+    let(:horizontal_logo) { nil }
+    let(:vertical_logo) { nil }
 
     it { is_expected.to be_a Greensub::Licensee }
     it { expect(subject.agent_type).to eq :Institution }
@@ -36,6 +40,102 @@ RSpec.describe Greensub::Institution, type: :model do
         let(:entity_id) { '' }
 
         it { expect(subject.shibboleth?).to be false }
+      end
+    end
+
+    describe '#logo' do
+      # Plenty of scope for the logo DB entries and actual images to be out-of-sync. Hence all the file checking here.
+      # The latter are uploaded to the GitHub repo while the former use the Fulcrum dashboard Institutions edit form.
+      # Maybe down the line we'll use CarrierWave for them, though that usually comes with its own issues.
+
+      before do
+        allow(File).to receive(:exist?).and_call_original
+        allow(Rails.logger).to receive(:info)
+      end
+
+      context 'neither logo field is set' do
+        it { expect(subject.logo).to be nil }
+      end
+
+      context 'horizontal_logo is set' do
+        let(:horizontal_logo) { 'blah_horizontal.png' }
+        let(:logo_path) { Rails.root.join('public', 'img', 'institutions', 'horizontal', horizontal_logo).to_s }
+
+        context 'the file does not exist' do
+          it { expect(subject.logo).to be nil }
+        end
+
+        context 'the file exists' do
+          before do
+            allow(File).to receive(:exist?).with(logo_path).and_return(true)
+          end
+
+          it 'uses the horizontal logo' do
+            expect(subject.logo).to eq(File.join('', 'img', 'institutions', 'horizontal', horizontal_logo))
+          end
+        end
+      end
+
+      context 'vertical_logo is set' do
+        let(:vertical_logo) { 'blah_vertical.png' }
+        let(:logo_path) { Rails.root.join('public', 'img', 'institutions', 'vertical', vertical_logo).to_s }
+
+        context 'the file does not exist' do
+          it { expect(subject.logo).to be nil }
+        end
+
+        context 'the file exists' do
+          before do
+            allow(File).to receive(:exist?).with(logo_path).and_return(true)
+          end
+
+          it 'uses the vertical logo' do
+            expect(subject.logo).to eq(File.join('', 'img', 'institutions', 'vertical', vertical_logo))
+          end
+        end
+      end
+
+      context 'both horizontal_logo and vertical_logo are set' do
+        let(:horizontal_logo) { 'blah_horizontal.png' }
+        let(:vertical_logo) { 'blah_vertical.png' }
+        let(:horizontal_logo_path) { Rails.root.join('public', 'img', 'institutions', 'horizontal', horizontal_logo).to_s }
+        let(:vertical_logo_path) { Rails.root.join('public', 'img', 'institutions', 'vertical', vertical_logo).to_s }
+
+        context 'neither file exists' do
+          it { expect(subject.logo).to be nil }
+        end
+
+        context 'the horizontal_logo file exists' do
+          before do
+            allow(File).to receive(:exist?).with(horizontal_logo_path).and_return(true)
+          end
+
+          it 'uses the horizontal logo' do
+            expect(subject.logo).to eq(File.join('', 'img', 'institutions', 'horizontal', horizontal_logo))
+          end
+        end
+
+        context 'the vertical_logo file exists' do
+          before do
+            allow(File).to receive(:exist?).with(vertical_logo_path).and_return(true)
+          end
+
+          it 'returns nil and logs the missing preferred/horizontal logo' do
+            expect(subject.logo).to be nil
+            expect(Rails.logger).to have_received(:info).with("Institution logo listed in DB does not exist in public folder: #{File.join('img', 'institutions', 'horizontal', horizontal_logo)}")
+          end
+        end
+
+        context 'both files exist' do
+          before do
+            allow(File).to receive(:exist?).with(horizontal_logo_path).and_return(true)
+            allow(File).to receive(:exist?).with(vertical_logo_path).and_return(true)
+          end
+
+          it 'uses the preferred horizontal logo' do
+            expect(subject.logo).to eq(File.join('', 'img', 'institutions', 'horizontal', horizontal_logo))
+          end
+        end
       end
     end
   end
