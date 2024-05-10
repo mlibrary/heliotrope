@@ -1,7 +1,11 @@
 <% if auth.publisher_restricted_content? %>
   <div class="brand-auth">
     <% if auth.institution? %>
-      Provided by <%= auth.institution.display_name %>
+      <% if auth.institution.logo.present? %>
+        <%= image_tag auth.institution.logo, class: 'institution-logo', alt: "Logo for #{auth.institution.display_name}" %>
+      <% else %>
+        <%= auth.institution.display_name %>
+      <% end %>
     <% else %>
       <span>
         Get access to more books. <strong><%= link_to "Log in with your institution.",
