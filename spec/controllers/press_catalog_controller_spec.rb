@@ -53,6 +53,23 @@ RSpec.describe PressCatalogController, type: :controller do
         expect(assigns(:search_ongoing)).to eq true
       end
     end
+
+    context "with an Anonymous subscriber" do
+      let(:product) { create(:product, identifier: "test_product") }
+      let(:institution) { create(:institution, identifier: 999) }
+      let(:keycard) { { dlpsInstitutionId: ["999"] } }
+
+      before do
+        create(:institution_affiliation, institution_id: institution.id, dlps_institution_id: institution.identifier, affiliation: "member")
+        institution.create_product_license(product, affiliation: 'member')
+        allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
+      end
+
+      it "blacklight_config.current_actor is populated (to be passed to the search builder)" do
+        get :index, params: { press: press }
+        expect(controller.blacklight_config.current_actor.products.first.identifier).to eq "test_product"
+      end
+    end
   end
 
   # inspired by https://github.com/samvera/hyrax/blob/6182f8c778c52bff1f2832173595f12c038b2793/spec/controllers/catalog_controller_spec.rb#L86
