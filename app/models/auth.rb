@@ -41,11 +41,13 @@ class Auth
 
   instrument_method
   def actor_authorized?
-    @actor_authorized ||= if !@monograph.restricted? || @monograph.open_access?
-                            true
-                          else
-                            EPubPolicy.new(@actor, @monograph.ebook, false).show?
-                          end
+    return @actor_authorized if defined? @actor_authorized
+
+    @actor_authorized = if !@monograph.restricted? || @monograph.open_access?
+                          true
+                        else
+                          EPubPolicy.new(@actor, @monograph.ebook, false).show?
+                        end
   end
 
   instrument_method
