@@ -5,7 +5,8 @@ class PressSearchBuilder < ::SearchBuilder
       :filter_by_press,
       :filter_by_product_access,
       :show_works_or_works_that_contain_files,
-      :filter_out_tombstones
+      :filter_out_tombstones,
+      :maybe_filter_draft_for_incognito
   ]
 
   def filter_by_press(solr_parameters)
@@ -65,6 +66,15 @@ class PressSearchBuilder < ::SearchBuilder
     end
   end
 
+  def maybe_filter_draft_for_incognito(solr_parameters)
+    # If you are using Incognito from the fulcrum dashboard and you have "force 'platform_admin?' to be false"
+    # set then we should honor that in search results by not showing Draft books
+    actor = scope.blacklight_config.current_actor
+    if actor.platform_admin? && (Incognito.allow_platform_admin?(actor) == false)
+      solr_parameters[:fq] << "-visibility_ssi:restricted"
+    end
+  end
+
   private
 
     # the {!lucene} gives us the OR syntax
@@ -88,7 +98,7 @@ class PressSearchBuilder < ::SearchBuilder
     end
 
     def press_admin_role_override?
-      return true if current_ability.current_user&.platform_admin?
+      return true if current_ability.current_user&.platform_admin? && Incognito.allow_platform_admin?(scope.blacklight_config.current_actor)
       admin_roles = Role.where(user: current_ability.current_user, resource_type: 'Press', resource_id: url_press.id, role: ['admin', 'editor']).map(&:role) & ['admin', 'editor']
       admin_roles.present?
     end

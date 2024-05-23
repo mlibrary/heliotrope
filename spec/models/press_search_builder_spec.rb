@@ -92,4 +92,38 @@ describe PressSearchBuilder do
       end
     end
   end
+
+  describe "#maybe_filter_draft_for_incognito" do
+    before do
+      search_builder.blacklight_config.current_actor = current_actor
+    end
+
+    context "a normal anonymous user" do
+      let(:current_actor) { Anonymous.new({}) }
+
+      it "does nothing (draft works are filtered out in Hyrax::SearchFilters via blacklight access control stuff)" do
+        search_builder.maybe_filter_draft_for_incognito(solr_params)
+        expect(solr_params[:fq]).to eq []
+      end
+    end
+
+    context "a platform_admin" do
+      let(:current_actor) { create(:platform_admin) }
+
+      context "without Incognito set" do
+        it "includes Draft works" do
+          search_builder.maybe_filter_draft_for_incognito(solr_params)
+          expect(solr_params[:fq]).to eq []
+        end
+      end
+
+      context "with Incognito set" do
+        it "filters out Draft works" do
+          Incognito.allow_platform_admin(current_actor, false)
+          search_builder.maybe_filter_draft_for_incognito(solr_params)
+          expect(solr_params[:fq].first).to eq ("-visibility_ssi:restricted")
+        end
+      end
+    end
+  end
 end
