@@ -137,6 +137,9 @@ class PressCatalogController < ::CatalogController
 
       blacklight_config.default_solr_params[:qf] += ' all_text_timv' if @press.subdomain == 'barpublishing'
 
+      # HELIO-4660 we might need this in PressSearchBuilder#filter_by_product_access so we'll sneak it in with the blacklight_config
+      blacklight_config.current_actor = current_actor
+
       search_or_browse
       monograph_sort_fields
     end

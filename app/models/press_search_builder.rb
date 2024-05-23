@@ -102,7 +102,8 @@ class PressSearchBuilder < ::SearchBuilder
       #  actor_products == current actor's products
       #
       allow_read_products_ids = Sighrax.allow_read_products.pluck(:id)
-      actor_products_ids = scope.current_ability.current_user.products.pluck(:id)
+      actor_products_ids = scope.blacklight_config.current_actor.products.pluck(:id)
+
       ([-1, 0] + allow_read_products_ids + actor_products_ids).uniq.sort
     end
 end
