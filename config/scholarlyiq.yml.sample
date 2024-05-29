@@ -1,0 +1,6 @@
+# AWS S3 ScholarlyIQ KEYS
+
+Bucket: "s3 bucket"
+BucketRegion: "s3 bucket region"
+AwsAccessKeyId: 123456789XYZ
+AwsSecretAccessKey: AwsSecretAccessKeyAwsSecretAccessKey

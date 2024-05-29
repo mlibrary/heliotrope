@@ -54,6 +54,7 @@ dump.rdb
 /config/psi_sftp.yml
 /config/fulcrum_sftp.yml
 /config/firebrand_sftp.yml
+/config/scholarlyiq.yml
 
 # Configuration file for automated systems tests.
 /testing/testing.yml
