@@ -9,6 +9,9 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
     instrument_method
     def show # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
       # local heliotrope changes
+      # HELIO-4673, use a pass-through URL param on a standard show-page DOI for direct download
+      return redirect_to(Hyrax::Engine.routes.url_helpers.download_path(params[:id])) if params[:download] == 'true'
+      # Prevent users seeing show pages of representative FileSets byt redirecting to the parent Monograph
       (redirect_to Rails.application.routes.url_helpers.monograph_catalog_path(presenter&.parent&.id)) && return if bounce_from_representatives?
 
       # Presently resources are not restricted but if someone is following a WAYFless URL

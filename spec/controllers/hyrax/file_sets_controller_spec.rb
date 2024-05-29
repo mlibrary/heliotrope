@@ -22,6 +22,12 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
       expect(controller.instance_variable_get(:@auth)).to be_an_instance_of(Auth)
       expect(controller.instance_variable_get(:@auth).return_location).to eq Rails.application.routes.url_helpers.hyrax_file_set_path(file_set)
     end
+
+    it "redirects to a direct download with a 'download=true' parameter" do
+      get :show, params: { id: file_set.id, download: true }
+      expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.download_path(file_set.id))
+      expect(response).to have_http_status(:found) # 302 Found
+    end
   end
 
   describe "#destroy" do
