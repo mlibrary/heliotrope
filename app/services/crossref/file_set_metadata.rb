@@ -55,7 +55,7 @@ module Crossref
           fragment.at_css('format').attribute('mime_type').value = mime_type(presenter.mime_type)
         end
         fragment.at_css('doi').content = doi(presenter, index)
-        fragment.at_css('resource').content = presenter.handle_url
+        fragment.at_css('resource').content = Rails.application.routes.url_helpers.hyrax_file_set_url(presenter.id)
         document.at_css('component_list') << fragment
       end
     end

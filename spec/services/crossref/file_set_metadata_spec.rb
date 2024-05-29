@@ -184,7 +184,7 @@ RSpec.describe Crossref::FileSetMetadata do
         end
 
         expect(subject.xpath("//component_list/component")[i].at_css('doi').content).to eq "#{monograph.doi}.cmp.#{i + 1}"
-        expect(subject.xpath("//component_list/component")[i].at_css('resource').content).to eq "https://hdl.handle.net/2027/fulcrum.#{fs.id}"
+        expect(subject.xpath("//component_list/component")[i].at_css('resource').content).to eq Rails.application.routes.url_helpers.hyrax_file_set_url(fs.id)
       end
     end
   end
