@@ -25,18 +25,18 @@ namespace :heliotrope do
     end
 
     puts "Institution data for ScholarlyIQ saved to #{output_file}"
-    fail unless scholorlyiq_s3_deposit(output_file)
+    fail unless scholarlyiq_s3_deposit(output_file)
   end
 
   # Because of the way task namespacing works, this should be usable by the other ScholarlyIQ tasks
-  def scholorlyiq_s3_deposit(filename)
+  def scholarlyiq_s3_deposit(filename)
     success = false
     begin
-      scholorlyiq_yaml = Rails.root.join('config', 'scholorlyiq.yml')
-      scholorlyiq = YAML.safe_load(File.read(scholorlyiq_yaml))
-      Aws.config.update(credentials: Aws::Credentials.new(scholorlyiq['AwsAccessKeyId'], scholorlyiq['AwsSecretAccessKey']))
-      s3 = Aws::S3::Resource.new(region: scholorlyiq['BucketRegion'])
-      success = s3.bucket(scholorlyiq['Bucket']).object(File.basename(filename)).upload_file(filename)
+      scholarlyiq_yaml = Rails.root.join('config', 'scholarlyiq.yml')
+      scholarlyiq = YAML.safe_load(File.read(scholarlyiq_yaml))
+      Aws.config.update(credentials: Aws::Credentials.new(scholarlyiq['AwsAccessKeyId'], scholarlyiq['AwsSecretAccessKey']))
+      s3 = Aws::S3::Resource.new(region: scholarlyiq['BucketRegion'])
+      success = s3.bucket(scholarlyiq['Bucket']).object(File.basename(filename)).upload_file(filename)
     rescue Aws::S3::Errors::ServiceError => e
       puts "Upload of file #{filename} failed in #{e.context} with error #{e}"
       success = false
