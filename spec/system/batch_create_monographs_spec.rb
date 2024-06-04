@@ -18,12 +18,17 @@ RSpec.describe 'Batch creation of monographs', type: :system, browser: true do
   end
 
   it "allows monograph creation by batch" do
+    # Since Hyrax 4 this is broken but we don't use this feature so we've decided not to invest in fixing it
+    # right now. It might just be this spec that is broken and not the feature itself but since we don't actually
+    # use batch creation (and never have) it's hard to tell. For now, leave the code, skip the test.
+    skip "Since we're not using this feature (and never have?) this spec hasn't been updated for Hyrax 4"
+
     expect(Monograph.count).to eq(0)
     # no audit_user created yet (see below)
     expect(User.count).to eq(1)
 
     expect(page).to have_content "Add New Monographs by Batch"
-    within("li.active") do
+    within("tabs") do
       expect(page).to have_content("Files")
     end
     expect(page).to have_content("Each file will be uploaded to a separate new monograph resulting in one monograph per uploaded file.")

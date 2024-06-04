@@ -50,7 +50,7 @@ RSpec.describe 'Dashboard User Types', type: :system, browser: true do
     it "has an empty dashboard" do
       visit hyrax.dashboard_path
       expect(page.has_css?('li.my-actions')).to be true
-      expect(find('.user-display-name').text).to eq "nobody@nothing.org"
+      expect(find('.profile-data-name').text).to eq "nobody@nothing.org"
       expect(page).not_to have_content("Reports")
 
       visit main_app.fulcrum_path
@@ -67,7 +67,7 @@ RSpec.describe 'Dashboard User Types', type: :system, browser: true do
     it "has an empty dashboard" do
       visit hyrax.dashboard_path
       expect(page.has_css?('li.my-actions')).to be true
-      expect(find('.user-display-name').text).to eq user.email
+      expect(find('.profile-data-name').text).to eq user.email
       expect(page).not_to have_content("Reports")
 
       visit main_app.fulcrum_path
@@ -117,7 +117,7 @@ RSpec.describe 'Dashboard User Types', type: :system, browser: true do
 
       visit hyrax.dashboard_path
       expect(page.has_css?('li.my-actions')).to be true
-      expect(find('.user-display-name').text).to eq platform_admin.email
+      expect(find('.profile-data-name').text).to eq platform_admin.email
       expect(page).to have_content("Reports")
     end
   end
