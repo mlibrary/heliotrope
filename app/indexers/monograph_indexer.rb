@@ -38,6 +38,10 @@ class MonographIndexer < Hyrax::WorkIndexer
       solr_doc['contributor_tesim'] = roleless_contributors
       solr_doc['contributor_orcids_ssim'] = contributor_orcids
 
+      # index authorship fields as they are stored in Fedora, for fast access use, e.g. console or ScholarlyiQ rake tasks
+      solr_doc['creator_ss'] = importable_backup_authorship_value('creator')
+      solr_doc['contributor_ss'] = importable_backup_authorship_value('contributor')
+
       # `date_created` is our citation pub date. We also use it for "year asc/desc" Blacklight results sorting.
       # Probably we'll need more substantial cleanup here, for now discard anything that isn't a 4-digit number as...
       # HEB often has stuff like 'c1999' in the Publication Year (`date_created`)
@@ -83,6 +87,11 @@ class MonographIndexer < Hyrax::WorkIndexer
       # HELIO-2428 index the "full" doi url if there's a doi
       solr_doc['doi_url_ssim'] = "https://doi.org/" + object.doi if object.doi.present?
     end
+  end
+
+  def importable_backup_authorship_value(field)
+    value = object.public_send(field).first
+    value.present? ? value.split(/\r?\n/).map(&:strip).reject(&:blank?).join('; ') : value
   end
 
   def table_of_contents(work_id)
