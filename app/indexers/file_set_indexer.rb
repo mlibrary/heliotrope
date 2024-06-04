@@ -17,6 +17,9 @@ class FileSetIndexer < Hyrax::FileSetIndexer
       solr_doc['primary_creator_role_tesim'] = primary_creator_role
       solr_doc['primary_creator_role_sim'] = primary_creator_role
       solr_doc['contributor_tesim'] = multiline_contributors # include roles
+      # index authorship fields as they are stored in importable backup files, for fast access use, e.g. ScholarlyiQ rake tasks
+      solr_doc['creator_ss'] = importable_backup_authorship_value('creator')
+      solr_doc['contributor_ss'] = importable_backup_authorship_value('contributor')
 
       # Extra technical metadata we need to index
       # These are apparently not necessarily integers all the time, so index them as symbols
@@ -36,6 +39,11 @@ class FileSetIndexer < Hyrax::FileSetIndexer
       # HELIO-2428 index the "full" doi url if there's a doi
       solr_doc['doi_url_ssim'] = "https://doi.org/" + object.doi if object.doi.present?
     end
+  end
+
+  def importable_backup_authorship_value(field)
+    value = object.public_send(field).first
+    value.present? ? value.split(/\r?\n/).map(&:strip).reject(&:blank?).join('; ') : value
   end
 
   def multiline_names_minus_role(field)

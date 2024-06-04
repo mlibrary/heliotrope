@@ -12,6 +12,7 @@ describe FileSetIndexer do
     let(:file_set2) do
       create(:file_set,
              creator: ["Moose, Bullwinkle\nSquirrel, Rocky"],
+             contributor: ["Moose, Bullwinkley\nSquirrel, Rock"],
              section_title: ['A section title'],
              description: ["This is the description"],
              doi: "10.3998/mpub.test")
@@ -36,6 +37,11 @@ describe FileSetIndexer do
     it "indexes all creators' names for access/search and faceting" do
       expect(subject['creator_tesim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky'] # search
       expect(subject['creator_sim']).to eq ['Moose, Bullwinkle', 'Squirrel, Rocky'] # facet
+    end
+
+    it "indexes authorship fields in their backup/importable form for quick access, e.g. ScholarlyiQ export" do
+      expect(subject['creator_ss']).to eq "Moose, Bullwinkle; Squirrel, Rocky"
+      expect(subject['contributor_ss']).to eq "Moose, Bullwinkley; Squirrel, Rock"
     end
 
     it "indexes its section_title" do

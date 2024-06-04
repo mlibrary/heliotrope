@@ -11,12 +11,17 @@ RSpec.describe MonographIndexer do
     let(:monograph) {
       build(:monograph,
             title: ['"Blah"-de-blah-blah and Stuff!'],
-            # throwing messy spaces in to test strip and rejection of blanks
+            # throwing messy spaces in to test strip and rejection of blanks in ORCID processing
             creator: ["Moose, Bullwinkle\n"\
                       "|https://orcid.org/dont-index-me\n"\
                       "Squirrel, Rocky|https://orcid.org/0000-0002-1825-0097\n\n"\
                       "Badenov, Boris  \n"\
                       " Fatale, Natasha |  https://orcid.org/0000-0002-1825-0097 "],
+            contributor: ["Moose, Bullwinkley\n"\
+                          "|https://orcid.org/dont-index\n"\
+                          "Squirrel, Rock|https://orcid.org/0000-0002-1825-0097\n\n"\
+                          "Badenovy, Boris  \n"\
+                          " Fataley, Natasha |  https://orcid.org/0000-0002-1825-0097 "],
             description: ["This is the abstract"],
             date_created: date_created,
             isbn: ['978-0-252012345 (paper)', '978-0252023456 (hardcover)', '978-1-62820-123-9 (e-book)'],
@@ -111,6 +116,13 @@ RSpec.describe MonographIndexer do
 
     it "indexes creator ORCIDs in a parallel array" do
       expect(subject['creator_orcids_ssim']).to eq ['', 'https://orcid.org/0000-0002-1825-0097', '', 'https://orcid.org/0000-0002-1825-0097']
+    end
+
+    it "indexes authorship fields in their backup/importable form for quick access, e.g. ScholarlyiQ export" do
+      expect(subject['creator_ss'])
+        .to eq "Moose, Bullwinkle; |https://orcid.org/dont-index-me; Squirrel, Rocky|https://orcid.org/0000-0002-1825-0097; Badenov, Boris; Fatale, Natasha |  https://orcid.org/0000-0002-1825-0097"
+      expect(subject['contributor_ss'])
+        .to eq "Moose, Bullwinkley; |https://orcid.org/dont-index; Squirrel, Rock|https://orcid.org/0000-0002-1825-0097; Badenovy, Boris; Fataley, Natasha |  https://orcid.org/0000-0002-1825-0097"
     end
 
     it 'has description indexed by Hyrax::IndexesBasicMetadata' do
