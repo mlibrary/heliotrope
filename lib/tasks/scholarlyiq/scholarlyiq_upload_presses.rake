@@ -30,6 +30,6 @@ namespace :heliotrope do
     end
 
     puts "Press data for ScholarlyIQ saved to #{output_file}"
-    fail unless scholorlyiq_s3_deposit(output_file)
+    fail unless scholarlyiq_s3_deposit(output_file)
   end
 end
