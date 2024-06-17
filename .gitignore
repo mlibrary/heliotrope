@@ -21,7 +21,9 @@
 /yarn-error.log
 
 .byebug_history
+.bash_history
 .rspec_status
+.local
 
 # Ignore Redis snapshots
 dump.rdb
@@ -103,3 +105,8 @@ lib/doc
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+
+# docker stuff
+.cache
+solr/config/core.properties
+solr/config/data/
