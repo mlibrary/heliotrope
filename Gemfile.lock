@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/casperisfine/posix-spawn
+  revision: 0fce38ed5458b638eda5f3bb711903424a4366db
+  ref: 0fce38ed5458b638eda5f3bb711903424a4366db
+  specs:
+    posix-spawn (0.3.15)
+
+GIT
   remote: https://github.com/mlibrary/fcrepo_wrapper
   revision: d09cf630cb403d4b513201c091430ce30a3909f1
   branch: file-exists-and-downloader-update
@@ -776,9 +783,7 @@ GEM
       forwardable-extended (~> 2.6)
     pdf-core (0.9.0)
     popper_js (1.16.1)
-    posix-spawn (0.3.15)
-    pragmatic_segmenter (0.3.23)
-      unicode
+    pragmatic_segmenter (0.3.24)
     prawn (2.4.0)
       pdf-core (~> 0.9.0)
       ttfunk (~> 1.7)
@@ -1177,7 +1182,9 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.2)
+    sqlite3 (2.9.5)
+      mini_portile2 (~> 2.8.0)
+    sqlite3 (2.9.5-arm64-darwin)
     ssrf_filter (1.0.8)
     sxp (1.2.4)
       matrix (~> 0.4)
@@ -1217,7 +1224,6 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.9.1)
-    unicode (0.4.4.4)
     unicode-display_width (2.5.0)
     unicode-types (1.9.0)
     validatable (1.6.7)
@@ -1338,7 +1344,8 @@ DEPENDENCIES
   net-sftp (~> 4.0)
   nokogiri (>= 1.13.6)
   okcomputer (~> 1.18.4)
-  pragmatic_segmenter (~> 0.3)
+  posix-spawn!
+  pragmatic_segmenter (~> 0.3.24)
   prawn (~> 2.2)
   pry-rails
   puma (~> 7.2.1)
@@ -1376,7 +1383,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   sprockets (= 3.7.2)
-  sqlite3 (= 1.4.2)
+  sqlite3 (~> 2.9.5)
   swagger_client!
   tinymce-rails (~> 5.10)
   turbolinks (~> 5)
