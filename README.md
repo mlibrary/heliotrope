@@ -115,6 +115,32 @@ $ solr_wrapper --config .wrap_conf/solr_dev
 $ bundle exec rails hyrax:default_admin_set:create
 ```
 
+## Alternate Docker Setup for Development
+
+### 1. Build and Run
+```
+docker compose up -d --build
+```
+
+### 2. MariaDB and Solr setup
+```
+docker compose exec -- db mysql -u root -phelio-admin -e "GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'helio' WITH GRANT OPTION;"
+docker compose exec -- solr solr create_core -d fulcrum-dev -c hydra-development
+```
+
+### 3. Setup the application
+```
+docker compose exec -- app bundle exec rails db:setup
+docker compose exec -- app bundle exec rails system_user
+docker compose exec -- app bundle exec rails checkpoint:migrate
+```
+
+### 4. Create a platform admin
+```
+docker compose exec -- app bundle exec rails admin
+```
+
+
 # Debugging
 ## Explain Partials
 When running Rails server, set the `EXPLAIN_PARTIALS` environment variable to show partials being rendered in source html of your views. You can view this info using your browser's inspect element mode.
