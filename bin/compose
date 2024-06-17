@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# On macOS Apple Silicon, default Docker builds and pulls to amd64 unless overridden.
+if [[ "$(uname -s)" == "Darwin" ]] && [[ "$(uname -m)" == "arm64" ]] && [[ -z "${DOCKER_DEFAULT_PLATFORM:-}" ]]; then
+  export DOCKER_DEFAULT_PLATFORM=linux/amd64
+fi
+
+exec docker compose "$@"

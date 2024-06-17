@@ -733,6 +733,8 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.4-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.19.4-x86_64-linux-gnu)
+      racc (~> 1.4)
     oai (1.2.1)
       builder (>= 3.1.0)
       faraday (< 3)
@@ -1166,7 +1168,9 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.2)
+    sqlite3 (2.9.4)
+      mini_portile2 (~> 2.8.0)
+    sqlite3 (2.9.4-arm64-darwin)
     ssrf_filter (1.0.8)
     sxp (1.2.4)
       matrix (~> 0.4)
@@ -1365,7 +1369,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   sprockets (= 3.7.2)
-  sqlite3 (= 1.4.2)
+  sqlite3 (~> 2.0)
   swagger_client!
   tinymce-rails (~> 5.10)
   turbolinks (~> 5)

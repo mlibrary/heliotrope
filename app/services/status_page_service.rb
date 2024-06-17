@@ -22,15 +22,16 @@ module StatusPageService
 
   instrument_method
   def redis
-    # Storing/retrieving an actual value might be better. This is good enough for now.
-    redis = if Settings.host == "www.fulcrum.org" || Settings.host == "staging.fulcrum.org" # # HELIO-4477
-              Redis.new(host: "redis", port: 6379)
-            else
-              Redis.new(host: "localhost", port: 6379)
-            end
+    config = YAML.safe_load(ERB.new(File.read(Rails.root.join('config', 'redis.yml'))).result)
+    env_config = config&.[](Rails.env)
+    return "can't read redis.yml!" if env_config.nil?
+    env_config = env_config.with_indifferent_access
+    redis = Redis.new(host: env_config["host"], port: Integer(env_config["port"]))
     result = redis.ping == "PONG" ? 'UP' : 'DOWN'
     redis.quit
     result
+  rescue StandardError => _e
+    "can't read redis.yml!"
   end
 
   # this is listed as a "MySQL" check in the output, which I think is fair enough

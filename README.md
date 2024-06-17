@@ -115,6 +115,52 @@ $ solr_wrapper --config .wrap_conf/solr_dev
 $ bundle exec rails hyrax:default_admin_set:create
 ```
 
+## Docker Setup for Development
+
+Instead of running locally with solr_wrapper and fcrepo_wrapper, everything can be run with docker compose. The Docker setup uses entrypoints under `docker/entrypoints/`.
+On startup, the app container will wait for dependencies and then run setup tasks (including `db:setup`/`db:migrate`, `checkpoint:migrate`, and `system_user`) automatically.
+
+Use `bin/compose` for Docker Compose commands in this repo on both macOS and Linux.
+- `bin/compose` automatically sets `DOCKER_DEFAULT_PLATFORM=linux/amd64` on macOS Apple Silicon unless you already set it.
+- `bin/dc` remains available as a compatibility alias to `bin/compose`.
+
+### 1. Create required config files (first time only)
+
+`config/database.yml` and `config/secrets.yml` are not committed to the repo. Copy the samples before starting the stack:
+```
+cp config/database.yml.sample config/database.yml
+cp config/secrets.yml.sample config/secrets.yml
+```
+
+### 2. Build and start services
+```
+bin/compose up -d --build
+```
+
+This starts the main development stack:
+- `app` (Rails on `http://localhost:3000`)
+- `resque`
+- `db` (MariaDB)
+- `solr`
+- `fcrepo`
+- `redis`
+
+### 3. Create a platform admin (one time per database)
+```
+bin/compose exec app bundle exec rails admin
+```
+
+### 4. Create default administrative set (if needed)
+```
+bin/compose exec app bundle exec rails hyrax:default_admin_set:create
+```
+
+### 5. Stop services
+```
+bin/compose down
+```
+
+
 # Debugging
 ## Explain Partials
 When running Rails server, set the `EXPLAIN_PARTIALS` environment variable to show partials being rendered in source html of your views. You can view this info using your browser's inspect element mode.
@@ -127,7 +173,7 @@ $ EXPLAIN_PARTIALS=true bundle exec rails s
 to only run in development mode.
 
 # Testing
-To execute the continuous integration task run by Travis CI
+To execute the continuous integration task run by CircleCI
 
 ```
 $ bundle exec rails ci
@@ -159,8 +205,36 @@ $ bundle exec rails ruumba
 $ bundle exec rails lib_spec
 $ bundle exec rspec
 ```
+
+## Running tests with Docker
+
+Use the Docker Compose `test` profile for test Solr/Fedora and a dedicated `test` container.
+
+### 1. Start test infrastructure
+```
+bin/compose --profile test up -d db redis solr-test fcrepo-test
+```
+
+### 2. Run the full test suite
+```
+bin/compose --profile test run --rm test
+```
+
+### 3. Run individual checks
+```
+bin/compose --profile test run --rm test bundle exec rspec spec/path/to_spec.rb
+bin/compose --profile test run --rm test bundle exec rubocop
+bin/compose --profile test run --rm test bundle exec rails ruumba
+bin/compose --profile test run --rm test bundle exec rails lib_spec
+```
+
+### 4. Stop test infrastructure
+```
+bin/compose --profile test stop solr-test fcrepo-test
+```
+
 #### System specs
-System specs are skipped on Travis due to frequent timing failures. This won't affect running `rspec` locally either directly or through the `ci` task. 
+System specs may be skipped in CircleCI due to timing-related instability. This won't affect running `rspec` locally either directly or through the `ci` task. 
 
 
 ## Running specs individually

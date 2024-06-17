@@ -40,6 +40,11 @@ commands:
         command: bundle lock --add-platform x86_64-linux-gnu 
         name: set platform
     - run:
+        command: |
+          bundle config build.sqlite3 --enable-system-libraries
+          bundle config force_ruby_platform true
+        name: Configure sqlite3 native build
+    - run:
         command: bundle check || bundle install
         name: Install dependencies
     - save_cache:
