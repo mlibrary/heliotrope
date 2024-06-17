@@ -5,7 +5,7 @@ services:
   db:
     image: mysql:5.7
     volumes:
-    - db_data:/var/lib/mysql
+      - db-data:/var/lib/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: helio-admin
@@ -13,24 +13,80 @@ services:
       MYSQL_PASSWORD: helio
       MYSQL_DATABASE: helio
 
-  web:
-    depends_on:
-    - db
-    build: .
+  solr:
+    image: solr:8-slim
     ports:
-    - "3000:3000"
+      - "8983:8983"
+    environment:
+      - SOLR_JAVA_MEM=-Xms1024m -Xmx1024m
+      - SOLR_HEAP=1024m
     volumes:
-    - .:/app
-    - gem_cache:/gems
-    - node_modules:/app/node_modules
+      #- solr-conf:/opt/solr/server/solr/configsets/umich-arclight
+      - solr-data:/var/solr
+
+  fcrepo:
+    image: ghcr.io/samvera/fcrepo4:4.7.5
+    volumes:
+      - fcrepo-data:/data
+    ports:
+      - 8080:8080
+
+  redis:
+    image: redis:6-buster
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  resque:
+    depends_on:
+      - app
+      - db
+      - solr
+      - redis
+      - fcrepo
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app
+      - gem_cache:/gems
+      - node_modules:/app/node_modules
+    healthcheck:
+      disable: true
+    stop_signal: SIGQUIT
+    command: bundle exec rake resque:pool
+
+  app:
+    depends_on:
+      - db
+      - solr
+      - redis
+      - fcrepo
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - gem_cache:/gems
+      - node_modules:/app/node_modules
     restart: always
     environment:
       RAILS_ENV: development
       DATABASE_URL: 'mysql2://helio:helio@db:3306/helio'
       # CHECKPOINT_DATABASE_URL: 'mysql2://helio:helio@db:3306/checkpoint'
       CHECKPOINT_DATABASE_URL: 'sqlite://db/checkpoint-development.sqlite3'
+      KEYCARD_DATABASE_URL: 'sqlite://db/keycard-development.sqlite3'
+
 volumes:
   gem_cache:
   node_modules:
-  db_data:
+  db-data:
     driver: local
+  fcrepo-data:
+  solr-data:
+  redis-data:
