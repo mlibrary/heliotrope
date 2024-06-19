@@ -23,9 +23,13 @@ namespace :heliotrope do
         tsv << [institution.identifier, institution.name, institution.display_name, institution.entity_id]
       end
     end
+    # puts "Institution data for ScholarlyIQ saved to #{output_file}"
 
-    puts "Institution data for ScholarlyIQ saved to #{output_file}"
     fail unless scholarlyiq_s3_deposit(output_file)
+
+    # No real purpose keeping this, the DB records are sticking around anyways!
+    # Deleting it means the crons can use system /tmp for these. No chance of trying to save to a missing/broken mount.
+    File.delete(output_file)
   end
 
   # Because of the way task namespacing works, this should be usable by the other ScholarlyIQ tasks
