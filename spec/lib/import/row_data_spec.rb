@@ -122,6 +122,15 @@ describe Import::RowData do
         end
       end
 
+      context 'CR newlines present' do
+        let(:row) { { 'Title' => "Line 1 \rLine 2  \rLine 3" } }
+
+        it 'joins the lines with a single space' do
+          subject
+          expect(attrs['title']).to eq(['Line 1 Line 2 Line 3'])
+        end
+      end
+
       context 'CRLF newlines present' do
         let(:row) { { 'Title' => "Line 1 \r\n  Line 2\r\nLine 3" } }
 

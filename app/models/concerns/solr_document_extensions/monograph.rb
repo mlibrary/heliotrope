@@ -66,7 +66,7 @@ module SolrDocumentExtensions
 
     def section_titles
       value = scalar('section_titles_ssim')
-      value.present? ? value.split(/\r?\n/).reject(&:blank?) : value
+      value.present? ? value.split(/\r\n?|\n/).reject(&:blank?) : value
     end
 
     def series

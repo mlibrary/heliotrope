@@ -20,7 +20,7 @@ module SocialShareWidgetPresenter
   end
 
   def social_share_widget_template
-    social_share_widget_template_content.gsub(/(?:\n\r?|\r\n?)/, '').html_safe # rubocop:disable Rails/OutputSafety
+    social_share_widget_template_content.gsub(/\r\n?|\n/, '').html_safe # rubocop:disable Rails/OutputSafety
   end
 
   def social_share_link(platform = nil)

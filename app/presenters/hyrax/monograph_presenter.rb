@@ -245,7 +245,7 @@ module Hyrax
       creators = []
       return creators if solr_document["creator_tesim"].blank?
 
-      solr_document["creator_tesim"].first.split(/\r?\n/).reject(&:blank?).each do |creator|
+      solr_document["creator_tesim"].first.split(/\r\n?|\n/).reject(&:blank?).each do |creator|
         # Last, First (Role)
         creator.match(/(.*?),(.*?)\((.*?)\)$/) do |m|
           creators << OpenStruct.new(lastname: m[1].strip, firstname: m[2].strip, role: m[3])

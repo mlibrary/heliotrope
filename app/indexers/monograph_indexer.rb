@@ -91,7 +91,7 @@ class MonographIndexer < Hyrax::WorkIndexer
 
   def importable_backup_authorship_value(field)
     value = object.public_send(field).first
-    value.present? ? value.split(/\r?\n/).map(&:strip).reject(&:blank?).join('; ') : value
+    value.present? ? value.split(/\r\n?|\n/).map(&:strip).reject(&:blank?).join('; ') : value
   end
 
   def table_of_contents(work_id)
@@ -122,7 +122,7 @@ class MonographIndexer < Hyrax::WorkIndexer
     if value.present?
       # for now an ORCID must have a manually-entered name preceding it, a (stripped) line starting with '|' is not...
       # indexed. See spec/indexers/monograph_indexer_spec.rb for examples.
-      values = value.split(/\r?\n/).reject(&:blank?).map(&:strip).reject { |val| val.start_with?('|') }
+      values = value.split(/\r\n?|\n/).reject(&:blank?).map(&:strip).reject { |val| val.start_with?('|') }
       # names and ORCIDs will strictly be parallel arrays until we (maybe) do something fancier with ORCIDs
       # nils here are not retained in Solr, hence the '' entries for names with no associated ORCID
       orcids = values.any? { |val| val.include?('|') } ? values.map { |val| val.split('|')[1]&.strip || '' } : []
