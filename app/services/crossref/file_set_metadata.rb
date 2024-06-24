@@ -45,6 +45,12 @@ module Crossref
     def components
       presenters.each_with_index do |presenter, index|
         next if monograph_representative?(presenter)
+
+        doi = doi(presenter, index)
+        # In the future, our Crossref user may be granted the ability to create/edit DOIs under multiple prefixes.
+        # At that time, this hard-coded prefix value can be moved to `crossref.yml`, along with any others.
+        next unless doi.start_with?('10.3998/')
+
         fragment = Nokogiri::XML.fragment(@component_file)
         fragment.at_css('title').content = presenter.page_title
         fragment.at_css('description').content = description(presenter)
@@ -54,7 +60,7 @@ module Crossref
         else
           fragment.at_css('format').attribute('mime_type').value = mime_type(presenter.mime_type)
         end
-        fragment.at_css('doi').content = doi(presenter, index)
+        fragment.at_css('doi').content = doi
         fragment.at_css('resource').content = Rails.application.routes.url_helpers.hyrax_file_set_url(presenter.id)
         document.at_css('component_list') << fragment
       end
