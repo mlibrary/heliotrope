@@ -4,23 +4,23 @@ require 'rails_helper'
 
 RSpec.describe Crossref::FileSetMetadata do
   let(:monograph) do
-    ::SolrDocument.new(id: '999999999',
+    ::SolrDocument.new(id: '000000000',
                        has_model_ssim: ['Monograph'],
                        title_tesim: ['A Title'],
                        creator_tesim: ["Last, First\nSecondLast, SecondFirst"],
                        press_tesim: [press.subdomain],
                        isbn_tesim: ["1234567890 (ebook)", "0987654321 (hardcover)"],
                        date_created_tesim: ['9999'],
-                       doi_ssim: ['10.9985/blue.999999999'],
-                       ordered_member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777', '888888888'],
-                       member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777', '888888888'],
+                       doi_ssim: ['10.3998/blue.000000000'],
+                       ordered_member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777', '888888888', '999999999'],
+                       member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777', '888888888', '999999999'],
                        hasRelatedMediaFragment_ssim: ['888888888'])
   end
 
   let(:fs1) do
     ::SolrDocument.new(id: '111111111',
                        has_model_ssim: ['FileSet'],
-                       monograph_id_ssim: '999999999',
+                       monograph_id_ssim: '000000000',
                        title_tesim: ["FS 1"],
                        creator_tesim: ["Last, First"],
                        contributor_tesim: ["First Last", "A Place", "Actor, An (actor)"],
@@ -31,7 +31,7 @@ RSpec.describe Crossref::FileSetMetadata do
   let(:fs2) do
     ::SolrDocument.new(id: '222222222',
                        has_model_ssim: ['FileSet'],
-                       monograph_id_ssim: '999999999',
+                       monograph_id_ssim: '000000000',
                        title_tesim: ["FS 2"],
                        creator_tesim: ["Last, First"],
                        contributor_tesim: ["First Last", "A Place", "Actor, An (actor)"],
@@ -42,7 +42,7 @@ RSpec.describe Crossref::FileSetMetadata do
   let(:fs3) do
     ::SolrDocument.new(id: '333333333',
                        has_model_ssim: ['FileSet'],
-                       monograph_id_ssim: '999999999',
+                       monograph_id_ssim: '000000000',
                        title_tesim: ["FS 3"],
                        creator_tesim: ["Last, First"],
                        contributor_tesim: ["First Last", "A Place", "Actor, An (actor)"],
@@ -53,7 +53,7 @@ RSpec.describe Crossref::FileSetMetadata do
   let(:fs4) do
     ::SolrDocument.new(id: '444444444',
                        has_model_ssim: ['FileSet'],
-                       monograph_id_ssim: '999999999',
+                       monograph_id_ssim: '000000000',
                        title_tesim: ["FS 4"],
                        creator_tesim: ["Last, First"],
                        contributor_tesim: ["First Last", "A Place", "Actor, An (actor)"],
@@ -65,7 +65,7 @@ RSpec.describe Crossref::FileSetMetadata do
   let(:fs5) do
     ::SolrDocument.new(id: '555555555',
                        has_model_ssim: ['FileSet'],
-                       monograph_id_ssim: '999999999',
+                       monograph_id_ssim: '000000000',
                        title_tesim: ["EPUB"],
                        mime_type_ssi: "epub")
   end
@@ -74,7 +74,7 @@ RSpec.describe Crossref::FileSetMetadata do
   let(:fs6) do
     ::SolrDocument.new(id: '666666666',
                        has_model_ssim: ['FileSet'],
-                       monograph_id_ssim: '999999999',
+                       monograph_id_ssim: '000000000',
                        title_tesim: ["Peer Review"],
                        mime_type_ssi: "text/html")
   end
@@ -83,7 +83,7 @@ RSpec.describe Crossref::FileSetMetadata do
   let(:fs7) do
     ::SolrDocument.new(id: '777777777',
                        has_model_ssim: ['FileSet'],
-                       monograph_id_ssim: '999999999',
+                       monograph_id_ssim: '000000000',
                        title_tesim: ["Related"],
                        mime_type_ssi: "text/html")
   end
@@ -92,17 +92,27 @@ RSpec.describe Crossref::FileSetMetadata do
   let(:fs8) do
     ::SolrDocument.new(id: '888888888',
                        has_model_ssim: ['FileSet'],
-                       monograph_id_ssim: '999999999',
+                       monograph_id_ssim: '000000000',
                        title_tesim: ["Cover"],
                        mime_type_ssi: "image/jpg")
   end
 
+  # will be skipped, no dois when the prefix isn't ours
+  let(:fs9) do
+    ::SolrDocument.new(id: '999999999',
+                       has_model_ssim: ['FileSet'],
+                       monograph_id_ssim: '000000000',
+                       doi_ssim: ['10.9999/this.wont.work'],
+                       title_tesim: ["Blah!"],
+                       mime_type_ssi: "image/jpg")
+  end
+
   before do
-    ActiveFedora::SolrService.add([monograph.to_h, fs1.to_h, fs2.to_h, fs3.to_h, fs4.to_h, fs5.to_h, fs6.to_h, fs7.to_h, fs8.to_h])
+    ActiveFedora::SolrService.add([monograph.to_h, fs1.to_h, fs2.to_h, fs3.to_h, fs4.to_h, fs5.to_h, fs6.to_h, fs7.to_h, fs8.to_h, fs9.to_h])
     ActiveFedora::SolrService.commit
-    FeaturedRepresentative.create(work_id: '999999999', file_set_id: '555555555', kind: 'epub')
-    FeaturedRepresentative.create(work_id: '999999999', file_set_id: '666666666', kind: 'peer_review')
-    FeaturedRepresentative.create(work_id: '999999999', file_set_id: '777777777', kind: 'related')
+    FeaturedRepresentative.create(work_id: '000000000', file_set_id: '555555555', kind: 'epub')
+    FeaturedRepresentative.create(work_id: '000000000', file_set_id: '666666666', kind: 'peer_review')
+    FeaturedRepresentative.create(work_id: '000000000', file_set_id: '777777777', kind: 'related')
   end
 
   describe "#new" do
@@ -110,7 +120,7 @@ RSpec.describe Crossref::FileSetMetadata do
       let(:press) { create(:press, subdomain: "blue", name: "The Blue Press") }
 
       it "raises an error" do
-        expect { described_class.new('999999999') }.to raise_error("Press blue can not make automatic DOIs")
+        expect { described_class.new('000000000') }.to raise_error("Press blue can not make automatic DOIs")
       end
     end
   end
@@ -122,7 +132,7 @@ RSpec.describe Crossref::FileSetMetadata do
       let(:code) { 200 }
 
       before do
-        Typhoeus.stub(/api.crossref.org\/works\/10.9985\/blue.999999999/).and_return(Typhoeus::Response.new(response_code: code))
+        Typhoeus.stub(/api.crossref.org\/works\/10.3998\/blue.000000000/).and_return(Typhoeus::Response.new(response_code: code))
       end
 
       it "returns true" do
@@ -135,7 +145,7 @@ RSpec.describe Crossref::FileSetMetadata do
       let(:code) { 404 }
 
       before do
-        Typhoeus.stub(/api.crossref.org\/works\/10.9985\/blue.999999999/).and_return(Typhoeus::Response.new(response_code: code))
+        Typhoeus.stub(/api.crossref.org\/works\/10.3998\/blue.000000000/).and_return(Typhoeus::Response.new(response_code: code))
       end
 
       it "returns false" do
@@ -145,7 +155,7 @@ RSpec.describe Crossref::FileSetMetadata do
   end
 
   describe "#build" do
-    subject { described_class.new('999999999').build }
+    subject { described_class.new('000000000').build }
 
     let(:press) { create(:press, subdomain: "blue", name: "The Blue Press", doi_creation: true) }
     let(:timestamp) { "20190419111616" }
@@ -162,8 +172,8 @@ RSpec.describe Crossref::FileSetMetadata do
       expect(subject.at_css('timestamp').content).to eq timestamp
       expect(subject.at_css('sa_component').attribute('parent_doi').value).to eq monograph.doi
 
-      expect(described_class.new('999999999').presenters.length).to eq 8
-      # no DOIs for covers, epubs (or mobi or pdf_ebook or any other FeaturedRepresentatives)
+      expect(described_class.new('000000000').presenters.length).to eq 9
+      # no DOIs for covers, epubs (or mobi or pdf_ebook or any other FeaturedRepresentatives), or where a manually-entered DOI has the wrong prefix
       expect(subject.xpath("//component_list/component").length).to eq 4
 
       [fs1, fs2, fs3, fs4].each_with_index do |fs, i|
