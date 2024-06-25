@@ -9,7 +9,7 @@ module Hyrax
       def li_value(value)
         # CC's usage:
         # auto_link(ERB::Util.h(value))
-        ERB::Util.h(value).gsub(/(?:\n\r?|\r\n?)/, '<br>')
+        ERB::Util.h(value).gsub(/\r\n?|\n/, '<br>')
       end
     end
   end

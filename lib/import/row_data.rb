@@ -76,7 +76,7 @@ module Import
       end
 
       def remove_newlines(field_values)
-        field_values.map! { |value| value.split(/\r?\n/).reject(&:blank?).map(&:strip).join(' ') }
+        field_values.map! { |value| value.split(/\r\n?|\n/).reject(&:blank?).map(&:strip).join(' ') }
       end
 
       # HELIO-3287 only 'yes' values make sense for this Blacklight facet field
@@ -127,7 +127,7 @@ module Import
       def downcase_role(field_name, field_values)
         return field_values unless ['Creator(s)', 'Additional Creator(s)'].include? field_name
 
-        field_values = field_values.first.split(/\r?\n/).reject(&:blank?)
+        field_values = field_values.first.split(/\r\n?|\n/).reject(&:blank?)
         downcased_output_value = []
 
         field_values.each do |value|

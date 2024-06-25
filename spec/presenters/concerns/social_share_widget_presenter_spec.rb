@@ -28,7 +28,7 @@ RSpec.describe SocialShareWidgetPresenter do
 
   describe "#social_share_widget_template" do
     it "has the correct HTML for the EPUB reader" do
-      expect(presenter.social_share_widget_template).to eq(expected_widget_template_content.gsub(/(?:\n\r?|\r\n?)/, ''))
+      expect(presenter.social_share_widget_template).to eq(expected_widget_template_content.gsub(/\r\n?|\n/, ''))
     end
   end
 

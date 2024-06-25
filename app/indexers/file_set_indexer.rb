@@ -43,18 +43,18 @@ class FileSetIndexer < Hyrax::FileSetIndexer
 
   def importable_backup_authorship_value(field)
     value = object.public_send(field).first
-    value.present? ? value.split(/\r?\n/).map(&:strip).reject(&:blank?).join('; ') : value
+    value.present? ? value.split(/\r\n?|\n/).map(&:strip).reject(&:blank?).join('; ') : value
   end
 
   def multiline_names_minus_role(field)
     value = object.public_send(field).first
-    value.present? ? value.split(/\r?\n/).reject(&:blank?).map { |val| val.sub(/\s*\(.+\)$/, '').strip } : value
+    value.present? ? value.split(/\r\n?|\n/).reject(&:blank?).map { |val| val.sub(/\s*\(.+\)$/, '').strip } : value
   end
 
   def multiline_contributors
     # any role in parenthesis will persist in Solr for contributors, as we've always done
     value = object.contributor.first
-    value.present? ? value.split(/\r?\n/).reject(&:blank?).map(&:strip) : value
+    value.present? ? value.split(/\r\n?|\n/).reject(&:blank?).map(&:strip) : value
   end
 
   def first_creator_roles # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
