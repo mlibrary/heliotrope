@@ -28,8 +28,12 @@ namespace :heliotrope do
         ]
       end
     end
+    # puts "Press data for ScholarlyIQ saved to #{output_file}"
 
-    puts "Press data for ScholarlyIQ saved to #{output_file}"
     fail unless scholarlyiq_s3_deposit(output_file)
+
+    # No real purpose keeping this, the DB records are sticking around anyways!
+    # Deleting it means the crons can use system /tmp for these. No chance of trying to save to a missing/broken mount.
+    File.delete(output_file)
   end
 end
