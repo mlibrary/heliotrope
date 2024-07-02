@@ -22,7 +22,11 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
       expect(schemer_validate?(meta_schemer, JSON.parse(Net::HTTP.get(URI('https://json-schema.org/draft-07/schema'))))).to be true
       expect(schemer_validate?(meta_schemer, JSON.parse(Net::HTTP.get(URI('https://drafts.opds.io/schema/feed.schema.json'))))).to be true
       expect(schemer_validate?(meta_schemer, JSON.parse(Net::HTTP.get(URI('https://drafts.opds.io/schema/publication.schema.json'))))).to be true
-      expect(schemer_validate?(meta_schemer, JSON.parse(Net::HTTP.get(URI('https://readium.org/webpub-manifest/schema/extensions/presentation/metadata.schema.json'))))).to be true
+      # 2024: I'm not really sure what this is below. The page no longer exists, it's a 404.
+      # Maybe it's just to show that whatever used to be there before was valid? We don't use it, whatever it was, I don't think.
+      # Is it here just to test "schemer_validate?" I don't know.
+      # I'm just going to comment this failing spec out.
+      # expect(schemer_validate?(meta_schemer, JSON.parse(Net::HTTP.get(URI('https://readium.org/webpub-manifest/schema/extensions/presentation/metadata.schema.json'))))).to be true
     end
 
     context 'unauthorized' do
