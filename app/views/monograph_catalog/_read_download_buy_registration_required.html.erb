@@ -1,14 +1,14 @@
 <%# This mapping will move to the parent partial if this functionality proliferates... %>
 <%# outside the `ee` Press before HELIO-4503 is completed %>
 <%# Note: You can use any ISBN stored on Fulcrum here. HELIO-4503 will remove this workaround anyway. %>
-<% form_link_ids = { '9781607854845' => '1FAIpQLScLWwaa-BzbDUvJ_tdWsGDX6wBialALOs1cceMCpFUkZ5qFuA', # Circuit Analysis and Design
+<% form_link_ids = { '9781607858768' => '1FAIpQLScLWwaa-BzbDUvJ_tdWsGDX6wBialALOs1cceMCpFUkZ5qFuA', # Circuit Analysis and Design
                      '9781607858270' => '1FAIpQLSeABECySpr4LMPo_4LtaCEFih4EuIHzDOEzDGhSmc0rp542vw', # Control Systems: An Introduction
                      '9781607858249' => '1FAIpQLSdwS2OFvMreCd0zeQNcSq49jNxKXG6-WjLOxOp58ATj1ff68Q', # Foundations of Applied Electromagnetics
                      '9781607854890' => '1FAIpQLSfa_lqrrhWPEXZ97DjMQTAt_cdEl4JIO-R-C93kNJyJneP0uA', # Image Processing for Engineers
                      '9781607858294' => '1FAIpQLSdL_V7gW7_N0UOtZNwrOwZlGHJn99cxIIgutunrKwUJB9UXhg', # Introduction to ARM Assembler
                      '9781607857471' => '1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g', # Introduction to Probability for Data Science
                      '9781607858478' => '1FAIpQLScdPlyIu78NW9IBk9TqALCDeXA7qJDtNH5-Bzg6p9YkapFAwg', # Modern Communications Systems
-                     '9781607854876' => '1FAIpQLScRSK1-A5ZNGAezmNZCbDnehA2h03JphmmJTePN9Lz0_nu7ng'  # Signals & Systems: Theory and Applications
+                     '9781607858782' => '1FAIpQLScRSK1-A5ZNGAezmNZCbDnehA2h03JphmmJTePN9Lz0_nu7ng'  # Signals & Systems: Theory and Applications
                    } %>
 
 <% isbns = @monograph_presenter.isbn.map { |isbn| isbn.delete("^0-9") } %>
