@@ -131,6 +131,17 @@ cozy.control.widget.button({
 }).addTo(reader);
 <% end %>
 
+<%# the controller only supports EPUBs and PDFs, so this logic is fine to catch the latter %>
+<% unless @parent_presenter.epub? %>
+  cozy.control.widget.button({
+    region: 'top.toolbar.right',
+    <%# reload is the closest to rotate in the collection https://icones.js.org/collection/oi %>
+    data: { label: '<i class="icon-reload oi" data-glyph="reload" aria-hidden="true"></i>'},
+    <%# `id="pageRotateCw` gets `pdf.js` to handle the rotation %>
+    template: '<button class="button--sm" data-toggle="button" data-slot="label" aria-label="Rotate Clockwise" id="pageRotateCw" title="Rotate Clockwise"</button>',
+  }).addTo(reader);
+<% end %>
+
 // Fullscreen
 cozy.control.fullscreen({ region: 'top.toolbar.right' }).addTo(reader);
 

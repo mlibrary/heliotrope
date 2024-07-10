@@ -2300,14 +2300,14 @@ footer.press {
   transition: 0.2s ease-in;
 }
 
-
-/* Feel free to be horrified at the bonkers-ness of this construct. */
+/* We want a border *between* all elements, so no border-left before the first one */
 .cozy-panel-toolbar div.cozy-control:not(:first-of-type) {
   border-left: 1px solid white;
 }
 
-.cozy-panel-toolbar div.cozy-control:nth-of-type(2),
-.cozy-panel-toolbar div.cozy-control:nth-of-type(3) {
+/* This prevents a border to the left of the desktop close button, which has a hidden mobile close button to its... */
+/* left, making it the de facto first element in desktop view! */
+.cozy-panel-toolbar div.cozy-panel-left div.cozy-control:nth-of-type(2) {
   border-left: none;
 }
 
