@@ -17,6 +17,14 @@ html, body {
   margin: 0;
 }
 
+/* Giving the Altmetric badge `padding-top: .5em` in the PDF viewer lines it up with the Dimensions badge, which... */
+/* uses the same value. In the EPUB viewer they use 3em and 5em, respectively, to line up. Weird. */
+.cozy-container-altmetric {
+  padding-top: .5em;
+  padding-right: .5em;
+  border: none;
+}
+
 .cozy-panel-header .cozy-control {
   height: 47px;
 }
