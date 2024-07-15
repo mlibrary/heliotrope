@@ -158,7 +158,7 @@ RSpec.describe Crossref::FileSetMetadata do
     subject { described_class.new('000000000').build }
 
     let(:press) { create(:press, subdomain: "blue", name: "The Blue Press", doi_creation: true) }
-    let(:timestamp) { "20190419111616" }
+    let(:timestamp) { "20190419111616000" }
 
     before do
       allow_any_instance_of(described_class).to receive(:timestamp).and_return(timestamp)
