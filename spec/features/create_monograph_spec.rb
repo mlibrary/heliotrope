@@ -75,7 +75,7 @@ describe 'Create a monograph' do
       fill_in 'ISBN(s)', with: '123-456-7890'
 
       # Citable Links
-      fill_in 'DOI', with: '<doi>'
+      fill_in 'DOI', with: "< doi\t>" # whitespace will be removed on save
       fill_in 'Handle', with: '<hdl>'
       # this will have its spaces removed by a `before_validation` method in `app/models/monograph.rb`
       fill_in 'Identifier(s)', with: '<identifier with spaces>'
