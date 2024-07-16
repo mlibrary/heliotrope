@@ -5,7 +5,7 @@ module HeliotropeUniversalMetadata
 
   included do # rubocop:disable Metrics/BlockLength
     validate :date_published_format
-    before_validation :maybe_convert_date_published_to_date_time, :maybe_set_date_published
+    before_validation :maybe_convert_date_published_to_date_time, :maybe_set_date_published, :remove_whitespace
 
     property :rightsholder, predicate: ::RDF::Vocab::DC.rightsHolder, multiple: false do |index|
       index.as :stored_searchable
@@ -82,6 +82,10 @@ module HeliotropeUniversalMetadata
             ''
           end
         end
+      end
+
+      def remove_whitespace
+        self.doi = self.doi.gsub(/\s+/, "") if self.doi.present? && self.doi.match(/\s/)
       end
   end
 end
