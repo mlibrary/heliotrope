@@ -144,7 +144,9 @@ module Crossref
       end
 
       def timestamp
-        Time.current.strftime("%Y%m%d%H%M%S")
+        # HELIO-4689 adding milliseconds (%L) to align with Crossref's web deposit form and Metadata Manager, see also:
+        # https://community.crossref.org/t/what-is-time-stamping-error-and-how-to-fix-it/932/9
+        Time.current.strftime("%Y%m%d%H%M%S%L")
       end
 
       def monograph_representative?(presenter)
