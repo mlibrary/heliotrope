@@ -2,8 +2,10 @@
 <%# https://github.com/mlibrary/heliotrope/issues/1228 %>
 <% content_for :head do %>
   <meta name="turbolinks-cache-control" content="no-cache">
+  <%# Altmetric badge JS %>
   <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
   <% if @parent_presenter.doi.present? %>
+    <%# Dimensions badge JS %>
     <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
   <% end %>
   <% if defined? @subdomain %>
