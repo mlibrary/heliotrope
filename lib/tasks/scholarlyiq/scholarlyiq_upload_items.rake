@@ -27,7 +27,7 @@ namespace :heliotrope do
                                                 'identifier_tesim',
                                                 'resource_type_tesim'], rows: 100_000)
 
-    CSV.open(output_file, "w", col_sep: "\t", write_headers: true) do |tsv|
+    CSV.open(output_file, "w", col_sep: "\t", force_quotes: true, write_headers: true) do |tsv|
       tsv << %w[id title creator date_created doi identifier resource_type]
       docs.each do |doc|
         tsv << [doc.id, doc['title_tesim']&.first,

@@ -32,7 +32,7 @@ namespace :heliotrope do
              CounterReport.where("created_at >= CURDATE() - INTERVAL 1 DAY AND created_at < CURDATE()").find_each
            end
 
-    CSV.open(output_file, "w", col_sep: "\t", write_headers: true) do |tsv|
+    CSV.open(output_file, "w", col_sep: "\t", force_quotes: true, write_headers: true) do |tsv|
       rows.with_index do |row, index|
         if index.zero?
           tsv << row.attributes.map { |key, _value| key }

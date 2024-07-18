@@ -17,7 +17,7 @@ namespace :heliotrope do
     # For now let's assume these will be tidied up manually, or by a separate cron
     output_file = File.join(args.output_directory, "institutions-#{Time.now.getlocal.strftime("%Y-%m-%d")}.tsv")
 
-    CSV.open(output_file, "w", col_sep: "\t", write_headers: true) do |tsv|
+    CSV.open(output_file, "w", col_sep: "\t", force_quotes: true, write_headers: true) do |tsv|
       tsv << %w[identifier name display_name entity_id]
       Greensub::Institution.all.each do |institution|
         tsv << [institution.identifier, institution.name, institution.display_name, institution.entity_id]
