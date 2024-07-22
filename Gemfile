@@ -228,7 +228,8 @@ gem 'yabeda-prometheus'
 group :development, :test do
   gem 'byebug'
   # test coverage with coveralls
-  gem 'coveralls', require: false
+  # gem 'coveralls', require: false
+  gem 'coveralls_reborn', require: false
   gem 'factory_bot_rails'
   gem "fakefs", require: "fakefs/safe"
   gem "faker"
