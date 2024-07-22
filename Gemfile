@@ -146,6 +146,9 @@ gem 'keycard', '~> 0.2.4'
 gem "kramdown", ">= 2.3.0"
 gem "kramdown-parser-gfm"
 
+# HELIO-4567, HELIO-4697
+gem 'marc', '~> 1.0'
+
 # HELIO-3816
 gem 'mimemagic', '~> 0.3.7'
 

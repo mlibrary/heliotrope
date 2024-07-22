@@ -1293,6 +1293,7 @@ DEPENDENCIES
   launchy (~> 2.4.3)
   legato (~> 0.3)
   listen (>= 3.0.5, < 4.0)
+  marc (~> 1.0)
   mimemagic (~> 0.3.7)
   minitar (~> 0.8)
   mysql2
