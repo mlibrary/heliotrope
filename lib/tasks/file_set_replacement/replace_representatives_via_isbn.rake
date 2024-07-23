@@ -53,11 +53,11 @@ namespace :heliotrope do
             epubs_added_count += 1
           end
         elsif file_extension == '.pdf'
-          current_pdf_id = FeaturedRepresentative.where(work_id: monograph.id, kind: 'pdf').first&.file_set_id
+          current_pdf_id = FeaturedRepresentative.where(work_id: monograph.id, kind: 'pdf_ebook').first&.file_set_id
 
           if current_pdf_id.present?
             puts "Monograph with NOID #{monograph.id} matching PDF file #{file_base_name}.pdf has an existing PDF representative ...... REPLACING"
-            Tmm::FileService.replace(file_set_id: current_epub_id, new_file_path: file_path)
+            Tmm::FileService.replace(file_set_id: current_pdf_id, new_file_path: file_path)
             pdfs_replaced_count += 1
           else
             puts "Monograph with NOID #{monograph.id} matching PDF file #{file_base_name}.pdf has no PDF representative ...... ADDING"
