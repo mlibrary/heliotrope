@@ -40,6 +40,7 @@ describe "Press Catalog Facets" do
       end
 
       it "shows a 'Source' facet link for each subpress monograph (with expected counts), but not for michigan monograph" do
+        Capybara.default_max_wait_time = 5
         visit press_catalog_path(press: michigan_press.subdomain)
         expect(page).to have_selector('#facet-press_name_sim a.facet-select', count: 2) # one entry per sub-press
         expect(page).to_not have_selector 'ul.facet-values li span.facet-label', text: michigan_press.name

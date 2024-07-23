@@ -825,6 +825,10 @@ GEM
       actionview (> 3.1)
       activesupport (> 3.1)
       railties (> 3.1)
+    rails_semantic_logger (4.17.0)
+      rack
+      railties (>= 5.1)
+      semantic_logger (~> 4.16)
     railties (6.0.6.1)
       actionpack (= 6.0.6.1)
       activesupport (= 6.0.6.1)
@@ -1050,6 +1054,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    semantic_logger (4.16.0)
+      concurrent-ruby (~> 1.0)
     semantic_range (3.0.0)
     sequel (5.77.0)
       bigdecimal
@@ -1304,6 +1310,7 @@ DEPENDENCIES
   rails (~> 6.0.5)
   rails-controller-testing (~> 1.0.5)
   rails-html-sanitizer
+  rails_semantic_logger (~> 4.14)
   railties (> 3, < 7)
   redcarpet (~> 3.5.1)
   redlock (>= 0.1.2, < 2.0)

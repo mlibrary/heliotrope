@@ -60,14 +60,6 @@ Rails.application.configure do
   # helpers in production to return suitable https links. Hence this:
   Rails.application.routes.default_url_options[:protocol] = 'https'
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  # Setting this in the top-level environment.rb, see HELIO-2068
-  # config.log_level = Settings.log_level || 0
-
-  # Prepend all log lines with the following tags.
-  config.log_tags = [:request_id]
-
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
 
@@ -95,18 +87,11 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
-
-  # Use a different logger for distributed setups.
-  # require 'syslog/logger'
-  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
-
-  if ENV["RAILS_LOG_TO_STDOUT"].present?
-    logger           = ActiveSupport::Logger.new(STDOUT)
-    logger.formatter = config.log_formatter
-    config.logger    = ActiveSupport::TaggedLogging.new(logger)
-  end
+  # Semantic logger config
+  # https://logger.rocketjob.io/rails.html
+  # log_level is set in puma.rb in the deploy project
+  config.rails_semantic_logger.quiet_assets = true
+  config.semantic_logger.backtrace_level = :error
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false

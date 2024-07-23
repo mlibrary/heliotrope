@@ -167,6 +167,8 @@ gem 'pragmatic_segmenter', '~> 0.3'
 
 # Turn page image epub chapters into pdfs
 gem 'prawn', '~> 2.2'
+ 
+gem "rails_semantic_logger", '~> 4.14'
 
 gem 'redcarpet', '~> 3.5.1'
 
