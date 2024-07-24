@@ -61,8 +61,18 @@ class EBookDownloadPresenter < ApplicationPresenter
     @ebook_presenters.each do |ebook|
       next unless downloadable?(ebook)
 
+      # The "read dashboard" conditional catches analyst admin users but not public readers as `can? :read, @monograph_presenter` would
+      editor = !current_actor&.is_a?(Anonymous) && current_actor&.can?(:read, :stats_dashboard)
+
+      download_warning = if editor && ebook.ebook_format == 'PDF'
+                           # yes this is nasty but the alternatives really balloon out into new controllers, pages, options and/or adding more things to CSB that don't belong there ;-)
+                           " --- Editors, please note this is *not* the repository PDF --- It has been compressed and may be watermarked --- Do *not* use this file for editing! ---".html_safe
+                         else
+                           ''
+                         end
+
       links << {
-        format: ebook.ebook_format,
+        format: ebook.ebook_format + download_warning,
         size: ActiveSupport::NumberHelper.number_to_human_size(ebook.file_size),
         href: Rails.application.routes.url_helpers.download_ebook_path(ebook.id)
       }
