@@ -9,7 +9,7 @@ Riiif::Image.file_resolver.id_to_uri = lambda do |id|
   doc = ActiveFedora::SolrService.query("{!terms f=id}#{id}", fl: ['id', 'original_file_id_ssi'], rows: 1).first
   return "" if doc.nil? || doc["original_file_id_ssi"].nil?
   ActiveFedora::Base.id_to_uri(CGI.unescape(doc["original_file_id_ssi"])).tap do |url|
-    Rails.logger.info "[RIIIF] Resolved #{id} to #{url}"
+    Rails.logger.debug "[RIIIF] Resolved #{id} to #{url}"
   end
 end
 

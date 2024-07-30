@@ -87,6 +87,25 @@ module Heliotrope
     # See the KeycardAuthenticatable strategy for more detail.
     config.create_user_on_login = Settings.create_user_on_login && true
 
+    # HELIO-4700 add Semantic Logger
+    # Prepend all log lines with the following tags.
+    # Can be overridden in environments/development and environments/test
+    config.log_tags = {
+      id: :request_id,
+      ip: :remote_ip
+    }
+
+    # config.rails_semantic_logger.format = :logfmt
+    config.rails_semantic_logger.format = :color
+
+    if ENV["RAILS_LOG_TO_STDOUT"].present?
+      $stdout.sync = true
+      config.rails_semantic_logger.add_file_appender = false
+      config.semantic_logger.add_appender(
+        io: $stdout, formatter: config.rails_semantic_logger.format
+      )
+    end
+
     # HELIO-4075 Set java.io.tmpdir to `Settings.scratch_space_path`
     # Ensure tmp directories are defined (Cut and pasted from DBD October 14, 2021 then modified for Fulcrum)
     verbose_init = false

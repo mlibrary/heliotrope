@@ -130,6 +130,11 @@ class UtilitiesController < ApplicationController
 
         #{ActiveFedora::Fedora.instance.authorized_connection.options}
 
+
+      Log Level
+
+        #{Rails.logger.level}
+
       APP_STATUS
     else
       output += <<~STATUS_LOGIN
