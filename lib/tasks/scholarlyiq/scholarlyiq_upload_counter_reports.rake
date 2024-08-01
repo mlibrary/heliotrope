@@ -6,38 +6,39 @@
 
 desc 'Upload COUNTER Reports Data to S3 Bucket For ScholarlyIQ'
 namespace :heliotrope do
-  task :scholarlyiq_upload_counter_reports, [:output_directory, :all_rows] => :environment do |_t, args|
-    # Usage: bundle exec rails "heliotrope:scholarlyiq_upload_counter_reports[output_directory, <all_rows>]"
+  task :scholarlyiq_upload_counter_reports, [:output_directory, :all_rows_before_today] => :environment do |_t, args|
+    # Usage: bundle exec rails "heliotrope:scholarlyiq_upload_counter_reports[output_directory, <all_rows_before_today>]"
 
     if !File.writable?(args.output_directory)
       puts "Provided directory (#{args.output_directory}) is not writable. Exiting."
       exit
     end
 
-    # this optional parameter will very rarely be used, maybe twice as we start up the Scholarly iQ feeds
-    all_rows = args.all_rows == 'all_rows'
+    # this optional parameter will very rarely be used once things have settled down. It's for when you have to send...
+    # everything again, but want the cron task (uses `else`) to pick up later with no overlapping rows
+    all_rows_before_today = args.all_rows_before_today == 'all_rows_before_today'
 
     # For now let's assume these will be tidied up manually, or by a separate cron
-    output_file = if all_rows
-                    File.join(args.output_directory, "counter_reports_all_rows-#{Time.now.getlocal.strftime("%Y-%m-%d")}.tsv")
+    output_file = if all_rows_before_today
+                    File.join(args.output_directory, "counter_reports_all_rows_through-#{Time.now.days_ago(1).getlocal.strftime("%Y-%m-%d")}.tsv")
                   else
                     # note this is named to indicate the dates of the actual records
                     File.join(args.output_directory, "counter_reports-#{Time.now.days_ago(1).getlocal.strftime("%Y-%m-%d")}.tsv")
                   end
 
     # find_each should default to 1000 rows stored at a time, not gobbling up RAM for the entire resultset
-    rows = if all_rows
-             CounterReport.find_each
+    rows = if all_rows_before_today
+             CounterReport.where("created_at < CURDATE()").find_each
            else
              CounterReport.where("created_at >= CURDATE() - INTERVAL 1 DAY AND created_at < CURDATE()").find_each
            end
 
-    CSV.open(output_file, "w", col_sep: "\t", force_quotes: true, write_headers: true) do |tsv|
+    CSV.open(output_file, "w", col_sep: "\t", write_headers: true) do |tsv|
       rows.with_index do |row, index|
         if index.zero?
           tsv << row.attributes.map { |key, _value| key }
         else
-          tsv << row.attributes.map { |_key, value| value }
+          tsv << row.attributes.map { |_key, value| value.to_s.squish }
         end
       end
     end
