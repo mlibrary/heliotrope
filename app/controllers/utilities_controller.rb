@@ -3,6 +3,8 @@
 include StatusPageService
 
 class UtilitiesController < ApplicationController
+  include Skylight::Helpers
+
   def whoami # rubocop:disable Metrics/CyclomaticComplexity
     headers = request.headers
     hash_tag_line = ''
@@ -59,6 +61,14 @@ class UtilitiesController < ApplicationController
     render plain: who_am_i
   end
 
+  instrument_method
+  def show_app_status?
+    # The "University of Michigan, Ann Arbor" institution has `identifier` == "1"
+    return true if Rails.env.eql?('development') || current_ability&.current_user&.platform_admin? || current_institutions&.map(&:identifier)&.include?('1')
+    false
+  end
+
+  instrument_method
   def status
     hash_tag_line = ''
     130.times { hash_tag_line += '#' }
@@ -71,80 +81,94 @@ class UtilitiesController < ApplicationController
       #{hash_tag_line}
     STATUS_HEADER
 
-    # The "University of Michigan, Ann Arbor" institution has `identifier` == "1"
-    if Rails.env.eql?('development') || current_ability&.current_user&.platform_admin? || current_institutions&.map(&:identifier)&.include?('1')
-      output += <<~APP_STATUS
+    time = Benchmark.measure do # rubocop:disable Metrics/BlockLength:
+      if show_app_status?
+        output += <<~APP_STATUS
 
-      Application Checks
+        Application Checks
 
-        Config Files
+          Config Files
 
-          database.yml .......... #{check_config_file('database.yml')}
-          fedora.yml ............ #{check_config_file('fedora.yml')}
-          secrets.yml ........... #{check_config_file('secrets.yml')}
-          solr.yml .............. #{check_config_file('solr.yml')}
-          analytics.yml ......... #{check_config_file('analytics.yml')}
-          aptrust.yml ........... #{check_config_file('aptrust.yml')}
-          blacklight.yml ........ #{check_config_file('blacklight.yml')}
-          box.yml ............... #{check_config_file('box.yml')}
-          crossref.yml .......... #{check_config_file('crossref.yml')}
-          redis.yml ............. #{check_config_file('redis.yml')}
-          resque-pool.yml ....... #{check_config_file('resque-pool.yml')}
-          role_map.yml .......... #{check_config_file('role_map.yml')}
-          skylight.yml .......... #{check_config_file('skylight.yml')}
+            database.yml .......... #{check_config_file('database.yml')}
+            fedora.yml ............ #{check_config_file('fedora.yml')}
+            secrets.yml ........... #{check_config_file('secrets.yml')}
+            solr.yml .............. #{check_config_file('solr.yml')}
+            analytics.yml ......... #{check_config_file('analytics.yml')}
+            aptrust.yml ........... #{check_config_file('aptrust.yml')}
+            blacklight.yml ........ #{check_config_file('blacklight.yml')}
+            box.yml ............... #{check_config_file('box.yml')}
+            crossref.yml .......... #{check_config_file('crossref.yml')}
+            redis.yml ............. #{check_config_file('redis.yml')}
+            resque-pool.yml ....... #{check_config_file('resque-pool.yml')}
+            role_map.yml .......... #{check_config_file('role_map.yml')}
+            skylight.yml .......... #{check_config_file('skylight.yml')}
 
-        Resque workers .......... #{resque_workers_count} registered, #{resque_workers_working_count} working
-
-
-      Environment Status
-
-          Shibboleth redirect ... #{shib_check_redirecting}
-          MySQL ................. #{check_active_record}
-          Fedora ................ #{fedora}
-          Solr .................. #{solr}
-          Redis ................. #{redis}
-          FITS .................. #{fits_version}
+          Resque workers .......... #{resque_workers_count} registered, #{resque_workers_working_count} working
 
 
-      Server
+        Environment Status
 
-        #{Socket.gethostname}
-
-
-      Server Uptime
-
-        #{server_status}
-
-
-      Processes - Puma workers
-
-        #{puma_workers}
+            Shibboleth redirect ... #{shib_check_redirecting}
+            MySQL ................. #{check_active_record}
+            Fedora ................ #{fedora}
+            Solr .................. #{solr}
+            Redis ................. #{redis}
+            FITS .................. #{fits_version}
 
 
-      Processes - Resque workers
+        Server
 
-        #{resque_workers}
-
-
-      ActiveFedora - Connection config options
-
-        #{ActiveFedora::Fedora.instance.authorized_connection.options}
+          #{Socket.gethostname}
 
 
-      Log Level
+        Server Uptime
 
-        #{Rails.logger.level}
+          #{server_status}
 
-      APP_STATUS
-    else
-      output += <<~STATUS_LOGIN
 
-      Please connect from a University of Michigan IP to see more details!
-      note: The Shibboleth process is #{shib_process}.
-      STATUS_LOGIN
+        Processes - Puma workers
+
+          #{puma_workers}
+
+
+        Processes - Resque workers
+
+          #{resque_workers}
+
+
+        ActiveFedora - Connection config options
+
+          #{ActiveFedora::Fedora.instance.authorized_connection.options}
+
+
+        Log Level
+
+          #{Rails.logger.level}
+
+
+        File System (results of /bin/ls on directories in seconds)
+
+          derivatives ............. #{derivatives_path}
+          uploads ................. #{uploads_path}
+          riiif_network_files ..... #{riiif_network_files_path}
+          scratch_space ........... #{scratch_space_path}
+
+
+        Sample Solr Query Time (in seconds): #{solr_sample_query}
+
+
+        APP_STATUS
+      else
+        output += <<~STATUS_LOGIN
+
+        Please connect from a University of Michigan IP to see more details!
+        note: The Shibboleth process is #{shib_process}.
+        STATUS_LOGIN
+      end
     end
 
     output += "\n#{hash_tag_line}"
+    output += "\n\nStatus Page benchmark elapsed real time is #{time.real} seconds\n\n" if show_app_status?
 
     render plain: output
   end
