@@ -68,7 +68,7 @@ cozy.control.widget.button({
 <% if @ebook_download_presenter.csb_download_links.length.positive? && @share_link.nil? %>
 cozy.control.download({
     region: 'top.toolbar.left',
-    template: '<button class="button--sm cozy-download" data-toggle="open" aria-label="Download book" role="button"><i id="download-control-button" class="oi" data-glyph="data-transfer-download" title="Download book" aria-hidden="true"></i></button>',
+    template: '<button class="button--sm cozy-download" <% if @ebook_download_presenter.csb_download_links.pluck(:format).include?('PDF') && !current_actor&.is_a?(Anonymous) && current_actor&.can?(:read, :stats_dashboard) %>id="cozy-pdf-download-warning-required" <% end %>data-toggle="open" aria-label="Download book" role="button"><i id="download-control-button" class="oi" data-glyph="data-transfer-download" title="Download book" aria-hidden="true"></i></button>',
 }).addTo(reader);
 <% end %>
 
