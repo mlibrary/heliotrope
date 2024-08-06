@@ -70,6 +70,11 @@ RSpec.describe "Utilities", type: :request do
         allow_any_instance_of(Kernel).to receive(:`).with("ps -f -u $USER").and_return("processy puma stuff line 1\nprocessy resque workers stuff line 2")
         allow_any_instance_of(Kernel).to receive(:`).with("fits.sh -v").and_return("build.version=1.3.0")
 
+        allow_any_instance_of(Kernel).to receive(:`).with("/bin/ls #{Settings.derivatives_path} > /dev/null 2> /dev/null")
+        allow_any_instance_of(Kernel).to receive(:`).with("/bin/ls #{Settings.uploads_path} > /dev/null 2> /dev/null")
+        allow_any_instance_of(Kernel).to receive(:`).with("/bin/ls #{Settings.riiif_network_files_path} > /dev/null 2> /dev/null")
+        allow_any_instance_of(Kernel).to receive(:`).with("/bin/ls #{Settings.scratch_space_path} > /dev/null 2> /dev/null")
+
         allow(Resque).to receive_message_chain(:workers, :count).and_return(5)
         allow(Resque).to receive_message_chain(:workers, :select).and_return([1, 2, 3])
 
@@ -108,7 +113,7 @@ RSpec.describe "Utilities", type: :request do
           expect(response.body).to_not include('skylight.yml .......... OK')
 
           expect(response.body).to_not include('Fedora ................ UP')
-          expect(response.body).to_not include('Solr .................. UP - core found')
+          expect(response.body).to_not include('Solr .................. UP - core (hydra-test) found - version: 6.5.1')
           expect(response.body).to_not include('Shibboleth redirect ... UP')
 
           expect(response.body).to_not include('FITS .................. build.version=1.3.0')
@@ -153,7 +158,7 @@ RSpec.describe "Utilities", type: :request do
           expect(response.body).to include('skylight.yml .......... OK')
 
           expect(response.body).to include('Fedora ................ UP')
-          expect(response.body).to include('Solr .................. UP - core found')
+          expect(response.body).to include('Solr .................. UP - core (hydra-test) found - version') # actual version is different on circle ci  so skip it I guess
           expect(response.body).to include('Shibboleth redirect ... UP')
 
           expect(response.body).to include('FITS .................. build.version=1.3.0')
@@ -165,6 +170,11 @@ RSpec.describe "Utilities", type: :request do
           expect(response.body).to include('processy puma stuff line 1')
           expect(response.body).to include('Processes - Resque workers')
           expect(response.body).to include('processy resque workers stuff line 2')
+
+          expect(response.body).to include("Log Level")
+          expect(response.body).to include("File System")
+          expect(response.body).to include("Sample Solr Query Time")
+          expect(response.body).to include("Status Page benchmark elapsed real time")
         end
       end
     end
@@ -175,10 +185,15 @@ RSpec.describe "Utilities", type: :request do
         allow(redis).to receive(:ping).and_return("")
         allow_any_instance_of(Kernel).to receive(:`).with('uptime').and_return("Server out to lunch!")
         allow(ActiveRecord::Migrator).to receive(:current_version).and_raise("BLAH")
-        allow_any_instance_of(Kernel).to receive(:`).with("curl --max-time 5 -s -w \"%{http_code}\" '#{solr_url}'").and_return('404')
+        allow(RSolr).to receive(:connect).and_return(RSolr.connect url: "http://127.0.0.1")
         allow_any_instance_of(Kernel).to receive(:`).with("curl --max-time 5 -s -o /dev/null -w \"%{http_code}\" '#{fedora_url}'").and_return('404')
         allow_any_instance_of(Kernel).to receive(:`).with("ps -f -u $USER").and_return("processy stuff line 1\nprocessy stuff line 2")
         allow_any_instance_of(Kernel).to receive(:`).with("fits.sh -v").and_return('')
+
+        allow_any_instance_of(Kernel).to receive(:`).with("/bin/ls #{Settings.derivatives_path} > /dev/null 2> /dev/null")
+        allow_any_instance_of(Kernel).to receive(:`).with("/bin/ls #{Settings.uploads_path} > /dev/null 2> /dev/null")
+        allow_any_instance_of(Kernel).to receive(:`).with("/bin/ls #{Settings.riiif_network_files_path} > /dev/null 2> /dev/null")
+        allow_any_instance_of(Kernel).to receive(:`).with("/bin/ls #{Settings.scratch_space_path} > /dev/null 2> /dev/null")
 
         allow(Resque).to receive_message_chain(:workers, :count).and_return(0)
         allow(Resque).to receive_message_chain(:workers, :select).and_return([])
