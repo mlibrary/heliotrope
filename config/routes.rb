@@ -170,6 +170,7 @@ Rails.application.routes.draw do
   resources :ebooks, only: [] do
     member do
       get :download
+      post :watermark
     end
   end
 
