@@ -169,6 +169,14 @@ module Heliotrope
     # not sure why this doesn't work on CircleCI, TBH. Is it not actually using the version of Node we think it is?
     ENV['NODE_OPTIONS'] = '--openssl-legacy-provider' unless node_major_version < 17 || ENV['CIRCLECI']
 
+    # action cable config HELIO-4534
+    config.action_cable.allowed_request_origins = [
+      'https://staging.fulcrum.org',
+      'https://heliotrope-preview.hydra.lib.umich.edu/',
+      'https://www.fulcrum.org'
+    ]
+
+
     config.to_prepare do
       # ensure overrides are loaded
       # see https://bibwild.wordpress.com/2016/12/27/a-class_eval-monkey-patching-pattern-with-prepend/
