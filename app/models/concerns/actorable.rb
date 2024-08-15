@@ -2,7 +2,9 @@
 
 module Actorable
   extend ActiveSupport::Concern
+  include Skylight::Helpers
 
+  instrument_method
   def individual
     if Incognito.sudo_actor?(self)
       Incognito.sudo_actor_individual(self)
@@ -11,6 +13,7 @@ module Actorable
     end
   end
 
+  instrument_method
   def institutions
     if Incognito.sudo_actor?(self)
       [Incognito.sudo_actor_institution(self)].compact
@@ -19,6 +22,7 @@ module Actorable
     end
   end
 
+  instrument_method
   def affiliations(institution)
     if Incognito.sudo_actor?(self)
       [Incognito.sudo_actor_institution_affiliation(self)].compact.select { |ia| ia.institution_id == institution.id }
@@ -27,10 +31,12 @@ module Actorable
     end
   end
 
+  instrument_method
   def products
     Greensub::Product.where(id: licenses.pluck(:product_id)).uniq
   end
 
+  instrument_method
   def licenses # rubocop:disable Metrics/CyclomaticComplexity
     licenses = individual&.licenses.to_a || []
     institutions.each do |institution|

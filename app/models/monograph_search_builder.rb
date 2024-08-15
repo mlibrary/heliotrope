@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class MonographSearchBuilder < ::SearchBuilder
+  include Skylight::Helpers
+
   self.default_processor_chain += [
     :filter_by_monograph_id,
     :filter_out_miscellaneous,
@@ -8,12 +10,14 @@ class MonographSearchBuilder < ::SearchBuilder
     :filter_out_tombstones
   ]
 
+  instrument_method
   def filter_by_monograph_id(solr_parameters)
     id = monograph_id(blacklight_params)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << "{!terms f=monograph_id_ssim}#{id}"
   end
 
+  instrument_method
   def filter_out_miscellaneous(solr_parameters)
     id = monograph_id(blacklight_params)
     mp = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).first
@@ -29,6 +33,7 @@ class MonographSearchBuilder < ::SearchBuilder
     end
   end
 
+  instrument_method
   def filter_out_representatives(solr_parameters)
     id = monograph_id(blacklight_params)
     # HELIO-4214 include webgls and database in the file_set/resource list
@@ -37,6 +42,7 @@ class MonographSearchBuilder < ::SearchBuilder
   end
 
   # Redundant but consistent with PressSearchBuilder
+  instrument_method
   def filter_out_tombstones(solr_parameters)
     # id = monograph_id(blacklight_params)
     solr_parameters[:fq] << "-tombstone_ssim:[* TO *]"
@@ -48,6 +54,7 @@ class MonographSearchBuilder < ::SearchBuilder
       blacklight_params[:monograph_id] || blacklight_params['id']
     end
 
+    instrument_method
     def tombstone?(doc)
       # HELIO-3707 ideally we'd do:
       # return true if Sighrax.tombstone?(Sighrax.from_solr_document(doc))

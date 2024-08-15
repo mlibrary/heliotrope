@@ -70,6 +70,7 @@ class MonographCatalogController < ::CatalogController
     config.add_facet_fields_to_solr_request!
   end
 
+  instrument_method
   def facet
     # Related to helpers/facets_helper#facet_url_helper
     # and views/catalog/_facet_limit.html.erb
@@ -77,6 +78,13 @@ class MonographCatalogController < ::CatalogController
     super
   end
 
+  instrument_method
+  def show
+    # this is just for skylight's instrument_method
+    super
+  end
+
+  instrument_method
   def purchase
   end
 
@@ -116,17 +124,22 @@ class MonographCatalogController < ::CatalogController
     instrument_method
     def monograph_auth_for
       auth_for(Sighrax.from_presenter(@monograph_presenter))
+      for_access_icons
       @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
-      # For Access Icons HELIO-3346
-      @actor_product_ids = current_actor.products.pluck(:id)
-      @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
-
       # The monograph catalog page is completely user-facing, apart from a small admin menu. The "Read" button should...
       # never show up if there is no published ebook for CSB to use! This is important for the "Forthcoming" workflow.
       @show_read_button = @monograph_presenter.reader_ebook? && @monograph_presenter&.reader_ebook['visibility_ssi'] == 'open'
       @disable_read_button = disable_read_button?
     end
 
+    instrument_method
+    def for_access_icons
+      # For Access Icons HELIO-3346
+      @actor_product_ids = current_actor.products.pluck(:id)
+      @allow_read_product_ids = Sighrax.allow_read_products.pluck(:id)
+    end
+
+    instrument_method
     def load_press_presenter
       @press_presenter = PressPresenter.for(@monograph_presenter.subdomain)
     end
