@@ -149,16 +149,16 @@ class EPubsController < CheckpointController
   def share_link
     return head :no_content unless @policy.show?
 
-    subdomain = @presenter.parent.subdomain
+    subdomain = @parent_presenter.subdomain
     if Press.where(subdomain: subdomain).first&.allow_share_links?
       expire = Time.now.to_i + 28 * 24 * 3600 # 28 days in seconds
-      token = JsonWebToken.encode(data: @noid, exp: expire)
+      token = JsonWebToken.encode(data: @parent_presenter.id, exp: expire)
       ShareLinkLog.create(ip_address: request.ip,
                           institution: current_institutions.map(&:name).join("|"),
                           press: subdomain,
                           user: current_actor.email,
-                          title: @presenter.parent.title,
-                          noid: @presenter.id,
+                          title: @parent_presenter.title,
+                          noid: @parent_presenter.id,
                           token: token,
                           action: 'create')
       render plain: Rails.application.routes.url_helpers.epub_url(@noid, share: token)
@@ -191,7 +191,7 @@ class EPubsController < CheckpointController
                           press: @subdomain,
                           user: current_actor.email,
                           title: @parent_presenter.title,
-                          noid: @noid,
+                          noid: @parent_presenter.id,
                           token: @share_link,
                           action: 'use')
     end
@@ -200,8 +200,8 @@ class EPubsController < CheckpointController
       if @share_link.present?
         begin
           decoded = JsonWebToken.decode(@share_link)
-          return true if decoded[:data] == @noid
-        rescue JWT::ExpiredSignature
+          return true if decoded[:data] == @noid || decoded[:data] == @parent_presenter.id
+        rescue JWT::ExpiredSignature, JWT::VerificationError
           return false
         end
       end

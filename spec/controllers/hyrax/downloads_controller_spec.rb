@@ -431,7 +431,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
       }
 
       let(:valid_share_token) do
-        JsonWebToken.encode(data: draft_epub_file_set.id, exp: Time.now.to_i + 48 * 3600)
+        JsonWebToken.encode(data: monograph.id, exp: Time.now.to_i + 28 * 24 * 3600)
       end
 
       before do
