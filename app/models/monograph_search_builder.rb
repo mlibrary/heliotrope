@@ -10,6 +10,11 @@ class MonographSearchBuilder < ::SearchBuilder
     :filter_out_tombstones
   ]
 
+  # this prevents the Solr request from filtering draft documents out, given an anonymous user using a share link,...
+  # otherwise the following would be added to `fq`, removing such documents from the response completely:
+  # ({!terms f=edit_access_group_ssim}public) OR ({!terms f=discover_access_group_ssim}public) OR ({!terms f=read_access_group_ssim}public)"
+  self.default_processor_chain -= [:add_access_controls_to_solr_params] if :valid_share_link?
+
   instrument_method
   def filter_by_monograph_id(solr_parameters)
     id = monograph_id(blacklight_params)
@@ -46,6 +51,22 @@ class MonographSearchBuilder < ::SearchBuilder
   def filter_out_tombstones(solr_parameters)
     # id = monograph_id(blacklight_params)
     solr_parameters[:fq] << "-tombstone_ssim:[* TO *]"
+  end
+
+  def valid_share_link?
+    share_link = blacklight_params[:share] || session[:share_link]
+    session[:share_link] = share_link
+
+    if share_link.present?
+      begin
+        decoded = JsonWebToken.decode(share_link)
+        return true if decoded[:data] == @monograph_presenter&.id
+      rescue JWT::ExpiredSignature
+        false
+      end
+    else
+      false
+    end
   end
 
   private

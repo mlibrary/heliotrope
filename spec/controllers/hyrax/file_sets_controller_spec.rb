@@ -28,6 +28,28 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
       expect(response).to redirect_to(Hyrax::Engine.routes.url_helpers.download_path(file_set.id))
       expect(response).to have_http_status(:found) # 302 Found
     end
+
+    context 'draft FileSet with an anonymous user' do
+      before { sign_out user }
+
+      it 'Redirects to login' do
+        get :show, params: { id: file_set.id }
+        expect(response).to redirect_to('/login?locale=en')
+        expect(response).to have_http_status(:found) # 302 Found
+      end
+
+      context 'Using a share link for the parent Monograph' do
+        let(:valid_share_token) do
+          JsonWebToken.encode(data: monograph.id, exp: Time.now.to_i + 28 * 24 * 3600)
+        end
+
+        it 'succeeds' do
+          get :show, params: { id: file_set.id, share: valid_share_token }
+          expect(response).to have_http_status(:success)
+          expect(response).to render_template('show')
+        end
+      end
+    end
   end
 
   describe "#destroy" do

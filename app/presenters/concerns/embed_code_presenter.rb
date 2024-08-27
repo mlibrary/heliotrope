@@ -8,7 +8,7 @@ module EmbedCodePresenter
   end
 
   def allow_embed?
-    current_ability.platform_admin?
+    current_ability&.platform_admin?
   end
 
   def embed_code

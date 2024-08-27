@@ -135,7 +135,29 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
     # See hyrax, https://github.com/samvera/hyrax/commit/cb21570fadcea0b8d1dfd0b7cffecf5135c1ea76
     # See hyrax, https://github.com/samvera/hyrax/commit/1efe93929285985751cc270675c243f628cf31ca
     def presenter
-      @presenter ||= show_presenter.new(curation_concern_document, current_ability, request)
+      @presenter ||= if valid_share_link?
+                       @share_link_presenter
+                     else
+                       show_presenter.new(curation_concern_document, current_ability, request)
+                     end
+    end
+
+    def valid_share_link?
+      return @valid_share_link if @valid_share_link.present?
+
+      share_link = params[:share] || session[:share_link]
+      session[:share_link] = share_link
+
+      @valid_share_link = if share_link.present?
+                            @share_link_presenter = show_presenter.new(::SolrDocument.find(params[:id]), current_ability, request)
+
+                            begin
+                              decoded = JsonWebToken.decode(share_link)
+                              true if decoded[:data] == @share_link_presenter&.parent&.id
+                            rescue JWT::ExpiredSignature
+                              false
+                            end
+                          end
     end
   end)
 end

@@ -677,13 +677,13 @@ RSpec.describe EPubsController, type: :controller do
 
       context "A restricted epub" do
         let(:valid_share_token) do
-          JsonWebToken.encode(data: file_set.id, exp: Time.now.to_i + 48 * 3600)
+          JsonWebToken.encode(data: monograph.id, exp: Time.now.to_i + 28 * 24 * 3600)
         end
         let(:expired_share_token) do
-          JsonWebToken.encode(data: file_set.id, exp: Time.now.to_i - 1000)
+          JsonWebToken.encode(data: monograph.id, exp: Time.now.to_i - 1000)
         end
         let(:wrong_share_token) do
-          JsonWebToken.encode(data: 'wrongnoid', exp: Time.now.to_i + 48 * 3600)
+          JsonWebToken.encode(data: 'wrongnoid', exp: Time.now.to_i + 28 * 24 * 3600)
         end
         let(:parent) { Sighrax.from_noid(monograph.id) }
         let(:epub) { Sighrax.from_noid(file_set.id) }
@@ -701,7 +701,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(ShareLinkLog.last.action).to eq 'use'
             expect(ShareLinkLog.last.user).to be_nil
             expect(ShareLinkLog.last.title).to eq monograph.title.first
-            expect(ShareLinkLog.last.noid).to eq file_set.id
+            expect(ShareLinkLog.last.noid).to eq monograph.id
             expect(ShareLinkLog.last.token).to eq valid_share_token
           end
 
@@ -735,7 +735,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(ShareLinkLog.last.action).to eq 'use'
             expect(ShareLinkLog.last.user).to eq user.email
             expect(ShareLinkLog.last.title).to eq monograph.title.first
-            expect(ShareLinkLog.last.noid).to eq file_set.id
+            expect(ShareLinkLog.last.noid).to eq monograph.id
             expect(ShareLinkLog.last.token).to eq valid_share_token
           end
 
@@ -793,7 +793,7 @@ RSpec.describe EPubsController, type: :controller do
       it 'returns a share link with a valid JSON webtoken and logs the creation' do
         get :share_link, params: { id: '222222222' }
         expect(response).to have_http_status(:success)
-        expect(response.body).to eq "http://test.host/epubs/222222222?share=#{JsonWebToken.encode(data: '222222222', exp: now.to_i + share_link_expiration_time)}"
+        expect(response.body).to eq "http://test.host/epubs/222222222?share=#{JsonWebToken.encode(data: '111111111', exp: now.to_i + share_link_expiration_time)}"
         expect(ShareLinkLog.count).to eq 1
         expect(ShareLinkLog.last.action).to eq 'create'
       end

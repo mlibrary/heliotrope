@@ -104,6 +104,17 @@ RSpec.describe MonographCatalogController, type: :controller do
             get :index, params: { id: monograph.id }
             expect(assigns(:show_read_button)).to eq false
           end
+
+          context 'with a valid share link' do
+            let(:valid_share_token) do
+              JsonWebToken.encode(data: monograph.id, exp: Time.now.to_i + 28 * 24 * 3600)
+            end
+
+            it "shows the read button" do
+              get :index, params: { id: monograph.id, share: valid_share_token }
+              expect(assigns(:show_read_button)).to eq true
+            end
+          end
         end
 
         context 'public ebook FeaturedRepresentative FileSet' do
@@ -203,6 +214,21 @@ RSpec.describe MonographCatalogController, type: :controller do
           end
           it 'redirects to login page' do
             expect(response).to redirect_to(new_user_session_path)
+          end
+
+          context 'with a valid share link' do
+            let(:valid_share_token) do
+              JsonWebToken.encode(data: monograph.id, exp: Time.now.to_i + 28 * 24 * 3600)
+            end
+
+            before do
+              get :index, params: { id: monograph.id, share: valid_share_token }
+            end
+
+            it 'response is successful' do
+              expect(response).to be_successful
+              expect(response).to render_template('monograph_catalog/index')
+            end
           end
         end
 

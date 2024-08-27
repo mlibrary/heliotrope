@@ -108,13 +108,37 @@ class MonographCatalogController < ::CatalogController
 
   private
 
+    def valid_share_link?
+      return @valid_share_link if @valid_share_link.present?
+
+      share_link = params[:share] || session[:share_link]
+      session[:share_link] = share_link
+
+      @valid_share_link = if share_link.present?
+                            begin
+                              decoded = JsonWebToken.decode(share_link)
+                              true if decoded[:data] == @monograph_presenter&.id
+                            rescue JWT::ExpiredSignature, JWT::VerificationError
+                              false
+                            end
+                          else
+                            false
+                          end
+    end
+
     instrument_method
     def load_presenter
       retries ||= 0
       monograph_id = params[:monograph_id] || params[:id]
       @monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
       raise PageNotFoundError if @monograph_presenter.nil?
-      raise CanCan::AccessDenied unless current_ability&.can?(:read, @monograph_presenter)
+
+      # We don't "sell"/protect the Monograph catalog page. This line is the one and only place where the Monograph's...
+      # draft (restricted) status can prevent it being universally seen.
+      # Share links being used to "expose" the Monograph page are only for editors allowing, e.g. authors to easily...
+      # review draft content. We can assume the Monograph is draft if the first condition is false.
+      raise CanCan::AccessDenied unless current_ability&.can?(:read, @monograph_presenter) || valid_share_link?
+
     rescue RSolr::Error::ConnectionRefused, RSolr::Error::Http => e
       Rails.logger.error(%Q|[RSOLR ERROR TRY:#{retries}] #{e} #{e.backtrace.join("\n")}|)
       retries += 1
@@ -128,7 +152,7 @@ class MonographCatalogController < ::CatalogController
       @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
       # The monograph catalog page is completely user-facing, apart from a small admin menu. The "Read" button should...
       # never show up if there is no published ebook for CSB to use! This is important for the "Forthcoming" workflow.
-      @show_read_button = @monograph_presenter.reader_ebook? && @monograph_presenter&.reader_ebook['visibility_ssi'] == 'open'
+      @show_read_button = @monograph_presenter.reader_ebook? && (@monograph_presenter&.reader_ebook['visibility_ssi'] == 'open' || valid_share_link?)
       @disable_read_button = disable_read_button?
     end
 

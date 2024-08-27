@@ -22,18 +22,18 @@ module CommonWorkPresenter
     @non_representative_file_set_ids = file_sets_ids
   end
 
-  def assets?
-    ordered_file_sets_ids.present?
+  def assets?(valid_share_link = false)
+    ordered_file_sets_ids(valid_share_link).present?
   end
 
-  def ordered_file_sets_ids # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+  def ordered_file_sets_ids(valid_share_link = false) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     return @ordered_file_sets_ids if @ordered_file_sets_ids
     file_sets_ids = []
     ordered_member_docs.each do |doc|
       next if doc['has_model_ssim'] != ['FileSet'].freeze
       next if doc.id == representative_id
       next if featured_representatives.map(&:file_set_id).include?(doc.id)
-      next if doc['visibility_ssi'] != 'open' && !current_ability&.can?(:read, doc.id)
+      next if doc['visibility_ssi'] != 'open' && !(current_ability&.can?(:read, doc.id) || valid_share_link)
 
       file_sets_ids.append doc.id
     end

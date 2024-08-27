@@ -104,7 +104,7 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
 
     # HELIO-4501 Override to use the Hyrax 3.4 version of this with no workflow related code.
     def authorize_download!
-      return true if authorize_embeds_for_epub_share_link?
+      return true if authorize_thumbs_and_embeds_for_share_link?
 
       authorize! :download, params[asset_param_key]
     rescue CanCan::AccessDenied
@@ -112,21 +112,21 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
       send_file unauthorized_image, status: :unauthorized
     end
 
-    def authorize_embeds_for_epub_share_link?
+    def authorize_thumbs_and_embeds_for_share_link?
       # adding some logic to allow *draft* FileSet "downloads" to work when a session holds the sibling EPUB's share link.
       # This is specifically so that draft embedded video, jpeg (video poster), audio and animated gif resources will display in CSB.
       # Images will work anyway seeing as RIIIF tiles get served regardless of the originating FileSet's publication status.
 
-      if presenter.visibility == 'restricted' && presenter&.parent&.epub? && (jpeg? || video? || sound? || animated_gif? || closed_captions? || visual_descriptions?)
-        # I think the link could only be in the session here, but will check for `params[:share]` anyway
-        share_link = params[:share] || session[:share_link]
-        session[:share_link] = share_link
+      share_link = params[:share] || session[:share_link]
+      session[:share_link] = share_link if share_link.present?
 
+      # note we're *not* authorizing *all* FileSet downloads from Fedora here, just those tied to display
+      if thumbnail? || jpeg? || video? || sound? || animated_gif? || closed_captions? || visual_descriptions?
         if share_link.present?
           begin
             decoded = JsonWebToken.decode(share_link)
 
-            return true if decoded[:data] == presenter&.parent&.epub_id
+            return true if decoded[:data] == presenter&.parent&.id
           rescue JWT::ExpiredSignature
             false
           end
