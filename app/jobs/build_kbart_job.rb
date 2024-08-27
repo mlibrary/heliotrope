@@ -71,6 +71,7 @@ class BuildKbartJob < ApplicationJob
       "michelt" => "/home/fulcrum_ftp/ftp.fulcrum.org/michelt/KBART",
       "test_product" => "/home/fulcrum_ftp/heliotropium/publishing/Testing/KBART",
       "umpebc" => "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART",
+      "vermont" => "/home/fulcrum_ftp/ftp.fulcrum.org/vermont/KBART"
     }
   end
 
