@@ -21,7 +21,7 @@ namespace :heliotrope do
     # These files are named to indicate the dates of the actual records (yesterday)
     output_file = File.join(args.output_directory, "counter_reports-#{Time.now.days_ago(1).getlocal.strftime("%Y-%m-%d")}.tsv")
 
-    CSV.open(output_file, "w", col_sep: "\t", write_headers: true) do |tsv|
+    CSV.open(output_file, "w", col_sep: "\t") do |tsv|
       # find_each should default to 1000 rows stored at a time, not gobbling up RAM for the entire resultset
       CounterReport.where("created_at >= CURDATE() - INTERVAL 1 DAY AND created_at < CURDATE()").find_each.with_index do |row, index|
         # For now, `url` is a shimmed-in addition but we may start adding it "properly" on new table rows in the future
