@@ -72,7 +72,7 @@
                 <div class="info">
                   <span><%= institution.name %></span>
                   <%# several institutions have a single quote in their name, this also works if a double quote should arise in future %>
-                  <button onclick='showInstitutionInfoWindow("<%= institution.name.gsub('"', '\"') %>")'>
+                  <button aria-label="Login information for <%= institution.name %>" onclick='showInstitutionInfoWindow("<%= institution.name.gsub('"', '\"') %>")'>
                     <span class="fa fa-info-circle" aria-hidden="true"></span>
                   </button>
                 </div>
