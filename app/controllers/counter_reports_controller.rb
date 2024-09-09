@@ -32,7 +32,12 @@ class CounterReportsController < ApplicationController
   def index
     return render if @counter_report_service.present?
 
-    render 'counter_reports/without_customer_id/index'
+    config = Rails.root.join('config', 'scholarlyiq.yml')
+    if Flipflop.scholarlyiq_counter_redirect? && File.exist?(config)
+      redirect_to ScholarlyiqRedirectUrlService.encrypted_url(config, @institutions)
+    else
+      render 'counter_reports/without_customer_id/index'
+    end
   end
 
   def edit
@@ -110,12 +115,8 @@ class CounterReportsController < ApplicationController
     def set_presses_and_institutions
       return if @counter_report_service.present?
 
-      # HELIO-3526 press admins (and editors, analysts or other authed and prived users) will no longer
-      # access reports through this controller, but instead through the dashboard and
-      # hyrax/admin/stats_controller.rb
       @institutions = current_institutions.sort_by(&:name)
       @presses = Press.order(:name)
-
       if @institutions.empty? || @presses.empty?
         @skip_footer = true
         render 'counter_reports/unauthorized', status: :unauthorized
