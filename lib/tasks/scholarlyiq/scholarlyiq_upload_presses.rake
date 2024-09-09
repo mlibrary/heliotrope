@@ -17,7 +17,7 @@ namespace :heliotrope do
     # For now let's assume these will be tidied up manually, or by a separate cron
     output_file = File.join(args.output_directory, "presses-#{Time.now.getlocal.strftime("%Y-%m-%d")}.tsv")
 
-    CSV.open(output_file, "w", col_sep: "\t", write_headers: true) do |tsv|
+    CSV.open(output_file, "w", col_sep: "\t") do |tsv|
       tsv << %w[press_id subdomain name child_press_ids]
       Press.all.each do |press|
         tsv << [press.id,
