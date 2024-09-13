@@ -38,50 +38,6 @@ describe MonographSearchBuilder do
       end
     end
 
-    describe '#filter_out_miscellaneous' do
-      it do
-        solr_params = { fq: [] }
-        search_builder.filter_out_miscellaneous(solr_params)
-        expect(solr_params[:fq]).to be_empty
-      end
-
-      context 'representative_id' do
-        it do
-          m = create(:public_monograph, id: id)
-          fs = create(:public_file_set)
-          m.representative_id = fs.id
-          m.save!
-          solr_params = { fq: [] }
-          search_builder.filter_out_miscellaneous(solr_params)
-          expect(solr_params[:fq]).to contain_exactly("-id:#{fs.id}")
-        end
-      end
-
-      context 'tombstone' do
-        it do
-          m = create(:public_monograph, id: id)
-          fs = create(:public_file_set, tombstone: 'yes')
-          m.ordered_members << fs
-          m.save!
-          solr_params = { fq: [] }
-          search_builder.filter_out_miscellaneous(solr_params)
-          expect(solr_params[:fq]).to contain_exactly("-id:#{fs.id}")
-        end
-      end
-
-      context 'permissions_expiration_date' do
-        it do
-          m = create(:public_monograph, id: id)
-          fs = create(:public_file_set, permissions_expiration_date: 1.day.ago.utc.strftime('%Y-%m-%d'))
-          m.ordered_members << fs
-          m.save!
-          solr_params = { fq: [] }
-          search_builder.filter_out_miscellaneous(solr_params)
-          expect(solr_params[:fq]).to contain_exactly("-id:#{fs.id}")
-        end
-      end
-    end
-
     describe '#filter_out_representatives' do
       it do
         solr_params = { fq: [] }
@@ -90,6 +46,14 @@ describe MonographSearchBuilder do
       end
 
       context 'representatives' do
+        let(:monograph) { ::SolrDocument.new(id: id, has_model_ssim: ['Monograph'], hasRelatedMediaFragment_ssim: cover.id) }
+        let(:cover) { ::SolrDocument.new(id: '999999999', has_model_ssim: ['FileSet'], visibility_ssi: 'open') }
+
+        before do
+          ActiveFedora::SolrService.add([monograph.to_h, cover.to_h])
+          ActiveFedora::SolrService.commit
+        end
+
         it do
           create(:featured_representative, work_id: id, file_set_id: '1', kind: 'epub')
           create(:featured_representative, work_id: id, file_set_id: '2', kind: 'pdf_ebook')
@@ -97,16 +61,18 @@ describe MonographSearchBuilder do
           create(:featured_representative, work_id: id, file_set_id: '4', kind: 'webgl')
           solr_params = { fq: [] }
           search_builder.filter_out_representatives(solr_params)
-          expect(solr_params[:fq]).to contain_exactly("-id:(1 2)")
+          expect(solr_params[:fq]).to contain_exactly("-id:(1 2)", "-id:999999999")
         end
       end
     end
 
     describe '#filter_out_tombstones' do
       it do
-        solr_params = { fq: [] }
-        search_builder.filter_out_tombstones(solr_params)
-        expect(solr_params[:fq]).to contain_exactly("-tombstone_ssim:[* TO *]")
+        travel_to(Time.zone.local(2022, 02, 02, 12, 00, 00)) do
+          solr_params = { fq: [] }
+          search_builder.filter_out_tombstones(solr_params)
+          expect(solr_params[:fq]).to contain_exactly("-permissions_expiration_date_ssim:[* TO 2022-02-02]", "-tombstone_ssim:[* TO *]")
+        end
       end
     end
   end
