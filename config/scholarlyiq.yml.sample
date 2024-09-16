@@ -4,3 +4,7 @@ Bucket: "s3 bucket"
 BucketRegion: "s3 bucket region"
 AwsAccessKeyId: 123456789XYZ
 AwsSecretAccessKey: AwsSecretAccessKeyAwsSecretAccessKey
+
+# HELIO-4726 for redirecting users to SIQ to see their reports
+siq_portal_url: 'scholarlyiq.com'
+siq_shared_secret: 'some-shared-secret'

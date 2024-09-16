@@ -154,10 +154,31 @@ RSpec.describe "Customers Counter Reports", type: :request do
       end
 
       describe "GET /counter_reports" do
-        it do
-          get counter_reports_path
-          expect(response).to have_http_status(:ok)
-          expect(response).to render_template(:index)
+        context "with scholarlyiq redirect" do
+          before do
+            allow(Flipflop).to receive(:scholarlyiq_counter_redirect?).and_return(true)
+            allow(File).to receive(:exist?).and_return(true)
+            allow(File).to receive(:read).and_return(true)
+            allow(YAML).to receive(:safe_load).and_return(yaml)
+          end
+
+          let(:yaml) { { 'siq_portal_url' => 'http://test.scholarlyiq.com', 'siq_shared_secret' => '0123456789123456' } }
+          it do
+            get counter_reports_path
+            expect(response).to have_http_status(:found)
+          end
+        end
+
+        context "without scholarlyiq redirect" do
+          before do
+            allow(Flipflop).to receive(:scholarlyiq_counter_redirect?).and_return(false)
+          end
+
+          it do
+            get counter_reports_path
+            expect(response).to have_http_status(:ok)
+            expect(response).to render_template(:index)
+          end
         end
       end
 
