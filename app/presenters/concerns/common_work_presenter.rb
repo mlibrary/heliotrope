@@ -2,13 +2,16 @@
 
 module CommonWorkPresenter
   extend ActiveSupport::Concern
+  include Skylight::Helpers
 
   # yes, I need this and `assets?` is completely geared towards whether the "resources" tab should show or not
   # so this is `ordered_file_sets_ids` with the visibility and permissions removed
+  instrument_method
   def non_representative_file_sets?
     non_representative_file_set_ids.present?
   end
 
+  instrument_method
   def non_representative_file_set_ids # rubocop:disable Metrics/CyclomaticComplexity
     return @non_representative_file_set_ids if @non_representative_file_set_ids
     file_sets_ids = []
@@ -22,10 +25,12 @@ module CommonWorkPresenter
     @non_representative_file_set_ids = file_sets_ids
   end
 
+  instrument_method
   def assets?(valid_share_link = false)
     ordered_file_sets_ids(valid_share_link).present?
   end
 
+  instrument_method
   def ordered_file_sets_ids(valid_share_link = false) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     return @ordered_file_sets_ids if @ordered_file_sets_ids
     file_sets_ids = []
@@ -40,6 +45,7 @@ module CommonWorkPresenter
     @ordered_file_sets_ids = file_sets_ids
   end
 
+  instrument_method
   def ordered_member_docs
     return @ordered_member_docs if @ordered_member_docs
 
