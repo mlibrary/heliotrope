@@ -423,6 +423,105 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("figure[@data-fulcrum-embed-filename][@style]")).to be_empty
         end
       end
+
+      context "Automatically-added Able Player headings" do
+        # the image will not have any headings automatically added, anywhere
+        let(:image_under_all_headings) { create(:file_set, label: 'image_under_all_headings.jpg', title: ['Image to be placed alongside all below, gets no headings']) }
+        let(:image_under_all_headings_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(image_under_all_headings.to_solr.merge(mime_type_ssi: 'image/jpeg')), nil) }
+
+        let(:audio_top_level) { create(:file_set, label: 'audio_top_level.mp3', title: ['Audio top level, will get h1']) }
+        let(:audio_top_level_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(audio_top_level.to_solr.merge(mime_type_ssi: 'audio/mp3')), nil) }
+        let(:audio_under_h1) { create(:file_set, label: 'audio_under_h1.mp3', title: ['Audio under a h1, will get h2']) }
+        let(:audio_under_h1_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(audio_under_h1.to_solr.merge(mime_type_ssi: 'audio/mp3')), nil) }
+        let(:audio_under_h2) { create(:file_set, label: 'audio_under_h2.mp3', title: ['Audio under a h2, will get h3']) }
+        let(:audio_under_h2_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(audio_under_h2.to_solr.merge(mime_type_ssi: 'audio/mp3')), nil) }
+        let(:audio_under_h3) { create(:file_set, label: 'audio_under_h3.mp3', title: ['Audio under a h3, will get h4']) }
+        let(:audio_under_h3_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(audio_under_h3.to_solr.merge(mime_type_ssi: 'audio/mp3')), nil) }
+        let(:audio_under_h4) { create(:file_set, label: 'audio_under_h4.mp3', title: ['Audio under a h4, will get h5']) }
+        let(:audio_under_h4_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(audio_under_h4.to_solr.merge(mime_type_ssi: 'audio/mp3')), nil) }
+        let(:audio_under_h5) { create(:file_set, label: 'audio_under_h5.mp3', title: ['Audio under a h5, will get h6']) }
+        let(:audio_under_h5_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(audio_under_h5.to_solr.merge(mime_type_ssi: 'audio/mp3')), nil) }
+        # this one is very unlikely to happen, thankfully
+        let(:audio_under_h6) { create(:file_set, label: 'audio_under_h6.mp3', title: ['Audio under a h6, will get h6']) }
+        let(:audio_under_h6_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(audio_under_h6.to_solr.merge(mime_type_ssi: 'audio/mp3')), nil) }
+
+        let(:video_top_level) { create(:file_set, label: 'video_top_level.mp4', title: ['Video top level, will get h1']) }
+        let(:video_top_level_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(video_top_level.to_solr.merge(mime_type_ssi: 'video/mp4')), nil) }
+        let(:video_under_h1) { create(:file_set, label: 'video_under_h1.mp4', title: ['Video under a h1, will get h2']) }
+        let(:video_under_h1_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(video_under_h1.to_solr.merge(mime_type_ssi: 'video/mp4')), nil) }
+        let(:video_under_h2) { create(:file_set, label: 'video_under_h2.mp4', title: ['Video under a h2, will get h3']) }
+        let(:video_under_h2_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(video_under_h2.to_solr.merge(mime_type_ssi: 'video/mp4')), nil) }
+        let(:video_under_h3) { create(:file_set, label: 'video_under_h3.mp4', title: ['Video under a h3, will get h4']) }
+        let(:video_under_h3_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(video_under_h3.to_solr.merge(mime_type_ssi: 'video/mp4')), nil) }
+        let(:video_under_h4) { create(:file_set, label: 'video_under_h4.mp4', title: ['Video under a h4, will get h5']) }
+        let(:video_under_h4_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(video_under_h4.to_solr.merge(mime_type_ssi: 'video/mp4')), nil) }
+        let(:video_under_h5) { create(:file_set, label: 'video_under_h5.mp4', title: ['Video under a h5, will get h6']) }
+        let(:video_under_h5_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(video_under_h5.to_solr.merge(mime_type_ssi: 'video/mp4')), nil) }
+        # this one is very unlikely to happen, thankfully
+        let(:video_under_h6) { create(:file_set, label: 'video_under_h6.mp4', title: ['Video under a h6, will get h6']) }
+        let(:video_under_h6_presenter) { Hyrax::FileSetPresenter.new(SolrDocument.new(video_under_h6.to_solr.merge(mime_type_ssi: 'video/mp4')), nil) }
+
+
+        before do
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [image_under_all_headings.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([image_under_all_headings_presenter])
+
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [audio_top_level_presenter.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([audio_top_level_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [audio_under_h1.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([audio_under_h1_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [audio_under_h2.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([audio_under_h2_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [audio_under_h3.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([audio_under_h3_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [audio_under_h4.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([audio_under_h4_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [audio_under_h5.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([audio_under_h5_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [audio_under_h6.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([audio_under_h6_presenter])
+
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [video_top_level.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([video_top_level_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [video_under_h1.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([video_under_h1_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [video_under_h2.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([video_under_h2_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [video_under_h3.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([video_under_h3_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [video_under_h4.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([video_under_h4_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [video_under_h5.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([video_under_h5_presenter])
+          allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [video_under_h6.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([video_under_h6_presenter])
+
+
+          ordered_members = [cover, epub, image_under_all_headings,
+                             audio_top_level, audio_under_h1, audio_under_h2, audio_under_h3, audio_under_h4, audio_under_h5, audio_under_h6,
+                             video_top_level, video_under_h1, video_under_h2, video_under_h3, video_under_h4, video_under_h5, video_under_h6]
+          monograph.ordered_members = ordered_members
+          monograph.save!
+          ordered_members.each { |item| item.save! }
+          UnpackJob.perform_now(epub.id, 'epub')
+        end
+
+        it "Adds headings appropriate to the original DOM, for audio and video embeds only" do
+          expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_heading_testing.xhtml'))).to be true
+
+          enhanced_file = File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_heading_testing.xhtml'))
+          inline_sr_only_style = '"clip: rect(1px, 1px, 1px, 1px); clip-path: inset(50%); height: 1px; width: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute;"'
+
+          expect(enhanced_file).not_to include("<h1 style=#{inline_sr_only_style}>Media player: #{image_under_all_headings.title.first}</h1>")
+          expect(enhanced_file).not_to include("<h2 style=#{inline_sr_only_style}>Media player: #{image_under_all_headings.title.first}</h2>")
+          expect(enhanced_file).not_to include("<h3 style=#{inline_sr_only_style}>Media player: #{image_under_all_headings.title.first}</h3>")
+          expect(enhanced_file).not_to include("<h4 style=#{inline_sr_only_style}>Media player: #{image_under_all_headings.title.first}</h4>")
+          expect(enhanced_file).not_to include("<h5 style=#{inline_sr_only_style}>Media player: #{image_under_all_headings.title.first}</h5>")
+          expect(enhanced_file).not_to include("<h6 style=#{inline_sr_only_style}>Media player: #{image_under_all_headings.title.first}</h6>")
+          expect(enhanced_file).not_to include("<h6 style=#{inline_sr_only_style}>Media player: #{image_under_all_headings.title.first}</h6>")
+
+          expect(enhanced_file).to include("<h1 style=#{inline_sr_only_style}>Media player: #{audio_top_level.title.first}</h1>")
+          expect(enhanced_file).to include("<h2 style=#{inline_sr_only_style}>Media player: #{audio_under_h1.title.first}</h2>")
+          expect(enhanced_file).to include("<h3 style=#{inline_sr_only_style}>Media player: #{audio_under_h2.title.first}</h3>")
+          expect(enhanced_file).to include("<h4 style=#{inline_sr_only_style}>Media player: #{audio_under_h3.title.first}</h4>")
+          expect(enhanced_file).to include("<h5 style=#{inline_sr_only_style}>Media player: #{audio_under_h4.title.first}</h5>")
+          expect(enhanced_file).to include("<h6 style=#{inline_sr_only_style}>Media player: #{audio_under_h5.title.first}</h6>")
+          expect(enhanced_file).to include("<h6 style=#{inline_sr_only_style}>Media player: #{audio_under_h6.title.first}</h6>")
+
+          expect(enhanced_file).to include("<h1 style=#{inline_sr_only_style}>Media player: #{video_top_level.title.first}</h1>")
+          expect(enhanced_file).to include("<h2 style=#{inline_sr_only_style}>Media player: #{video_under_h1.title.first}</h2>")
+          expect(enhanced_file).to include("<h3 style=#{inline_sr_only_style}>Media player: #{video_under_h2.title.first}</h3>")
+          expect(enhanced_file).to include("<h4 style=#{inline_sr_only_style}>Media player: #{video_under_h3.title.first}</h4>")
+          expect(enhanced_file).to include("<h5 style=#{inline_sr_only_style}>Media player: #{video_under_h4.title.first}</h5>")
+          expect(enhanced_file).to include("<h6 style=#{inline_sr_only_style}>Media player: #{video_under_h5.title.first}</h6>")
+          expect(enhanced_file).to include("<h6 style=#{inline_sr_only_style}>Media player: #{video_under_h6.title.first}</h6>")
+        end
+      end
     end
   end
 end
