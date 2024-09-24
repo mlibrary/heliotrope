@@ -194,28 +194,47 @@ module Hyrax
           Sighrax.platform.tombstone_message(monograph.publisher.name)
     end
 
+    # HELIO-4728 a faster version of CommonWorkPresenter#ordered_file_sets_ids
+    # ONLY used for the next/previous buttons on the FileSetController#show page
+    # Does NOT Filter Out Tombstoned FileSets
+    # Does NOT work for private/unpublished FileSets and share_links
+    instrument_method
+    def filtered_ordered_member_ids
+      return @filtered_ordered_member_ids if @filtered_ordered_member_ids
+      file_set_ids = []
+      everyone = ::Ability.new(::User.new)
+      solr_document['ordered_member_ids_ssim'].each do |id|
+        next if id == representative_id
+        next if featured_representatives.map(&:file_set_id).include?(id)
+        next if !everyone&.can?(:read, id)
+        file_set_ids << id
+      end
+
+      @filtered_ordered_member_ids = file_set_ids
+    end
+
     instrument_method
     def previous_file_sets_id?(file_sets_id)
-      return false unless ordered_file_sets_ids.include? file_sets_id
-      ordered_file_sets_ids.first != file_sets_id
+      return false unless filtered_ordered_member_ids.include? file_sets_id
+      filtered_ordered_member_ids.first != file_sets_id
     end
 
     instrument_method
     def previous_file_sets_id(file_sets_id)
-      return nil unless previous_file_sets_id? file_sets_id
-      ordered_file_sets_ids[(ordered_file_sets_ids.find_index(file_sets_id) - 1)]
+      return false unless previous_file_sets_id? file_sets_id
+      filtered_ordered_member_ids[filtered_ordered_member_ids.find_index(file_sets_id) - 1]
     end
 
     instrument_method
     def next_file_sets_id?(file_sets_id)
-      return false unless ordered_file_sets_ids.include? file_sets_id
-      ordered_file_sets_ids.last != file_sets_id
+      return false unless filtered_ordered_member_ids.include? file_sets_id
+      filtered_ordered_member_ids.last != file_sets_id
     end
 
     instrument_method
     def next_file_sets_id(file_sets_id)
       return nil unless next_file_sets_id? file_sets_id
-      ordered_file_sets_ids[(ordered_file_sets_ids.find_index(file_sets_id) + 1)]
+      filtered_ordered_member_ids[filtered_ordered_member_ids.find_index(file_sets_id) + 1]
     end
 
     instrument_method
