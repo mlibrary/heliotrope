@@ -5,7 +5,6 @@ class MonographSearchBuilder < ::SearchBuilder
 
   self.default_processor_chain += [
     :filter_by_monograph_id,
-    :filter_out_miscellaneous,
     :filter_out_representatives,
     :filter_out_tombstones
   ]
@@ -23,34 +22,26 @@ class MonographSearchBuilder < ::SearchBuilder
   end
 
   instrument_method
-  def filter_out_miscellaneous(solr_parameters)
-    id = monograph_id(blacklight_params)
-    mp = Hyrax::PresenterFactory.build_for(ids: [id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).first
-    return if mp.blank?
-
-    solr_parameters[:fq] << "-id:#{mp.representative_id}" if mp.representative_id.present?
-
-    # TODO: This isn't ideal but works. Ideally the solr document tombstone field
-    # would be set to 'yes' for file sets that have past their permissions expiration date and
-    # would be filtered out by the filter_out_tombstones filter method below.
-    mp.ordered_member_docs.each do |doc|
-      solr_parameters[:fq] << "-id:#{doc['id']}" if tombstone?(doc)
-    end
-  end
-
-  instrument_method
   def filter_out_representatives(solr_parameters)
     id = monograph_id(blacklight_params)
+    # ickily get the cover/representative_id from the monograph with a solr call
+    doc = ActiveFedora::SolrService.query("{!terms f=id}#{id}", fl: "hasRelatedMediaFragment_ssim", rows: 1).first
+    if doc.present? && doc["hasRelatedMediaFragment_ssim"].first.present?
+      solr_parameters[:fq] << "-id:#{doc["hasRelatedMediaFragment_ssim"].first}"
+    end
+
     # HELIO-4214 include webgls and database in the file_set/resource list
     ids = FeaturedRepresentative.where(work_id: id).where.not(kind: "database").where.not(kind: "webgl").map(&:file_set_id)
     solr_parameters[:fq] << "-id:(#{ids.join(' ')})" if ids.present?
   end
 
-  # Redundant but consistent with PressSearchBuilder
   instrument_method
   def filter_out_tombstones(solr_parameters)
-    # id = monograph_id(blacklight_params)
+    # I guess for tombstones in this context it's either tombstone == "yes" (or any non-blank)
+    # AND/OR
+    # permissions_expiration_date_ssim is anything YYYY-MM-DD before today (including today)
     solr_parameters[:fq] << "-tombstone_ssim:[* TO *]"
+    solr_parameters[:fq] << "-permissions_expiration_date_ssim:[* TO #{Time.zone.today.strftime('%Y-%m-%d')}]"
   end
 
   def valid_share_link?
@@ -73,19 +64,6 @@ class MonographSearchBuilder < ::SearchBuilder
 
     def monograph_id(blacklight_params)
       blacklight_params[:monograph_id] || blacklight_params['id']
-    end
-
-    instrument_method
-    def tombstone?(doc)
-      # HELIO-3707 ideally we'd do:
-      # return true if Sighrax.tombstone?(Sighrax.from_solr_document(doc))
-      # but that is N+1 and the contructors are a little complicated to change
-      # The logic is simple, so:
-      tombstone = /^yes$/i.match?(doc.tombstone)
-      return true if tombstone
-      Date.parse(doc['permissions_expiration_date_ssim'].first) <= Time.now.utc.to_date
-    rescue StandardError => _e
-      false
     end
 
     def work_types
