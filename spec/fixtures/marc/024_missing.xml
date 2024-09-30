@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+  <record>
+    <leader>03486nam a22004333i 4500</leader>
+    <controlfield tag="001">10.3998/mpub.10209707</controlfield>
+    <controlfield tag="003">MiU</controlfield>
+    <controlfield tag="005">20181218132046.0</controlfield>
+    <controlfield tag="006">m     o  d        </controlfield>
+    <controlfield tag="007">cr unu||||||||</controlfield>
+    <controlfield tag="008">181218t20182018mau     ob    001 0 eng d</controlfield>
+    <datafield ind1=" " ind2=" " tag="020">
+      <subfield code="a">9781643150024</subfield>
+      <subfield code="q">open access</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="020">
+      <subfield code="z">9781643150000</subfield>
+      <subfield code="q">paperback</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="040">
+      <subfield code="a">MiU</subfield>
+      <subfield code="b">eng</subfield>
+      <subfield code="e">rda</subfield>
+      <subfield code="e">pn</subfield>
+      <subfield code="c">MiU</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="4" tag="050">
+      <subfield code="a">PR3021</subfield>
+      <subfield code="b">.G66 2018</subfield>
+    </datafield>
+    <datafield ind1="1" ind2=" " tag="100">
+      <subfield code="a">Goodman, Robin Truth,</subfield>
+      <subfield code="d">1966-</subfield>
+      <subfield code="e">author.</subfield>
+    </datafield>
+    <datafield ind1="1" ind2="0" tag="245">
+      <subfield code="a">Promissory notes :</subfield>
+      <subfield code="b">on the literary conditions of debt /</subfield>
+      <subfield code="c">by Robin Truth Goodman.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="1" tag="264">
+      <subfield code="a">Amherst, Massachutsetts :</subfield>
+      <subfield code="b">Lever Press,</subfield>
+      <subfield code="c">[2018]</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="4" tag="264">
+      <subfield code="c">&#xA9;2018</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="300">
+      <subfield code="a">1 online resource (viii, 126 pages).</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="336">
+      <subfield code="a">text</subfield>
+      <subfield code="b">txt</subfield>
+      <subfield code="2">rdacontent</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="337">
+      <subfield code="a">computer</subfield>
+      <subfield code="b">c</subfield>
+      <subfield code="2">rdamedia</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="338">
+      <subfield code="a">online resource</subfield>
+      <subfield code="b">cr</subfield>
+      <subfield code="2">rdacarrier</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="504">
+      <subfield code="a">Includes bibliographical references (pages 119-126).</subfield>
+    </datafield>
+    <datafield ind1="0" ind2=" " tag="505">
+      <subfield code="a">Futures and fictions : the right to make promises and the object that never was -- Debt's geographies : inequality, or development's dance with dead capital.</subfield>
+    </datafield>
+    <datafield ind1="3" ind2=" " tag="520">
+      <subfield code="a">There is no doubt that the beginning of the twenty-first century was marked by crises of debt. Less well known is that literature played a historical role in defining and teaching debt to the public. Promissory Notes: On the Literary Conditions of Debt addresses how neoliberal finance has depended upon a historical linking of geopolitical inequality and financial representation that positions the so-called "Third World" as negative value, or debt. Starting with an analysis of Anthony Trollope's novel, The Eustace Diamonds, Goodman shows how colonized spaces came to inhabit this negative value. Promissory Notesargues that the twentieth-century continues to apply literary innovations in character, subjectivity, temporal and spatial representation to construct debt as the negative creation of value not only in reference to objects, but also houses, credit cards, students, and, in particular, "Third World" geographies, often leading to crisis. Yet, late twentieth century and early twenty-first literary texts, such as Soyinka's The Road and Ngugi's Wizard of the Crow, address the negative space of the indebted world also as a critiqueof the financial take-over of the postcolonial developmental state. Looking to situations like the Puerto Rican debt crisis, Goodman demonstrates how financial discourse is articulated through social inequalities and how literature can both expose and contest the imposition of a morality of debt as a mode of anti-democratic control.</subfield>
+    </datafield>
+    <datafield ind1="1" ind2=" " tag="542">
+      <subfield code="f">This work is licensed under the Creative Commons Attribution-Noncommercial-NoDerivatives 4.0 Unported license</subfield>
+      <subfield code="u">http://creativecommons.org/licenses/by-nc-nd/4.0/</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="588">
+      <subfield code="a">Description based on information from the publisher.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="0" tag="650">
+      <subfield code="a">Debt in literature.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="0" tag="650">
+      <subfield code="a">Literature and society.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="0" tag="650">
+      <subfield code="a">Debt</subfield>
+      <subfield code="x">Social aspects.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="0" tag="650">
+      <subfield code="a">Neoliberalism.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="0" tag="650">
+      <subfield code="a">Equality.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="0" tag="650">
+      <subfield code="a">Democracy.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="4" tag="655">
+      <subfield code="a">Electronic books.</subfield>
+    </datafield>
+    <datafield ind1="2" ind2=" " tag="710">
+      <subfield code="a">Michigan Publishing (University of Michigan)</subfield>
+      <subfield code="e">publisher.</subfield>
+    </datafield>
+    <datafield ind1="0" ind2="8" tag="770">
+      <subfield code="i">Supplement (work):</subfield>
+      <subfield code="a">Goodman, Robin Truth, 1966-</subfield>
+      <subfield code="t">Syllabus for Studies in Critical Theory: Literature and Debt, ENG 5049 (Spring 2017), instructed by Professor Robin Truth Goodman at Florida State University.</subfield>
+      <subfield code="h">1 online resource (1 text file)</subfield>
+    </datafield>
+    <datafield ind1="4" ind2="0" tag="856">
+      <subfield code="z">Access to the Michigan Publishing online version:</subfield>
+      <subfield code="u">https://doi.org/10.3998/mpub.10209707</subfield>
+    </datafield>
+  </record>
+</collection>
