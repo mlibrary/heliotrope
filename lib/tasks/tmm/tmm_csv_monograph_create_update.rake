@@ -213,7 +213,7 @@ namespace :heliotrope do
 
       # to make the "orderless" array comparison meaningful, we sort the new values just as we do in the...
       # stolen-from-Exporter field_value method below
-      value = value&.sort if multivalued == :yes_split
+      value = value&.uniq&.sort if multivalued == :yes_split
 
       if value != current_value
         changes_message = "\n" + changes_message + "\nnote: only fields with pending changes are shown\n" if !changes
