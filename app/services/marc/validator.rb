@@ -2,7 +2,7 @@
 
 module Marc
   class Validator
-    attr_reader :file, :reader, :noid, :group_key
+    attr_reader :file, :reader, :noid, :group_key, :error
 
     def initialize(file)
       @file = file
@@ -52,7 +52,7 @@ module Marc
     def ruby_marc_valid?(record)
       unless record.valid?
         log_message("is not valid according to ruby-marc")
-        ::MarcLogger.logger.error(record.errors.join("\n"))
+        MarcLogger.error(record.errors.join("\n"))
         return false
       end
 
@@ -136,7 +136,7 @@ module Marc
 
     # BAR
     #   003: Use organization code 'UkOxBAR'.
-    # HEB (and probably everythinhg else?)
+    # HEB (and probably everything else?)
     #   003: Use organization code 'MiU'.
     def valid_003?(record)
       if record["003"].blank?
@@ -220,7 +220,9 @@ module Marc
                        else
                          nil
                        end
-      ::MarcLogger.logger.error("#{group_and_noid || ''}#{File.basename(@file)} #{message}")
+      full_message = "ERROR\t#{group_and_noid || ''}#{File.basename(@file)} #{message}"
+      @error = full_message
+      MarcLogger.error(full_message)
     end
 
     def read_marc

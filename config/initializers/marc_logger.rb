@@ -1,14 +1,27 @@
 # frozen_string_literal: true
 
-require 'semantic_logger'
-
-SemanticLogger.add_appender(io: $stdout, formatter: :color)
-
 class MarcLogger
-  include SemanticLogger::Loggable
+  def self.logger
+    @logger ||= create_logger
+  end
 
-  self.logger = SemanticLogger.add_appender(
-    file_name: Rails.root.join('log', 'marc.log').to_s,
-    formatter: :color
-  )
+  def self.create_logger
+    logger = Logger.new('log/marc.log', 'daily')
+    logger.level = Logger::DEBUG
+    logger
+  end
+
+  def self.info(message)
+    logger.info(message)
+  end
+
+  def self.debug(message)
+    logger.debug(message)
+  end
+
+  def self.error(message)
+    logger.error(message)
+  end
+
+  private_class_method :create_logger
 end
