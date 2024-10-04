@@ -23,6 +23,7 @@ describe Hyrax::MonographForm do
                            publisher
                            date_created
                            subject
+                           keyword
                            language
                            representative_id
                            thumbnail_id
@@ -90,6 +91,7 @@ describe Hyrax::MonographForm do
                            contributor
                            creator_display
                            subject
+                           keyword
                            language
                            series
                            buy_url
