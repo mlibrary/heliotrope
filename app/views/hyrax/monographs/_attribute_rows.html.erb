@@ -1,6 +1,7 @@
 <%= presenter.attribute_to_html(:press, label: t('publisher')) %>
 <%= presenter.attribute_to_html(:description, render_as: :markdown) %>
-<%= presenter.attribute_to_html(:subject, catalog_search_link: true) %>
+<%= presenter.attribute_to_html(:subject) %>
+<%= presenter.attribute_to_html(:keyword) %>
 <%= presenter.attribute_to_html(:language) %>
 <%= presenter.attribute_to_html(:section_titles) %>
 <%= presenter.attribute_to_html(:buy_url, render_as: :markdown) %>

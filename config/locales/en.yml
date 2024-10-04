@@ -348,7 +348,7 @@ en:
         press: "The monograph's publisher/press on Fulcrum."
         previous_edition: "Full DOI (or other) URL pointing to the previous edition of the Monograph"
         section_titles: "Used like a table of contents to indicate the order of attached FileSets' \"related sections\"."
-        subject: "Keywords which describe what this monograph is about."
+        subject: "Academic discipline(s) which relate to this monograph.<br/>Fulcrum does not enforce a controlled vocabulary but we recommend that each press maintain its own."
         volume: "Monograph volume number if member of a multi-volume set - integer - greater than 0."
         oclc_owi: "OCLC Work Identifier - NOT the OCLC Number - At least that is my interpretation."
         copyright_year: "Copyright Year - YYYY - four digit year - greater than 1709."
