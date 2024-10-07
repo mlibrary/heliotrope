@@ -142,7 +142,7 @@ RSpec.describe "Hyrax Admin Stats", type: :request do
       let!(:maize_component) { create(:component, identifier: maize_book.id, name: 'Maize', noid: maize_book.id) }
       let(:blue_product) { create(:product, identifier: "blue", name: "Blue Product") }
       let(:maize_product) { create(:product, identifier: "maize", name: "Maize Product") }
-      let(:institution) { create(:institution) }
+      let(:institution) { create(:institution, name: "Blue U") }
 
       before do
         blue_product.components << blue_component
@@ -154,13 +154,36 @@ RSpec.describe "Hyrax Admin Stats", type: :request do
         sign_in(press_admin)
       end
 
-      it 'dropdown only shows products the logged in user has permissions for' do
-        get hyrax.admin_stats_path(partial: 'licenses')
-        expect(response).to have_http_status(:ok)
-        # This is sort of dumb since we're parsing ALL the html, but the dropdown has the Blue product in it
-        expect(response.body_parts.first.match?("Blue Product")).to be true
-        # and does not have the Maize product in it
-        expect(response.body_parts.first.match?("Maize Product")).to be false
+      context "on page load" do
+        it 'dropdown only shows products the logged in user has permissions for' do
+          get hyrax.admin_stats_path(partial: 'licenses')
+          expect(response).to have_http_status(:ok)
+          # This is sort of dumb since we're parsing ALL the html, but the dropdown has the Blue product in it
+          expect(response.body_parts.first.match?("Blue Product")).to be true
+          # and does not have the Maize product in it
+          expect(response.body_parts.first.match?("Maize Product")).to be false
+        end
+      end
+
+      context "with show_report" do
+        it "returns the report" do
+          get hyrax.admin_stats_path(partial: 'licenses', show_report: 'true', product_ids: [blue_product.id])
+          expect(response).to have_http_status(:ok)
+          expect(response.body.match?("Product Identifier")).to be true
+          expect(response.body.match?("Licensee")).to be true
+          expect(response.body.match?("Blue U")).to be true
+        end
+      end
+
+      context "with show_report and csv" do
+        it "returns the csv" do
+          get hyrax.admin_stats_path(partial: 'licenses', show_report: 'true', product_ids: [blue_product.id], format: 'csv')
+          expect(response).to have_http_status(:ok)
+          expect(response.header["Content-Type"]).to eq "text/csv"
+          expect(response.body.match?("Product Identifier,Licensee,dlpsid,License Type,Affiliations")).to be true
+          expect(response.body.match?("blue")).to be true
+          expect(response.body.match?("Blue U")).to be true
+        end
       end
     end
   end

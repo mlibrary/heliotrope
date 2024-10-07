@@ -26,7 +26,11 @@ module Hyrax
           end
         end
 
-        render
+        if params[:format] == "csv"
+          send_data csv_products_for_licenses, type: "text/csv", filename: "Fulcrum_Product_Licenses_Report.csv"
+        else
+          render
+        end
       end
 
       def institution_report
@@ -116,6 +120,37 @@ module Hyrax
 
       def products_for_licenses_report
         @products = Greensub::Product.where(id: params[:product_ids]).order(:name)
+      end
+
+      # This is not performant but also seldom used
+      # This is also true for views/hyrax/admin/stats/_licenses.html.erb which is basically the same code ¯\_(ツ)_/¯
+      def csv_products_for_licenses
+        CSV.generate(headers: true) do |csv|
+          csv << ["Product Identifier", "Licensee", "dlpsid", "License Type", "Affiliations"]
+          @products.each do |product|
+            product.institutions_ordered_by_name.each do |inst|
+              license = product.licenses.where(licensee_id: inst.id).first
+              csv << [
+                product.identifier,
+                inst.name,
+                inst.identifier,
+                license.label,
+                license.affiliations.map(&:affiliation).join("|")
+              ]
+            end
+
+            product.individuals_ordered_by_email.each do |indv|
+              license = product.licenses.where(licensee_id: indv.id).first
+              csv << [
+                product.identifier,
+                indv.email,
+                "",
+                license.label,
+                license.affiliations.map(&:affiliation).join("|")
+              ]
+            end
+          end
+        end
       end
 
       private
