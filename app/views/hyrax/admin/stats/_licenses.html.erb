@@ -41,20 +41,23 @@
     </tbody>
   </table>
   <div class="form-group row">
-    <div class="col-sm-2">
+    <div class="col-sm-12">
       <a href="/admin/stats?partial=licenses" class="btn btn-primary">Product List</a>
+      <% if @show_report.present? %>
+        <a href="<%= request.fullpath %>&format=csv" target="_blank" class="btn btn-primary">Download CSV File</a>
+      <% end %>
     </div>
   </div>
 <% else %>
   <%= form_with(url: "/admin/stats?partial=licenses", method: "get", local: true) do %>
     <div class="form-group row">
-      <label for="product_id" class="col-sm-2 col-form-label">Products</label>
-      <div class="col-sm-6">
+      <div class="col-sm-12">
+        <label for="product_id" class="col-form-label">Products</label>
         <%= select_tag(:product_ids, options_for_select(@products.map { |i| [i.name, i.id] }), multiple: true, class: 'form-control') %>
       </div>
     </div>
-      <div class="form-group row">
-      <div class="col-sm-6">
+    <div class="form-group row">
+      <div class="col-sm-12">
         <input type="hidden" name="partial" value="licenses">
         <input type="hidden" name="show_report" value="true">
         <button type="submit" class="btn btn-primary">Show Licenses</button>
