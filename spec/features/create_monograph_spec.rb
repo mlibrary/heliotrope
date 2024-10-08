@@ -43,6 +43,8 @@ describe 'Create a monograph' do
       fill_in 'Description', with: 'Blahdy blah description works'
       expect(page).to have_css('input.monograph_subject', count: 1)
       fill_in 'Subject', with: 'red stuff'
+      expect(page).to have_css('input.monograph_keyword', count: 1)
+      fill_in 'Keywords', with: 'not a subject!'
       expect(page).to have_css('input.monograph_language', count: 1)
       fill_in 'Language', with: 'English'
       fill_in 'Series', with: 'The Cereal Series'
@@ -133,6 +135,8 @@ describe 'Create a monograph' do
       fill_in 'Authorship Display (free-form text)', with: 'Fancy Authorship Name Stuff That Takes Precedence'
       expect(page).to have_css('input.monograph_subject', count: 2)
       page.all(:fillable_field, 'monograph[subject][]').last.set('green stuff')
+      expect(page).to have_css('input.monograph_keyword', count: 2)
+      page.all(:fillable_field, 'monograph[keyword][]').last.set('not a second subject!')
       expect(page).to have_css('input.monograph_language', count: 2)
       page.all(:fillable_field, 'monograph[language][]').last.set('German')
       expect(page).to have_css('input.monograph_series', count: 2)
@@ -156,6 +160,8 @@ describe 'Create a monograph' do
       expect(page).to have_content 'The Second Series'
       # Subject
       expect(page).to have_content 'red stuff'
+      # Keywords - for now we're not actually going to show Monograph keywords on the catalog page
+      expect(page).not_to have_content 'not a subject!'
       # ISBN
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content '123-456-7891'
@@ -199,6 +205,9 @@ describe 'Create a monograph' do
       # subject
       expect(page).to have_content 'red stuff'
       expect(page).to have_content 'green stuff'
+      # keyword
+      expect(page).to have_content 'not a subject!'
+      expect(page).to have_content 'not a second subject!'
       # language
       expect(page).to have_content 'English'
       expect(page).to have_content 'German'
