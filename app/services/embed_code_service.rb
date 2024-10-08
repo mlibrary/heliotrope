@@ -15,16 +15,25 @@ module EmbedCodeService
     Dir.glob("#{epub_dir}/**/*.xhtml").each do |file|
       doc = File.open(file) { |f| Nokogiri::XML(f) }
 
-      # these should look something like this
-      # <div data-embed-filename="audio_file_name.mp3">
-      nodes = doc.search 'figure[data-fulcrum-embed-filename]'
-      data_attribute_embeds(nodes, embeddable_file_set_docs) if nodes.present?
+      # NB: we need to figure out what (screen-reader only) heading level _might_ be appropriate to automatically add...
+      # at any given "embed-altered" node. It only really makes sense to do this before the document has been altered...
+      # in any way, seeing as any added headings will alter this calculation. Hence nodes which embeds will target...
+      # need to be gathered and stored while that analysis is done.
 
-      # these should look like regular img tags
+      # "data attribute embed" nodes should look something like this:
+      # <figure data-fulcrum-embed-filename="audio_file_name.mp3">
+      data_attribute_embed_nodes = doc.search 'figure[data-fulcrum-embed-filename]'
+      heading_tags_for_data_attribute_embed_nodes = heading_tags_for_nodes(doc, data_attribute_embed_nodes)
+
+      # "img src basename embed" nodes should look like regular img tags:
       # <img src="images/video_file_basename.jpg" alt="local image representing a video embed"/>
-      # `data-fulcrum-embed="false"` allows img tags with matching Monograph resource FileSet basenames to *not* cause an embed
-      nodes = doc.search 'img:not([data-fulcrum-embed="false"])'
-      img_src_basename_embeds(nodes, embeddable_file_set_docs) if nodes.present?
+      # note: `data-fulcrum-embed="false"` allows img tags with matching Monograph resource FileSet basenames to *not* cause an embed
+      img_src_basename_embed_nodes = doc.search 'img:not([data-fulcrum-embed="false"])'
+      heading_tags_for_img_src_basename_embed_nodes = heading_tags_for_nodes(doc, img_src_basename_embed_nodes)
+
+      # now, we can actually make the changes to the document, adding headings (where appropriate) and embed codes
+      data_attribute_embeds(data_attribute_embed_nodes, heading_tags_for_data_attribute_embed_nodes, embeddable_file_set_docs) if data_attribute_embed_nodes.present?
+      img_src_basename_embeds(img_src_basename_embed_nodes, heading_tags_for_img_src_basename_embed_nodes, embeddable_file_set_docs) if img_src_basename_embed_nodes.present?
 
       File.write(file, doc)
     end
@@ -54,8 +63,8 @@ module EmbedCodeService
     end
   end
 
-  def data_attribute_embeds(nodes, embeddable_file_set_docs) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-    nodes.each do |node|
+  def data_attribute_embeds(nodes, heading_tags_for_nodes, embeddable_file_set_docs) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity, Metrics/BlockLength
+    nodes.each_with_index do |node, index| # rubocop:disable Metrics/BlockLength
       next if node['data-fulcrum-embed-filename']&.gsub(/\s+/, "").blank?
 
       matching_files = match_files(embeddable_file_set_docs, node['data-fulcrum-embed-filename'])
@@ -89,11 +98,15 @@ module EmbedCodeService
         end
 
       else
+        heading = heading_node(heading_tags_for_nodes[index], file_set_presenter)
+
         # for these full embed markup is added inside the <figure> element in the derivative-folder XHTML file
         # we must ensure this node is inserted above any existing <figcaption>
         if figcaption.present?
+          figcaption.add_previous_sibling(heading) if heading.present?
           figcaption.add_previous_sibling(file_set_presenter.embed_code)
         else
+          node.add_child(heading) if heading.present?
           node.add_child(file_set_presenter.embed_code)
         end
       end
@@ -102,8 +115,8 @@ module EmbedCodeService
     end
   end
 
-  def img_src_basename_embeds(nodes, embeddable_file_set_docs) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    nodes.each do |node|
+  def img_src_basename_embeds(nodes, heading_tags_for_nodes, embeddable_file_set_docs) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    nodes.each_with_index do |node, index|
       next if node['src']&.gsub(/\s+/, "").blank?
 
       matching_files = match_files_by_basename(embeddable_file_set_docs, node['src'])
@@ -123,9 +136,15 @@ module EmbedCodeService
                               "data-title=\"#{file_set_presenter.embed_code_title}\" " \
                               "data-resource-type=\"#{resource_type(file_set_presenter)}\" />")
       else
+        heading = heading_node(heading_tags_for_nodes[index], file_set_presenter)
+
         # full embed markup added to XHTML file for these
         # the local image is no longer needed, just replace it with the embed code
-        node.replace(file_set_presenter.embed_code)
+        if heading.present?
+          node.replace("#{heading}#{file_set_presenter.embed_code}")
+        else
+          node.replace(file_set_presenter.embed_code)
+        end
       end
     end
   end
@@ -135,5 +154,33 @@ module EmbedCodeService
     return if node.at('figcaption').present?
     caption = file_set_presenter.caption.present? ? file_set_presenter.caption.first : "Additional #{resource_type(file_set_presenter).titlecase} Resource"
     node.add_child("<figcaption>#{caption}</figcaption>")
+  end
+
+  def heading_node(heading_tag_for_node, file_set_presenter)
+    # this whole "auto-heading" deal only applies to Able Player embeds (so, audio or video)
+    return nil unless file_set_presenter.audio? || file_set_presenter.video?
+    # https://uit.stanford.edu/accessibility/concepts/screen-reader-only-content
+    "<#{heading_tag_for_node} style=\"clip: rect(1px, 1px, 1px, 1px); clip-path: inset(50%); height: 1px; width: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute;\">Media player: #{file_set_presenter.embed_code_title}</#{heading_tag_for_node}>"
+  end
+
+  def heading_tags_for_nodes(doc, nodes)
+    headings_for_nodes = []
+
+    nodes.each do |node|
+      best_heading = nil
+      doc.traverse do |recursive_child_node|
+        break if recursive_child_node == node
+        if ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].include? recursive_child_node.name
+          best_heading = recursive_child_node.name
+        end
+      end
+
+      nearest_heading_up_level = best_heading.nil? ? 0 : best_heading.delete('h').to_i
+      # the embed being nested under a 6 seems unlikely enough that I'm not going to fret over it, we'll add another 6!
+      nearest_heading_up_level += 1 if nearest_heading_up_level < 6
+
+      headings_for_nodes << "h#{nearest_heading_up_level}"
+    end
+    headings_for_nodes
   end
 end

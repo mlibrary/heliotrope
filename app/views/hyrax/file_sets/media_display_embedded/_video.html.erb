@@ -41,6 +41,7 @@
        data-skin="2020"
        data-captions-position="overlay" <%# Does not have the desired effect if the user has set a "Below video" caption position preference. Hence `checkElement()` fiddling below. %>
        data-include-transcript="false"
+       data-heading-level="0" <%# see HELIO-4718 %>
        <%# `fs=1` param right now targets external/non-CSB embed use cases only. %>
        <%# CSB has issues with fullscreen. See HELIO-2961 and HELIO-4024. Maybe other issues too. %>
        data-allow-fullscreen=<%= params[:fs] == '1' ? "true" : "false" %>
