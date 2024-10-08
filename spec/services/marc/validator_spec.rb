@@ -69,7 +69,7 @@ RSpec.describe Marc::Validator do
       let(:record) { double("record", valid?: false, errors: ['An error message I guess']) }
       it "logs an error, returns false" do
         validator = described_class.new(marc_file)
-        expect(MarcLogger.logger).to receive(:error).twice
+        expect(MarcLogger).to receive(:error).twice
         expect(validator.ruby_marc_valid?(record)).to be false
       end
     end
@@ -90,7 +90,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.valid_024?(record)).to be false
       end
     end
@@ -151,7 +151,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.exists_in_fulcrum?(record)).to be false
       end
     end
@@ -167,7 +167,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.exists_in_fulcrum?(record)).to be false
       end
     end
@@ -185,7 +185,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.exists_in_fulcrum?(record)).to be false
       end
     end
@@ -209,7 +209,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.exists_in_fulcrum?(record)).to be false
       end
     end
@@ -232,7 +232,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.valid_001?(record)).to be false
       end
     end
@@ -243,7 +243,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.valid_001?(record)).to be false
       end
     end
@@ -266,7 +266,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.valid_003?(record)).to be false
       end
     end
@@ -278,7 +278,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.valid_003?(record)).to be false
       end
     end
@@ -313,7 +313,7 @@ RSpec.describe Marc::Validator do
           record = validator.reader.first
           # need to set the group_key here
           validator.exists_in_fulcrum?(record)
-          expect(MarcLogger.logger).to receive(:error)
+          expect(MarcLogger).to receive(:error)
           expect(validator.valid_003?(record)).to be false
         end
       end
@@ -337,7 +337,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.valid_020?(record)).to be false
       end
     end
@@ -360,7 +360,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.valid_856?(record)).to be false
       end
     end
@@ -371,7 +371,7 @@ RSpec.describe Marc::Validator do
       it "returns false" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
-        expect(MarcLogger.logger).to receive(:error)
+        expect(MarcLogger).to receive(:error)
         expect(validator.valid_856?(record)).to be false
       end
     end
