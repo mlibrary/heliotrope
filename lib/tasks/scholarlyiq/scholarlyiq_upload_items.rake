@@ -25,10 +25,11 @@ namespace :heliotrope do
                                                 'date_created_tesim',
                                                 'doi_ssim',
                                                 'identifier_tesim',
-                                                'resource_type_tesim'], rows: 100_000)
+                                                'resource_type_tesim',
+                                                'isbn_tesim'], rows: 100_000)
 
     CSV.open(output_file, "w", col_sep: "\t") do |tsv|
-      tsv << %w[id title creator date_created doi identifier resource_type]
+      tsv << %w[id title creator date_created doi identifier resource_type isbn]
       docs.each do |doc|
         tsv << [doc.id,
                 doc['title_tesim']&.first&.squish,
@@ -36,7 +37,8 @@ namespace :heliotrope do
                 doc['date_created_tesim']&.first,
                 doc['doi_ssim']&.first,
                 doc['identifier_tesim']&.map(&:strip)&.reject(&:blank?)&.join('; '),
-                doc['resource_type_tesim']&.map(&:strip)&.reject(&:blank?)&.join('; ')]
+                doc['resource_type_tesim']&.map(&:strip)&.reject(&:blank?)&.join('; '),
+                doc['isbn_tesim']&.map(&:strip)&.reject(&:blank?)&.join('; ')]
       end
     end
     # puts "Item data for ScholarlyIQ saved to #{output_file}"
