@@ -200,7 +200,7 @@ class EPubsController < CheckpointController
       if @share_link.present?
         begin
           decoded = JsonWebToken.decode(@share_link)
-          return true if decoded[:data] == @noid || decoded[:data] == @parent_presenter.id
+          return true if decoded[:data] == @parent_presenter.id
         rescue JWT::ExpiredSignature, JWT::VerificationError
           return false
         end
