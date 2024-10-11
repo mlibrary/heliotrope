@@ -18,7 +18,6 @@ module Marc
         "test_product" => "/home/fulcrum_ftp/heliotropium/cataloging/Testing",
         "umpebc" => "/home/fulcrum_ftp/MARC_from_Cataloging/UMPEBC",
         "vermont" => "/home/fulcrum_ftp/MARC_from_Cataloging/vermont"
-
       }
     end
 

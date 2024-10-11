@@ -136,7 +136,7 @@ RSpec.describe BuildKbartJob, type: :job do
             FileUtils.mkdir_p(test_root)
 
             expect(Net::SFTP).not_to receive(:start)
-            expect(Rails.logger).to receive(:error)
+            expect(MarcLogger).to receive(:error)
 
             subject.perform_now
 
