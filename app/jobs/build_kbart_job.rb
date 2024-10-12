@@ -10,11 +10,13 @@ require 'net/sftp'
 
 class BuildKbartJob < ApplicationJob
   def perform
+    MarcLogger.info("Beginning BuildKbartLog...")
+
     Greensub::Product.where(needs_kbart: true).each do |product|
       next if product.group_key.nil?
       next if product.components.count == 0
-      Rails.logger.error("No mapping avilable for group_key: #{product.group_key} KBART WILL NOT BE CREATED") unless group_key_ftp_dir_map.key?(product.group_key)
-      next unless group_key_ftp_dir_map.key?(product.group_key)
+      MarcLogger.error("No mapping avilable for group_key: #{product.group_key} KBART WILL NOT BE CREATED") unless Marc::DirectoryMapper.group_key_kbart.key?(product.group_key)
+      next unless Marc::DirectoryMapper.group_key_kbart.key?(product.group_key)
 
       # HELIO-4528 Set the timezone just for this job to get "accurate" date stamped file names
       Time.zone = 'Eastern Time (US & Canada)'
@@ -41,7 +43,7 @@ class BuildKbartJob < ApplicationJob
       today = Time.zone.now.strftime "%Y-%m-%d"
       new_kbart_name = File.join(kbart_root_dir, "#{file_root}_#{today}")
 
-      Rails.logger.info("Creating new KBART #{new_kbart_name}")
+      MarcLogger.info("Creating new KBART #{new_kbart_name}")
       File.write(new_kbart_name + ".csv", new_kbart_csv)
 
       # And the tsv (but with the .txt extension)
@@ -53,26 +55,8 @@ class BuildKbartJob < ApplicationJob
       # FTP the files to ftp.fulcrum.org
       sftp_kbart(new_kbart_name, product.group_key, file_root)
     end
-  end
 
-  # I don't see a way around having a map due to the unpredictablity of the
-  # naming of the ftp directories, they're not consistant.
-  # Right now it's easiest to just put this map here, but it could be in a config file.
-  # Unfortunatly it means if we get a new group_key we need to add it here.
-  def group_key_ftp_dir_map
-    {
-      "aberdeen" => "/home/fulcrum_ftp/ftp.fulcrum.org/aberdeen/KBART",
-      "amherst" => "/home/fulcrum_ftp/ftp.fulcrum.org/Amherst_College_Press/KBART",
-      "bar" => "/home/fulcrum_ftp/ftp.fulcrum.org/BAR/KBART",
-      "bigten" => "/home/fulcrum_ftp/ftp.fulcrum.org/bigten/KBART",
-      "bridwell" => "/home/fulcrum_ftp/ftp.fulcrum.org/bridwell/KBART",
-      "heb" => "/home/fulcrum_ftp/ftp.fulcrum.org/HEB/KBART",
-      "leverpress" => "/home/fulcrum_ftp/ftp.fulcrum.org/Lever_Press/KBART",
-      "michelt" => "/home/fulcrum_ftp/ftp.fulcrum.org/michelt/KBART",
-      "test_product" => "/home/fulcrum_ftp/heliotropium/publishing/Testing/KBART",
-      "umpebc" => "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART",
-      "vermont" => "/home/fulcrum_ftp/ftp.fulcrum.org/vermont/KBART"
-    }
+    MarcLogger.info("BuildKbartLog Finished")
   end
 
   def sftp_kbart(kbart, group_key, file_root)
@@ -82,16 +66,16 @@ class BuildKbartJob < ApplicationJob
       begin
         Net::SFTP.start(fulcrum_sftp["sftp"], fulcrum_sftp["user"], password: fulcrum_sftp["password"]) do |sftp|
           maybe_move_old_kbarts(sftp, group_key, file_root)
-          Rails.logger.info("Uploading #{kbart + ".csv"} to #{remote_file(kbart, group_key, ".csv")}")
+          MarcLogger.info("Uploading #{kbart + ".csv"} to #{remote_file(kbart, group_key, ".csv")}")
           sftp.upload!(kbart + ".csv", remote_file(kbart, group_key, ".csv"))
-          Rails.logger.info("Uploading #{kbart + ".csv"} to #{remote_file(kbart, group_key, ".txt")}")
+          MarcLogger.info("Uploading #{kbart + ".csv"} to #{remote_file(kbart, group_key, ".txt")}")
           sftp.upload!(kbart + ".txt", remote_file(kbart, group_key, ".txt"))
         end
       rescue RuntimeError, Net::SFTP::StatusException => e
-        Rails.logger.error("SFTP ERROR: #{e}")
+        MarcLogger.error("SFTP ERROR: #{e}")
       end
     else
-      Rails.logger.error("No SFTP configuration file found, '#{kbart}' will not be sent!")
+      MarcLogger.error("No SFTP configuration file found, '#{kbart}' will not be sent!")
     end
   end
 
@@ -102,23 +86,23 @@ class BuildKbartJob < ApplicationJob
     return unless ['aberdeen', 'umpebc', 'bar', 'amherst', 'leverpress', 'test_product'].include?(group_key)
 
     old_kbart_dir = if group_key == "umpebc"
-                      File.join(group_key_ftp_dir_map[group_key], "UMPEBC_old")
+                      File.join(Marc::DirectoryMapper.group_key_kbart[group_key], "UMPEBC_old")
                     else
-                      File.join(group_key_ftp_dir_map[group_key], "#{group_key}_old")
+                      File.join(Marc::DirectoryMapper.group_key_kbart[group_key], "#{group_key}_old")
                     end
 
     # You can't move, only "rename", https://stackoverflow.com/a/22260984 which makes this annoying
-    sftp.dir.entries(group_key_ftp_dir_map[group_key]).each do |entry|
+    sftp.dir.entries(Marc::DirectoryMapper.group_key_kbart[group_key]).each do |entry|
       match = entry.name.match(/#{file_root}_\d\d\d\d-\d\d-\d\d\.\w{3}$/)
       if match.present? && match[0].present?
-        Rails.logger.info("Moving old kbart: #{File.join(group_key_ftp_dir_map[group_key], entry.name)} to #{File.join(old_kbart_dir, entry.name)}")
-        sftp.rename(File.join(group_key_ftp_dir_map[group_key], entry.name), File.join(old_kbart_dir, entry.name))
+        MarcLogger.info("Moving old kbart: #{File.join(Marc::DirectoryMapper.group_key_kbart[group_key], entry.name)} to #{File.join(old_kbart_dir, entry.name)}")
+        sftp.rename(File.join(Marc::DirectoryMapper.group_key_kbart[group_key], entry.name), File.join(old_kbart_dir, entry.name))
       end
     end
   end
 
   def remote_file(kbart, group_key, ext)
-    File.join(group_key_ftp_dir_map[group_key], File.basename(kbart) + ext)
+    File.join(Marc::DirectoryMapper.group_key_kbart[group_key], File.basename(kbart) + ext)
   end
 
   def yaml_config
