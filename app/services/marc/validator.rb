@@ -45,6 +45,10 @@ module Marc
       end
 
       rvalue
+    rescue StandardError => e
+      log_message("ruby-marc can't open record! #{e}")
+      MarcLogger.error(e.backtrace.join("\n"))
+      false
     end
 
     # This is from the ruby-marc gem. I don't think this means too much really in this context.
