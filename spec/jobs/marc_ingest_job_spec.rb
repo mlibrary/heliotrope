@@ -15,9 +15,10 @@ RSpec.describe MarcIngestJob, type: :job do
     allow(validator_instance).to receive(:valid?).and_return(true)
     allow(validator_instance).to receive(:group_key).and_return('group_key')
     allow(validator_instance).to receive(:noid).and_return('noid')
-    allow(validator_instance).to receive(:file).and_return('file.mrc')
+    allow(validator_instance).to receive(:file).and_return('/local/path/to/file.mrc')
     allow(Marc::DirectoryMapper).to receive(:group_key_cataloging).and_return('group_key' => product_dir)
     allow(Marc::Sftp).to receive(:move_marc_ingest_file_to_product_dir)
+    allow(Marc::Sftp).to receive(:move_marc_ingest_file_to_failures)
     allow(FileUtils).to receive(:rm)
     allow(MarcIngestMailer).to receive(:send_mail)
   end
@@ -48,7 +49,7 @@ RSpec.describe MarcIngestJob, type: :job do
       context 'when the validator is valid' do
         it 'moves the remote file to the remote product directory and removes the local copy' do
           MarcIngestJob.perform_now
-          expect(Marc::Sftp).to have_received(:move_marc_ingest_file_to_product_dir).with('file.mrc', product_dir).twice
+          expect(Marc::Sftp).to have_received(:move_marc_ingest_file_to_product_dir).with('/local/path/to/file.mrc', product_dir).twice
           expect(FileUtils).to have_received(:rm).with(files.first)
           expect(FileUtils).to have_received(:rm).with(files.last)
         end
@@ -66,11 +67,11 @@ RSpec.describe MarcIngestJob, type: :job do
           allow(validator_instance).to receive(:error).and_return("Validation error")
         end
 
-        it 'removes the local copy and logs validation error' do
+        it 'moves the file to marc_ingest/failres, removes the local copy and logs validation error' do
           MarcIngestJob.perform_now
-          files.each do |file|
-            expect(FileUtils).to have_received(:rm).with(file)
-          end
+          expect(Marc::Sftp).to have_received(:move_marc_ingest_file_to_failures).with('/local/path/to/file.mrc').twice
+          expect(FileUtils).to have_received(:rm).with(files.first)
+          expect(FileUtils).to have_received(:rm).with(files.last)
         end
 
         it 'sends a failure report' do

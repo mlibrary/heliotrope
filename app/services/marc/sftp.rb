@@ -41,6 +41,19 @@ module Marc
       conn.remove!(File.join("/home/fulcrum_ftp/marc_ingest", file))
     end
 
+    def self.move_marc_ingest_file_to_failures(file)
+      file = File.basename(file)
+      from = File.join("/home/fulcrum_ftp/marc_ingest", file)
+      to = File.join("/home/fulcrum_ftp/marc_ingest/failures", "#{Time.zone.now.strftime("%Y-%m-%d")}_#{file}")
+      begin
+        conn.rename!(from, to)
+      rescue Net::SFTP::StatusException => e
+        MarcLogger.error("Marc::Sftp could not rename!(#{from}, #{to})")
+        MarcLogger.error(e)
+        raise
+      end
+    end
+
     def self.local_marc_processing_dir
       path = File.join(Settings.scratch_space_path, "marc_processing")
       FileUtils.mkdir_p(path) unless Dir.exist? path
