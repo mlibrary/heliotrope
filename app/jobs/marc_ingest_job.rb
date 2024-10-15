@@ -21,6 +21,8 @@ class MarcIngestJob < ApplicationJob
       if validator.valid?
         product_dir = Marc::DirectoryMapper.group_key_cataloging[validator.group_key]
         if product_dir.blank?
+          # This marc is actually ok, we just don't have a group_key for it yet.
+          # So don't move it to the failures directory
           error = "ERROR\tMarc::DirectoryMapper is missing a group_key/cataloging path for '#{validator.group_key}' with file '#{file}'!"
           MarcLogger.error(error)
           report << error
@@ -35,6 +37,8 @@ class MarcIngestJob < ApplicationJob
         # The file has been moved out of the remote ~/marc_ingest, just delete the local copy
         FileUtils.rm file
       else
+        # Prepend "YYYY-MM-DD_" to the remote invalid marc file name and move it into ~/marc_ingest/failures
+        Marc::Sftp.move_marc_ingest_file_to_failures(validator.file)
         FileUtils.rm file
         report << validator.error
       end
