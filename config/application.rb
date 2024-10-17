@@ -89,8 +89,8 @@ module Heliotrope
     config.create_user_on_login = Settings.create_user_on_login && true
 
     # HELIO-4700 use Semantic Logger
-    config.semantic_logger.add_appender(io: STDOUT, level: :debug, formatter: :color)
-    config.active_record.logger = SemanticLogger[ActiveRecord::Base]
+    # config.semantic_logger.add_appender(io: STDOUT, level: :debug, formatter: :color)
+    # config.active_record.logger = SemanticLogger[ActiveRecord::Base]
 
     # Prepend all log lines with the following tags.
     # Can be overridden in environments/development and environments/test
