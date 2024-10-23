@@ -169,10 +169,20 @@ p.blurb {
     display: block;
     text-align: center;
     border-bottom: 0px solid transparent; // HELIO-3594
+  
+    span {
+      display: block;
+      padding-top: .5em;
+      line-height: 25px;
+    }
   }
 
   a:hover, a:active {
     border-bottom: 0px solid transparent;
+
+    span {
+      text-decoration: underline;
+    }
   }
 
   a.btn-large {
@@ -279,10 +289,12 @@ footer.page-footer {
     a {
       font-weight: 300;
       color: $accent-color;
+      text-decoration: underline;
     }
     a:hover, a:focus, a:active {
       color: $accent-color;
       border-color: $accent-color;
+      text-decoration: none;
     }
   }
 }
