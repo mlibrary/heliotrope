@@ -187,6 +187,39 @@ RSpec.describe Marc::Sftp do
     end
   end
 
+  describe "#move_marc_ingest_file_to_failures" do
+    let(:valid_yaml) do
+      {
+        'fulcrum_sftp_credentials' => {
+          'sftp' => 'hostname',
+          'user' => 'username',
+          'password' => 'password',
+          'root' => '/'
+        }
+      }
+    end
+    let(:config) { double("config") }
+    let(:sftp_session) { instance_double(Net::SFTP::Session) }
+
+    before do
+      allow(Rails.root).to receive(:join).with('config', 'fulcrum_sftp.yml').and_return(config)
+      allow(File).to receive(:exist?).with(config).and_return(true)
+      allow(File).to receive(:read).with(config).and_return(true)
+      allow(YAML).to receive(:safe_load).and_return(valid_yaml)
+      allow(Net::SFTP).to receive(:start).with("hostname", "username", password: "password").and_return(sftp_session)
+      allow(sftp_session).to receive(:rename!)
+    end
+
+    after { described_class.instance_variable_set("@conn", nil) }
+
+    it 'renames an invalid marc with YYYY-MM-DD and moves it to marc_ingest/failures' do
+      travel_to(Time.zone.local(2022, 02, 02, 12, 00, 00)) do
+        described_class.move_marc_ingest_file_to_failures('/local/path/to/test_file.mrc')
+        expect(sftp_session).to have_received(:rename!).with("/home/fulcrum_ftp/marc_ingest/test_file.mrc", "/home/fulcrum_ftp/marc_ingest/failures/2022-02-02_test_file.mrc")
+      end
+    end
+  end
+
   describe '.local_marc_processing_dir' do
     let(:scratch_space_path) { '/somewhere/scratch_space' }
 
