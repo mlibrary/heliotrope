@@ -494,6 +494,9 @@ footer.press {
 
   .page-links {
     font-size: 14px;
+    a {
+      text-decoration: underline;
+    }
   }
 
   p.authors {
