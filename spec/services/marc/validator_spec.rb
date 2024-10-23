@@ -48,6 +48,17 @@ RSpec.describe Marc::Validator do
         end
       end
     end
+
+    context "an unparsable marc record" do
+      let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', 'unparsable_9781951519803.mrc').to_s }
+
+      it "throws an exception, logs the error" do
+        validator = described_class.new(marc_file)
+        expect(MarcLogger).to receive(:error).twice
+        expect(validator.valid?).to be false
+        expect(validator.error).to match("unparsable_9781951519803.mrc ruby-marc can't open record! undefined method `pack' for nil:NilClass")
+      end
+    end
   end
 
   describe "#ruby_marc_valid?" do
