@@ -17,7 +17,8 @@ module Marc
         "michelt" => "/home/fulcrum_ftp/MARC_from_Cataloging/michelt",
         "test_product" => "/home/fulcrum_ftp/heliotropium/cataloging/Testing",
         "umpebc" => "/home/fulcrum_ftp/MARC_from_Cataloging/UMPEBC",
-        "vermont" => "/home/fulcrum_ftp/MARC_from_Cataloging/vermont"
+        "vermont" => "/home/fulcrum_ftp/MARC_from_Cataloging/vermont",
+        "westminster" => "/home/fulcrum_ftp/MARC_from_Cataloging/westminster"
       }
     end
 
@@ -33,7 +34,8 @@ module Marc
         "michelt" => "/home/fulcrum_ftp/ftp.fulcrum.org/michelt/KBART",
         "test_product" => "/home/fulcrum_ftp/heliotropium/publishing/Testing/KBART",
         "umpebc" => "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART",
-        "vermont" => "/home/fulcrum_ftp/ftp.fulcrum.org/vermont/KBART"
+        "vermont" => "/home/fulcrum_ftp/ftp.fulcrum.org/vermont/KBART",
+        "westminster" => "/home/fulcrum_ftp/ftp.fulcrum.org/westminster/KBART"
       }
     end
   end
