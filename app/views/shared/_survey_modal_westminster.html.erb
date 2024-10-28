@@ -22,7 +22,7 @@
 <script type="text/javascript">
   function survey_button_yes(){
     Cookies.set('survey_westminster', 'clicked', { expires: 365<%= ', secure: true' if Rails.env == 'production' %> });
-    window.open("https://umich.qualtrics.com/jfe/form/SV_eR0SD4fzEVY4EYK?publisher=<%= @monograph_presenter.subdomain %>&title=<%= @monograph_presenter.title %>", "_blank");
+    window.open("https://umich.qualtrics.com/jfe/form/SV_bq37RieqgU57nkG?publisher=<%= @monograph_presenter.subdomain %>&title=<%= @monograph_presenter.title %>", "_blank");
   }
   function survey_button_no(){
     Cookies.set('survey_westminster', 'ignore', { expires: 180<%= ', secure: true' if Rails.env == 'production' %> });

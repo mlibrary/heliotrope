@@ -14591,15 +14591,11 @@ $westminster-button-hover-border-color: #0a5554;
 
   a, .link {
     color: $westminster-link;
-    border-bottom: 1px solid $westminster-link;
-    word-wrap: break-word;
+    text-decoration: underline;
   }
 
   a:hover,
   a:active {
-    border-bottom:none;
-    color: $westminster-light-beige;
-    background-color: $westminster-link;
     text-decoration: underline; 
   }
 
@@ -14633,11 +14629,12 @@ $westminster-button-hover-border-color: #0a5554;
     @include futura;
   }
 
+  // download button
   .dropdown-menu.monograph-catalog-rep-downloads {
     background-color: $westminster-button;
     @include futura;
     a {
-      color: $westminster-black-80;
+      color: $westminster-white;
     }
   }
 
@@ -14654,7 +14651,7 @@ $westminster-button-hover-border-color: #0a5554;
   } */
 
   .blacklight-icons svg {
-    fill: $westminster-accent-color;
+    fill: $westminster-white;
   }
 
   // navigation menu
@@ -14799,6 +14796,12 @@ $westminster-button-hover-border-color: #0a5554;
     padding-left: 0px;
   }
 
+  #facets {
+    .card .card-header {
+      background-color: $westminster-light-beige;
+    }
+  }
+
   .panel-group {
     padding-left: 0px;
   }
@@ -14831,6 +14834,11 @@ $westminster-button-hover-border-color: #0a5554;
     background-color: #fff;
   }
 
+  .nav-tabs > li > h2 > a,
+  .nav-tabs > li.active > h2 > a {
+    font-size: 16px;
+  }
+
   // sorts on press and monograph pages
   .search-widgets .dropdown-menu {
     @include futura;  
@@ -14842,6 +14850,7 @@ $westminster-button-hover-border-color: #0a5554;
       .dropdown-item.active,
       .dropdown-item:active {
         background-color: $westminster-button;
+        color: $westminster-white;
       }
   }
 
@@ -14875,7 +14884,7 @@ $westminster-button-hover-border-color: #0a5554;
   }
 
   .btn-group .blacklight-icons svg {
-    fill: $westminster-accent-color;
+    fill: $westminster-white;
   }
 
   .view-type-gallery.btn-outline-secondary.active:not(:disabled):not(.disabled),
@@ -15137,6 +15146,12 @@ $westminster-button-hover-border-color: #0a5554;
       }
     }
 
+    .modal__header,
+    .modal__header h3,
+    .modal__header button {
+      color: $westminster-white;
+    }
+
     // PDF loading progress bar
     .helio-loading-bar .progress {
       background-color: $westminster-brand-color;
@@ -15166,7 +15181,12 @@ $westminster-button-hover-border-color: #0a5554;
 
   @media only screen and (max-width : 992px) {
     #main {
-      margin-top: 11.5em;
+      margin-top: 2em;
+    }
+
+    header .navbar-brand img {
+      width: 350px;
+      height: auto;
     }
 
     .navbar-header {
