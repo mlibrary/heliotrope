@@ -14490,3 +14490,734 @@ $vermont-button-hover-border-color: #9db0a9;
   }
 
 }
+///////////////////////////////////////////////
+//
+// University of Westminster Press
+//
+///////////////////////////////////////////////
+// colors
+$westminster-brand-color: #B13C32;
+$westminster-brand-color-red: #B3302E;
+
+$westminster-accent-color: #0F8381;
+$westminster-light-beige: #F3F4EF;
+$westminster-dark-grey: #333333;
+$westminster-light-grey: #EFEFEF;
+$westminster-black-80: #33312d;
+$westminster-black-100: #000000;
+$westminster-link: $westminster-black-80;
+$westminster-highlight: #FFDF00;
+$westminster-white: #FFFFFF;
+
+$westminster-button: $westminster-accent-color;
+$westminster-button-hover: #0b615f;
+$westminster-button-hover-border-color: #0a5554;
+
+.westminster {
+
+  @import url("https://use.typekit.net/fsc5ebl.css");
+
+  // typography
+
+  @mixin droid-serif {
+    font-family: droid-serif, serif;
+  }
+  
+  .droid-serif {
+    @include droid-serif;
+  }
+  
+  @mixin futura {
+    font-family: futura-pt, sans-serif;
+  }
+  
+  .futura {
+    @include futura;
+  }
+
+  // svgicon
+  #documents, #resource-page-svgicon {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(27%) sepia(73%) saturate(847%) hue-rotate(233deg) brightness(90%) contrast(104%); // $vermont-link: #6837A3;
+
+    }
+
+  }
+
+  // typography
+  @include droid-serif;
+
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 600;
+    @include futura;
+    color: $westminster-black-80;
+  }
+
+  h1 {
+    font-size: 40px;
+  }
+
+  h2 {
+    font-size: 32px;
+  }
+
+  .bold {
+    font-weight: 600;
+  }
+
+  .text-light {
+    color: #f8f9fa !important;
+  }
+
+  // links
+  :focus,
+  a:focus,
+  button:focus,
+  .form-control:focus,
+  .btn:focus {
+    outline: 3px solid #FFD100;
+    outline-offset: 0;
+    -webkit-transition: outline .05s ease-out;
+    -o-transition: outline .05s ease-out;
+    transition: outline .05s ease-out;
+  }
+
+  a, .link {
+    color: $westminster-link;
+    border-bottom: 1px solid $westminster-link;
+    word-wrap: break-word;
+  }
+
+  a:hover,
+  a:active {
+    border-bottom:none;
+    color: $westminster-light-beige;
+    background-color: $westminster-link;
+    text-decoration: underline; 
+  }
+
+  a.btn, a.previous, a.next {
+    text-decoration: none;
+  }
+
+  // buttons
+
+  .btn {
+    @include futura;
+    font-weight: 500;
+  }
+
+  .btn-default,
+  .btn {
+    @include button-background-color($westminster-button);
+    @include button-font-color($westminster-white);
+    border-color: $westminster-button;
+    @include futura;
+  }
+
+
+  .btn-default:hover,
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
+    @include button-hover-background-color($westminster-button-hover);
+    @include button-font-color($westminster-white);
+    border-color: $westminster-button-hover-border-color;
+    @include futura;
+  }
+
+  .dropdown-menu.monograph-catalog-rep-downloads {
+    background-color: $westminster-button;
+    @include futura;
+    a {
+      color: $westminster-black-80;
+    }
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $westminster-light-beige;
+  }
+
+  // .container
+  /* #main {
+    margin-top: 9em;
+  } */
+
+  .blacklight-icons svg {
+    fill: $westminster-accent-color;
+  }
+
+  // navigation menu
+
+  .nav,
+  header {
+    @include futura;
+  }
+
+  header {
+    background-color: $westminster-brand-color;
+    border-bottom: 4px solid $westminster-light-beige;
+    hgroup {
+      height: auto;
+    }    
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end !important;
+
+      // search box and links
+      .col-md-4.pt-3 {
+        display: flex;
+        flex-direction: column;
+        padding-top: 16px;
+
+        form.navbar-form {
+          margin: 0;
+          padding: 0;
+        }
+
+        form {
+          @include futura;
+
+          .input-group {
+            display: flex;
+            position: relative;
+            width: 80%;
+            align-items: stretch;
+
+            .form-control {
+              position: relative;
+              flex: 1 1 auto;
+              width: 1%;
+              margin-bottom: 0;
+              display: block;
+              padding: 6px 12px;
+              font-size: 14px;
+              line-height: 1.5;
+              background-clip: padding-box;
+              border: 1px solid $westminster-button-hover-border-color;
+              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+              color: rgb(73, 80, 87) !important;
+            }
+          }
+
+          input.search-query {
+            background-color: #FFF;
+            border-right: none !important;
+            color: $westminster-black-80 !important;
+            height: 38px;
+          }
+
+          button.search-submit {
+            background-color: $westminster-button;
+            border-top: $westminster-button-hover-border-color 1px solid;
+            border-right: $westminster-button-hover-border-color 1px solid;
+            border-bottom: $westminster-button-hover-border-color 1px solid;
+            border-left: none !important;
+            height: 100%;
+            padding: 0;
+            text-transform: none;
+            overflow: visible;
+            border-radius: 0;            
+            width: 53px;
+            height: 38px;
+
+            svg {
+              height: auto;
+              width: auto;
+              fill: $westminster-accent-color;
+              stroke-width: 2;
+              color: $westminster-white;
+            }
+          }
+        }
+      }
+    }
+
+    .navbar-brand-logo {
+      display: inline-block;      
+    }
+    a.navbar-brand {
+      border-bottom: none;
+      text-decoration: none;
+    }
+
+    a.navbar-brand:hover {
+      text-decoration: none;
+      background-color: transparent;
+    }
+    .navbar-brand {
+      padding: 1em 0;
+
+      img {
+        vertical-align: middle;
+      }
+    }
+  }
+
+    // container on all pages
+    #main.container {
+      max-width: 1140px;
+      padding-top: 1.5em;
+    }
+
+
+  // press catalog
+
+  .press {
+    .results-container {
+
+      .document {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: $westminster-black-80;
+          text-decoration: none;
+        }
+        a:hover,
+        a:active {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: $westminster-light-beige;
+  }
+
+  .search-form.panel-body {
+    background-color: #fff;
+  }
+
+  // sorts on press and monograph pages
+  .search-widgets .dropdown-menu {
+    @include futura;  
+      a {
+        color: $westminster-black-80;
+        text-decoration: none;
+      }
+
+      .dropdown-item.active,
+      .dropdown-item:active {
+        background-color: $westminster-button;
+      }
+  }
+
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $westminster-white;
+
+    .caret {
+      color: $westminster-white;
+    }
+  }
+
+  #per_page-dropdown.show > .btn-outline-secondary.dropdown-toggle,
+  #per-page-dropdown .btn-outline-secondary:not(:disabled):not(.disabled):active,
+  #sort-dropdown.show > .btn-outline-secondary.dropdown-toggle,
+  #sort-dropdown .btn-outline-secondary:not(:disabled):not(.disabled):active {
+    background-color: $westminster-accent-color;
+    color: $westminster-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $westminster-white;
+
+    .caret {
+      color: $westminster-white;
+    }
+
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: $westminster-accent-color;
+  }
+
+  .view-type-gallery.btn-outline-secondary.active:not(:disabled):not(.disabled),
+  .view-type-list.btn-outline-secondary.active:not(:disabled):not(.disabled) {
+    background-color: $westminster-accent-color;
+    .blacklight-icons svg { 
+      fill: $westminster-white;
+    }
+  }
+
+  // search resources
+  button.search-submit {
+    background-color: $westminster-accent-color;
+    border-color: $vermont-button;
+    color: $westminster-white;
+  }
+
+  button.search-submit:hover {
+    background-color: $westminster-button-hover;
+    border-color: $westminster-button-hover-border-color;
+    color: $westminster-white;
+  }
+
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $westminster-button;
+       border-color: $westminster-button;
+       color: $westminster-white;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $westminster-button-hover;
+       border-color: $westminster-button-hover-border-color;
+       color: $westminster-white;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $westminster-light-beige;
+       border-color: $westminster-button;
+       color: $westminster-black-80;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+      background-color: $westminster-white;
+      border-color: $westminster-button;
+      color: $westminster-black-80;
+     }
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include futura;
+  }
+
+  .breadcrumb {
+    padding: 8px 15px !important;
+  }
+
+  //footer
+  footer.press {
+      color: $westminster-white;
+      background-color: $westminster-black-80;
+      border-top: 1px solid rgba(0,0,0,.125);
+      padding: 3rem 0 1rem;
+
+      .container .row:first-of-type {
+        display: flex;
+        justify-content: space-between;
+      }
+  }
+  footer {
+      @include futura;
+
+      a {
+        color: $westminster-white;
+        text-decoration: none;
+      }
+
+      a.logo-link {
+        text-decoration: none;
+
+       img {
+        width: auto;
+        height: 100px;
+        display: block;
+       }
+      }
+
+      a.logo-link:hover {
+        text-decoration: none;
+      }
+
+
+      a:hover,
+      a:active {
+        color: #dae0e5;
+        text-decoration: underline;
+      }
+
+      .block {
+        display: block;
+      }
+
+      .contact a {
+        margin-bottom: 1em;
+        border-bottom: none;
+      }
+
+      h5 {
+        font-size: 1.5em;
+      }
+
+      .partners {
+        .westminster svg {
+          fill: $westminster-light-beige;
+          width: 140px;
+          margin-bottom: 15px;
+          display: block;
+        }
+        .alpsp img {
+          height: 40px;
+          display: block;
+          width: auto;
+        }
+        .alpsp img {
+          margin-bottom: 20px;
+        }
+        .aeup img, .even img {
+          height: 40px;
+          width: auto;
+          display: inline-block;
+        }
+        .aeup img {
+          margin-right: 10px;
+        }
+      }
+
+      .fulcrum {
+        height: 20px;
+        width: auto;
+        vertical-align: baseline;
+      }
+
+      small {
+        font-size: 12.8px
+      }
+
+      ul.second-nav {
+        font-size: 20px;
+      }
+
+      li {
+        padding-left: 1rem;
+        text-indent: -1rem;
+      }
+
+      p.social {
+        padding-top: .4em;
+        a {
+          padding-right: 0.75em;
+          svg {
+            display: inline-block;
+            vertical-align: middle;
+            fill: $vermont-light-blue;
+          }
+        }
+      }
+
+    .press-block-a, .press-block-b, .press-block-c {
+      background-color: $westminster-black-80;
+    }
+
+    .press-block-a {
+      padding-top: 0;
+      padding-left: 15px;
+      small {
+        display: block;
+      }
+    }
+
+    .press-block-b {
+      padding-top: 0;
+      ul {
+        @include futura;
+        font-size: 1.1em;
+      }
+    }
+
+    .press-block-c {
+      padding: 0;
+      margin-top: 1.5rem
+    }
+  }
+
+  // e-book reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($westminster-button,$westminster-button-hover,$westminster-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($westminster-button,$westminster-button-hover,$westminster-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($westminster-button,$westminster-button-hover,$westminster-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($westminster-button,$westminster-button-hover,$westminster-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($westminster-button,$westminster-button-hover,$westminster-white);
+      color: $westminster-white;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($westminster-button);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($westminster-button-hover);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $westminster-brand-color;
+    }
+
+  }
+
+  @media only screen and (max-width: 1220px) {
+    .navbar-default .navbar-nav {
+      padding-left: 0px;
+    }
+
+    #brand-bar form.search-form {
+      padding-left: 0;
+      width: 200px;
+    }
+
+  }
+
+  @media only screen and (max-width : 1200px) {
+    #brand-bar #brand-bar-nav {
+      form {
+        width: 175px;
+      }
+    }
+  }
+
+  @media only screen and (max-width : 992px) {
+    #main {
+      margin-top: 11.5em;
+    }
+
+    .navbar-header {
+      float: none;
+    }
+
+    .navbar-toggle {
+      display: block;
+    }
+
+    .navbar-collapse {
+      border-top: 1px solid transparent;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .navbar-default .navbar-nav {
+      padding-top: 0;
+      padding-right: 0;
+      margin-top: 0;
+    }
+
+    .navbar-nav>li {
+      float: none;
+    }
+
+    .navbar-nav>li>a {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      line-height: unset;
+    }
+
+    .navbar-collapse.collapse.in {
+      display: block!important;
+    }
+
+    .collapsing {
+      overflow: hidden!important;
+    }
+
+    #brand-bar #brand-bar-nav form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+
+  }
+
+}

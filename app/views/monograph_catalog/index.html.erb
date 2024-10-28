@@ -6,6 +6,8 @@
     <%= render 'shared/survey_modal_bigten' %>
   <% elsif @monograph_presenter.subdomain == 'aberdeenunipress' %>
     <%= render 'shared/survey_modal_aberdeenunipress' %>
+  <% elsif @monograph_presenter.subdomain == 'westminster' %>
+    <%= render 'shared/survey_modal_westminster' %>
   <% else %>
     <%= render 'shared/survey_modal' %>
   <% end %>
