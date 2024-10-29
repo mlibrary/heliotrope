@@ -4,8 +4,6 @@
 ## NOTE: THIS IS RUN FROM A CRON JOB! ##
 ########################################
 
-require 'htmlentities'
-
 desc 'Task to be called by a cron for Monographs create/edit from TMM CSV files'
 namespace :heliotrope do
   task :tmm_csv_monograph_create_update, [:tmm_csv_dir] => :environment do |_t, args|
@@ -159,8 +157,7 @@ namespace :heliotrope do
     puts "***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped: #{unexpecteds.join(', ')}\n\n" if unexpecteds.present?
   end
 
-  # this method expects HTMLEntities to have done its work in converting entities and decimal codes
-  # TODO: this should happen somewhere else -- in RowData, or even in a before_save callback on both Monographs and FileSets?
+  # TODO: Should this happen somewhere else -- in RowData, or even in a before_save callback on both Monographs and FileSets?
   def cleanup_characters(attrs, new_monograph)
     attrs_out = {}
     attrs.each do |key, value|
@@ -180,6 +177,12 @@ namespace :heliotrope do
     values.each do |value|
       if value.present?
         value = value.gsub(/\r\n?/, "\n") # editors are on a mix of OS's so make line endings uniform
+
+        # we used to run HTMLEntities.new.decode() on all values from TMM, as well as doing manual replacements on...
+        # `&nbsp;` and `&#160;` because of the plethora of HTML entity names and numbers coming from TMM.
+        # This seems to have subsided somewhat, so we'll just deal with them as they pop up.
+        value = value.gsub('&amp;', '&')
+
         # value = value.gsub('–', '-') # endash, commented out as apparently editors want to use them
         # value = value.gsub('—', '--') # emdash, commented out as apparently editors want to use them
         value = value.gsub(/[‘’]/, "'") # left, right single quotation marks
