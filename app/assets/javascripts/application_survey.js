@@ -38,6 +38,15 @@ function displayAberdeenModalSurvey() {
   }
 }
 
+function displayWestminsterModalSurvey() {
+  var westminsterSurveyStatus = Cookies.get('survey_westminster');
+  if (( westminsterSurveyStatus == 'ignore') || (westminsterSurveyStatus == 'clicked')) {
+    $('#surveyWestminsterModal').modal('hide');
+  } else {
+    $('#surveyWestminsterModal').modal('show');
+  }
+}
+
 // This survey function is called above on document load and appears only in e-reader
 // The survey is hidden by default to prevent a flash of the survey if 
 // cookie surveyStatus = 'ignore' or 'clicked'
@@ -46,6 +55,7 @@ function displayNonModalSurvey() {
   var gabiiSurveyStatus = Cookies.get('survey_gabii');
   var bigTenSurveyStatus = Cookies.get('survey_bigten');
   var aberdeenSurveyStatus = Cookies.get('survey_aberdeenunipress');
+  var westminsterSurveyStatus = Cookies.get('survey_westminster');
   if (( surveyStatus == 'ignore') || (surveyStatus == 'clicked')) {
     $('#surveyNonModal').hide();
   } else {
@@ -65,6 +75,11 @@ function displayNonModalSurvey() {
     $('#surveyNonModalAberdeen').hide();
   } else {
     $('#surveyNonModalAberdeen').show();
+  }
+  if (( westminsterSurveyStatus == 'ignore') || (westminsterSurveyStatus == 'clicked')) {
+    $('#surveyNonModalWestminster').hide();
+  } else {
+    $('#surveyNonModalWestminster').show();
   }
 }
 
