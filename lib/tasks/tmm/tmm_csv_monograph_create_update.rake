@@ -34,10 +34,9 @@ namespace :heliotrope do
     fail "CSV file may accidentally be a backup as '#{input_file}' contains 'bak'. Exiting." if input_file.include? 'bak'
 
     puts "Parsing file: #{input_file}"
-    # we need UTF-8 and TMM needs to export UTF-16LE for now because of this kind of thing: https://dba.stackexchange.com/a/250018
-    # unfortunately we need to read this file into memory to force uniform line endings before parsing the CSV.
-    # side note: although the
-    file_content = File.read(input_file, encoding: 'bom|utf-16le')
+    # Firebrand are finally good with UTF8. Note that it's crucial for Ruby to know there's a BOM or the first column is lost.
+    # Unfortunately we need to read this file into memory to force uniform line endings before parsing the CSV.
+    file_content = File.read(input_file, encoding: 'bom|utf-8')
     # Use `gsub!` to avoid holding more memory (I guess).
     file_content.gsub!(/\r\n?/, "\n")
 
