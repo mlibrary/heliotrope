@@ -30,7 +30,10 @@ RSpec.describe EbookIntervalDownloadOperation do
 
       it { is_expected.to be false }
 
-      # HELIO-4264: you can't download PDF chapters from the Monograph catalog page just because you're an editor.
+      # You *can* download PDF chapters from the Monograph catalog page just because you're an editor.
+      # This is less of an issue than allowing same for the full-ebook downloads because there's no metadata involved.
+      # In other words, `allow_download` on the ebook FileSet is not involved. Only the press setting and...
+      # draft/public status matter here.
       context 'when can edit' do
         let(:can_update) { true }
 

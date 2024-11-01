@@ -4,10 +4,11 @@ class EBookDownloadPresenter < ApplicationPresenter
   include ActionView::Helpers::UrlHelper
   attr_reader :monograph, :current_ability, :current_actor, :ebook_presenters
 
-  def initialize(monograph_presenter, current_ability, current_actor)
+  def initialize(monograph_presenter, current_ability, current_actor, admin_override = false)
     @monograph = monograph_presenter
     @current_ability = current_ability
     @current_actor = current_actor
+    @admin_override = admin_override
     # note the order here is the order that will end up in the ebook download dropdown options
     @ebook_presenters = Hyrax::PresenterFactory.build_for(ids: [@monograph.epub_id, @monograph.mobi_id, @monograph.pdf_ebook_id, @monograph.audiobook_id], presenter_class: Hyrax::FileSetPresenter, presenter_args: @current_ability).compact
     @ebook_presenters.each do |ebook|
@@ -45,7 +46,7 @@ class EBookDownloadPresenter < ApplicationPresenter
   def downloadable?(ebook_presenter)
     Rails.logger.debug { "[EBOOK DOWNLOAD] ebook_presenter.blank? #{ebook_presenter.blank?} (#{ebook_presenter.class})" }
     return false if ebook_presenter.blank?
-    EbookDownloadOperation.new(current_actor, Sighrax.from_presenter(ebook_presenter)).allowed?
+    EbookDownloadOperation.new(current_actor, Sighrax.from_presenter(ebook_presenter)).allowed?(@admin_override)
   end
 
   def downloadable_ebooks?

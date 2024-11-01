@@ -77,7 +77,6 @@ RSpec.describe "Editors PDF Download Warning Spec" do
       end
 
       context 'no PDF to download' do
-        # EbookDownloadOperation won't allow an analyst to download this
         let(:pdf) { create(:public_file_set, allow_download: 'no') }
 
         it 'Does not show the PDF warning' do
@@ -113,8 +112,7 @@ RSpec.describe "Editors PDF Download Warning Spec" do
       end
 
       context 'no PDF to download' do
-        # EbookDownloadOperation will allow an editor to download no matter what (pending HELIO-4569). So delete the FR.
-        before { FeaturedRepresentative.delete_by(file_set_id: pdf.id) }
+        let(:pdf) { create(:public_file_set, allow_download: 'no') }
 
         it 'Does not show the PDF warning' do
           visit epub_path(id: pdf.id)
@@ -149,8 +147,7 @@ RSpec.describe "Editors PDF Download Warning Spec" do
       end
 
       context 'no PDF to download' do
-        # EbookDownloadOperation will allow an editor to download no matter what (pending HELIO-4569). So delete the FR.
-        before { FeaturedRepresentative.delete_by(file_set_id: pdf.id) }
+        let(:pdf) { create(:public_file_set, allow_download: 'no') }
 
         it 'Does not show the PDF warning' do
           visit epub_path(id: pdf.id)
@@ -185,8 +182,7 @@ RSpec.describe "Editors PDF Download Warning Spec" do
       end
 
       context 'no PDF to download' do
-        # EbookDownloadOperation will allow an editor to download no matter what (pending HELIO-4569). So delete the FR.
-        before { FeaturedRepresentative.delete_by(file_set_id: pdf.id) }
+        let(:pdf) { create(:public_file_set, allow_download: 'no') }
 
         it 'Does not show the PDF warning' do
           visit epub_path(id: pdf.id)
