@@ -3,15 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe "Cozy Sun Bear", type: :system, browser: true do
-  let(:user) { create(:platform_admin) }
   let(:press) { create(:press, subdomain: 'blue') }
-  let(:monograph) { create(:monograph, press: press.subdomain, user: user, visibility: "open", representative_id: cover.id) }
-  let(:cover) { create(:file_set, content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
-  let(:file_set) { create(:file_set, id: '999999999', allow_download: 'yes', content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
+  let(:monograph) { create(:public_monograph, press: press.subdomain, visibility: "open", representative_id: cover.id) }
+  let(:cover) { create(:public_file_set, content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
+  let(:file_set) { create(:public_file_set, id: '999999999', allow_download: 'yes', content: File.open(File.join(fixture_path, 'fake_epub01.epub'))) }
   let!(:fr) { create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: 'epub') }
 
   before do
-    sign_in user
     stub_out_redis
     monograph.ordered_members << cover
     monograph.ordered_members << file_set

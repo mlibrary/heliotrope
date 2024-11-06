@@ -19,6 +19,7 @@ RSpec.describe "CSB Share Links", type: :system, browser: true do
     monograph.save!
     cover.save!
     file_set.save!
+    # Creating this component means the Monograph is now protected
     Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid)
   end
 
@@ -35,8 +36,8 @@ RSpec.describe "CSB Share Links", type: :system, browser: true do
         # For a platform_admin (or other authed user)
         visit epub_path(id: file_set.id)
 
-        # download epub button is present
-        expect(page.has_css?('.cozy-download')).to be true
+        # download epub button is not present, as it's protected by the Component
+        expect(page.has_css?('.cozy-download')).to be false
         # share link button is present
         expect(page).to have_selector('#share-link-btn')
         # click to create a sharable link
@@ -60,7 +61,7 @@ RSpec.describe "CSB Share Links", type: :system, browser: true do
         # For an anon user following a share link
         visit epub_path(id: file_set.id, share: ShareLinkLog.last.token)
 
-        # download epub button is not present
+        # download epub button is not present, as it's protected by the Component
         expect(page.has_css?('.cozy-download')).to be false
         # share link button is not present
         expect(page).to have_no_selector('#share-link-btn')
@@ -81,8 +82,8 @@ RSpec.describe "CSB Share Links", type: :system, browser: true do
         # For a platform_admin (or other authed user)
         visit epub_path(id: file_set.id)
 
-        # download epub button is present
-        expect(page.has_css?('.cozy-download')).to be true
+        # download epub button is not present, as it's protected by the Component
+        expect(page.has_css?('.cozy-download')).to be false
         # share link button is present
         expect(page).to have_selector('#share-link-btn')
         # click to create a sharable link
@@ -106,7 +107,7 @@ RSpec.describe "CSB Share Links", type: :system, browser: true do
         # For an anon user following a share link
         visit epub_path(id: file_set.id, share: ShareLinkLog.last.token)
 
-        # download epub button is not present
+        # download epub button is not present, as it's protected by the Component
         expect(page.has_css?('.cozy-download')).to be false
         # share link button is not present
         expect(page).to have_no_selector('#share-link-btn')
@@ -131,8 +132,8 @@ RSpec.describe "CSB Share Links", type: :system, browser: true do
         # For a platform_admin (or other authed user)
         visit epub_path(id: file_set.id)
 
-        # download epub button is present
-        expect(page.has_css?('.cozy-download')).to be true
+        # download epub button is not present
+        expect(page.has_css?('.cozy-download')).to be false
         # share link button is present
         expect(page).to have_selector('#share-link-btn')
         # click to create a sharable link
@@ -177,8 +178,8 @@ RSpec.describe "CSB Share Links", type: :system, browser: true do
         # For a platform_admin (or other authed user)
         visit epub_path(id: file_set.id)
 
-        # download epub button is present
-        expect(page.has_css?('.cozy-download')).to be true
+        # download epub button is not present
+        expect(page.has_css?('.cozy-download')).to be false
         # share link button is present
         expect(page).to have_selector('#share-link-btn')
         # click to create a sharable link
