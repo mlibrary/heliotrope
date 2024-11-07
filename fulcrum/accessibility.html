@@ -4,8 +4,17 @@ title: Accessibility
 permalink: /accessibility/
 ---
 
-<p class="milli">Last updated: June 3, 2024</p>
+<p class="milli">Last updated: November 6, 2024</p>
 <p>Accessibility is a core value and design component of Fulcrum.  As part of the ongoing development of Fulcrum, we work to make the platform and its content inclusive, accessible, and usable for all readers.</p>
+
+<p>Fulcrum makes every reasonable effort to have its products and services available to all customers and users, especially those with disabilities, allocating significant time and resources towards ensuring Fulcrum users have equal access. We approach this with three guiding principles:</p>
+  <ol>
+    <li><strong>Be responsive</strong> to requests for remediation or reported accessibility issues. We aim to respond to requests within 2 business days.</li>
+    <li><strong>Be proactive</strong> by identifying and working on known platform issues and remediation of content for most likely to be used and essential functions of the platform.</li>
+    <li><strong>Be transparent</strong> as to what we are planning and doing to support accessibility requirements for the platform and its content.</li>
+  </ol>
+
+<h2>Conformance Status</h2>
 <p>Fulcrum aims to meet the latest <a href="https://www.w3.org/WAI/WCAG22/quickref/?versions=2.2" title="Web Content Accessibility Guidelines 2.2 AA">WCAG 2 AA Standards</a> (currently WCAG 2.2 AA) in two ways:</p>
 <ul>
   <li>Developing a platform with infrastructure that meets web accessibility guidelines and includes accessibility features.</li>
@@ -13,11 +22,12 @@ permalink: /accessibility/
 </ul>
 <p>We report Fulcrum's compliance with WCAG 2.2 and Section 508 in a <a href="/docs/Fulcrum-VPAT2.5INT-MASTER-20240522.pdf">Voluntary Product Accessibility Template (VPAT®) Version 2.5 INT</a>. We report content compliance <a href="#content">in collection specific VPATs</a>.</p>
 <p>Accessibility features, compatibility, and known issues are also summarized on this page.</p>
+<p>Fulcrum's conformance status is assessed through a combination of self-evaluation, user testing and feedback, and third-party evaluation.</p>
 
 <div class="help">
     <h2>Need Help?</h2>
     <p>If you need to be provided with an accessible version of a book or need other assistance using the platform, please email <a href="mailto:fulcrum-info@umich.edu">fulcrum-info@umich.edu</a>.</p>    
-    <p>If you would like to report an issue, share general comments, suggestions, or other ideas, please use our <a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?url=https://www.fulcrum.org/accessibility">feedback form</a>.</p>
+    <p>If you would like to report an issue, share general comments, suggestions, or other ideas about accessibility, please use our <a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?url=https://www.fulcrum.org/accessibility">feedback form</a>.</p>
 </div>
 
 <div class="toc">
@@ -32,6 +42,24 @@ permalink: /accessibility/
 </div>
 
 <h2 id="timeline">Accessibility Timeline and Roadmap</h2>
+<h3>2025</h3>
+<p>Throughout 2025 we plan to release platform features to help with assessing the accessibility of content on Fulcrum:</p>
+  <ul>
+    <li>Introduce title-level accessibility metadata to help users identify accessibility features available within an ebook.</li>
+    <li>Enable searching and browsing of content based on accessibility conformance status and accessibility features.</li>
+  </ul>
+<p>By June 2025 we aim to upgrade any WCAG 2.2 AA criteria identified in the <a href="https://www.fulcrum.org/docs/Fulcrum-VPAT2.5INT-MASTER-20240522.pdf">current platform VPAT®</a> as "partially supports" to "supports".</p>
+<h3>2024</h3>
+<p>Several VPAT®s were revised and updated including the core master VPAT for Fulcrum. VPAT®s were upgraded to report conformance on WCAG 2.2 and follow VPAT® Version 2.5 INT.</p>
+<p>Work on assessing the accessibility gaps of several collections containing deep backlist titles (pre 2010) has begun for determining remediation needs to meet the European Accessibility Act requirements which go into effect in June 2025.</p>
+<p>Several accessibility issues were addressed in September and October 2024, specifically:</p> 
+  <ul>
+    <li>Ensuring information buttons on authentication page have unique values.</li>
+    <li>Configuring the time-based media player's headings and values to be unique and assigned correct heading level when embedded into ebook content in the Fulcrum Reader.</li>
+    <li>Ensuring pagination links distinguish themselves from surrounding non-linked text.</li>
+    <li>Announcing loading status to assistive technologies when content is loading in the Fulcrum Reader.</li>
+  </ul>
+
 <h3>2023</h3>
 <p>In January 2023, several VPAT®s were revised and updated including the core master VPAT for Fulcrum.</p>
 
@@ -88,7 +116,7 @@ permalink: /accessibility/
   <li>In the Fulcrum Reader, alt-text image descriptions will be read when the embedded image is selected via the TAB key, but will not be read automatically via continuous reading. Alt-text image descriptions can be accessed by selecting the embedded image via keyboard controls or by following the link to the full image media page.</li>
   <li>In the Fulcrum Reader, when searching inside the text of a book and following a search result, the matched term in the text is indicated on the page only through visual highlighting of the matched text, but the excerpts and chapter locations are accessible through screen reader technology.</li>
   <li>In the Fulcrum Reader, text selection for highlighting or note taking does not work as expected.</li>
-  <li>On <a href="https://www.fulcrum.org/concern/monographs/sj139271b?locale=en">book title pages</a>, “Table of Contents” is the default tab. To get to other tabs on that page, navigate to the “Table of Contents” heading and press the right arrow key.</li>
+  <li>On <a href="https://www.fulcrum.org/concern/monographs/sj139271b?locale=en">book title pages</a>, “Overview” is the default tab. To get to other tabs on that page, navigate to the “Overview” heading and press the right arrow key.</li>
   <li>On <a href="https://www.fulcrum.org/concern/file_sets/x633f103b?locale=en">resources pages</a>, “Info” is the default tab. To get to others tabs, navigate to the “Info” heading and press the right arrow key.</li>
 </ul>
 <p>For readers using VoiceOver:</p>
@@ -124,6 +152,7 @@ permalink: /accessibility/
   </li>
   <li>Left and right arrow keys in the Fulcrum Reader provide shortcuts for easy page flipping or scrolling.</li>
   <li>Using scroll mode in the Fulcrum Reader, Page Up and Page Down and up and down arrow keys also allow for page scrolling.</li>
+  <li>When reading PDFs in the Fulcrum Reader, pages can be rotated by either using the "Rotate Clockwise" button or pressing R on the keyboard. Both will rotate the page 90 degrees clockwise.</li>
   <li>The default video player shortcuts are as follows:
     <ul>
       <li>Alt + Control + p or spacebar = Play/Pause</li>
@@ -143,7 +172,7 @@ permalink: /accessibility/
 <ul>
   <li>For certain content, users can choose between page-by-page and scroll view in the Fulcrum Reader. To switch views, select the Preferences and Settings button and choose your preferred Display mode.</li>
   <li>AblePlayer video and audio player has the capability for captions, audio descriptions, and transcripts, though not all publishers may provide these features. The caption font, size, color, and location can be adjusted in the player settings. Captions and transcripts are available when provided by the publisher. As of January 2022, the current version of AblePlayer on Fulcrum has a known issue where audio descriptions can auto-play based on the time codes when users activate descriptions to be read aloud by the player. Turning off the read aloud function of the descriptions will resolve this issue.</li>
-  <li>Image descriptions are enabled for screen readers through alt-text attributes (when provided by publisher).</li>
+  <li>Image descriptions are enabled for screen readers through alt-text attributes and linked extended descriptions when necessary (and when provided by publisher).</li>
   <li>While there is no built-in text-to-speech feature, screen readers and text-to-speech browser extensions such as Read Aloud for Chrome should work with the Fulcrum Reader as well as all of the book, publisher, and media pages.</li>
 </ul>
 <p>For readers with low vision:</p>
