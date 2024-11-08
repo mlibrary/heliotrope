@@ -9,6 +9,6 @@ class MarcIngestMailer < ApplicationMailer
     @today = Time.zone.now.strftime "%Y-%m-%d"
     @report = report
 
-    mail
+    mail(to: "sethajoh@umich.edu")
   end
 end

@@ -5,6 +5,27 @@
 # locations on ftp.fulcrum.org since they are not always predicatble
 module Marc
   class DirectoryMapper
+    # HELIO-4760
+    # "press_cataloging" is TEMPORARY :)
+    # For now we can map Press to cataloging location bypassing the need for Product.group_key to exist
+    # That way we can correctly categorize MARC records before they have a Product or Component (when they're still Draft)
+    def self.press_group_key
+      {
+        "aberdeen" => "aberdeen",
+        "amherst" => "amherst",
+        "bar" => "bar",
+        "bigten" => "bigten",
+        "bridwell" => "bridwell",
+        "heb" => "heb",
+        "leverpress" => "leverpress",
+        "michelt" => "michelt",
+        "test_product" => "test_product",
+        "michigan" => "umpebc",
+        "vermont" => "vermont",
+        "westminster" => "westminster"
+      }
+    end
+
     def self.group_key_cataloging
       {
         "aberdeen" => "/home/fulcrum_ftp/MARC_from_Cataloging/aberdeen",

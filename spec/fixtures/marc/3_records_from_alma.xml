@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection>
+  <record>
+    <leader>03798nam a2200517 i 4500</leader>
+    <controlfield tag="005">20241022102248.0</controlfield>
+    <controlfield tag="006">m     o  d        </controlfield>
+    <controlfield tag="007">cr#una||||||||</controlfield>
+    <controlfield tag="008">231222r20242024miua    ob    000 0 eng d</controlfield>
+    <controlfield tag="001">99188092514106381</controlfield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">9780472076413</subfield>
+      <subfield code="q">hardcover book</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">0472076418</subfield>
+      <subfield code="q">hardcover book</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">9780472056415</subfield>
+      <subfield code="q">paperback book</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">0472056417</subfield>
+      <subfield code="q">paperback book</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">9780472903825</subfield>
+      <subfield code="q">electronic book</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">0472903829</subfield>
+      <subfield code="q">electronic book</subfield>
+    </datafield>
+    <datafield tag="024" ind1="7" ind2=" ">
+      <subfield code="a">10.3998/mpub.11950963</subfield>
+      <subfield code="2">doi</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(OCoLC)1415859996</subfield>
+    </datafield>
+    <datafield tag="040" ind1=" " ind2=" ">
+      <subfield code="a">EYM</subfield>
+      <subfield code="b">eng</subfield>
+      <subfield code="e">rda</subfield>
+      <subfield code="e">pn</subfield>
+      <subfield code="c">EYM</subfield>
+    </datafield>
+    <datafield tag="043" ind1=" " ind2=" ">
+      <subfield code="a">n-us-ca</subfield>
+    </datafield>
+    <datafield tag="050" ind1=" " ind2="4">
+      <subfield code="a">GV1624.7.A34</subfield>
+    </datafield>
+    <datafield tag="100" ind1="1" ind2=" ">
+      <subfield code="a">Bragin, Naomi Macalalad,</subfield>
+      <subfield code="e">author.</subfield>
+    </datafield>
+    <datafield tag="245" ind1="1" ind2="0">
+      <subfield code="a">Kinethic California :</subfield>
+      <subfield code="b">dancing funk &amp; disco era kinships /</subfield>
+      <subfield code="c">Naomi Macalalad Bragin.</subfield>
+    </datafield>
+    <datafield tag="246" ind1="3" ind2="0">
+      <subfield code="a">Kinethic California :</subfield>
+      <subfield code="b">dancing funk and disco era kinships</subfield>
+    </datafield>
+    <datafield tag="264" ind1=" " ind2="1">
+      <subfield code="a">Ann Arbor, Michigan :</subfield>
+      <subfield code="b">University of Michigan Press,</subfield>
+      <subfield code="c">2024.</subfield>
+    </datafield>
+    <datafield tag="264" ind1=" " ind2="4">
+      <subfield code="c">©2024</subfield>
+    </datafield>
+    <datafield tag="300" ind1=" " ind2=" ">
+      <subfield code="a">1 online resource (xi, 214 pages :</subfield>
+      <subfield code="b">color illustrations)</subfield>
+    </datafield>
+    <datafield tag="336" ind1=" " ind2=" ">
+      <subfield code="a">text</subfield>
+      <subfield code="b">txt</subfield>
+      <subfield code="2">rdacontent</subfield>
+    </datafield>
+    <datafield tag="337" ind1=" " ind2=" ">
+      <subfield code="a">computer</subfield>
+      <subfield code="b">c</subfield>
+      <subfield code="2">rdamedia</subfield>
+    </datafield>
+    <datafield tag="338" ind1=" " ind2=" ">
+      <subfield code="a">online resource</subfield>
+      <subfield code="b">cr</subfield>
+      <subfield code="2">rdacarrier</subfield>
+    </datafield>
+    <datafield tag="490" ind1="1" ind2=" ">
+      <subfield code="a">Studies in Dance: Theories and Practices</subfield>
+    </datafield>
+    <datafield tag="504" ind1=" " ind2=" ">
+      <subfield code="a">Includes bibliographical references (pages 201-214).</subfield>
+    </datafield>
+    <datafield tag="506" ind1="0" ind2=" ">
+      <subfield code="a">Open access</subfield>
+    </datafield>
+    <datafield tag="520" ind1="3" ind2=" ">
+      <subfield code="a">Kinethic California: Dancing Funk and Disco Era Kinships documents the emergence of new forms of black social and vernacular dance in 1970s California, forms embedded in local cultural histories but connected to the contemporary global culture of hip hop/streetdance. The book weaves interviews and ethnographies of first generation (1960s-70s) dancers of strutting, boogaloo, robotting, popping, locking, waacking, and punking styles, as it advances a theory of dance as kinetic kinship formation, through a focus on techniques and practices of the dancers themselves. The term given to these collective movement practices is kinethic, to bring attention to motion at the core of black aesthetics that generate dances as forms of kinship beyond blood relation. Kinethics reorient dancers toward kinetic kinship in ways that give continuity to black dance lineages under persistent conditions of disappearance and loss. As dancers engage kinethics, they reinvent gestural vocabularies that describe worlds they imagine into knowing-being. The stories in Kinethic California attend to the aesthetics of everyday movement, seen through the lens of young artists who from childhood listened to their family's soul and funk records, observed the bent-leg strolls and rhythmic handshakes of people moving through their neighborhoods, and watched each other move at house parties, school gyms, and around-the-way social clubs. Their aesthetic sociality and geographic movement provided materials for collective study and creative play. Naomi Macalalad Bragin attends to such multidirectional conversations between dancer, community, and tradition, by way of which California dance lineages emerge and take flight.</subfield>
+    </datafield>
+    <datafield tag="536" ind1=" " ind2=" ">
+      <subfield code="a">Sponsored by National Endowment for the Humanities</subfield>
+    </datafield>
+    <datafield tag="542" ind1="1" ind2=" ">
+      <subfield code="f">This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License</subfield>
+      <subfield code="u">https://creativecommons.org/licenses/by-nc/4.0</subfield>
+    </datafield>
+    <datafield tag="588" ind1=" " ind2=" ">
+      <subfield code="a">Description based on information from the publisher.</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="0">
+      <subfield code="a">African American dance</subfield>
+      <subfield code="z">California</subfield>
+      <subfield code="x">History and criticism.</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="0">
+      <subfield code="a">African Americans</subfield>
+      <subfield code="x">Social life and customs.</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="0">
+      <subfield code="a">Hip-hop</subfield>
+      <subfield code="x">History and criticism.</subfield>
+    </datafield>
+    <datafield tag="655" ind1=" " ind2="4">
+      <subfield code="a">Electronic books.</subfield>
+    </datafield>
+    <datafield tag="710" ind1="2" ind2=" ">
+      <subfield code="a">Michigan Publishing (University of Michigan),</subfield>
+      <subfield code="e">publisher.</subfield>
+    </datafield>
+    <datafield tag="830" ind1=" " ind2="0">
+      <subfield code="a">Studies in dance: theories and practices.</subfield>
+    </datafield>
+    <datafield tag="856" ind1="4" ind2="0">
+      <subfield code="u">https://doi.org/10.3998/mpub.11950963</subfield>
+      <subfield code="7">0</subfield>
+    </datafield>
+    <datafield tag="914" ind1=" " ind2=" ">
+      <subfield code="a">No-worldcat</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">MPubCataloging</subfield>
+    </datafield>
+  </record>
+  <record>
+    <leader>03214nam a2200481 i 4500</leader>
+    <controlfield tag="005">20241022102157.0</controlfield>
+    <controlfield tag="006">m     o  d        </controlfield>
+    <controlfield tag="007">cr#unu||||||||</controlfield>
+    <controlfield tag="008">231027t20242024miua    ob    000 0 eng d</controlfield>
+    <controlfield tag="001">99188092514006381</controlfield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">9780472904457</subfield>
+      <subfield code="q">(open access ebook)</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">0472904450</subfield>
+      <subfield code="q">(open access ebook)</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="z">9780472076772</subfield>
+      <subfield code="q">(hardcover)</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="z">0472076779</subfield>
+      <subfield code="q">(hardcover)</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="z">9780472056774</subfield>
+      <subfield code="q">(paperback)</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="z">0472056778</subfield>
+      <subfield code="q">(paperback)</subfield>
+    </datafield>
+    <datafield tag="024" ind1="7" ind2=" ">
+      <subfield code="a">10.3998/mpub.12135287</subfield>
+      <subfield code="2">doi</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(OCoLC)1406102374</subfield>
+    </datafield>
+    <datafield tag="040" ind1=" " ind2=" ">
+      <subfield code="a">EYM</subfield>
+      <subfield code="b">eng</subfield>
+      <subfield code="e">rda</subfield>
+      <subfield code="e">pn</subfield>
+      <subfield code="c">EYM</subfield>
+    </datafield>
+    <datafield tag="050" ind1=" " ind2="4">
+      <subfield code="a">GV1469.25.S67</subfield>
+    </datafield>
+    <datafield tag="100" ind1="1" ind2=" ">
+      <subfield code="a">Dor, Simon,</subfield>
+      <subfield code="e">author.</subfield>
+    </datafield>
+    <datafield tag="245" ind1="1" ind2="0">
+      <subfield code="a">StarCraft :</subfield>
+      <subfield code="b">legacy of real-time strategy /</subfield>
+      <subfield code="c">Simon Dor.</subfield>
+    </datafield>
+    <datafield tag="264" ind1=" " ind2="1">
+      <subfield code="a">Ann Arbor :</subfield>
+      <subfield code="b">University of Michigan Press,</subfield>
+      <subfield code="c">2024.</subfield>
+    </datafield>
+    <datafield tag="264" ind1=" " ind2="4">
+      <subfield code="c">©2024</subfield>
+    </datafield>
+    <datafield tag="300" ind1=" " ind2=" ">
+      <subfield code="a">1 online resource (x, 145 pages) :</subfield>
+      <subfield code="b">illustrations</subfield>
+    </datafield>
+    <datafield tag="336" ind1=" " ind2=" ">
+      <subfield code="a">text</subfield>
+      <subfield code="b">txt</subfield>
+      <subfield code="2">rdacontent</subfield>
+    </datafield>
+    <datafield tag="337" ind1=" " ind2=" ">
+      <subfield code="a">computer</subfield>
+      <subfield code="b">c</subfield>
+      <subfield code="2">rdamedia</subfield>
+    </datafield>
+    <datafield tag="338" ind1=" " ind2=" ">
+      <subfield code="a">online resource</subfield>
+      <subfield code="b">cr</subfield>
+      <subfield code="2">rdacarrier</subfield>
+    </datafield>
+    <datafield tag="490" ind1="1" ind2=" ">
+      <subfield code="a">Landmark video games</subfield>
+    </datafield>
+    <datafield tag="504" ind1=" " ind2=" ">
+      <subfield code="a">Includes bibliographical references (pages 169-183)</subfield>
+    </datafield>
+    <datafield tag="506" ind1="0" ind2=" ">
+      <subfield code="a">Open access</subfield>
+    </datafield>
+    <datafield tag="520" ind1="3" ind2=" ">
+      <subfield code="a">StarCraft (Blizzard Entertainment, 1998) is a real-time strategy video game, placing the player in command of three extraterrestrial races fighting against each other for strategic control of resources, terrain, and power. Simon Dor examines the game's unanticipated effect by delving into the history of the game and the two core competencies it encouraged: decoding and foreseeing. Although StarCraft was not designed as an e-sport, its role in developing foreseeing skills helped give rise to one of the earliest e-sport communities in South Korea. Apart from the game's clear landmark status, StarCraft offers a unique insight into changes in gaming culture and, more broadly, the marketability and profit of previously niche areas of interest. The book places StarCraft in the history of real-time strategy games in the 1990s--Dune II, Command &amp; Conquer, Age of Empires--in terms of visual style, narrative tropes, and control. It shows how design decisions, technological infrastructures, and a strong contribution from its gaming community through Battle.net and its campaign editor were necessary conditions for the flexibility it needed to grow its success. In exploring the fanatic clusters of competitive players who formed the first tournaments and professionalized gaming, StarCraft shows that the game was key to the transition towards foreseeing play and essential to competitive gaming and e-sports.</subfield>
+    </datafield>
+    <datafield tag="542" ind1="1" ind2=" ">
+      <subfield code="f">This work is licensed under the Creative Commons Attribution-Non-Commercial 4.0 International License</subfield>
+      <subfield code="u">https://creativecommons.org/licenses/by-nc/4.0</subfield>
+    </datafield>
+    <datafield tag="588" ind1=" " ind2=" ">
+      <subfield code="a">Description based on information from the publisher.</subfield>
+    </datafield>
+    <datafield tag="630" ind1="0" ind2="0">
+      <subfield code="a">StarCraft</subfield>
+      <subfield code="x">History and criticism.</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="0">
+      <subfield code="a">Fantasy games</subfield>
+      <subfield code="x">History and criticism.</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="0">
+      <subfield code="a">Video games</subfield>
+      <subfield code="x">History and criticism.</subfield>
+    </datafield>
+    <datafield tag="655" ind1=" " ind2="4">
+      <subfield code="a">Electronic books.</subfield>
+    </datafield>
+    <datafield tag="710" ind1="2" ind2=" ">
+      <subfield code="a">Michigan Publishing (University of Michigan),</subfield>
+      <subfield code="e">publisher.</subfield>
+    </datafield>
+    <datafield tag="830" ind1=" " ind2="0">
+      <subfield code="a">Landmark video games.</subfield>
+    </datafield>
+    <datafield tag="856" ind1="4" ind2="0">
+      <subfield code="u">https://doi.org/10.3998/mpub.12135287</subfield>
+      <subfield code="7">0</subfield>
+    </datafield>
+    <datafield tag="914" ind1=" " ind2=" ">
+      <subfield code="a">No-worldcat</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">MPubCataloging</subfield>
+    </datafield>
+  </record>
+  <record>
+    <leader>-----nam-a22-----z--4500</leader>
+    <controlfield tag="001">99188091309306381</controlfield>
+    <controlfield tag="008">241015u2024uuuuuuuuu-|-o----u|----|eng-d</controlfield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">0-472-90459-0</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(CKB)5600000000878751</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(EXLCZ)995600000000878751</subfield>
+    </datafield>
+    <datafield tag="245" ind1="1" ind2="0">
+      <subfield code="a">Teaching Difficult Topics: Reflections from the Undergraduate Music Classroom</subfield>
+    </datafield>
+    <datafield tag="246" ind1=" " ind2=" ">
+      <subfield code="a">Teaching Difficult Topics</subfield>
+    </datafield>
+    <datafield tag="260" ind1=" " ind2=" ">
+      <subfield code="b">University of Michigan Press</subfield>
+    </datafield>
+    <datafield tag="776" ind1=" " ind2=" ">
+      <subfield code="z">0-472-07696-5</subfield>
+    </datafield>
+    <datafield tag="906" ind1=" " ind2=" ">
+      <subfield code="a">BOOK</subfield>
+    </datafield>
+  </record>
+</collection>

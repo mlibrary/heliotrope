@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection>
+  <record>
+    <leader>02615nam a2200457 i 4500</leader>
+    <controlfield tag="001">10.3998/mpub.12527012</controlfield>
+    <controlfield tag="003">MiU</controlfield>
+    <controlfield tag="005">20241021122912.0</controlfield>
+    <controlfield tag="006">m     o  d        </controlfield>
+    <controlfield tag="007">cr#una||||||||</controlfield>
+    <controlfield tag="008">240806t20252025miua    ob    001 0 eng d</controlfield>
+    <controlfield tag="001">99188075270906381</controlfield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="z">9780472077175</subfield>
+      <subfield code="q">hardcover book</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="z">9780472057177</subfield>
+      <subfield code="q">paperback book</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">9780472221981</subfield>
+      <subfield code="q">electronic book</subfield>
+    </datafield>
+    <datafield tag="020" ind1=" " ind2=" ">
+      <subfield code="a">0472221981</subfield>
+      <subfield code="q">electronic book</subfield>
+    </datafield>
+    <datafield tag="024" ind1="7" ind2=" ">
+      <subfield code="a">10.3998/mpub.12527012</subfield>
+      <subfield code="2">doi</subfield>
+    </datafield>
+    <datafield tag="035" ind1=" " ind2=" ">
+      <subfield code="a">(OCoLC)1451111268</subfield>
+    </datafield>
+    <datafield tag="040" ind1=" " ind2=" ">
+      <subfield code="a">EYM</subfield>
+      <subfield code="b">eng</subfield>
+      <subfield code="e">rda</subfield>
+      <subfield code="e">pn</subfield>
+      <subfield code="c">EYM</subfield>
+    </datafield>
+    <datafield tag="043" ind1=" " ind2=" ">
+      <subfield code="a">n-us---</subfield>
+    </datafield>
+    <datafield tag="050" ind1=" " ind2="4">
+      <subfield code="a">LC1099.515.C85</subfield>
+    </datafield>
+    <datafield tag="100" ind1="1" ind2=" ">
+      <subfield code="a">Evans, Jabari M.</subfield>
+      <subfield code="e">author.</subfield>
+    </datafield>
+    <datafield tag="245" ind1="1" ind2="0">
+      <subfield code="a">Hip-Hop civics :</subfield>
+      <subfield code="b">connected learning in the rap classroom /</subfield>
+      <subfield code="c">Jabari M. Evans.</subfield>
+    </datafield>
+    <datafield tag="264" ind1=" " ind2="1">
+      <subfield code="a">Ann Arbor, Michigan :</subfield>
+      <subfield code="b">University of Michigan Press,</subfield>
+      <subfield code="c">2025.</subfield>
+    </datafield>
+    <datafield tag="264" ind1=" " ind2="4">
+      <subfield code="c">©2025</subfield>
+    </datafield>
+    <datafield tag="300" ind1=" " ind2=" ">
+      <subfield code="a">1 online resource (1 volume :</subfield>
+      <subfield code="b">illustrations)</subfield>
+    </datafield>
+    <datafield tag="336" ind1=" " ind2=" ">
+      <subfield code="a">text</subfield>
+      <subfield code="b">txt</subfield>
+      <subfield code="2">rdacontent</subfield>
+    </datafield>
+    <datafield tag="337" ind1=" " ind2=" ">
+      <subfield code="a">computer</subfield>
+      <subfield code="b">c</subfield>
+      <subfield code="2">rdamedia</subfield>
+    </datafield>
+    <datafield tag="338" ind1=" " ind2=" ">
+      <subfield code="a">online resource</subfield>
+      <subfield code="b">cr</subfield>
+      <subfield code="2">rdacarrier</subfield>
+    </datafield>
+    <datafield tag="490" ind1="1" ind2=" ">
+      <subfield code="a">Music and Social Justice</subfield>
+    </datafield>
+    <datafield tag="520" ind1="3" ind2=" ">
+      <subfield code="a">In Hip-Hop Civics, Jabari Evans demonstrates how Hip-Hop can be deployed in revamping formal civic education for Black and Brown youth. Based on an original ethnographic study of a Hip-Hop-based education program, the Songwriting and Production Program (SWP), administered by the Foundation of Music in two of Chicago's lowest performing public schools, Evans argues that Hip-Hop culture is central to students' lives and can be used as a vehicle for students to engage in civic practices and extract critical lessons about mainstream media, relational currency, identity development, and race/racism within the classroom. Through a compelling exploration of the SWP program, Evans contends that Hip-Hop should be part of formal education spaces and instruction, a conclusion he reaches through his understanding of how Hip-Hop impacted his own life, and by witnessing students discuss, write, and produce Hip-Hop music as part of the SWP program.</subfield>
+    </datafield>
+    <datafield tag="504" ind1=" " ind2=" ">
+      <subfield code="a">Includes bibliographical references (pages 179-199) and index.</subfield>
+    </datafield>
+    <datafield tag="588" ind1=" " ind2=" ">
+      <subfield code="a">Description based on information from the publisher.</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="0">
+      <subfield code="a">Culturally relevant pedagogy</subfield>
+      <subfield code="z">United States.</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="0">
+      <subfield code="a">Hip-hop</subfield>
+      <subfield code="x">Social aspects</subfield>
+      <subfield code="z">United States.</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="0">
+      <subfield code="a">African American youth</subfield>
+      <subfield code="x">Education.</subfield>
+    </datafield>
+    <datafield tag="650" ind1=" " ind2="0">
+      <subfield code="a">African American youth</subfield>
+      <subfield code="x">Social conditions.</subfield>
+    </datafield>
+    <datafield tag="655" ind1=" " ind2="4">
+      <subfield code="a">Electronic books.</subfield>
+    </datafield>
+    <datafield tag="710" ind1="2" ind2=" ">
+      <subfield code="a">Michigan Publishing (University of Michigan),</subfield>
+      <subfield code="e">publisher.</subfield>
+    </datafield>
+    <datafield tag="830" ind1=" " ind2="0">
+      <subfield code="a">Music and social justice.</subfield>
+    </datafield>
+    <datafield tag="856" ind1="4" ind2="0">
+      <subfield code="u">https://doi.org/10.3998/mpub.12527012</subfield>
+    </datafield>
+    <datafield tag="914" ind1=" " ind2=" ">
+      <subfield code="a">No-worldcat</subfield>
+    </datafield>
+    <datafield tag="933" ind1=" " ind2=" ">
+      <subfield code="a">MPubCataloging</subfield>
+    </datafield>
+  </record>
+</collection>
