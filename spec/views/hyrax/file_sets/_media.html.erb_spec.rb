@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe 'hyrax/file_sets/_media' do
+  before { allow(FileSet).to receive(:find).with('fileset_id').and_return(file_set) }
+
   let(:file_set) {
     build(:file_set,
           id: 'fileset_id',
@@ -55,10 +57,7 @@ RSpec.describe 'hyrax/file_sets/_media' do
   end
 
   context 'download button' do
-    before do
-      allow(FileSet).to receive(:find).with('fileset_id').and_return(file_set)
-      render
-    end
+    before { render }
 
     context 'has a download link when resource download operation allowed' do
       let(:resource_download_operation_allowed) { true }

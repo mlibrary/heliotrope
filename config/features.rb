@@ -6,4 +6,7 @@ Flipflop.configure do
   feature :scholarlyiq_counter_redirect,
           default: false,
           description: "Redirect known users from /counter_report to scholarlyiq"
+  feature :no_able_player_for_youtube_videos,
+          default: false,
+          description: "YouTube videos will never use Able Player"
 end

@@ -121,4 +121,40 @@ describe FileSetIndexer do
       end
     end
   end
+
+  describe "indexing YouTube video file_sets" do
+    subject { indexer.generate_solr_document }
+
+    let(:indexer) { described_class.new(file_set) }
+    let(:file_set) do
+      create(:file_set, identifier: ['youtube_id: goodyoutubeid'])
+    end
+    let(:oembed_json) { '{"height":113,"width":200}' }
+    let(:youtube_video_page_body) { "<body>...</body>" }
+
+    before do
+      oembed_response = Net::HTTPSuccess.new(1.0, '200', body: oembed_json)
+      allow(oembed_response).to receive(:body).and_return(oembed_json)
+      allow(Net::HTTP)
+        .to receive(:get_response)
+              .with(URI("https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=goodyoutubeid&format=json"))
+              .and_return(oembed_response)
+
+      youtube_video_page_response = Net::HTTPSuccess.new(1.0, '200', body: youtube_video_page_body)
+      allow(youtube_video_page_response).to receive(:body).and_return(youtube_video_page_body)
+      allow(Net::HTTP)
+        .to receive(:get_response)
+              .with(URI("https://www.youtube.com/watch?v=goodyoutubeid"))
+              .and_return(youtube_video_page_response)
+    end
+
+    it "indexes the YouTube-related fields" do
+      expect(subject['youtube_id_tesi']).to eq 'goodyoutubeid'
+      expect(subject['youtube_video_bsi']).to eq true
+      expect(subject['youtube_video_use_able_player_bsi']).to eq false
+      expect(subject['youtube_video_captions_on_yt_bsi']).to eq false
+      expect(subject['width_is']).to eq 1000
+      expect(subject['height_is']).to eq 565
+    end
+  end
 end

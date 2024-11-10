@@ -3,7 +3,8 @@
   <div class="documentHeader">
     <h4 class="index_title">
       <% counter = document_counter_with_offset(document_counter) %>
-      <%= link_to_document document, render_markdown(document.title.first), counter: counter %>
+      <%# disable Turbolinks at it causes "Scroll Position Lock" in moving from the Monograph catalog to the FileSet page %>
+      <%= link_to_document document, render_markdown(document.title.first), counter: counter, 'data-turbolinks': false %>
     </h4>
     <% if document.section_title.present? %>
       <p>From <%= render_markdown @monograph_presenter.display_section_titles document.section_title %></p>

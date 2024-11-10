@@ -4,11 +4,7 @@ require 'rails_helper'
 
 RSpec.describe "embed/show.html.erb" do
   let(:mock_file) { Hydra::PCDM::File.new }
-  let(:file_set) do
-    FileSet.new(id: 'a0s1d2f3g', title: ['A Title'], creator: ['Pants, Mr Smarty']) do |f|
-      f.apply_depositor_metadata('user@example.com')
-    end
-  end
+  let(:file_set) { create(:file_set, title: ['A Title'], creator: ['Pants, Mr Smarty'], depositor: 'user@example.com') }
   let(:file_set_doc) { SolrDocument.new(file_set.to_solr) }
   let(:file_set_presenter) { Hyrax::FileSetPresenter.new(file_set_doc, nil) }
 

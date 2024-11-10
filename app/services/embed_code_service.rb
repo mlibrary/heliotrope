@@ -8,7 +8,7 @@ module EmbedCodeService
     return unless monograph_presenter.non_representative_file_sets?
 
     # first get all the Monograph's FileSets' Solr docs, then whittle out the "representative" ones
-    embeddable_file_set_docs = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND monograph_id_ssim:#{parent_id} AND +label_ssi:['' TO *]", rows: 100_000)
+    embeddable_file_set_docs = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND monograph_id_ssim:#{parent_id}", rows: 100_000)
     embeddable_file_set_docs = embeddable_file_set_docs.select { |doc| monograph_presenter.non_representative_file_set_ids.include?(doc.id) }
 
     # Find all XHTML files in this directory and its subdirectories
@@ -47,10 +47,19 @@ module EmbedCodeService
     file_docs.select { |file_doc| File.basename(file_doc['label_ssi'].to_s, ".*").downcase == File.basename(filename.to_s.strip, ".*").downcase }
   end
 
+  def match_youtube_video_file_sets(file_docs, filename)
+    file_docs.select do |file_doc|
+      yt_id = file_doc['youtube_id_tesi']
+      yt_id == File.basename(filename.to_s.strip, ".*")
+    end
+  end
+
   def resource_type(file_set_presenter)
     if file_set_presenter.image?
       'image'
     elsif file_set_presenter.video?
+      'video'
+    elsif file_set_presenter.youtube_player_video?
       'video'
     elsif file_set_presenter.audio?
       'audio'
@@ -67,7 +76,7 @@ module EmbedCodeService
     nodes.each_with_index do |node, index| # rubocop:disable Metrics/BlockLength
       next if node['data-fulcrum-embed-filename']&.gsub(/\s+/, "").blank?
 
-      matching_files = match_files(embeddable_file_set_docs, node['data-fulcrum-embed-filename'])
+      matching_files = match_files(embeddable_file_set_docs, node['data-fulcrum-embed-filename']) + match_youtube_video_file_sets(embeddable_file_set_docs, node['data-fulcrum-embed-filename'])
       next unless matching_files.count == 1 # there must only be one file found to add the embed code
       id = matching_files&.first&.id
 
@@ -119,7 +128,7 @@ module EmbedCodeService
     nodes.each_with_index do |node, index|
       next if node['src']&.gsub(/\s+/, "").blank?
 
-      matching_files = match_files_by_basename(embeddable_file_set_docs, node['src'])
+      matching_files = match_files_by_basename(embeddable_file_set_docs, node['src']) + match_youtube_video_file_sets(embeddable_file_set_docs, node['src'])
       next unless matching_files.count == 1 # there must only be one file found to add the embed code
       id = matching_files&.first&.id
 
