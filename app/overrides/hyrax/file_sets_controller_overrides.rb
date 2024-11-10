@@ -26,7 +26,9 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
         send_irus_analytics_investigation
       end
 
-      @resource_download_operation_allowed ||= ResourceDownloadOperation.new(current_actor, Sighrax.from_noid(params[:id])).allowed?
+      # See HELIO-1606 regarding the `admin_override` stuff (`false` param). Basically don't show a download button...
+      # to editors/admins unless the public would also see one, i.e. the metadata is set correctly.
+      @resource_download_operation_allowed ||= ResourceDownloadOperation.new(current_actor, Sighrax.from_noid(params[:id])).allowed?(false)
 
       auth_for(Sighrax.from_presenter(@presenter))
 
@@ -45,8 +47,8 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
     def edit
       # @resource_download_operation_allowed needed in edit() as well as show() because of the "mini show view" included on the edit form.
       # At least that is my assumption. With the Module prepend override stuff it's too egregious to create an...
-      # initialize/setup method on the overriden class. So just duplicate.
-      @resource_download_operation_allowed ||= ResourceDownloadOperation.new(current_actor, Sighrax.from_noid(params[:id])).allowed?
+      # initialize/setup method on the overriden class. So just duplicate. We should probably remove that partial at some point.
+      @resource_download_operation_allowed ||= ResourceDownloadOperation.new(current_actor, Sighrax.from_noid(params[:id])).allowed?(false)
       initialize_edit_form
     end
 
