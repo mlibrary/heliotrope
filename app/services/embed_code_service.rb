@@ -4,12 +4,16 @@ module EmbedCodeService
   extend ActiveSupport::Concern
 
   def insert_embed_codes(parent_id, epub_dir)
-    monograph_presenter = Hyrax::PresenterFactory.build_for(ids: [parent_id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).first
-    return unless monograph_presenter.non_representative_file_sets?
+    # note that we don't consider tombstones as "assets"/"resources" from the point of view of the catalog pages,...
+    # where they should no longer appear. However, we decided that they should continue to show up where they have...
+    # been embedded in a book.
+    # TODO (low priority): consider adding a tombstone-embedding assertion to `embed_code_service_spec.rb`
+    non_representative_file_set_ids = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND monograph_id_ssim:#{parent_id} AND -hidden_representative_bsi:true", fl: [:id], rows: 100_000).map(&:id)
+    return if non_representative_file_set_ids.blank?
 
     # first get all the Monograph's FileSets' Solr docs, then whittle out the "representative" ones
     embeddable_file_set_docs = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND monograph_id_ssim:#{parent_id}", rows: 100_000)
-    embeddable_file_set_docs = embeddable_file_set_docs.select { |doc| monograph_presenter.non_representative_file_set_ids.include?(doc.id) }
+    embeddable_file_set_docs = embeddable_file_set_docs.select { |doc| non_representative_file_set_ids.include?(doc.id) }
 
     # Find all XHTML files in this directory and its subdirectories
     Dir.glob("#{epub_dir}/**/*.xhtml").each do |file|

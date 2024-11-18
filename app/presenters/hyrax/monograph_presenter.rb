@@ -46,21 +46,14 @@ module Hyrax
 
     instrument_method
     def ordered_section_titles
-      # FileSets store their section_title as ActiveTriples::Relation, which does not preserve order.
-      # As a result they can't be relied on to give the correct order for their own sections, or sections as a whole.
-      # For this reason, we're adding section_titles to the monograph, where all sections are entered manually, giving
-      # canonical order (and later spelling etc) for FileSet sections.
-      # However, fileset_section_titles will make a useful fallback.
-      fileset_section_titles = ordered_member_docs.flat_map(&:section_title).uniq
-      manual_monograph_section_titles = solr_document.section_titles
-      if manual_monograph_section_titles.present?
-        if fileset_section_titles.count != manual_monograph_section_titles.count
-          Rails.logger.warn("Monograph #{id} has a section_titles count not matching its FileSets' unique section_titles")
-        end
-        manual_monograph_section_titles
-      else
-        fileset_section_titles
-      end
+      return @section_titles if @section_titles.present?
+
+      # See HELIO-4771. This query won't run at all unless the custom_section_facet partial is displayed, which uses...
+      # reorder_section_facet() from FacetsHelper, which in turn calls this method.
+      @section_titles = section_titles.presence ||
+        ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND +monograph_id_ssim:#{id}",
+                                        sort: 'monograph_position_isi asc', fl: [:section_title_tesim],
+                                        rows: 100_000).map { |doc| doc['section_title_tesim'] }.flatten.uniq.reject(&:blank?)
     end
 
     def display_section_titles(section_titles_in)

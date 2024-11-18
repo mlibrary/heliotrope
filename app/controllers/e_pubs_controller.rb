@@ -182,6 +182,22 @@ class EPubsController < CheckpointController
       @share_link = params[:share] || session[:share_link]
       session[:share_link] = @share_link
       @policy = EPubPolicy.new(current_actor, @entity, valid_share_link?)
+      # determine whether CSB should show an assets tab for this user (`rows: 1` because we don't need the actual results)
+      assets_finding_clause = "+monograph_id_ssim:#{@parent_presenter.id} AND -hidden_representative_bsi:true AND -tombstone_ssim:yes"
+      @monograph_assets_present = ActiveFedora::SolrService.query("#{assets_finding_clause} #{assets_visibility_clause}",
+                                                                  fl: [:id],
+                                                                  rows: 1).present?
+    end
+
+    # A user who can load the stats dashboard has a role of "analyst" or above, and so should be able to see draft...
+    # assets if they click CSB's "assets" button. Authors using a share link to view a draft book should also be...
+    # able to do this, but anonymous users should not.
+    def assets_visibility_clause
+      if valid_share_link? || current_ability.can?(:read, :stats_dashboard)
+        nil
+      else
+        'AND -visibility_ssi:restricted'
+      end
     end
 
     def log_share_link_use

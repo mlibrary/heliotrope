@@ -236,12 +236,22 @@ RSpec.describe Hyrax::MonographPresenter do
                          ordered_member_ids_ssim: ordered_ids)
     }
 
-    let(:cover) { ::SolrDocument.new(id: 'cover', has_model_ssim: ['FileSet']) }
-    let(:blue_file) { ::SolrDocument.new(id: 'blue', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 2']) }
-    let(:green_file) { ::SolrDocument.new(id: 'green', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 4']) }
+    let(:cover) { ::SolrDocument.new(id: 'cover',
+                                     has_model_ssim: ['FileSet'],
+                                     monograph_id_ssim: ['mono']) }
+    let(:blue_file) { ::SolrDocument.new(id: 'blue',
+                                         has_model_ssim: ['FileSet'],
+                                         monograph_id_ssim: ['mono'],
+                                         section_title_tesim: ['chapter 2']) }
+    let(:green_file) { ::SolrDocument.new(id: 'green',
+                                          has_model_ssim: ['FileSet'],
+                                          monograph_id_ssim: ['mono'],
+                                          section_title_tesim: ['chapter 4']) }
 
     context 'monograph.ordered_members contains a non-file' do
-      let(:non_file) { SolrDocument.new(id: 'NotAFile', has_model_ssim: ['Monograph']) } # It doesn't have section_title_tesim
+      let(:non_file) { SolrDocument.new(id: 'NotAFile',
+                                        has_model_ssim: ['Monograph'],
+                                        monograph_id_ssim: ['mono']) } # It doesn't have section_title_tesim
       let(:ordered_ids) { [cover.id, blue_file.id, non_file.id, green_file.id] }
 
       before do
@@ -256,7 +266,10 @@ RSpec.describe Hyrax::MonographPresenter do
     end
 
     context 'a fileset that belongs to more than 1 chapter' do
-      let(:red_file) { ::SolrDocument.new(id: 'red', has_model_ssim: ['FileSet'], section_title_tesim: ['chapter 1', 'chapter 3']) }
+      let(:red_file) { ::SolrDocument.new(id: 'red',
+                                          has_model_ssim: ['FileSet'],
+                                          monograph_id_ssim: ['mono'],
+                                          section_title_tesim: ['chapter 1', 'chapter 3']) }
 
       let(:ordered_ids) {
         # red_file appears in both chapter 1 and chapter 3
@@ -281,14 +294,14 @@ RSpec.describe Hyrax::MonographPresenter do
   end
 
   context 'a monograph without attached members' do
-    describe '#ordered_file_sets_ids', :private do
-      subject { presenter.ordered_file_sets_ids }
+    describe '#featured_representative_docs', :private do
+      subject { presenter.featured_representative_docs }
 
       it 'returns an empty array' do
         expect(subject.count).to eq 0
       end
     end
-  end # context 'a monograph with no attached members' do
+  end # context 'a monograph without attached members' do
 
   context 'a monograph with attached members' do
     # the cover FileSet won't be included in the ordered_file_sets_ids
@@ -296,9 +309,7 @@ RSpec.describe Hyrax::MonographPresenter do
     let(:fs1_doc) { ::SolrDocument.new(id: 'fs1', has_model_ssim: ['FileSet']) }
     let(:fs2_doc) { ::SolrDocument.new(id: 'fs2', has_model_ssim: ['FileSet']) }
     let(:fs3_doc) { ::SolrDocument.new(id: 'fs3', has_model_ssim: ['FileSet']) }
-
     let(:expected_id_count) { 3 }
-
     let(:mono_doc) do
       ::SolrDocument.new(
         id: 'mono',
@@ -310,31 +321,23 @@ RSpec.describe Hyrax::MonographPresenter do
         ordered_member_ids_ssim: [cover_fileset_doc.id, fs1_doc.id, fs2_doc.id, fs3_doc.id]
       )
     end
-
     before do
       # SolrService.add takes hashes not docs!
       ActiveFedora::SolrService.add([mono_doc.to_h, cover_fileset_doc.to_h, fs1_doc.to_h, fs2_doc.to_h, fs3_doc.to_h])
       ActiveFedora::SolrService.commit
     end
 
-    describe '#ordered_file_sets_ids' do
-      subject { presenter.ordered_file_sets_ids }
+    describe '#featured_representative_docs', :private do
+      subject { presenter.featured_representative_docs }
 
-      it { expect(subject).to contain_exactly('fs1', 'fs2', 'fs3') }
+      before do
+        FeaturedRepresentative.create(work_id: 'mono', file_set_id: 'fs1', kind: 'epub')
+        FeaturedRepresentative.create(work_id: 'mono', file_set_id: 'fs2', kind: 'pdf_ebook')
+      end
 
-      context 'featured representatives' do
-        FeaturedRepresentative::KINDS.each do |kind|
-          context kind.to_s do
-            let(:featured_representative) { instance_double(FeaturedRepresentative, 'featured_representative', file_set_id: 'fs2', kind: kind) }
-
-            before do
-              allow(FeaturedRepresentative).to receive(:where).with(work_id: 'mono').and_return([featured_representative])
-              allow(FeaturedRepresentative).to receive(:find_by).with(file_set_id: 'fs2').and_return(featured_representative)
-            end
-
-            it { expect(subject).to contain_exactly('fs1', 'fs3') }
-          end
-        end
+      it 'returns the FeaturedRepresentative docs' do
+        expect(subject.count).to eq 2
+        expect(subject.map(&:id)).to eq ["fs1", "fs2"]
       end
     end
 

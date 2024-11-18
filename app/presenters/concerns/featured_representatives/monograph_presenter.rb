@@ -38,11 +38,11 @@ module FeaturedRepresentatives
     end
 
     def reader_ebook
-      ordered_member_docs.find { |doc| doc.id == reader_ebook_id }
+      featured_representative_docs.find { |doc| doc.id == reader_ebook_id }
     end
 
     def audiobook
-      ordered_member_docs.find { |doc| doc.id == audiobook_id }
+      featured_representative_docs.find { |doc| doc.id == audiobook_id }
     end
 
     def audiobook?
@@ -58,7 +58,7 @@ module FeaturedRepresentatives
     end
 
     def epub
-      ordered_member_docs.find { |doc| doc.id == epub_id }
+      featured_representative_docs.find { |doc| doc.id == epub_id }
     end
 
     def epub_id
@@ -74,7 +74,7 @@ module FeaturedRepresentatives
     end
 
     def webgl
-      ordered_member_docs.find { |doc| doc.id == webgl_id }
+      featured_representative_docs.find { |doc| doc.id == webgl_id }
     end
 
     def webgl_id
@@ -87,7 +87,7 @@ module FeaturedRepresentatives
 
     def database
       return @database if @database.present?
-      solr_doc = ordered_member_docs.find { |doc| doc.id == database_id }
+      solr_doc = featured_representative_docs.find { |doc| doc.id == database_id }
       @database ||= Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
 
@@ -101,7 +101,7 @@ module FeaturedRepresentatives
 
     def aboutware
       return @aboutware if @aboutware.present?
-      solr_doc = ordered_member_docs.find { |doc| doc.id == aboutware_id }
+      solr_doc = featured_representative_docs.find { |doc| doc.id == aboutware_id }
       @aboutware ||= Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
 
@@ -115,7 +115,7 @@ module FeaturedRepresentatives
 
     def reviews
       return @reviews if @reviews.present?
-      solr_doc = ordered_member_docs.find { |doc| doc.id == reviews_id }
+      solr_doc = featured_representative_docs.find { |doc| doc.id == reviews_id }
       @reviews ||= Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
 
@@ -129,7 +129,7 @@ module FeaturedRepresentatives
 
     def related
       return @related if @related.present?
-      solr_doc = ordered_member_docs.find { |doc| doc.id == related_id }
+      solr_doc = featured_representative_docs.find { |doc| doc.id == related_id }
       @related ||= Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
 
@@ -142,7 +142,7 @@ module FeaturedRepresentatives
     end
 
     def pdf_ebook
-      ordered_member_docs.find { |doc| doc.id == pdf_ebook_id }
+      featured_representative_docs.find { |doc| doc.id == pdf_ebook_id }
     end
 
     def pdf_ebook_id
@@ -167,12 +167,22 @@ module FeaturedRepresentatives
 
     def peer_review
       return @peer_review if @peer_review.present?
-      solr_doc = ordered_member_docs.find { |doc| doc.id == peer_review_id }
+      solr_doc = featured_representative_docs.find { |doc| doc.id == peer_review_id }
       @peer_review ||= Hyrax::FileSetPresenter.new(solr_doc, current_ability, request) if solr_doc.present?
     end
 
     def peer_review_id
       featured_representatives.filter_map { |fr| fr.file_set_id if fr.kind == 'peer_review' }.first
+    end
+
+    def featured_representative_docs
+      # HELIO-4771
+      # Instead of using ordered_members which can be very large depending on the monograph, specificially get
+      # featured representative docs from solr which will be much smaller (and faster)
+      # These need to be wrapped up as SolrDocument (not just ActiveFedora::SolrHit), presumably because they are...
+      # directly wrapped as FileSetPresenters down the line.
+      @featured_representative_docs ||=
+        ActiveFedora::SolrService.query("{!terms f=id}#{featured_representatives.map(&:file_set_id).join(',')}", rows: featured_representatives.count).map { |fr_doc| ::SolrDocument.new(fr_doc) }
     end
   end
 end

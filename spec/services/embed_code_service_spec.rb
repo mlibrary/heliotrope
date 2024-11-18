@@ -71,7 +71,6 @@ RSpec.describe EmbedCodeService do
 
     before do
       FeaturedRepresentative.create(work_id: monograph.id, file_set_id: epub.id, kind: 'epub')
-      allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [monograph.id], presenter_class: Hyrax::MonographPresenter, presenter_args: nil).and_call_original
       allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [image.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([image_presenter])
       allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [audio.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([audio_presenter])
       allow(Hyrax::PresenterFactory).to receive(:build_for).with(ids: [video.id], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).and_return([video_presenter])
