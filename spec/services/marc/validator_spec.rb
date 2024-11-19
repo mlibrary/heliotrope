@@ -8,13 +8,6 @@ RSpec.describe Marc::Validator do
       let(:doi) { "10.3998/mpub.10209707" }
       let(:noid) { "999999999" }
       let!(:monograph) { create(:public_monograph, press: "leverpress", id: noid, title: ["Something"], doi: doi) }
-      let(:component) { create(:component, identifier: 'someid or doi or noid or something', name: 'something', noid: noid) }
-      let(:product) { create(:product, identifier: 'leverpress', name: 'name', purchase: 'purchase', needs_kbart: true, group_key: 'leverpress') }
-
-      before do
-        product.components << component
-        product.save!
-      end
 
       context ".mrc format" do
         let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', 'valid_marc.mrc').to_s }
@@ -118,34 +111,32 @@ RSpec.describe Marc::Validator do
   end
 
   describe "#exists_in_fulcrum?" do
-    context "valid marc" do
+    context "with a valid marc file" do
       let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', 'valid_marc.xml').to_s }
-      let(:noid) { "999999999" }
-      let(:component) { double("component", products: [product]) }
-      let(:product) { double("product", group_key: "leverpress") }
+      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: ["leverpress"], doi_ssim: ["10.3998/mpub.10209707"]) }
 
       before do
-        allow(Greensub::Component).to receive(:find_by).and_return(component)
-        allow(ActiveFedora::SolrService).to receive(:query).and_return([{ "id" => noid }])
+        ActiveFedora::SolrService.add(doc.to_h)
+        ActiveFedora::SolrService.commit
       end
 
       it "returns true" do
         validator = described_class.new(marc_file)
         record = validator.reader.first
         expect(validator.exists_in_fulcrum?(record)).to be true
+        expect(validator.group_key).to eq "leverpress"
+        expect(validator.noid).to eq "999999999"
       end
     end
 
-    context "has a handle in 024$a but not a doi" do
+    context "when the marc file has a handle and not a doi" do
       let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', '024_handle_instead_of_doi.xml').to_s }
-      let(:noid) { "999999999" }
-      let(:component) { double("component", products: [product]) }
-      let(:product) { double("product", group_key: "leverpress") }
-      let(:hdl_row) { double("hdl_row", url_value: "https://www.fulcrum.org/concern/monograph/#{noid}") }
+      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: ["leverpress"]) }
+      let(:hdl_row) { double("hdl_row", url_value: "https://www.fulcrum.org/concern/monograph/999999999") }
 
       before do
-        allow(Greensub::Component).to receive(:find_by).and_return(component)
-        allow(ActiveFedora::SolrService).to receive(:query).and_return([{}])
+        ActiveFedora::SolrService.add(doc.to_h)
+        ActiveFedora::SolrService.commit
         allow(HandleDeposit).to receive(:where).and_return([hdl_row])
       end
 
@@ -153,68 +144,18 @@ RSpec.describe Marc::Validator do
         validator = described_class.new(marc_file)
         record = validator.reader.first
         expect(validator.exists_in_fulcrum?(record)).to be true
+        expect(validator.group_key).to eq "leverpress"
+        expect(validator.noid).to eq "999999999"
       end
     end
 
-    context "024$a doi/hdl is not in fulcrum" do
+    context "when the marc record's doi or handle does not match a monograph in fulcrum" do
       let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', '024_bad_doi.xml').to_s }
-
-      it "returns false" do
-        validator = described_class.new(marc_file)
-        record = validator.reader.first
-        expect(MarcLogger).to receive(:error)
-        expect(validator.exists_in_fulcrum?(record)).to be false
-      end
-    end
-
-    context "monograph has no component" do
-      let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', 'valid_marc.xml').to_s }
-      let(:noid) { "999999999" }
+      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: ["leverpress"], doi_ssim: ["10.3998/mpub.10209707"]) }
 
       before do
-        allow(ActiveFedora::SolrService).to receive(:query).and_return([{ "id" => noid }])
-      end
-
-      it "returns false" do
-        validator = described_class.new(marc_file)
-        record = validator.reader.first
-        expect(MarcLogger).to receive(:error)
-        expect(validator.exists_in_fulcrum?(record)).to be false
-      end
-    end
-
-    context "monograph component is in no products" do
-      let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', 'valid_marc.xml').to_s }
-      let(:noid) { "999999999" }
-      let(:component) { double("component", products: []) }
-
-      before do
-        allow(Greensub::Component).to receive(:find_by).and_return(component)
-        allow(ActiveFedora::SolrService).to receive(:query).and_return([{ "id" => noid }])
-      end
-
-      it "returns false" do
-        validator = described_class.new(marc_file)
-        record = validator.reader.first
-        expect(MarcLogger).to receive(:error)
-        expect(validator.exists_in_fulcrum?(record)).to be false
-      end
-    end
-
-    context "component is in multiple products and has more than one group_key" do
-      # This should not happen. It will mess things up if it does. We do have examples of the same book being in both
-      # bigten and michigan (umpebc) for example, however we've duplicated the monograph so it's in the repo twice, once
-      # as bigten and once as michigan. So the bigten book has it's own component and the michigan book has it's own component.
-      # No monograph should have more than one group_key at this point in time.
-      let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', 'valid_marc.xml').to_s }
-      let(:noid) { "999999999" }
-      let(:component) { double("component", products: [product1, product2]) }
-      let(:product1) { double("product", group_key: "leverpress") }
-      let(:product2) { double("product", group_key: "amherst") }
-
-      before do
-        allow(Greensub::Component).to receive(:find_by).and_return(component)
-        allow(ActiveFedora::SolrService).to receive(:query).and_return([{ "id" => noid }])
+        ActiveFedora::SolrService.add(doc.to_h)
+        ActiveFedora::SolrService.commit
       end
 
       it "returns false" do
@@ -295,13 +236,11 @@ RSpec.describe Marc::Validator do
     end
 
     context "a BAR group_key" do
-      let(:noid) { "999999999" }
-      let(:component) { double("component", products: [product]) }
-      let(:product) { double("product", group_key: "bar") }
+      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: ["bar"], doi_ssim: ["10.3998/mpub.10209707"]) }
 
       before do
-        allow(Greensub::Component).to receive(:find_by).and_return(component)
-        allow(ActiveFedora::SolrService).to receive(:query).and_return([{ "id" => noid }])
+        ActiveFedora::SolrService.add(doc.to_h)
+        ActiveFedora::SolrService.commit
       end
 
       context "a BAR 003 field" do

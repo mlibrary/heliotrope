@@ -63,50 +63,39 @@ module Marc
       true
     end
 
+    # See HELIO-4760
+    # We're using Marc::DirectoryMapper.press_group_key to match the book's press to it's group_key.
+    # This means monographs only need as valid 024$a field and do not need Components/Products/etc
     def exists_in_fulcrum?(record)
       # We've already determined that something exists in the 024$a field.
       # We need to match that with a monograph in fulcrum
       # When we do that, we also will get the group_key
       purl = record["024"]["a"]
-      doc = ActiveFedora::SolrService.query("+doi_ssim:#{purl}", fl: ['id'], rows: 1)&.first
-      noid = doc["id"] if doc.present?
-
-      # Except for heb, everything (currently) uses DOI. So in case there's no doi, we look for a handle
-      # Since everything gets a handle they should all be in the HandleDepost table, right?
-      if noid.blank?
+      doc = ActiveFedora::SolrService.query("+doi_ssim:#{purl}", fl: ['id', 'press_tesim'], rows: 1)&.first
+      if doc.present?
+        @noid = doc['id']
+        @group_key = Marc::DirectoryMapper.press_group_key[doc['press_tesim'].first]
+      else
         row = HandleDeposit.where(handle: purl).first
         if row.present?
           url = row.url_value
-          noid = url.match(/.*\/(.*)$/)
+          m = url.match(/.*\/(.*)$/)
+          @noid = m[1] if m[1].present?
+          doc = ActiveFedora::SolrService.query("{!terms f=id}#{@noid}", fl: ['press_tesim'], rows: 1)&.first
+          if doc.present?
+            @group_key = Marc::DirectoryMapper.press_group_key[doc['press_tesim'].first]
+          end
         end
       end
 
-      if noid.blank?
+      if @noid.blank?
         log_message("does not have a DOI or Handle that is in fulcrum, 024$a value is '#{purl}'")
         return false
       end
 
-      component = Greensub::Component.find_by(noid: noid)
-      if component.blank?
-        log_message("noid: '#{noid}' does not have a registered Component in fulcrum")
-        return false
-      end
-
-      products = component.products
-      if products.blank?
-        log_message("Component for '#{noid}' is not in any Products")
-        return false
-      end
-
-      group_key = products.first.group_key
-
-      unless products.map(&:group_key).all? { |key| key == group_key }
-        log_message("noid: '#{noid}' has more than one group_key, group_keys are: #{products.map(&:group_key)}")
-        return false
-      end
-
-      @noid = noid
-      @group_key = group_key
+      # I guess records can still "exist_in_fulcrum?" if they don't have a group_key
+      # Handle that "error" in what ever calls the Validator since it's not exactly an "error",
+      # it just means we need to add the group_key to the Marc::DirectoryMapper or something.
 
       true
     end
