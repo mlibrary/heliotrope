@@ -13942,77 +13942,89 @@ $vermont-button-hover-border-color: #9db0a9;
     hgroup {
       height: auto;
     }    
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end !important;
+    // search box and links
+    form.navbar-form {
+      margin: 0;
+      padding: 0;
+    }
+    form {
+      @include roboto;
 
-      // search box and links
-      .col-md-4.pt-3 {
+      .input-group {
         display: flex;
-        flex-direction: column;
-        padding-top: 16px;
+        position: relative;
+        width: 100%;
+        align-items: stretch;
 
-        form.navbar-form {
-          margin: 0;
-          padding: 0;
+        .form-control {
+          position: relative;
+          flex: 1 1 auto;
+          width: 1%;
+          margin-bottom: 0;
+          display: block;
+          padding: 6px 12px;
+          font-size: 14px;
+          line-height: 1.5;
+          background-clip: padding-box;
+          border: 1px solid $vermont-button-hover-border-color;
+          transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+          color: rgb(73, 80, 87) !important;
         }
+      }
+
+      input.search-query {
+        background-color: #F3F3F3;
+        border-right: none !important;
+        color: rgb(73, 80, 87) !important;
+        height: 38px;
+      }
+
+      button.search-submit {
+        background-color: $vermont-button;
+        border-top: $vermont-button-hover-border-color 1px solid;
+        border-right: $vermont-button-hover-border-color 1px solid;
+        border-bottom: $vermont-button-hover-border-color 1px solid;
+        border-left: none !important;
+        height: 100%;
+        padding: 0;
+        text-transform: none;
+        overflow: visible;
+        border-radius: 0;            
+        width: 53px;
+        height: 38px;
+
+        svg {
+          height: auto;
+          width: auto;
+          fill: $vermont-button;
+          stroke-width: 2;
+          color: $vermont-brand-color;
+        }
+      }
+    } 
+
+    #brand-bar {
+      #brand-bar-nav {
+        justify-content: end;
 
         form {
-          @include roboto;
-
-          .input-group {
-            display: flex;
-            position: relative;
-            width: 80%;
-            align-items: stretch;
-
-            .form-control {
-              position: relative;
-              flex: 1 1 auto;
-              width: 1%;
-              margin-bottom: 0;
-              display: block;
-              padding: 6px 12px;
-              font-size: 14px;
-              line-height: 1.5;
-              background-clip: padding-box;
-              border: 1px solid $vermont-button-hover-border-color;
-              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-              color: rgb(73, 80, 87) !important;
-            }
-          }
-
-          input.search-query {
-            background-color: #F3F3F3;
-            border-right: none !important;
-            color: rgb(73, 80, 87) !important;
-            height: 38px;
-          }
-
-          button.search-submit {
-            background-color: $vermont-button;
-            border-top: $vermont-button-hover-border-color 1px solid;
-            border-right: $vermont-button-hover-border-color 1px solid;
-            border-bottom: $vermont-button-hover-border-color 1px solid;
-            border-left: none !important;
-            height: 100%;
-            padding: 0;
-            text-transform: none;
-            overflow: visible;
-            border-radius: 0;            
-            width: 53px;
-            height: 38px;
-
-            svg {
-              height: auto;
-              width: auto;
-              fill: $vermont-button;
-              stroke-width: 2;
-              color: $vermont-brand-color;
-            }
-          }
+          padding-top: 2.8em;
         }
+      }
+    }
+
+    .navbar-nav {
+      padding-top: 2.3em;
+      padding-right: 1em;
+      a {
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: none;
+      }
+
+      .dropdown-menu {
+        border-radius: 0;
       }
     }
 
@@ -14269,9 +14281,9 @@ $vermont-button-hover-border-color: #9db0a9;
         text-decoration: none;
 
        img {
-        width: auto;
-        height: 60px;
-        display: inline-block;
+        width: 250px;
+        height: auto;
+        display: block;
        }
       }
 
