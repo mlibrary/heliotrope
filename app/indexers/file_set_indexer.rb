@@ -38,6 +38,9 @@ class FileSetIndexer < Hyrax::FileSetIndexer
 
       # HELIO-2428 index the "full" doi url if there's a doi
       solr_doc['doi_url_ssim'] = "https://doi.org/" + object.doi if object.doi.present?
+
+      # HELIO-4739 - YouTube video embed codes
+      maybe_index_youtube_metadata(solr_doc)
     end
   end
 
@@ -84,5 +87,21 @@ class FileSetIndexer < Hyrax::FileSetIndexer
     return if @monograph.blank?
     fileset_order = @monograph.ordered_member_ids
     solr_doc['monograph_position_isi'] = fileset_order.index(object.id) if fileset_order.present?
+  end
+
+  def maybe_index_youtube_metadata(solr_doc)
+    yt_data = YouTubeVideoInfoService.get_yt_video_data(object.id)
+
+    if yt_data.present?
+      solr_doc['youtube_id_tesi'] = yt_data['id']
+      solr_doc['youtube_video_bsi'] = yt_data['id'].present?
+      # this is used to force able player to be used when otherwise it would not, for testing purposes
+      solr_doc['youtube_video_use_able_player_bsi'] = yt_data['use_able_player']
+      # this will allow us to not use Able Player on videos that lack captions on YT, because of https://github.com/ableplayer/ableplayer/issues/554
+      solr_doc['youtube_video_captions_on_yt_bsi'] = yt_data['captions_present']
+      # using standard Hyrax height/width fields here, as they are already tied into embed code and presenter methods
+      solr_doc['width_is'] = yt_data['width']
+      solr_doc['height_is'] = yt_data['height']
+    end
   end
 end

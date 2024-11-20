@@ -4,7 +4,7 @@ module EmbedCodePresenter
   extend ActiveSupport::Concern
 
   def embeddable_type?
-    image? || video? || audio? || interactive_application? || interactive_map?
+    image? || video? || audio? || interactive_application? || interactive_map? || youtube_player_video?
   end
 
   def allow_embed?
@@ -12,7 +12,7 @@ module EmbedCodePresenter
   end
 
   def embed_code
-    if video? || image? || interactive_application? || interactive_map?
+    if video? || image? || interactive_application? || interactive_map? || youtube_player_video?
       responsive_embed_code
     elsif audio?
       audio_embed_code
@@ -55,7 +55,7 @@ module EmbedCodePresenter
     <<~END
       <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:#{embed_width}px; margin:auto; background-color:#000'>
         <div style='overflow:hidden; padding-bottom:#{padding_bottom}%; position:relative; height:0;'>#{embed_height_string}
-          <iframe src='#{embed_link}' title='#{embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
+          <iframe src='#{embed_link}' title='#{embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'#{frameborder}></iframe>
         </div>
       </div>
     END
@@ -130,6 +130,8 @@ module EmbedCodePresenter
   end
 
   def embed_height_string
+    return '' if youtube_player_video?
+
     media_type = if video?
                    ' video'
                  elsif image?
@@ -152,7 +154,7 @@ module EmbedCodePresenter
     # images have pan/zoom and are often portrait, which would gobble up massive height, so we used to use 60% for all
     # but see HELIO-3242. Small portrait images get a negative zoom. Maps that are closer to square will cause...
     # fewer issues with "best fit" initial zoom. So for portrait or square images I'll bump the bottom padding to 80%.
-    if video?
+    if video? || youtube_player_video?
       # adjusts the height to allow for what the video player is doing to preserve the content's aspect ratio
       percentage = !width_ok? || !height_ok? ? 75 : (height.to_f * 100.0 / width.to_f).round(2)
 
@@ -177,5 +179,9 @@ module EmbedCodePresenter
 
   def audio_embed_height
     closed_captions.present? ? 300 : 125
+  end
+
+  def frameborder
+    youtube_player_video? ? ' frameborder="0"' : ''
   end
 end

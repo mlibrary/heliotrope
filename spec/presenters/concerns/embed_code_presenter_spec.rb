@@ -34,9 +34,12 @@ RSpec.describe EmbedCodePresenter do
   describe '#embeddable_type?' do
     subject { presenter.embeddable_type? }
 
-    let(:file_set_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type, resource_type_tesim: [resource_type]) }
+    let(:file_set_doc) { SolrDocument.new(id: 'fileset_id', has_model_ssim: ['FileSet'], mime_type_ssi: mime_type,
+                                          resource_type_tesim: [resource_type], youtube_video_bsi: youtube_video_bsi) }
     let(:mime_type) { nil }
     let(:resource_type) { nil }
+    let(:identifier) { nil }
+    let(:youtube_video_bsi) { nil }
 
     context 'generic JavaScript application' do
       let(:resource_type) { 'interactive application' }
@@ -84,6 +87,12 @@ RSpec.describe EmbedCodePresenter do
       let(:mime_type) { 'application/msword' }
 
       it { is_expected.to be false }
+    end
+
+    context 'YouTube video' do
+      let(:youtube_video_bsi) { true }
+
+      it { is_expected.to be true }
     end
   end
 

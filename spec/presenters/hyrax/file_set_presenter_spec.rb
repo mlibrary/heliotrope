@@ -437,12 +437,18 @@ RSpec.describe Hyrax::FileSetPresenter do
 
     let(:fileset_doc) { SolrDocument.new(mime_type_ssi: mime_type, resource_type_tesim: [resource_type],
                                          external_resource_url_ssim: external_resource_url,
-                                         animated_gif_bsi: animated_gif_bsi, width_is: width_is) }
+                                         animated_gif_bsi: animated_gif_bsi, width_is: width_is,
+                                         youtube_video_bsi: youtube_video_bsi,
+                                         youtube_video_use_able_player_bsi: youtube_video_use_able_player_bsi,
+                                         youtube_video_captions_on_yt_bsi: youtube_video_captions_on_yt_bsi) }
     let(:mime_type) { nil }
     let(:animated_gif_bsi) { nil }
     let(:resource_type) { nil }
     let(:external_resource_url) { '' }
     let(:width_is) { nil }
+    let(:youtube_video_bsi) { nil }
+    let(:youtube_video_use_able_player_bsi) { nil }
+    let(:youtube_video_captions_on_yt_bsi) { nil }
 
     # rubocop:disable RSpec/EmptyExampleGroup
     context 'with featured representative' do
@@ -548,6 +554,42 @@ RSpec.describe Hyrax::FileSetPresenter do
 
       it { is_expected.to eq 'hyrax/file_sets/media_display/external_resource' }
     end
+
+    context 'YouTube videos' do
+      let(:youtube_video_bsi) { true }
+
+      context "No captions present on the YouTube video" do
+        let(:youtube_video_captions_on_yt_bsi) { false }
+
+        it 'uses the YouTube Player' do
+          is_expected.to eq 'hyrax/file_sets/media_display/video_youtube'
+        end
+
+        context "force the use of Able Player for testing" do
+          let(:youtube_video_use_able_player_bsi) { true }
+
+          it 'uses Able Player' do
+            is_expected.to eq 'hyrax/file_sets/media_display/video_able_player_youtube'
+          end
+        end
+      end
+
+      context "Captions present on the YouTube video" do
+        let(:youtube_video_captions_on_yt_bsi) { true }
+
+        it 'uses Able Player' do
+          is_expected.to eq 'hyrax/file_sets/media_display/video_able_player_youtube'
+        end
+
+        context "force the use of the YouTube player with a Flipflop" do
+          before { allow(Flipflop).to receive(:no_able_player_for_youtube_videos?).and_return(true) }
+
+          it 'uses the YouTube Player' do
+            is_expected.to eq 'hyrax/file_sets/media_display/video_youtube'
+          end
+        end
+      end
+    end
   end
 
   describe '#heliotrope_media_partial for embedded assets' do
@@ -555,12 +597,18 @@ RSpec.describe Hyrax::FileSetPresenter do
 
     let(:fileset_doc) { SolrDocument.new(mime_type_ssi: mime_type, resource_type_tesim: [resource_type],
                                          external_resource_url_ssim: external_resource_url,
-                                         animated_gif_bsi: animated_gif_bsi, width_is: width_is) }
+                                         animated_gif_bsi: animated_gif_bsi, width_is: width_is,
+                                         youtube_video_bsi: youtube_video_bsi,
+                                         youtube_video_use_able_player_bsi: youtube_video_use_able_player_bsi,
+                                         youtube_video_captions_on_yt_bsi: youtube_video_captions_on_yt_bsi) }
     let(:mime_type) { nil }
     let(:animated_gif_bsi) { nil }
     let(:resource_type) { nil }
     let(:external_resource_url) { '' }
     let(:width_is) { nil }
+    let(:youtube_video_bsi) { nil }
+    let(:youtube_video_use_able_player_bsi) { nil }
+    let(:youtube_video_captions_on_yt_bsi) { nil }
 
     # rubocop:disable RSpec/EmptyExampleGroup
     context 'with featured representative' do
@@ -639,6 +687,42 @@ RSpec.describe Hyrax::FileSetPresenter do
       let(:mime_type) { 'application/binary' }
 
       it { is_expected.to eq 'hyrax/file_sets/media_display_embedded/default' }
+    end
+
+    context 'YouTube videos' do
+      let(:youtube_video_bsi) { true }
+
+      context "No captions present on the YouTube video" do
+        let(:youtube_video_captions_on_yt_bsi) { false }
+
+        it 'uses the YouTube Player' do
+          is_expected.to eq 'hyrax/file_sets/media_display_embedded/video_youtube'
+        end
+
+        context "force the use of Able Player for testing" do
+          let(:youtube_video_use_able_player_bsi) { true }
+
+          it 'uses Able Player' do
+            is_expected.to eq 'hyrax/file_sets/media_display_embedded/video_able_player_youtube'
+          end
+        end
+      end
+
+      context "Captions present on the YouTube video" do
+        let(:youtube_video_captions_on_yt_bsi) { true }
+
+        it 'uses Able Player' do
+          is_expected.to eq 'hyrax/file_sets/media_display_embedded/video_able_player_youtube'
+        end
+
+        context "force the use of the YouTube player with a Flipflop" do
+          before { allow(Flipflop).to receive(:no_able_player_for_youtube_videos?).and_return(true) }
+
+          it 'uses the YouTube Player' do
+            is_expected.to eq 'hyrax/file_sets/media_display_embedded/video_youtube'
+          end
+        end
+      end
     end
   end
 

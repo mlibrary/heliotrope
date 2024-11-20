@@ -321,7 +321,11 @@ module Hyrax
     def heliotrope_media_partial(directory = 'media_display') # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       # we've diverged from the media_display_partial stuff in Hyrax, so check our asset-page partials here
       partial = 'hyrax/file_sets/' + directory + '/'
-      partial + if external_resource?
+      partial + if able_player_youtube_video?
+                  'video_able_player_youtube'
+                elsif youtube_player_video?
+                  'video_youtube'
+                elsif external_resource?
                   'external_resource'
                 # this needs to come before `elsif image?` as these are also images
                 # less than 430 or so px wide means a "responsive" iframe with a 5:3 ratio will not fit a Leaflet...
@@ -366,6 +370,26 @@ module Hyrax
 
     def animated_gif?
       solr_document['animated_gif_bsi'] == true
+    end
+
+    def able_player_youtube_video?
+      # `solr_document['youtube_video_use_able_player_bsi']` is an override to force the use of Able Player for testing purposes
+      # otherwise we don't want to use it for videos that lack caption on YouTube, see https://github.com/ableplayer/ableplayer/issues/554
+      # The FlipFlop will act as a kill switch if using Able Player for YouTube proves problematic generally
+      (!Flipflop.no_able_player_for_youtube_videos? && solr_document['youtube_video_captions_on_yt_bsi']) ||
+        solr_document['youtube_video_use_able_player_bsi'] == true
+    end
+
+    def youtube_player_video?
+      solr_document['youtube_video_bsi'] == true
+    end
+
+    def youtube_id
+      solr_document['youtube_id_tesi']
+    end
+
+    def youtube_captions_present?
+      solr_document['youtube_video_captions_on_yt_bsi'] == true
     end
 
     private

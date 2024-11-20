@@ -1,7 +1,8 @@
 <% fs_presenter = Hyrax::FileSetPresenter.new(document, nil, nil) %>
 <div class="document col-xs-6 col-md-3">
   <div class="thumbnail">
-    <%= link_to search_state.url_for_document(document) do %>
+    <%# disable Turbolinks at it causes "Scroll Position Lock" in moving from the Monograph catalog to the FileSet page %>
+    <%= link_to search_state.url_for_document(document), 'data-turbolinks': false do %>
       <%=
         if fs_presenter.use_riiif_for_icon?
           riiif_icon = "/image-service/#{fs_presenter.id + fs_presenter&.browser_cache_breaker}/full/200,/0/default.png"
@@ -27,7 +28,8 @@
         <div class="documentHeader">
           <h4 class="index_title">
             <% counter = document_counter_with_offset(document_counter) %>
-            <%= render_markdown link_to_document document, render_markdown(document.title.first), counter: counter %>
+            <%# disable Turbolinks at it causes "Scroll Position Lock" in moving from the Monograph catalog to the FileSet page %>
+            <%= render_markdown link_to_document document, render_markdown(document.title.first), counter: counter, 'data-turbolinks': false %>
           </h4>
         </div>
       </div>
