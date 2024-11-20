@@ -71,7 +71,9 @@ module PDFEbook
           page ||= outline[:Dest]&.solve&.[](0)&.solve
           unless page.nil?
             page_number = @obj_to_page[page.no] || 0
-            intervals << PDFEbook::Interval.from_title_level_cfi(id, index, outline[:Title].to_utf8, depth, "page=#{page_number}")
+            # HELIO-4768: very rarely `title` is an `Origami::Reference` at this point, for whatever reason
+            title = outline[:Title].is_a?(Origami::Reference) ? outline[:Title]&.solve : outline[:Title]
+            intervals << PDFEbook::Interval.from_title_level_cfi(id, index, title.to_utf8, depth, "page=#{page_number}")
             index += 1
           end
           unless outline[:First]&.solve.nil? # Child outline
