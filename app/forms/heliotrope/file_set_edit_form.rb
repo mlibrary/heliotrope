@@ -13,7 +13,7 @@ module Heliotrope
                      exclusive_to_platform permissions_expiration_date
                      allow_display_after_expiration allow_download_after_expiration
                      sort_date allow_download allow_hi_res credit_line
-                     holding_contact external_resource_url doi hdl
+                     holding_contact external_resource_url doi hdl identifier
                      display_date transcript translation
                      closed_captions visual_descriptions
                      tombstone tombstone_message
