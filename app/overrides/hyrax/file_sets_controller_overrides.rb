@@ -100,8 +100,9 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
     end
 
     def change_thumbnail
+      dest = Hyrax::DerivativePath.derivative_path_for_reference(params[:id], 'thumbnail')
+
       if params[:user_thumbnail].key?(:custom_thumbnail)
-        dest = Hyrax::DerivativePath.derivative_path_for_reference(params[:id], 'thumbnail')
         FileUtils.mkdir_p(File.dirname(dest))
         FileUtils.cp(params[:user_thumbnail][:custom_thumbnail].path, dest)
         # Because the file at `params[:user_thumbnail][:custom_thumbnail].path` was created with Tempfile.new (see...
@@ -110,6 +111,7 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
       end
       if params[:user_thumbnail].key?(:use_default)
         if params[:user_thumbnail][:use_default] == '1'
+          FileUtils.rm(dest) if File.exist?(dest)
           ActiveFedora::SolrService.add(@file_set.to_solr.merge(thumbnail_path_ss: ActionController::Base.helpers.image_path('default.png')), softCommit: true)
         else
           ActiveFedora::SolrService.add(@file_set.to_solr.merge(thumbnail_path_ss: Hyrax::Engine.routes.url_helpers.download_path(@file_set.id, file: 'thumbnail')), softCommit: true)
