@@ -399,9 +399,16 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
 
     let(:file_set_doc_derivative) { file_set.to_solr.merge(thumbnail_path_ss: thumbnail_derivative_path) }
     let(:thumbnail_derivative_path) { Hyrax::Engine.routes.url_helpers.download_path(file_set.id, file: 'thumbnail') }
+    let(:thumbnail_path) { Hyrax::DerivativePath.derivative_path_for_reference(file_set.id, 'thumbnail') }
+
+    before do
+      allow(File).to receive(:exist?).and_call_original
+      allow(File).to receive(:exist?).with(thumbnail_path).and_return(true)
+    end
 
     it 'sets it to the Hyrax default thumbnail path' do
       expect(ActiveFedora::SolrService).to receive(:add).with(file_set_doc_default, softCommit: true)
+      expect(FileUtils).to receive(:rm).with(thumbnail_path)
       post :update, params: { id: file_set, user_thumbnail: { use_default: '1' } }
     end
     it 'sets it to the thumbnail derivative path' do

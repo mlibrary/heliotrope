@@ -1654,6 +1654,15 @@ footer.press {
   }
 }
 
+// Tidy the "Override Thumbnail with svgicon?" checkbox label on the FileSet edit page "thumbnail" tab
+.user_thumbnail_use_default {
+  .checkbox {
+    input {
+      margin-right: 0.5em;
+    }
+  }
+}
+
 // restrict large user-uploaded thumbnails on the asset edit page
 .restricted-width-media-display {
   .representative-media {
