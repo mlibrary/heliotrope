@@ -83,6 +83,7 @@ describe 'Edit a file set' do
       fill_in 'Language', with: 'English'
       fill_in 'Transcript', with: 'This is what is transcribed for you to read'
       fill_in 'Translation(s)', with: 'Here is what that&nbsp;means'
+      fill_in 'Identifier', with: 'external_id: blahblahblah'
 
       # section_title is a multi-value field but it's not possible to add another without js: true (Selenium)
       # adding one now, will revisit the page to add the second section_title
@@ -94,6 +95,8 @@ describe 'Edit a file set' do
       fill_in 'Allow Hi-Res?', with: 'yes2'
       fill_in 'Credit Line', with: 'A Nice Museum'
       fill_in 'Holding Contact', with: 'Unauthorized use prohibited. A Nice Museum.'
+      # add a second identifier
+      fill_in 'Identifier', with: 'youtube_id: goodyoutubeid'
 
       click_button 'Update Attached File'
 
