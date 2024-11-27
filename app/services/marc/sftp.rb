@@ -32,27 +32,25 @@ module Marc
     end
 
     def upload_local_marc_file_to_remote_product_dir(local_file, product_dir)
-      conn.upload!(local_file, product_dir)
-    rescue Net::SFTP::StatusException => e
-      MarcLogger.error("Marc::Sftp could not upload!(#{from}, #{to})")
-      MarcLogger.error(e)
+      remote_file = File.join(product_dir, File.basename(local_file))
+      conn.upload!(local_file, remote_file)
+    rescue Net::SFTP::StatusException, StandardError => e
+      MarcLogger.error("Marc::Sftp could not upload!(#{local_file}, #{remote_file}): #{e}")
     end
 
-
     def remove_marc_ingest_file(file)
-      file = File.basename(file)
-      conn.remove!(File.join("/home/fulcrum_ftp/marc_ingest", file))
-      MarcLogger.info("Marc::Sftp removed #{file}")
+      remote_file = File.join("/home/fulcrum_ftp/marc_ingest", File.basename(file))
+      conn.remove!(remote_file)
+      MarcLogger.info("Marc::Sftp removed #{remote_file}")
     rescue Net::SFTP::StatusException => e
-      MarcLogger.error("Marc::Sftp could not remove!(#{file}), #{e}")
+      MarcLogger.error("Marc::Sftp could not remove!(#{remote_file}), #{e}")
     end
 
     def upload_local_marc_file_to_remote_failures(local_file)
-      remote_failure_file = File.join("/home/fulcrum_ftp/marc_ingest/failures", "#{File.basename(local_file)}")
-      conn.upload!(local_file, remote_failure_file)
-    rescue Net::SFTP::StatusException => e
-      MarcLogger.error("Marc::Sftp could not rename!(#{from}, #{to})")
-      MarcLogger.error(e)
+      remote_file = File.join("/home/fulcrum_ftp/marc_ingest/failures", File.basename(local_file))
+      conn.upload!(local_file, remote_file)
+    rescue Net::SFTP::StatusException, StandardError => e
+      MarcLogger.error("Marc::Sftp could not rename!(#{local_file}, #{remote_file}): #{e}")
     end
 
     def local_marc_processing_dir
