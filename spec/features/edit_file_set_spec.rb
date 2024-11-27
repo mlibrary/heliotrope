@@ -100,14 +100,23 @@ describe 'Edit a file set' do
 
       click_button 'Update Attached File'
 
+      # On FileSet Page
+      expect(page.title).to eq file_set_page_title
+      # no download link, even though we're a platform admin, because `allow_download` is not set to 'yes'
+      expect(page).not_to have_link(href: hyrax.download_path(file_set, locale: 'en'))
+
       expect(FileSet.find(noid).date_modified).to eq(FileSet.find(noid).modified_date)
       expect(FileSet.find(noid).date_uploaded).to eq(FileSet.find(noid).create_date)
 
-      # Add another section title
+      # Go back to edit page
       visit edit_hyrax_file_set_path(file_set)
       expect(page).to have_css('input.file_set_section_title', count: 2)
+      # Add another section title
       page.all(:fillable_field, 'file_set[section_title][]').last.set('C 1')
       click_button 'Update Attached File'
+
+      # On FileSet Page
+      expect(page.title).to eq file_set_page_title
 
       # Go to Monograph catalog page
       find_link(monograph.title.first, match: :first).click
@@ -231,6 +240,16 @@ describe 'Edit a file set' do
       # check that the link includes the emphasised text
       expect(title_link).to have_css('em', text: 'MD Italics')
       expect(title_link).to have_css('em', text: 'HTML Italics')
+
+      # Go back to FileSet edit page
+      visit edit_hyrax_file_set_path(file_set)
+      # set allow_download to 'yes' so we can check that behavior
+      fill_in 'Allow Download?', with: 'yes'
+      click_button 'Update Attached File'
+
+      # On FileSet Page
+      expect(page.title).to eq file_set_page_title
+      expect(page).not_to have_link(href: hyrax.download_path(file_set, locale: 'en'))
     end
   end
 end
