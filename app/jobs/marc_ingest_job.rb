@@ -44,6 +44,10 @@ class MarcIngestJob < ApplicationJob
       end
     end
 
+    report.each do |r|
+      MarcLogger.info(r)
+    end
+
     # Done. Delete all the local directories
     lfh.clean_up_processing_dir
     # Remove the original Alma file(s) that were in the remote ~/marc_ingest since they've been untarred, split and renamed
@@ -52,9 +56,6 @@ class MarcIngestJob < ApplicationJob
     end
 
     MarcLogger.info("MarcIngestJob finished")
-    report.each do |r|
-      MarcLogger.info(r)
-    end
 
     MarcIngestMailer.send_mail(report).deliver_now if report.count > 0
   end

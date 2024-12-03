@@ -2,6 +2,8 @@
 
 require 'rails_helper'
 require 'net/sftp'
+require 'rspec/support/differ'
+
 
 # Lots of mocks here unsurprisingly. It's pretty gross.
 RSpec.describe Marc::Sftp do
@@ -103,20 +105,38 @@ RSpec.describe Marc::Sftp do
     let(:sftp_session) { instance_double(Net::SFTP::Session) }
     let(:local_file) { File.join(Settings.scratch_space_path, "marc_processing", "test_dir", "test_file.xml") }
     let(:product_dir) { "/home/fulcrum_ftp/MARC_from_Cataloging/UMPEBC" }
+    let(:remote_file) { File.join(product_dir, "test_file.xml") }
 
-    before do
-      allow(Rails.root).to receive(:join).with('config', 'fulcrum_sftp.yml').and_return(config)
-      allow(File).to receive(:exist?).with(config).and_return(true)
-      allow(File).to receive(:read).with(config).and_return(true)
-      allow(YAML).to receive(:safe_load).and_return(valid_yaml)
-      allow(Net::SFTP).to receive(:start).with("hostname", "username", password: "password").and_return(sftp_session)
-      allow(sftp_session).to receive(:upload!)
+    context "when successful" do
+      before do
+        allow(Rails.root).to receive(:join).with('config', 'fulcrum_sftp.yml').and_return(config)
+        allow(File).to receive(:exist?).with(config).and_return(true)
+        allow(File).to receive(:read).with(config).and_return(true)
+        allow(YAML).to receive(:safe_load).and_return(valid_yaml)
+        allow(Net::SFTP).to receive(:start).with("hostname", "username", password: "password").and_return(sftp_session)
+        allow(sftp_session).to receive(:upload!)
+      end
+
+      it "uploads the local file to the remote product directory" do
+        sftp = described_class.new
+        sftp.upload_local_marc_file_to_remote_product_dir(local_file, product_dir)
+        expect(sftp_session).to have_received(:upload!).with(local_file, remote_file)
+      end
     end
 
-    it "uploads the local file to the remote product directory" do
-      sftp = described_class.new
-      sftp.upload_local_marc_file_to_remote_product_dir(local_file, product_dir)
-      expect(sftp_session).to have_received(:upload!).with(local_file, product_dir)
+    context "with an exception" do
+      before do
+        allow_any_instance_of(described_class).to receive(:conn).and_return(sftp_session)
+        allow(sftp_session).to receive(:upload!).and_raise(StandardError)
+        allow(MarcLogger).to receive(:error)
+      end
+
+      it "logs the exception" do
+        sftp = described_class.new
+        sftp.upload_local_marc_file_to_remote_product_dir(local_file, product_dir)
+        expect(sftp_session).to have_received(:upload!).with(local_file, remote_file)
+        expect(MarcLogger).to have_received(:error).with("Marc::Sftp could not upload!(#{local_file}, #{remote_file}): StandardError")
+      end
     end
   end
 
@@ -165,7 +185,7 @@ RSpec.describe Marc::Sftp do
     let(:config) { double("config") }
     let(:sftp_session) { instance_double(Net::SFTP::Session) }
     let!(:local_file) { File.join(Settings.scratch_space_path, "marc_processing", "test", "test_00001.xml") }
-    let!(:remote_failure_file) { "/home/fulcrum_ftp/marc_ingest/failures/test_00001.xml" }
+    let!(:remote_file) { "/home/fulcrum_ftp/marc_ingest/failures/test_00001.xml" }
 
     before do
       allow(Rails.root).to receive(:join).with('config', 'fulcrum_sftp.yml').and_return(config)
@@ -185,7 +205,22 @@ RSpec.describe Marc::Sftp do
       sftp = described_class.new
       sftp.upload_local_marc_file_to_remote_failures(local_file)
 
-      expect(sftp_session).to have_received(:upload!).with(local_file, remote_failure_file)
+      expect(sftp_session).to have_received(:upload!).with(local_file, remote_file)
+    end
+
+    context "with an exception" do
+      before do
+        allow(sftp_session).to receive(:upload!).and_raise(StandardError)
+        allow(MarcLogger).to receive(:error)
+      end
+
+      it 'raises and logs the exception' do
+        sftp = described_class.new
+        sftp.upload_local_marc_file_to_remote_failures(local_file)
+
+        expect(sftp_session).to have_received(:upload!).with(local_file, remote_file)
+        expect(MarcLogger).to have_received(:error).with("Marc::Sftp could not rename!(#{local_file}, #{remote_file}): StandardError")
+      end
     end
   end
 
