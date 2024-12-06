@@ -24,7 +24,7 @@ module Marc
             marc_files << marc_file
           end
         else
-          # We can accept either Alma .tar.gz files or individual .mrc files.
+          # We can accept either Alma .tar.gz files or individual .mrc or .xml files.
           # Maybe. Not sure this will work in practice yet.
           marc_files << file
         end

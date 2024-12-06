@@ -90,6 +90,32 @@ RSpec.describe Marc::Sftp do
     end
   end
 
+  describe "#download_retry_files" do
+    let(:local_marc_processing_dir) { '/tmp/marc_processing' }
+    let(:file_entry) { double("Net::SFTP::Entry", file?: true, name: "RDU_something_00001.xml") }
+    let(:sftp_dir) { instance_double(Net::SFTP::Operations::Dir) }
+    let(:sftp_session) { instance_double(Net::SFTP::Session) }
+
+    before do
+      allow_any_instance_of(described_class).to receive(:conn).and_return(sftp_session)
+      allow_any_instance_of(described_class).to receive(:local_marc_processing_dir).and_return(local_marc_processing_dir)
+      allow(sftp_session).to receive(:dir).and_return(sftp_dir)
+      allow(sftp_dir).to receive(:foreach).with("/home/fulcrum_ftp/marc_ingest/retry").and_yield(file_entry)
+      allow(sftp_session).to receive(:download!)
+    end
+
+    it "downloads files from the remote ~/marc_ingest/retry directory and saves them locally" do
+      sftp = described_class.new
+      files = sftp.download_retry_files
+
+      expect(sftp_dir).to have_received(:foreach).with("/home/fulcrum_ftp/marc_ingest/retry")
+      expect(file_entry).to have_received(:file?).once
+      expect(sftp_session).to have_received(:dir)
+      expect(sftp_session).to have_received(:download!).with("/home/fulcrum_ftp/marc_ingest/retry/RDU_something_00001.xml", "#{local_marc_processing_dir}/RDU_something_00001.xml")
+      expect(files).to include("#{local_marc_processing_dir}/RDU_something_00001.xml")
+    end
+  end
+
   describe "#upload_local_marc_file_to_remote_product_dir" do
     let(:valid_yaml) do
       {
@@ -220,6 +246,68 @@ RSpec.describe Marc::Sftp do
 
         expect(sftp_session).to have_received(:upload!).with(local_file, remote_file)
         expect(MarcLogger).to have_received(:error).with("Marc::Sftp could not rename!(#{local_file}, #{remote_file}): StandardError")
+      end
+    end
+  end
+
+  describe "#upload_unknown_local_marc_file_to_retry" do
+    let(:sftp_session) { instance_double(Net::SFTP::Session) }
+    let!(:local_file) { File.join(Settings.scratch_space_path, "marc_processing", "test", "test_00001.xml") }
+    let!(:remote_file) { "/home/fulcrum_ftp/marc_ingest/retry/test_00001.xml" }
+
+    before do
+      allow_any_instance_of(described_class).to receive(:conn).and_return(sftp_session)
+      allow(sftp_session).to receive(:upload!).with(local_file, remote_file)
+    end
+
+    it "uploads the file" do
+      sftp = described_class.new
+      sftp.upload_unknown_local_marc_file_to_retry(local_file)
+      expect(sftp_session).to have_received(:upload!).with(local_file, remote_file)
+    end
+
+    context "with an exception" do
+      before do
+        allow(sftp_session).to receive(:upload!).and_raise(StandardError)
+        allow(MarcLogger).to receive(:error)
+      end
+
+      it "raises and logs the exception" do
+        sftp = described_class.new
+        sftp.upload_unknown_local_marc_file_to_retry(local_file)
+        expect(sftp_session).to have_received(:upload!).with(local_file, remote_file)
+        expect(MarcLogger).to have_received(:error).with("Marc::Sftp could not upload!(#{local_file}, #{remote_file}): StandardError")
+      end
+    end
+  end
+
+  describe "#remove_remote_retry_file" do
+    let(:sftp_session) { instance_double(Net::SFTP::Session) }
+    let!(:local_file) { File.join(Settings.scratch_space_path, "marc_processing", "test", "test_00001.xml") }
+    let!(:remote_file) { "/home/fulcrum_ftp/marc_ingest/retry/test_00001.xml" }
+
+    before do
+      allow_any_instance_of(described_class).to receive(:conn).and_return(sftp_session)
+      allow(sftp_session).to receive(:remove!).with(remote_file)
+    end
+
+    it "removes the remote file" do
+      sftp = described_class.new
+      sftp.remove_remote_retry_file(local_file)
+      expect(sftp_session).to have_received(:remove!).with(remote_file)
+    end
+
+    context "with an excpetion" do
+      before do
+        allow(sftp_session).to receive(:remove!).and_raise(StandardError)
+        allow(MarcLogger).to receive(:error)
+      end
+
+      it "raises and logs the execption" do
+        sftp = described_class.new
+        sftp.remove_remote_retry_file(local_file)
+        expect(sftp_session).to have_received(:remove!).with(remote_file)
+        expect(MarcLogger).to have_received(:error).with("Marc::Sftp could not remove!(#{remote_file}): StandardError")
       end
     end
   end
