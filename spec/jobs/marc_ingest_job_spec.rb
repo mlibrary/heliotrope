@@ -24,6 +24,7 @@ RSpec.describe MarcIngestJob, type: :job do
         allow(sftp).to receive(:download_marc_ingest_files).and_return(files)
         allow(sftp).to receive(:upload_local_marc_file_to_remote_product_dir).with(marc_xml_file, product_dir).and_return(true)
         allow(sftp).to receive(:remove_marc_ingest_file).with(file).and_return(true)
+        allow(sftp).to receive(:download_retry_files).and_return([])
         allow(MarcIngestMailer).to receive(:send_mail).with(report).and_return(mailer)
       end
 
@@ -48,6 +49,7 @@ RSpec.describe MarcIngestJob, type: :job do
         allow(sftp).to receive(:download_marc_ingest_files).and_return(files)
         allow(sftp).to receive(:upload_local_marc_file_to_remote_product_dir)
         allow(sftp).to receive(:remove_marc_ingest_file)
+        allow(sftp).to receive(:download_retry_files).and_return([])
         allow(MarcIngestMailer).to receive(:send_mail).with(report).and_return(mailer)
         allow(MarcLogger).to receive(:info)
       end
@@ -68,7 +70,7 @@ RSpec.describe MarcIngestJob, type: :job do
       let(:doc) { SolrDocument.new(id: "999999999", press_tesim: ["leverpress"], doi_ssim: ["10.3998/mpub.10209707"]) }
       let(:marc_xml_file) { Rails.root.join("tmp", "marc_processing", "003_missing", "003_missing_00001.xml").to_s }
       let(:mailer) { double("mailer", deliver_now: true) }
-      let(:report) { ["ERROR\tleverpress 999999999 003_missing_00001.xml has no 003 field"] }
+      let(:report) { ["Marc::Validator\tleverpress 999999999 003_missing_00001.xml has no 003 field"] }
 
       before do
         FileUtils.mkdir_p(File.join(Settings.scratch_space_path, "marc_processing"))
@@ -79,6 +81,7 @@ RSpec.describe MarcIngestJob, type: :job do
         allow(sftp).to receive(:download_marc_ingest_files).and_return(files)
         allow(sftp).to receive(:upload_local_marc_file_to_remote_failures).with(marc_xml_file).and_return(true)
         allow(sftp).to receive(:remove_marc_ingest_file).with(file).and_return(true)
+        allow(sftp).to receive(:download_retry_files).and_return([])
         allow(MarcIngestMailer).to receive(:send_mail).with(report).and_return(mailer)
         allow(MarcLogger).to receive(:info)
       end
@@ -96,7 +99,12 @@ RSpec.describe MarcIngestJob, type: :job do
       let(:doc) { SolrDocument.new(id: "999999999", press_tesim: ["a_brand_new_press"], doi_ssim: ["10.3998/mpub.12527012"]) }
       let(:marc_xml_file) { Rails.root.join("tmp", "marc_processing", "single_record_from_alma", "single_record_from_alma_00001.xml").to_s }
       let(:mailer) { double("mailer", deliver_now: true) }
-      let(:report) { ["ERROR\tMarc::DirectoryMapper is missing a group_key for '#{marc_xml_file}'!"] }
+      let(:report) {
+        [
+          "MISSING\t'#{marc_xml_file}' with noid:'999999999' and group_key:'' is ignored",
+          "RETRIED FAILURE\t'#{marc_xml_file}' with noid:'999999999' is in Fulcrum but is missing a group_key (''). Make sure the correct group_key is in Marc::DirectoryMapper."
+        ]
+      }
 
       before do
         FileUtils.mkdir_p(File.join(Settings.scratch_space_path, "marc_processing"))
@@ -106,15 +114,17 @@ RSpec.describe MarcIngestJob, type: :job do
         allow(Marc::Sftp).to receive(:new).and_return(sftp)
         allow(sftp).to receive(:download_marc_ingest_files).and_return(files)
         allow(sftp).to receive(:upload_local_marc_file_to_remote_product_dir)
-        allow(sftp).to receive(:upload_local_marc_file_to_remote_failures)
         allow(sftp).to receive(:remove_marc_ingest_file).with(file).and_return(true)
+        allow(sftp).to receive(:upload_unknown_local_marc_file_to_retry).with(marc_xml_file)
+        allow(sftp).to receive(:download_retry_files).and_return([marc_xml_file])
         allow(MarcIngestMailer).to receive(:send_mail).with(report).and_return(mailer)
       end
 
-      it "sends an email with the error, does not move the file" do
+      it "uploads the file to the retry directory, downloads it again, attempts to revalidate and sends an email report" do
         described_class.perform_now
         expect(sftp).not_to have_received(:upload_local_marc_file_to_remote_product_dir)
-        expect(sftp).not_to have_received(:upload_local_marc_file_to_remote_failures)
+        expect(sftp).to have_received(:upload_unknown_local_marc_file_to_retry).with(marc_xml_file)
+        expect(sftp).to have_received(:download_retry_files)
         expect(MarcIngestMailer).to have_received(:send_mail).with(report)
       end
     end
@@ -125,7 +135,12 @@ RSpec.describe MarcIngestJob, type: :job do
       let(:doc) { SolrDocument.new(id: "999999999", press_tesim: ["leverpress"], doi_ssim: ["10.3998/mpub.NOT_A_REGISTERED_DOI"]) }
       let(:marc_xml_file) { Rails.root.join("tmp", "marc_processing", "single_record_from_alma", "single_record_from_alma_00001.xml").to_s }
       let(:mailer) { double("mailer", deliver_now: true) }
-      let(:report) { ["ERROR\tsingle_record_from_alma_00001.xml does not have a DOI or Handle that is in fulcrum, 024$a value is '10.3998/mpub.12527012'"] }
+      let(:report) {
+        [
+          "MISSING\t'#{marc_xml_file}' with noid:'unknown_noid[10.3998/mpub.12527012]' and group_key:'unknown_group_key' is ignored",
+          "RETRIED FAILURE\t'#{marc_xml_file}' with noid:'unknown_noid[10.3998/mpub.12527012]' and group_key:'unknown_group_key' still doesn't match a Fulcrum monograph"
+        ]
+      }
 
       before do
         FileUtils.mkdir_p(File.join(Settings.scratch_space_path, "marc_processing"))
@@ -135,16 +150,18 @@ RSpec.describe MarcIngestJob, type: :job do
         allow(Marc::Sftp).to receive(:new).and_return(sftp)
         allow(sftp).to receive(:download_marc_ingest_files).and_return(files)
         allow(sftp).to receive(:upload_local_marc_file_to_remote_product_dir)
-        allow(sftp).to receive(:upload_local_marc_file_to_remote_failures).with(marc_xml_file).and_return(true)
         allow(sftp).to receive(:remove_marc_ingest_file).with(file).and_return(true)
+        allow(sftp).to receive(:upload_unknown_local_marc_file_to_retry).with(marc_xml_file)
+        allow(sftp).to receive(:download_retry_files).and_return([marc_xml_file])
         allow(MarcIngestMailer).to receive(:send_mail).with(report).and_return(mailer)
         allow(MarcLogger).to receive(:info)
       end
 
-      it "considers the record 'invalid' based on no DOI/Handle match so moves it to /failures and sends an email" do
+      it "uploads the file to the retry directory, downloads it again, attempts to revalidate and sends an email report" do
         described_class.perform_now
         expect(sftp).not_to have_received(:upload_local_marc_file_to_remote_product_dir)
-        expect(sftp).to have_received(:upload_local_marc_file_to_remote_failures).with(marc_xml_file)
+        expect(sftp).to have_received(:upload_unknown_local_marc_file_to_retry).with(marc_xml_file)
+        expect(sftp).to have_received(:download_retry_files)
         expect(MarcIngestMailer).to have_received(:send_mail).with(report)
       end
     end
