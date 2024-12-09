@@ -24,7 +24,7 @@ module Marc
             marc_files << marc_file
           end
         else
-          # We can accept either Alma .tar.gz files or individual .mrc files.
+          # We can accept either Alma .tar.gz files or individual .mrc or .xml files.
           # Maybe. Not sure this will work in practice yet.
           marc_files << file
         end
@@ -32,7 +32,7 @@ module Marc
 
       marc_files
     rescue StandardError => e
-      MarcLogger.error("Failed convert_to_individual_marc_files: #{files.join(',')}: #{e}")
+      MarcLogger.error("Marc::LocalFileHandler Failed convert_to_individual_marc_files: #{files.join(',')}: #{e}")
       clean_up_processing_dir
       []
     end
@@ -44,7 +44,7 @@ module Marc
       rm(file)
       untar_dir
     rescue StandardError => e
-      MarcLogger.error("Failed to ungzip_untar #{file}: #{e}")
+      MarcLogger.error("Marc::LocalFileHandler Failed to ungzip_untar #{file}: #{e}")
       rm(file)
       nil
     end
@@ -79,7 +79,7 @@ module Marc
       marc_files
 
     rescue StandardError => e
-      MarcLogger.error("Failed to split #{alma_file} into multiple MARC records: #{e}")
+      MarcLogger.error("Marc::LocalFileHandler Failed to split #{alma_file} into multiple MARC records: #{e}")
       e.backtrace.each do |line|
         MarcLogger.error(line)
       end
@@ -97,8 +97,8 @@ module Marc
       # I assume the calling job is still holding on to it or something.
       # Eventually it lets them go, but then the directory is still sitting there.
       # It doesn't really matter, it will get cleaned up the next time the job is run.
-      # So just log it I guess, don't let it crash everything.
-      MarcLogger.info("Failed to delete #{file_or_directory}: #{e}")
+      # So just log as INFO I guess, don't let it crash everything.
+      MarcLogger.info("Marc::LocalFileHandler Failed to delete #{file_or_directory}: #{e}")
     end
 
     def rename_file_with_noid(validator)
@@ -107,7 +107,7 @@ module Marc
       FileUtils.move(src, dst)
       dst
     rescue StandardError => e
-      MarcLogger.error("Failed to rename '#{src}' to '#{dst}', #{e}")
+      MarcLogger.error("Marc::LocalFileHandler Failed to rename '#{src}' to '#{dst}', #{e}")
       nil
     end
 

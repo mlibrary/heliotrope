@@ -4,8 +4,14 @@ module Marc
   class Validator
     attr_reader :file, :reader, :noid, :group_key, :error
 
-    def initialize(file)
+    def initialize(file, strict = true)
       @file = file
+      # "strict" right now means the record must match a monograph in Fulcrum.
+      # If "strict" is false then a record can still be valid even if the DOI or Handle
+      # doesn't match a monograph in Fulcrum. Yet. The idea is that we may get "good" marc
+      # records but we haven't yet added the Monograph to Fulcrum, but we don't consider them failures,
+      # we just try again at a later time.
+      @strict = strict
       @reader = read_marc
     end
 
@@ -89,13 +95,17 @@ module Marc
       end
 
       if @noid.blank?
-        log_message("does not have a DOI or Handle that is in fulcrum, 024$a value is '#{purl}'")
-        return false
-      end
+        if @strict == true
+          log_message("does not have a DOI or Handle that is in fulcrum, 024$a value is '#{purl}'")
+          return false
+        end
 
-      # I guess records can still "exist_in_fulcrum?" if they don't have a group_key
-      # Handle that "error" in what ever calls the Validator since it's not exactly an "error",
-      # it just means we need to add the group_key to the Marc::DirectoryMapper or something.
+        if @strict == false
+          log_message("does not have a DOI or Handle that is in fulcrum, 024$a value is '#{purl}'. The record will be retried nightly until a match in Fulcrum is found.")
+          @noid = "unknown_noid[#{purl}]"
+          @group_key = "unknown_group_key"
+        end
+      end
 
       true
     end
@@ -213,7 +223,7 @@ module Marc
                        else
                          nil
                        end
-      full_message = "ERROR\t#{group_and_noid || ''}#{File.basename(@file)} #{message}"
+      full_message = "Marc::Validator\t#{group_and_noid || ''}#{File.basename(@file)} #{message}"
       @error = full_message
       MarcLogger.error(full_message)
     end

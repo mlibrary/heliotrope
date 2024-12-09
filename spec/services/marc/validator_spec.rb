@@ -164,6 +164,25 @@ RSpec.describe Marc::Validator do
         expect(MarcLogger).to receive(:error)
         expect(validator.exists_in_fulcrum?(record)).to be false
       end
+
+      context "when 'strict' is set to false" do
+        let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', '024_bad_doi.xml').to_s }
+        let(:doc) { SolrDocument.new(id: '999999999', press_tesim: ["leverpress"], doi_ssim: ["10.3998/mpub.10209707"]) }
+
+        before do
+          ActiveFedora::SolrService.add(doc.to_h)
+          ActiveFedora::SolrService.commit
+        end
+
+        it "returns true" do
+          validator = described_class.new(marc_file, false)
+          record = validator.reader.first
+          expect(validator.exists_in_fulcrum?(record)).to be true
+          expect(validator.noid).to eq "unknown_noid[not-a-real-doi]"
+          expect(validator.group_key).to eq "unknown_group_key"
+          expect(validator.error).to eq "Marc::Validator\t024_bad_doi.xml does not have a DOI or Handle that is in fulcrum, 024$a value is 'not-a-real-doi'. The record will be retried nightly until a match in Fulcrum is found."
+        end
+      end
     end
   end
 
