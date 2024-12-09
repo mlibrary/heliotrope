@@ -85,14 +85,23 @@ RSpec.describe MonographIndexer do
       end
     end
 
-    context "ebook representative table of contents" do
+    context "ebook metadata indexed at the Monograph level" do
       before do
         create(:featured_representative, work_id: monograph.id, file_set_id: file_set.id, kind: "epub")
-        UnpackJob.perform_now(file_set.id, "epub") # to index the epub's table of contents HELIO-3870
+        UnpackJob.perform_now(file_set.id, "epub") # to index the epub's table of contents HELIO-3870 and a11y metadata HELIO-4125
       end
 
-      it "indexes the epub/pdf_ebook's ToC if there is one" do
-        expect(subject['table_of_contents_tesim']).to include("Chapter 73. Stubb and Flask Kill a Right Whale; and Then Have a Talk")
+      context 'ebook representative table of contents' do
+        it "indexes the epub/pdf_ebook's ToC if there is one" do
+          expect(subject['table_of_contents_tesim']).to include("Chapter 73. Stubb and Flask Kill a Right Whale; and Then Have a Talk")
+        end
+      end
+
+      context 'Runs EpubAccessibilityMetadataIndexingService' do
+        it 'indexes fields from the EPUB OPF "package" file on the Monograph' do
+          # checking that `version` was indexed wll suffice, EpubAccessibilityMetadataIndexingServiceSpec covers them all
+          expect(subject['epub_version_ssi']).to eq("3.0")
+        end
       end
     end
 
