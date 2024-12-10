@@ -31,6 +31,29 @@ module Marc
       []
     end
 
+    def download_retry_files
+      to_download = []
+      conn.dir.foreach("/home/fulcrum_ftp/marc_ingest/retry") do |entry|
+        if entry.file?
+          to_download << entry.name
+        end
+      end
+
+      files = []
+      to_download.each do |file|
+        remote = File.join("/home/fulcrum_ftp/marc_ingest/retry", file)
+        local = File.join(local_marc_processing_dir, file)
+        conn.download!(remote, local)
+        files << local
+      end
+
+      files
+
+    rescue StandardError => e
+      MarcLogger.error("Marc::Sftp download_retry_files failed with #{e}")
+      []
+    end
+
     def upload_local_marc_file_to_remote_product_dir(local_file, product_dir)
       remote_file = File.join(product_dir, File.basename(local_file))
       conn.upload!(local_file, remote_file)
@@ -51,6 +74,22 @@ module Marc
       conn.upload!(local_file, remote_file)
     rescue Net::SFTP::StatusException, StandardError => e
       MarcLogger.error("Marc::Sftp could not rename!(#{local_file}, #{remote_file}): #{e}")
+    end
+
+    # If we find a record that is not in fulcrum, we put it in ~/marc_ingest/retry to be retried another day
+    def upload_unknown_local_marc_file_to_retry(local_file)
+      remote_file = File.join("/home/fulcrum_ftp/marc_ingest/retry", File.basename(local_file))
+      conn.upload!(local_file, remote_file)
+    rescue Net::SFTP::StatusException, StandardError => e
+      MarcLogger.error("Marc::Sftp could not upload!(#{local_file}, #{remote_file}): #{e}")
+    end
+
+    # After we find a retry file's monograph and put it in the correct product dir, remove it from the retry dir
+    def remove_remote_retry_file(original_file_name)
+      remote_file = File.join("/home/fulcrum_ftp/marc_ingest/retry", File.basename(original_file_name))
+      conn.remove!(remote_file)
+    rescue Net::SFTP::StatusException, StandardError => e
+      MarcLogger.error("Marc::Sftp could not remove!(#{remote_file}): #{e}")
     end
 
     def local_marc_processing_dir
