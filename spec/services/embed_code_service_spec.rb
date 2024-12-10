@@ -150,6 +150,27 @@ RSpec.describe EmbedCodeService do
           expect(doc.search("iframe[@src=\"#{youtube_video_embed_url}\"]").size).to eq(1)
         end
 
+        # HELIO-4788: Adding test for "Playback on other websites has been disabled by the video owner"
+        context "YouTube video is not emdeddable" do
+          before do
+            oembed_response = Net::HTTPForbidden.new(1.0, '401', body: 'Unauthorized')
+            allow(Net::HTTP)
+              .to receive(:get_response)
+                    .with(URI("https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=goodyoutubeid&format=json"))
+                    .and_return(oembed_response)
+
+            youtube_video.save!
+            UnpackJob.perform_now(epub.id, 'epub')
+          end
+
+          it "Does not insert embed codes for the YouTube video" do
+            expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
+            doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
+            expect(doc.search(youtube_video_embed_attributes)).to be_empty
+            expect(doc.search("iframe[@src=\"#{youtube_video_embed_url}\"]")).to be_empty
+          end
+        end
+
         it "inserts CSB-modal embed codes for interactive JavaScript applications/maps" do
           expect(File.exist?(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))).to be true
           doc = Nokogiri::XML(File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml')))
