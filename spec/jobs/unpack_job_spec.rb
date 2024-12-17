@@ -24,9 +24,15 @@ RSpec.describe UnpackJob, type: :job do
         monograph.ordered_members << reflowable_epub
         monograph.save!
         reflowable_epub.save!
+        # the `find` and `parent` stubs are necessary for the `update_index` stub to work
+        allow(FileSet).to receive(:find).with(reflowable_epub.id).and_return(reflowable_epub)
+        allow(reflowable_epub).to receive(:parent).and_return(monograph)
+        allow(monograph).to receive(:update_index)
       end
 
       it "unzips the epub, caches the ToC, creates the search database and doesn't make chapter files derivatives" do
+        # check that we're reindexing to get the ToC and accessibility metadata on the parent Monograph's Solr doc
+        expect(monograph).to receive(:update_index)
         described_class.perform_now(reflowable_epub.id, 'epub')
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: reflowable_epub.id).toc).length).to eq 3
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: reflowable_epub.id).toc)[0]["title"]).to eq "Damage report!"
@@ -48,9 +54,15 @@ RSpec.describe UnpackJob, type: :job do
         monograph.ordered_members << fixed_layout_epub
         monograph.save!
         fixed_layout_epub.save!
+        # the `find` and `parent` stubs are necessary for the `update_index` stub to work
+        allow(FileSet).to receive(:find).with(fixed_layout_epub.id).and_return(fixed_layout_epub)
+        allow(fixed_layout_epub).to receive(:parent).and_return(monograph)
+        allow(monograph).to receive(:update_index)
       end
 
       it "unzips the epub, caches the ToC, creates the search database and makes the chapter files derivatives" do
+        # check that we're reindexing to get the ToC and accessibility metadata on the parent Monograph's Solr doc
+        expect(monograph).to receive(:update_index)
         described_class.perform_now(fixed_layout_epub.id, 'epub')
         expect(File.exist?(File.join(root_path, fixed_layout_epub.id + '.db'))).to be true
         expect(Dir.exist?(chapters_dir)).to be true

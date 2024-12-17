@@ -86,6 +86,9 @@ class MonographIndexer < Hyrax::WorkIndexer
 
       # HELIO-2428 index the "full" doi url if there's a doi
       solr_doc['doi_url_ssim'] = "https://doi.org/" + object.doi if object.doi.present?
+
+      # HELIO-4125 - Extract EPUB metadata on ingest and store in Solr
+      maybe_index_accessibility_metadata(solr_doc)
     end
   end
 
@@ -169,5 +172,11 @@ class MonographIndexer < Hyrax::WorkIndexer
     all_product_names << "Open Access" if all_product_ids.include?(-1)
     all_product_names << "Unrestricted" if all_product_ids.include?(0)
     all_product_names + Greensub::Product.where(id: all_product_ids).map { |product| product.name || product.identifier }
+  end
+
+  def maybe_index_accessibility_metadata(solr_doc)
+    epub_fr = FeaturedRepresentative.where(work_id: object.id, kind: 'epub')&.first
+    return if epub_fr.blank?
+    EpubAccessibilityMetadataIndexingService.index(epub_fr.file_set_id, solr_doc)
   end
 end
