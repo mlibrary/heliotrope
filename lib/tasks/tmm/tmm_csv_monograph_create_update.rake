@@ -55,8 +55,14 @@ namespace :heliotrope do
     # `blank_metadata` is used to enable deletion of existing values. It's *ESSENTIAL* that this hash only contain...
     # fields actually present in the TMM CSV  (those known to TMM as mentioned above). Hence the `select`.
     tmm_csv_header_field_names = rows[0].to_h.keys.map { |k| k&.strip }
-    blank_metadata = monograph_fields.select{ |field| tmm_csv_header_field_names.include?(field[:field_name]) }
+    blank_metadata = monograph_fields.select { |field| tmm_csv_header_field_names.include?(field[:field_name]) }
                                      .pluck(:metadata_name).map { |name| [name, nil] }.to_h
+
+    # michigan and its sub-presses are always allowed
+    allowed_presses = Press.where(parent: Press.where(subdomain: 'michigan').first).map(&:subdomain).push('michigan')
+    # gradually we'll be adding more allowed (non-EBC) presses to the list here
+    allowed_presses += ['bigten', 'livedplaces']
+    allowed_presses.uniq! # just in case
 
     rows.each do |row|
       row_num += 1
@@ -84,7 +90,7 @@ namespace :heliotrope do
 
       press = tmm_press_name_map[press] if tmm_press_name_map[press].present?
 
-      unless Press.exists?(subdomain: press)
+      unless allowed_presses.include?(press) && Press.exists?(subdomain: press)
         puts "Invalid Press value '#{press}' on row #{row_num} ... SKIPPING ROW"
         next
       end
