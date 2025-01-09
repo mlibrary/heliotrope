@@ -73,7 +73,7 @@ html {
     }
   }
   // :active here is a first attempt to defeat sticky touch hover behavior
-  .able:hover > div:nth-child(3), .able:active > div:nth-child(3) {
+  .able:hover > div:nth-of-type(2), .able:active > div:nth-of-type(2) {
     // show the controls on hover
     -webkit-opacity: 1;
     -moz-opacity: 1;

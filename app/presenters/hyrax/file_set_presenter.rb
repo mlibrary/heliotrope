@@ -65,20 +65,22 @@ module Hyrax
       parent.subject
     end
 
+    # TODO: HELIO-4728 - remove these horribly slow methods from MonographPresenter and just index...
+    # the previous and next ids on the FileSet doc instead (if they exist and are publicly viewable)
     def previous_id?
-      parent.previous_file_sets_id? id
+      # parent.previous_file_sets_id? id
     end
 
     def previous_id
-      parent.previous_file_sets_id id
+      # parent.previous_file_sets_id id
     end
 
     def next_id?
-      parent.next_file_sets_id? id
+      # parent.next_file_sets_id? id
     end
 
     def next_id
-      parent.next_file_sets_id id
+      # parent.next_file_sets_id id
     end
 
     def link_name
