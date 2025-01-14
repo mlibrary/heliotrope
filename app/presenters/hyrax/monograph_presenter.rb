@@ -218,11 +218,6 @@ module Hyrax
       ordered_file_sets_ids[(ordered_file_sets_ids.find_index(file_sets_id) + 1)]
     end
 
-    instrument_method
-    def monograph_analytics_ids
-      ordered_file_sets_ids + [id]
-    end
-
     def buy_url?
       solr_document.buy_url.present?
     end
