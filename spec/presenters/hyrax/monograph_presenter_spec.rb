@@ -288,38 +288,6 @@ RSpec.describe Hyrax::MonographPresenter do
         expect(subject.count).to eq 0
       end
     end
-
-    describe '#previous_file_sets_id?' do
-      subject { presenter.previous_file_sets_id? 0 }
-
-      it 'returns false' do
-        expect(subject).to eq false
-      end
-    end
-
-    describe '#previous_file_sets_id' do
-      subject { presenter.previous_file_sets_id 0 }
-
-      it 'returns nil' do
-        expect(subject).to eq nil
-      end
-    end
-
-    describe '#next_file_sets_id?' do
-      subject { presenter.next_file_sets_id? 0 }
-
-      it 'returns false' do
-        expect(subject).to eq false
-      end
-    end
-
-    describe '#next_file_sets_id' do
-      subject { presenter.next_file_sets_id 0 }
-
-      it 'returns nil' do
-        expect(subject).to eq nil
-      end
-    end
   end # context 'a monograph with no attached members' do
 
   context 'a monograph with attached members' do
@@ -367,84 +335,6 @@ RSpec.describe Hyrax::MonographPresenter do
             it { expect(subject).to contain_exactly('fs1', 'fs3') }
           end
         end
-      end
-    end
-
-    context 'the first (non-representative) file' do
-      describe '#previous_file_sets_id?' do
-        subject { presenter.previous_file_sets_id? fs1_doc.id }
-
-        it { is_expected.to be false }
-      end
-
-      describe '#previous_file_sets_id' do
-        subject { presenter.previous_file_sets_id fs1_doc.id }
-
-        it { is_expected.to eq nil }
-      end
-
-      describe '#next_file_sets_id?' do
-        subject { presenter.next_file_sets_id? fs1_doc.id }
-
-        it { is_expected.to eq true }
-      end
-
-      describe '#next_file_sets_id' do
-        subject { presenter.next_file_sets_id fs1_doc.id }
-
-        it { is_expected.to eq fs2_doc.id }
-      end
-    end
-
-    context 'the 2nd file in the list' do
-      describe '#previous_file_sets_id?' do
-        subject { presenter.previous_file_sets_id? fs2_doc.id }
-
-        it { is_expected.to eq true }
-      end
-
-      describe '#previous_file_sets_id' do
-        subject { presenter.previous_file_sets_id fs2_doc.id }
-
-        it { is_expected.to eq fs1_doc.id }
-      end
-
-      describe '#next_file_sets_id?' do
-        subject { presenter.next_file_sets_id? fs2_doc.id }
-
-        it { is_expected.to eq true }
-      end
-
-      describe '#next_file_sets_id' do
-        subject { presenter.next_file_sets_id fs2_doc.id }
-
-        it { is_expected.to eq fs3_doc.id }
-      end
-    end
-
-    context 'the last file in the list' do
-      describe '#previous_file_sets_id?' do
-        subject { presenter.previous_file_sets_id? fs3_doc.id }
-
-        it { is_expected.to eq true }
-      end
-
-      describe '#previous_file_sets_id' do
-        subject { presenter.previous_file_sets_id fs3_doc.id }
-
-        it { is_expected.to eq fs2_doc.id }
-      end
-
-      describe '#next_file_sets_id?' do
-        subject { presenter.next_file_sets_id? fs3_doc.id }
-
-        it { is_expected.to eq false }
-      end
-
-      describe '#next_file_sets_id' do
-        subject { presenter.next_file_sets_id fs3_doc.id }
-
-        it { is_expected.to eq nil }
       end
     end
 
