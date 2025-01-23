@@ -100,6 +100,7 @@ class MonographCatalogController < ::CatalogController
   def default_url_options
     # HELIO-4332
     @except_locale = true if @monograph_presenter.present? && @monograph_presenter&.subdomain == "barpublishing"
+    @valid_share_link = true if valid_share_link?
     super
   end
 

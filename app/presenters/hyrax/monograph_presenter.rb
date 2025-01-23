@@ -230,8 +230,12 @@ module Hyrax
       solr_document.description.present?
     end
 
-    def catalog_url
-      Rails.application.routes.url_helpers.monograph_catalog_path(id)
+    def catalog_url(share_link = nil)
+      if share_link.present?
+        Rails.application.routes.url_helpers.monograph_catalog_path(id, share: share_link)
+      else
+        Rails.application.routes.url_helpers.monograph_catalog_path(id)
+      end
     end
 
     def monograph_coins_title?

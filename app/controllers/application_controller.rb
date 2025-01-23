@@ -72,11 +72,18 @@ class ApplicationController < ActionController::Base
   end
 
   def default_url_options
+    value = super
+
     if @except_locale
-      super.except(:locale)
-    else
-      super
+      value = value.except(:locale)
     end
+
+    # get share link query parameters to stick around as long as they are relevant to the current Monograph
+    if @valid_share_link
+      value = value.merge(share: params[:share])
+    end
+
+    value
   end
 
   def wayfless_redirect_to_shib_login

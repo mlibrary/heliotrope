@@ -9,10 +9,20 @@ class MonographSearchBuilder < ::SearchBuilder
     :filter_out_tombstones
   ]
 
-  # this prevents the Solr request from filtering draft documents out, given an anonymous user using a share link,...
-  # otherwise the following would be added to `fq`, removing such documents from the response completely:
+  # Making this method from blacklight-access_controls aware of our share links to prevents the Solr request from...
+  # filtering draft documents out when an anonymous user is using a share link.
+  # Otherwise the following would be added to `fq`, removing such documents from the response completely:
   # ({!terms f=edit_access_group_ssim}public) OR ({!terms f=discover_access_group_ssim}public) OR ({!terms f=read_access_group_ssim}public)"
-  self.default_processor_chain -= [:add_access_controls_to_solr_params] if :valid_share_link?
+  # method copied from here, where it's actually named `apply_gated_discovery`, it's included in the...
+  # processor chain with the alias `add_access_controls_to_solr_params`:
+  # https://github.com/projectblacklight/blacklight-access_controls/blob/089cb43377086adba46e4cde272c2ccb19fef5ad/lib/blacklight/access_controls/enforcement.rb#L54
+  def add_access_controls_to_solr_params(solr_parameters)
+    return if valid_share_link? # <-- only heliotrope change
+
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << gated_discovery_filters.reject(&:blank?).join(' OR ')
+    Rails.logger.debug("Solr parameters: #{solr_parameters.inspect}") # rubocop:disable Rails/EagerEvaluationLogMessage
+  end
 
   instrument_method
   def filter_by_monograph_id(solr_parameters)
@@ -44,23 +54,24 @@ class MonographSearchBuilder < ::SearchBuilder
     solr_parameters[:fq] << "-permissions_expiration_date_ssim:[* TO #{Time.zone.today.strftime('%Y-%m-%d')}]"
   end
 
-  def valid_share_link?
-    share_link = blacklight_params[:share] || session[:share_link]
-    session[:share_link] = share_link
+  private
 
-    if share_link.present?
-      begin
-        decoded = JsonWebToken.decode(share_link)
-        return true if decoded[:data] == @monograph_presenter&.id
-      rescue JWT::ExpiredSignature
+    # note we can't access the session variable here, the `share` URL query parameter needs to be present for our...
+    # Blacklight share-link override to work
+    def valid_share_link?
+      share_link = blacklight_params[:share]
+
+      if share_link.present?
+        begin
+          decoded = JsonWebToken.decode(share_link)
+          return true if decoded[:data] == monograph_id(blacklight_params)
+        rescue JWT::ExpiredSignature
+          false
+        end
+      else
         false
       end
-    else
-      false
     end
-  end
-
-  private
 
     def monograph_id(blacklight_params)
       blacklight_params[:monograph_id] || blacklight_params['id']

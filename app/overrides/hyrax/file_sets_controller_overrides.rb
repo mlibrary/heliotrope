@@ -163,5 +163,10 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
                             end
                           end
     end
+
+    def default_url_options
+      @valid_share_link = true if valid_share_link?
+      super
+    end
   end)
 end
