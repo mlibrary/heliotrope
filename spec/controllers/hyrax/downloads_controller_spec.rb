@@ -438,9 +438,8 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
         monograph.ordered_members << draft_resource_file_set << draft_epub_file_set << draft_closed_captions_file_set
         monograph.ordered_members << draft_visual_descriptions_file_set << published_resource_file_set
         monograph.save!
-        draft_resource_file_set.save!
-        draft_epub_file_set.save!
-        published_resource_file_set.save!
+        monograph.ordered_members.to_a.each(&:save!)
+
         FeaturedRepresentative.create(work_id: monograph.id, file_set_id: draft_epub_file_set.id, kind: "epub")
 
         allow(Hyrax::DerivativePath).to receive(:derivative_path_for_reference).and_call_original

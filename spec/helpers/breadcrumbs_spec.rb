@@ -16,7 +16,7 @@ describe BreadcrumbsHelper, type: :helper do
       SolrDocument.new(id: 2,
                        title_tesim: ["FileSet Title"],
                        has_model_ssim: ["FileSet"],
-                       monograph_id_ssim: 1)
+                       monograph_id_ssim: ['1'])
     end
     let(:monograph_presenter) { Hyrax::MonographPresenter.new(mono_doc, nil) }
     let(:file_set_presenter) { Hyrax::FileSetPresenter.new(file_set_doc, nil) }
