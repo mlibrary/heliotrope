@@ -88,7 +88,7 @@ RSpec.describe 'hyrax/file_sets/show' do
     let(:file_set3) { create(:file_set, section_title: ['Chapter 3']) }
     let(:file_set) { create(:file_set, section_title: ['Chapter 3', 'Chapter 1', 'Chapter 2']) }
 
-    it 'infers the correct order from the FileSets\' section_titles to show the order correctly' do
+    it 'uses Array.sort on the section_title values' do
       monograph.ordered_members = []
       monograph.ordered_members << file_set1 << file_set2 << file_set3 << file_set
       monograph.save!
