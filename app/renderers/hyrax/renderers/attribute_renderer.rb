@@ -32,9 +32,13 @@ module Hyrax
                   end
         attributes = microdata_object_attributes(field).merge(class: "attribute #{field}")
 
-        maybe_sort_values
+        maybe_sort_values_by
 
-        Array(values).each do |value|
+        values_array = Array(values)
+        # the default Ruby array sort offered in `Hyrax::Renderers::AttributeRenderer`
+        values_array = values_array.sort if options[:sort]
+
+        values_array.each do |value|
           markup << "<li#{html_attributes(attributes)}>#{attribute_value_to_html(value.to_s)}</li>"
         end
 
@@ -60,7 +64,7 @@ module Hyrax
         markup.html_safe # rubocop:disable Rails/OutputSafety
       end
 
-      def maybe_sort_values # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
+      def maybe_sort_values_by # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
         # options[:sort_by] is an array showing values' items in their intended order
         return if options[:sort_by].blank? || !values.is_a?(Array) || values.count < 1
         ordered_values = []
