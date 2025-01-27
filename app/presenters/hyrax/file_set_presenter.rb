@@ -58,7 +58,7 @@ module Hyrax
     end
 
     def parent
-      @parent_presenter ||= fetch_parent_presenter
+      @parent_presenter ||= Hyrax::PresenterFactory.build_for(ids: [monograph_id], presenter_class: Hyrax::MonographPresenter, presenter_args: current_ability).first
     end
 
     def subjects
@@ -393,20 +393,5 @@ module Hyrax
     def youtube_captions_present?
       solr_document['youtube_video_captions_on_yt_bsi'] == true
     end
-
-    private
-
-      instrument_method
-      def fetch_parent_presenter
-        @parent_document ||= ActiveFedora::SolrService.query("{!field f=member_ids_ssim}#{id}", rows: 1).first
-        return nil if @parent_document.blank?
-
-        case @parent_document["has_model_ssim"].first
-        when "Monograph"
-          Hyrax::MonographPresenter.new(::SolrDocument.new(@parent_document), current_ability)
-        else
-          WorkShowPresenter.new(::SolrDocument.new(@parent_document), current_ability)
-        end
-      end
   end
 end
