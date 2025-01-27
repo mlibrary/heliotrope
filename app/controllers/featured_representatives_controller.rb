@@ -2,6 +2,7 @@
 
 class FeaturedRepresentativesController < ApplicationController
   before_action :authenticate_user!
+  after_action :reindex_file_set, only: %i[delete save]
   load_and_authorize_resource
 
   def save
@@ -32,4 +33,10 @@ class FeaturedRepresentativesController < ApplicationController
     fr.destroy if fr.present?
     redirect_to monograph_show_path(params[:work_id])
   end
+
+  private
+
+    def reindex_file_set
+      UpdateIndexJob.perform_later(params[:file_set_id])
+    end
 end

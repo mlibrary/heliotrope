@@ -116,6 +116,8 @@ class AttachImportFilesToWorkJob < ApplicationJob
       FeaturedRepresentative.where(file_set_id: file_set.id).destroy_all
       FeaturedRepresentative.where(work_id: work.id, kind: kind).destroy_all
       FeaturedRepresentative.create!(work_id: work.id, file_set_id: file_set.id, kind: kind)
+      # always update a FileSet's Solr doc after making it a FeaturedRepresentative or cover
+      file_set.update_index
     end
 
     # We've disabled the default Hyrax behavior which sets these to the first FileSet.

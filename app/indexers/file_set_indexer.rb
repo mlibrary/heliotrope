@@ -4,7 +4,7 @@ class FileSetIndexer < Hyrax::FileSetIndexer
   attr_reader :monograph
 
   def generate_solr_document # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-    super.tap do |solr_doc|
+    super.tap do |solr_doc| # rubocop:disable Metrics/BlockLength
       # Removing punctuation so that a title starting with quotes doesn't always come first
       solr_doc['title_si'] = object&.title&.first&.downcase&.gsub(/[^\w\s\d-]/, '')
       solr_doc['resource_type_si'] = object&.resource_type&.first
@@ -29,8 +29,24 @@ class FileSetIndexer < Hyrax::FileSetIndexer
       # "intermediate" Works (a.k.a. "Sections") in a really long time. So grab the one and only parent *once* here.
       @monograph ||= object.in_works.first
 
-      index_monograph_metadata(solr_doc) if @monograph.present?
-      index_monograph_position(solr_doc) if @monograph.present?
+      hidden_representative = false
+
+      if @monograph.present?
+        index_monograph_metadata(solr_doc)
+        index_monograph_position(solr_doc)
+
+        hidden_representative = true if @monograph.representative_id == object.id ||
+          FeaturedRepresentative.where(work_id: @monograph.id, file_set_id: object.id)
+                                .where.not(kind: ['database', 'webgl']).present? # these are weird oddball FeaturedRepresentatives that *do* appear in Blacklight results
+      end
+
+      if hidden_representative
+        solr_doc['hidden_representative_bsi'] = true
+      else
+        # just remove it from the doc if this is not a cover or FeaturedRepresentative
+        solr_doc['hidden_representative_bsi'] = nil
+      end
+
       if object.sort_date.present?
         solr_doc['search_year_si'] = object.sort_date[0, 4]
         solr_doc['search_year_sim'] = object.sort_date[0, 4]

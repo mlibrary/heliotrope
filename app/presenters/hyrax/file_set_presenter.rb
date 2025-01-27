@@ -65,22 +65,43 @@ module Hyrax
       parent.subject
     end
 
-    # TODO: HELIO-4728 - remove these horribly slow methods from MonographPresenter and just index...
-    # the previous and next ids on the FileSet doc instead (if they exist and are publicly viewable)
+    # If a user can load the current FileSet in draft mode then they should be able to get to draft siblings...
+    # using prev/next. Examples are logged-in admins/editors or authors using a share link to view a draft book.
+    def prev_next_visibility_clause
+      if visibility == 'restricted'
+        nil
+      else
+        'AND -visibility_ssi:restricted '
+      end
+    end
+
     def previous_id?
-      # parent.previous_file_sets_id? id
+      previous_id.present?
     end
 
     def previous_id
-      # parent.previous_file_sets_id id
+      return @previous_id if @previous_id.present?
+
+      @previous_id = if solr_document['monograph_position_isi'] == 0
+                       nil
+                     else
+                       # representatives/covers and tombstones should never appear in prev/next. See above RE: prev_next_visibility_clause
+                       ActiveFedora::SolrService.query("+monograph_id_ssim:#{monograph_id} AND -hidden_representative_bsi:true AND -tombstone_ssim:yes #{prev_next_visibility_clause}AND monograph_position_isi:[* TO #{solr_document['monograph_position_isi'] - 1}]",
+                                                       sort: 'monograph_position_isi desc',
+                                                       rows: 1)&.first&.id
+                     end
     end
 
     def next_id?
-      # parent.next_file_sets_id? id
+      next_id.present?
     end
 
     def next_id
-      # parent.next_file_sets_id id
+      return @next_id if @next_id.present?
+
+      @next_id = ActiveFedora::SolrService.query("+monograph_id_ssim:#{monograph_id} AND -hidden_representative_bsi:true AND -tombstone_ssim:yes #{prev_next_visibility_clause}AND monograph_position_isi:[#{solr_document['monograph_position_isi'] + 1} TO *]",
+                                                 sort: 'monograph_position_isi asc',
+                                                 rows: 1)&.first&.id
     end
 
     def link_name

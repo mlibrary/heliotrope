@@ -67,11 +67,19 @@ class MonographIndexer < Hyrax::WorkIndexer
         solr_doc['date_published_dtsim'] = [object.date_uploaded]
       end
 
-      # grab previous file set order here from Solr (before they are reindexed)
-      existing_fileset_order = existing_filesets
+      # grab previous file set order and cover_id here from Solr (before they are reindexed)
+      existing_monograph_doc = ActiveFedora::SolrService.query("{!terms f=id}#{object.id}", fl: ['ordered_member_ids_ssim', 'representative_id_ssim'], rows: 1)[0]
+
+      existing_fileset_order = existing_filesets(existing_monograph_doc)
       solr_doc['ordered_member_ids_ssim'] = object.ordered_member_ids
       solr_doc['representative_id_ssim'] = object.representative_id
       trigger_fileset_reindexing(existing_fileset_order, object.ordered_member_ids)
+
+      # making sure that `monograph_representative_bsi` gets set or removed if/when covers change
+      if existing_monograph_doc.present? && existing_monograph_doc['representative_id_ssim']&.first != object.representative_id
+        UpdateIndexJob.perform_later(existing_monograph_doc['representative_id_ssim']&.first) if existing_monograph_doc['representative_id_ssim'].present?
+        UpdateIndexJob.perform_later(object.representative_id)
+      end
 
       # 'isbn_numeric' is an isbn indexed multivalued field for finding books which is copied from 'isbn_tesim'
       #   <copyField source="isbn_tesim" dest="isbn_numeric"/>
@@ -106,9 +114,8 @@ class MonographIndexer < Hyrax::WorkIndexer
     JSON.parse(toc).map { |entry| entry["title"] }
   end
 
-  def existing_filesets
-    existing_monograph_doc = ActiveFedora::SolrService.query("{!terms f=id}#{object.id}", rows: 1)
-    order = existing_monograph_doc.blank? ? [] : existing_monograph_doc[0]['ordered_member_ids_ssim']
+  def existing_filesets(existing_monograph_doc)
+    order = existing_monograph_doc.blank? ? [] : existing_monograph_doc['ordered_member_ids_ssim']
     order || []
   end
 

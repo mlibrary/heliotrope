@@ -78,6 +78,8 @@ module Import
         end
       end
       FeaturedRepresentative.create!(work_id: monograph.id, file_set_id: file_set.id, kind: representative_kind)
+      # always update a FileSet's Solr doc after making it a FeaturedRepresentative or cover
+      file_set.update_index
     end
 
     # TODO: see if this method, which makes up part of the currently-unused/experimental UI "manifest"...
