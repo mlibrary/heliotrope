@@ -554,7 +554,8 @@ RSpec.describe EmbedCodeService do
 
           ordered_members = [cover, epub, image_under_all_headings,
                              audio_top_level, audio_under_h1, audio_under_h2, audio_under_h3, audio_under_h4, audio_under_h5, audio_under_h6,
-                             video_top_level, video_under_h1, video_under_h2, video_under_h3, video_under_h4, video_under_h5, video_under_h6]
+                             video_top_level, video_under_h1, video_under_h2, video_under_h3, video_under_h4, video_under_h5, video_under_h6,
+                             youtube_video] # we'll just test the YouTube video FileSet above as part of this `embeds_heading_testing.xhtml` chapter, embedded under a h2 to receive an automatic h2
           monograph.ordered_members = ordered_members
           monograph.save!
           ordered_members.each { |item| item.save! }
@@ -585,6 +586,7 @@ RSpec.describe EmbedCodeService do
 
           expect(enhanced_file).to include("<h1 style=#{inline_sr_only_style}>Media player: #{video_top_level.title.first}</h1>")
           expect(enhanced_file).to include("<h2 style=#{inline_sr_only_style}>Media player: #{video_under_h1.title.first}</h2>")
+          expect(enhanced_file).to include("<h2 style=#{inline_sr_only_style}>Media player: #{youtube_video.title.first}</h2>")
           expect(enhanced_file).to include("<h3 style=#{inline_sr_only_style}>Media player: #{video_under_h2.title.first}</h3>")
           expect(enhanced_file).to include("<h4 style=#{inline_sr_only_style}>Media player: #{video_under_h3.title.first}</h4>")
           expect(enhanced_file).to include("<h5 style=#{inline_sr_only_style}>Media player: #{video_under_h4.title.first}</h5>")
