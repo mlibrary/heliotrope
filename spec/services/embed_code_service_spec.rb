@@ -145,8 +145,6 @@ RSpec.describe EmbedCodeService do
           expect(doc.search(video_embed_attributes)).to be_empty
           expect(doc.search("iframe[@src=\"#{video_embed_url}\"]").size).to eq(1)
           expect(doc.search(youtube_video_embed_attributes)).to be_empty
-          pp ActiveFedora::SolrService.query("{!terms f=id}#{youtube_video.id}", rows: 1)
-          pp File.read(File.join(root_path, 'EPUB', 'xhtml', 'embeds_using_data_attributes.xhtml'))
           expect(doc.search("iframe[@src=\"#{youtube_video_embed_url}\"]").size).to eq(1)
         end
 
