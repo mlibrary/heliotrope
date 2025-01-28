@@ -5972,6 +5972,765 @@ $lever-black-80: #342f2e;
 }
 ///////////////////////////////////////////////
 //
+// Lived Places Publishing
+//
+///////////////////////////////////////////////
+// colors
+$livedplaces-headings: #292929;
+$livedplaces-text: #554948;
+$livedplaces-footer: #527E7B;
+$livedplaces-link: #CD4C1F;
+$livedplaces-button: #BF3C01;
+$livedplaces-ereader: #cb4e0b;
+$livedplaces-button-secondary: #FFEEE1;
+$livedplaces-button-light: #FFFFFF;
+$livedplaces-button-light-text: #C63F00;
+$livedplaces-grey-1: #FEFEFE;
+$livedplaces-white: #FFFFFF;
+$livedplaces-light-secondary: #EEE9E3;
+
+// typography
+@import url('https://fonts.googleapis.com/css2?family=Aleo:ital,wght@0,300..700;1,300..700&family=Montserrat:ital,wght@0,300..700;1,300..700&display=swap');
+
+@mixin montserrat {
+  font-family: "Montserrat", serif;
+  color: $livedplaces-text;
+}
+
+@mixin aleo {
+  font-family: "Aleo", serif;
+  color: $livedplaces-headings;
+}
+
+@mixin nexus-sans {
+  font-family: ff-nexus-sans, sans-serif; 
+}
+
+.montserrat {
+  @include montserrat;
+}
+
+.aleo {
+  @include aleo;
+}
+
+.nexus-sans {
+  @include nexus-sans;
+}
+
+
+.livedplaces {
+
+  // svgicon
+  #documents, #resource-page-svgicon {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(38%) sepia(20%) saturate(1106%) hue-rotate(165deg) brightness(93%) contrast(96%); // $um-accent-link: rgb(29, 116, 145);
+
+    }
+
+  }
+
+  // typography
+  @include nexus-sans;
+
+  h1 {
+    @include aleo;
+    font-weight: 600;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include aleo;
+    font-weight: 600;
+  }
+
+  h2 {
+    margin-top: 2rem;
+  }
+
+  h3,
+  h4,
+  h5 {
+    margin-top: 1rem;
+  }
+
+  .bold {
+    font-weight: 700;
+  }
+
+  .text-light {
+    color: #fff !important;
+  }
+
+  p, ul li, ol li {
+    font-weight: 300;
+  }
+
+  // links
+  a, .link {
+    color: $livedplaces-link;
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  button:hover,
+  button:active,
+  .link:hover {
+    color: $livedplaces-link;
+    text-decoration-thickness: 2px;
+  }
+
+  a:focus,
+  button:focus,
+  .form-control:focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px $livedplaces-button-light-text,0 0 0 3px #212B36;
+    border-radius: 2px !important;
+  }
+
+  a.btn, a.previous, a.next {
+    text-decoration: none;
+  }
+
+  // buttons
+  .btn, .btn-group {
+    @include aleo;
+    font-weight: 600;
+  }
+
+  .btn-default,
+  .btn {
+    @include button-background-color($livedplaces-button);
+    @include button-font-color($livedplaces-white);
+    border-color: $livedplaces-button;
+    font-weight: 600;
+    @include aleo;
+    color: $livedplaces-white;
+  }
+
+  .download {
+    .btn-default, 
+    .btn {
+    @include button-background-color($livedplaces-button);
+    @include button-font-color($livedplaces-white);
+    border-color: $livedplaces-button;
+    font-weight: 600;
+    @include aleo;
+    color: $livedplaces-white;
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
+    @include button-hover-background-color($livedplaces-white);
+    @include button-hover-font-color($livedplaces-button);
+    border-color: $livedplaces-button;
+    font-weight: 600;
+    color: $livedplaces-button;
+  }
+
+  .open > .btn-default.dropdown-toggle {
+    background-color: $livedplaces-button;
+    background-image: none;
+    border-color: $livedplaces-button-secondary;
+    color: #fff;
+  }
+
+  .btn-outline-secondary.active:not(:disabled):not(.disabled) {
+    background-color: $livedplaces-white;
+    color: $livedplaces-button;
+    border-color: $livedplaces-button;
+    .blacklight-icons svg {
+      fill: $livedplaces-button;
+    }
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $livedplaces-white;
+  }
+
+  // navigation menu
+
+  .nav,
+  header {
+    @include aleo;
+  }
+
+  header {
+    height: 113px;
+    border-bottom: 1px solid rgb(238, 233, 227);
+    hgroup {
+      height: inherit;
+    }
+    .container {
+      padding: 16px 15px !important;
+      height: inherit;
+      max-width: 1140px;
+    }
+    .row.justify-content-end {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end !important;
+      height: 113px;
+
+      // search box and links
+      .col-md-4.pt-3 {
+        display: flex;
+        flex-direction: column;
+        padding-top: 16px;
+
+        form.navbar-form {
+          margin: 0;
+          padding: 0;
+        }
+
+        form {
+          @include nexus-sans;
+
+          .input-group {
+            display: flex;
+            position: relative;
+            width: 100%;
+            align-items: stretch;
+
+            .form-control {
+              position: relative;
+              flex: 1 1 auto;
+              width: 1%;
+              margin-bottom: 0;
+              display: block;
+              padding: 6px 12px;
+              font-size: 16px;
+              line-height: 1.5;
+              background-clip: padding-box;
+              border: 1px solid #ced4da;
+              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+              color: $livedplaces-text !important;
+            }
+          }
+          
+
+          input.search-query {
+            background-color: #F3F3F3;
+            color: $livedplaces-text !important;
+            height: 38px;
+          }
+
+          button.search-submit {
+            background-color: rgb(243, 243, 243);
+            border-top: rgb(206, 212, 218) 1px solid;
+            border-right: rgb(206, 212, 218) 1px solid;
+            border-bottom: rgb(206, 212, 218) 1px solid;
+            border-left: none !important;
+            height: 100%;
+            padding: 0;
+            text-transform: none;
+            overflow: visible;
+            border-radius: 0;
+            margin: 0;
+            width: 53px;
+            height: 38px;
+
+            svg {
+              height: auto;
+              width: auto;
+              fill: none;
+              stroke-width: 2;
+              color: #000;
+            }
+          }
+        }
+      }
+    }
+    .navbar-brand-logo {
+      display: inline-block;
+      padding-right: 21.5px;
+    }
+    .nav-browse {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 14px;
+      @include montserrat;
+      margin-top: 4px;
+
+      .pr-4 {
+        padding-right: 24px;
+      }
+
+      a {
+        text-transform: uppercase;
+        color: #707070;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      a:hover,
+      a:active {
+        text-decoration: underline;
+      }
+    }
+
+    .navbar-brand {
+      height: inherit;
+      display: inline-block;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-left: 0;
+      margin-right: 1rem;
+      font-size: 1.25rem;
+      line-height: inherit;
+      white-space: nowrap;
+    }
+
+    .navbar-brand h1 {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      display: inline-block;
+      margin: 0;
+      margin-bottom: -5px;
+      vertical-align: bottom;
+      font-size: 26px;
+      line-height: 31.2px;
+      @include montserrat;
+      color: $livedplaces-headings;
+    }
+
+  }
+
+  // container on all pages
+  #main.container {
+    max-width: 1140px;
+    padding-top: 1.5em;
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include nexus-sans;
+  }
+
+  // press catalog
+
+  .press .document {
+    a {
+      display: block;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  #facets a {
+    text-decoration: none;
+  }
+
+  #facets a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: $livedplaces-white;
+  }
+
+  .btn-group .btn:hover .blacklight-icons svg {
+    fill: $livedplaces-button;
+  }
+
+  #facet-panel-collapse {
+    h3 {
+      margin-top: 0;
+    }
+
+    button {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $livedplaces-white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover, 
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active, 
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $livedplaces-button;
+    background-color: $livedplaces-white;
+    border-color: $livedplaces-button;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include nexus-sans;
+      }
+    }
+
+    .authors, .copyright {
+      @include nexus-sans;
+    }
+
+    button.search-submit {
+      background-color: $livedplaces-button;
+      border-color: $livedplaces-button-secondary;
+      color: $livedplaces-white;
+      height: 38px;
+    }
+  }
+
+  // pagination
+  .page-links {
+    @include aleo;
+  }
+
+  .pagination {
+    @include aleo;
+     li a, li span {
+       color: $livedplaces-white;
+       background-color: $livedplaces-button;
+       border-color: $livedplaces-button-secondary;
+     }
+
+     li a:hover, li span:hover {
+      color: $livedplaces-white;
+      background-color: $livedplaces-button-secondary;
+      border-color: $livedplaces-button-secondary;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+      color: $livedplaces-white;
+      background-color: $livedplaces-button-secondary;
+      border-color: $livedplaces-button-secondary;
+     }
+  }
+
+  // assets
+  .asset-navigation {
+    @include aleo;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include aleo;
+    }
+
+    .able-transcript-area {
+      .panel-title {
+        margin: 0;
+        color: #fff;
+        font-size: 1em;
+      }
+    }
+  }
+
+  //footer
+  footer.press {
+    @include montserrat;
+    background-color: $livedplaces-footer !important;
+    padding: 48px 0 16px;
+
+    img {
+      height: 80px !important;
+      width: auto !important;
+      margin: 0px 20px 10px 0px;
+      padding-bottom: 8px !important;
+    }
+
+    img.fulcrum {
+      height: 27px !important;
+      width: auto !important;
+      margin: initial;
+    }
+
+    .press-block-c {
+      padding: 0;
+      margin-top: 16px;
+    }
+
+    .foot-width {
+      .h6-title {
+        @include aleo;
+        line-height: 1.2;
+        margin: 0 0 30px;
+        margin-bottom: 30px;
+        font-size: 18px;
+        font-weight: 400;
+        margin-bottom: 10px;
+        color: #fff;
+      }
+      .social-ic a {
+        color: #fff;
+        padding: 6px 8px !important;
+        background: #cd4c1f;
+        border-radius: 2px;
+        margin: 0px 1px 0px 0px !important;
+        display: inline-block;
+
+        img {
+          width: 25px !important;
+          height: auto !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+      }
+
+      .social-ic a:hover {
+        background-color: #f26419;
+        color: #fff !important;
+      }
+    }
+  }
+
+  footer.press .press-block-a, footer.press .press-block-b {
+    background-color: $livedplaces-footer !important;
+    padding: 0;
+  }
+
+  footer {
+    @include montserrat;
+    .container {
+      max-width: 1140px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #dae0e5 !important;
+      text-decoration: none;
+    }
+
+    .press
+    .press-block-a,
+    .press-block-b,
+    .press-block-c {
+      background-color:  $livedplaces-footer !important;
+
+      small {
+        font-size: 12.8px;
+      }
+
+    }
+
+    .press-block-a {
+      display: flex;
+
+      a {
+        display: block;
+      }
+
+      .lpp-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .lpp-text {
+        @include aleo;
+        font-size: 22px;
+        font-weight: 400;
+        color: $livedplaces-white;
+        margin-top: -5px;
+      }
+
+      .lpp-copyright {
+        margin-bottom: 10px;
+        font-size: 13px;
+        line-height: 1.875;
+        border-bottom: 1px solid rgba(255,255,255,.4);
+        padding-bottom: 10px;
+        color: #fff;
+      }
+    }
+
+    .press-block-c {
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 400;
+      color: #fff;
+      
+      a {
+        color: #fff !important;
+      }
+
+      a:hover, a:active, a:focus {
+        text-decoration: underline;
+      }
+
+      .text-right {
+        letter-spacing: initial;
+        text-transform: initial;
+      }
+
+    }
+
+    .admin {
+      vertical-align: middle;
+    }
+
+    section {
+      ul {
+        font-size: 16px;
+      }
+    }
+
+    h2 {
+      font-size: 17px;
+      @include aleo;
+      text-transform: uppercase;
+      margin-top: 0;
+    }
+
+    .block {
+      display: block;
+    }
+
+  }
+
+  // e-book reader
+  #reader {
+
+    .cozy-control .cozy-h1 {
+      font-size: 1.5em;
+    }
+
+    .button {
+      @include epub-button-background-color($livedplaces-button,$livedplaces-ereader,$livedplaces-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($livedplaces-button,$livedplaces-ereader,$livedplaces-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($livedplaces-button,$livedplaces-ereader,$livedplaces-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($livedplaces-button,$livedplaces-ereader,$livedplaces-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($livedplaces-button,$livedplaces-ereader,$livedplaces-white);
+      color: $livedplaces-white;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($livedplaces-button);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($livedplaces-button);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      background: initial;
+      height: 46.6px;
+      width: auto;
+      overflow: hidden;
+
+      img {
+        height: 36px;
+        margin-top: 6px;
+        margin-left: 0px;
+      }
+    }
+
+    .modal__footer {
+      background-color: $livedplaces-light-secondary;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $livedplaces-button;
+    }
+
+  }
+
+}
+
+@media(max-width: 976px) {
+  .livedplaces header {
+    height: 194px;
+  }
+  .livedplaces .container {
+    overflow: unset;
+  }
+  .livedplaces header .row.justify-content-end .col-md-4.pt-3 {
+    flex-grow: 1;
+  }
+
+  .livedplaces header .row.justify-content-end .col-md-4.pt-3 form.navbar-form {
+    width: 80%;
+  }
+
+  .livedplaces .row.justify-content-end {
+    justify-content: unset !important;
+    margin: 0 auto;
+    width: 95%;
+  }
+
+  .livedplaces .navbar-brand h1 {
+    font-size: 20px;
+    letter-spacing: 1px;
+    line-height: 28px;
+  }
+
+  .livedplaces header .nav-browse {
+    justify-content: flex-start;
+    margin-top: .8em;
+  }
+
+  .livedplaces .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
+
+  .livedplaces footer .row {
+    flex-wrap: wrap;
+    justify-content: unset;
+  }
+}
+
+///////////////////////////////////////////////
+//
 // University of Michigan Press
 //
 ///////////////////////////////////////////////
