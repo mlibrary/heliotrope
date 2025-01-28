@@ -166,8 +166,8 @@ module EmbedCodeService
   end
 
   def heading_node(heading_tag_for_node, file_set_presenter)
-    # this whole "auto-heading" deal only applies to Able Player embeds (so, audio or video)
-    return nil unless file_set_presenter.audio? || file_set_presenter.video?
+    # this whole "auto-heading" deal only applies to media player embeds (so, audio, video or YouTube videos)
+    return nil unless file_set_presenter.audio? || file_set_presenter.video? || file_set_presenter.able_player_youtube_video? || file_set_presenter.youtube_player_video?
     # https://uit.stanford.edu/accessibility/concepts/screen-reader-only-content
     "<#{heading_tag_for_node} style=\"clip: rect(1px, 1px, 1px, 1px); clip-path: inset(50%); height: 1px; width: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute;\">Media player: #{file_set_presenter.embed_code_title}</#{heading_tag_for_node}>"
   end
