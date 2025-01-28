@@ -65,10 +65,16 @@ module Hyrax
       parent.subject
     end
 
-    # If a user can load the current FileSet in draft mode then they should be able to get to draft siblings...
-    # using prev/next. Examples are logged-in admins/editors or authors using a share link to view a draft book.
+    # representatives/covers and tombstones should never appear in prev/next.
+    def prev_next_shared_clauses
+      "+monograph_id_ssim:#{monograph_id} AND -hidden_representative_bsi:true AND -tombstone_ssim:yes AND -permissions_expiration_date_ssim:[* TO #{Time.zone.today.strftime('%Y-%m-%d')}]"
+    end
+
+    # A user who can load the stats dashboard has a role of analyst or above, and so should be able to get to draft...
+    # siblings using prev/next. Authors using a share link to view a draft book should also be able to do this, but...
+    # anonymous users should not.
     def prev_next_visibility_clause
-      if visibility == 'restricted'
+      if @valid_share_link || current_ability.can?(:read, :stats_dashboard)
         nil
       else
         'AND -visibility_ssi:restricted '
@@ -85,8 +91,8 @@ module Hyrax
       @previous_id = if solr_document['monograph_position_isi'] == 0
                        nil
                      else
-                       # representatives/covers and tombstones should never appear in prev/next. See above RE: prev_next_visibility_clause
-                       ActiveFedora::SolrService.query("+monograph_id_ssim:#{monograph_id} AND -hidden_representative_bsi:true AND -tombstone_ssim:yes #{prev_next_visibility_clause}AND monograph_position_isi:[* TO #{solr_document['monograph_position_isi'] - 1}]",
+
+                       ActiveFedora::SolrService.query("#{prev_next_shared_clauses} #{prev_next_visibility_clause}AND monograph_position_isi:[* TO #{solr_document['monograph_position_isi'] - 1}]",
                                                        sort: 'monograph_position_isi desc',
                                                        rows: 1)&.first&.id
                      end
@@ -99,7 +105,7 @@ module Hyrax
     def next_id
       return @next_id if @next_id.present?
 
-      @next_id = ActiveFedora::SolrService.query("+monograph_id_ssim:#{monograph_id} AND -hidden_representative_bsi:true AND -tombstone_ssim:yes #{prev_next_visibility_clause}AND monograph_position_isi:[#{solr_document['monograph_position_isi'] + 1} TO *]",
+      @next_id = ActiveFedora::SolrService.query("#{prev_next_shared_clauses} #{prev_next_visibility_clause}AND monograph_position_isi:[#{solr_document['monograph_position_isi'] + 1} TO *]",
                                                  sort: 'monograph_position_isi asc',
                                                  rows: 1)&.first&.id
     end
