@@ -26,6 +26,8 @@ describe 'FileSet Browse' do
 
         monograph.ordered_members << FactoryBot.create(:file_set) << FactoryBot.create(:public_file_set)
         monograph.ordered_members << tombstoned_file_set << epub << FactoryBot.create(:public_file_set)
+        monograph.ordered_members << FactoryBot.create(:public_file_set, permissions_expiration_date: '2025-01-01')
+        monograph.ordered_members << FactoryBot.create(:public_file_set)
 
         monograph.save!
         FileSet.all.each(&:save!)
@@ -63,7 +65,7 @@ describe 'FileSet Browse' do
         # no next link to the tombstone or EPUB representative...
         expect(page).to_not have_link('Next', href: monograph.ordered_members.to_a[6].id)
         expect(page).to_not have_link('Next', href: monograph.ordered_members.to_a[7].id)
-        # ... instead the next link goes to the final published resource
+        # ... instead the next link goes to the published resource after that
         expect(page).to have_link('Next', href: monograph.ordered_members.to_a[8].id)
 
         visit hyrax_file_set_path(monograph.ordered_members.to_a[8].id)
@@ -72,6 +74,16 @@ describe 'FileSet Browse' do
         expect(page).not_to have_link('Previous', href: monograph.ordered_members.to_a[6].id)
         # ... instead the previous link goes to the previous published resource
         expect(page).to have_link('Previous', href: monograph.ordered_members.to_a[5].id)
+        # no next link to the FileSet that's tombstoned by being past its "Permissions Expiration Date"...
+        expect(page).not_to have_link('Next', href: monograph.ordered_members.to_a[9].id)
+        # ... instead the next link goes to the published resource after that
+        expect(page).to have_link('Next', href: monograph.ordered_members.to_a[10].id)
+
+        visit hyrax_file_set_path(monograph.ordered_members.to_a[10].id)
+        # no previous link to the FileSet that's tombstoned by being past its "Permissions Expiration Date"...
+        expect(page).not_to have_link('Previous', href: monograph.ordered_members.to_a[9].id)
+        # ... instead the previous link goes to the previous published resource
+        expect(page).to have_link('Previous', href: monograph.ordered_members.to_a[8].id)
         # no next link at all, this is the end of the chain
         expect(page).to_not have_link('Next')
       end
@@ -97,6 +109,8 @@ describe 'FileSet Browse' do
         end
 
         monograph.ordered_members << tombstoned_file_set << epub << FactoryBot.create(:file_set)
+        monograph.ordered_members << FactoryBot.create(:public_file_set, permissions_expiration_date: '2025-01-01')
+        monograph.ordered_members << FactoryBot.create(:public_file_set)
 
         monograph.save!
         FileSet.all.each(&:save!)
@@ -147,6 +161,16 @@ describe 'FileSet Browse' do
         expect(page).not_to have_link('Previous', href: monograph.ordered_members.to_a[6].id)
         # ... instead the previous link goes to the previous published resource
         expect(page).to have_link('Previous', href: monograph.ordered_members.to_a[5].id)
+        # no next link to the FileSet that's tombstoned by being past its "Permissions Expiration Date"...
+        expect(page).not_to have_link('Next', href: monograph.ordered_members.to_a[9].id)
+        # ... instead the next link goes to the published resource after that
+        expect(page).to have_link('Next', href: monograph.ordered_members.to_a[10].id)
+
+        visit hyrax_file_set_path(monograph.ordered_members.to_a[10].id)
+        # no previous link to the FileSet that's tombstoned by being past its "Permissions Expiration Date"...
+        expect(page).not_to have_link('Previous', href: monograph.ordered_members.to_a[9].id)
+        # ... instead the previous link goes to the previous published resource
+        expect(page).to have_link('Previous', href: monograph.ordered_members.to_a[8].id)
         # no next link at all, this is the end of the chain
         expect(page).to_not have_link('Next')
       end
