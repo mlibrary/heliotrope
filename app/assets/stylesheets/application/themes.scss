@@ -6402,13 +6402,13 @@ $livedplaces-light-secondary: #EEE9E3;
      li a, li span {
        color: $livedplaces-white;
        background-color: $livedplaces-button;
-       border-color: $livedplaces-button-secondary;
+       border-color: $livedplaces-button;
      }
 
      li a:hover, li span:hover {
-      color: $livedplaces-white;
-      background-color: $livedplaces-button-secondary;
-      border-color: $livedplaces-button-secondary;
+      color: $livedplaces-button;
+      background-color: $livedplaces-white;
+      border-color: $livedplaces-button;
      }
 
      .active>a,
@@ -6418,8 +6418,8 @@ $livedplaces-light-secondary: #EEE9E3;
      .active>span:hover,
      .active>span:focus {
       color: $livedplaces-white;
-      background-color: $livedplaces-button-secondary;
-      border-color: $livedplaces-button-secondary;
+      background-color: $livedplaces-ereader;
+      border-color: $livedplaces-button;
      }
   }
 
