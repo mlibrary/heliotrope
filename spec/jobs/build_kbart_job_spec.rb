@@ -82,6 +82,7 @@ RSpec.describe BuildKbartJob, type: :job do
     before do
       allow_any_instance_of(BuildKbartJob).to receive(:yaml_config).and_return(login)
       allow(Net::SFTP).to receive(:start).and_yield(sftp)
+      allow(sftp).to receive(:mkdir!)
       allow(dir).to receive(:entries).and_return([])
     end
 
@@ -342,11 +343,33 @@ RSpec.describe BuildKbartJob, type: :job do
         allow(sftp.dir).to receive(:entries).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART").and_return(entries)
       end
 
-      it "renames (moves) the old kbarts to UMPEBC_old" do
-        subject.maybe_move_old_kbarts(sftp, group_key, file_root)
-        expect(sftp).to have_received(:rename).exactly(2).times
-        expect(sftp).to have_received(:rename).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_2018_2022-01-01.csv", "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old/UMPEBC_2018_2022-01-01.csv")
-        expect(sftp).to have_received(:rename).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_2018_2022-01-01.txt", "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old/UMPEBC_2018_2022-01-01.txt")
+      context "when the old kbart dir already exists" do
+        before do
+          allow(sftp).to receive(:mkdir!).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old").and_raise(StandardError)
+        end
+
+        it "throws on mkdir which is fine, renames (moves) the old kbarts to UMPEBC_old" do
+          subject.maybe_move_old_kbarts(sftp, group_key, file_root)
+          expect(sftp).to have_received(:mkdir!).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old")
+          expect(sftp).to have_received(:rename).exactly(2).times
+          expect(sftp).to have_received(:rename).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_2018_2022-01-01.csv", "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old/UMPEBC_2018_2022-01-01.csv")
+          expect(sftp).to have_received(:rename).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_2018_2022-01-01.txt", "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old/UMPEBC_2018_2022-01-01.txt")
+        end
+      end
+
+      context "when the old kbart diretory doesn't yet exist" do
+        before do
+          allow(sftp).to receive(:mkdir!).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old").and_return(true)
+          allow(MarcLogger).to receive(:info)
+        end
+
+        it "creates UMPEBC_old, renames (moves) the old kbarts to UMPEBC_old" do
+          subject.maybe_move_old_kbarts(sftp, group_key, file_root)
+          expect(sftp).to have_received(:mkdir!).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old")
+          expect(sftp).to have_received(:rename).exactly(2).times
+          expect(sftp).to have_received(:rename).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_2018_2022-01-01.csv", "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old/UMPEBC_2018_2022-01-01.csv")
+          expect(sftp).to have_received(:rename).with("/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_2018_2022-01-01.txt", "/home/fulcrum_ftp/ftp.fulcrum.org/UMPEBC/KBART/UMPEBC_old/UMPEBC_2018_2022-01-01.txt")
+        end
       end
     end
 
@@ -362,6 +385,7 @@ RSpec.describe BuildKbartJob, type: :job do
 
       before do
         allow(sftp.dir).to receive(:entries).with("/home/fulcrum_ftp/ftp.fulcrum.org/Amherst_College_Press/KBART").and_return(entries)
+        allow(sftp).to receive(:mkdir!).with("/home/fulcrum_ftp/ftp.fulcrum.org/Amherst_College_Press/KBART/amherst_old").and_return(true)
       end
 
       it "renames (moves) the old kbarts amherst_old" do

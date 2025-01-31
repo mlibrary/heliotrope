@@ -10,7 +10,7 @@ require 'net/sftp'
 
 class BuildKbartJob < ApplicationJob
   def perform
-    MarcLogger.info("Beginning BuildKbartLog...")
+    MarcLogger.info("Beginning BuildKbartJob...")
 
     Greensub::Product.where(needs_kbart: true).each do |product|
       next if product.group_key.nil?
@@ -56,7 +56,7 @@ class BuildKbartJob < ApplicationJob
       sftp_kbart(new_kbart_name, product.group_key, file_root)
     end
 
-    MarcLogger.info("BuildKbartLog Finished")
+    MarcLogger.info("BuildKbartJob Finished")
   end
 
   def sftp_kbart(kbart, group_key, file_root)
@@ -81,15 +81,21 @@ class BuildKbartJob < ApplicationJob
 
   # HELIO-4531
   # fulcimen can only handle building marcs reliably if there is a single kbart per product
-  # Not all kbarts get marc files generated only UMPEBC, BAR, Amherst and Lever
+  # so move old ones out of the way. Do this for all products, not just the ones that fulcimen makes marc for
   def maybe_move_old_kbarts(sftp, group_key, file_root)
-    return unless ['aberdeen', 'umpebc', 'bar', 'amherst', 'leverpress', 'test_product'].include?(group_key)
-
     old_kbart_dir = if group_key == "umpebc"
                       File.join(Marc::DirectoryMapper.group_key_kbart[group_key], "UMPEBC_old")
                     else
                       File.join(Marc::DirectoryMapper.group_key_kbart[group_key], "#{group_key}_old")
                     end
+
+    begin
+      sftp.mkdir!(old_kbart_dir)
+    rescue Net::SFTP::StatusException, StandardError => e
+      # There's no way to check if a directory exists beforehand, so mkdir! can fail with an exception
+      # but it just means the directory already exists
+      MarcLogger.info("Ran mkdir '#{old_kbart_dir}' and got an exception (because the directory already exists?): #{e}")
+    end
 
     # You can't move, only "rename", https://stackoverflow.com/a/22260984 which makes this annoying
     sftp.dir.entries(Marc::DirectoryMapper.group_key_kbart[group_key]).each do |entry|
