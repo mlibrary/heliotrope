@@ -70,7 +70,7 @@ class EpubAccessibilityMetadataIndexingService
                  values&.map { |value| value&.text&.strip }
                end
       # want to ensure the indexer is set to nil not [] if these are not present, keeping the field off the doc entirely
-      values.presence
+      values.presence&.sort
     end
 
     def access_mode
@@ -83,21 +83,40 @@ class EpubAccessibilityMetadataIndexingService
                  values&.map { |value| value&.text&.strip }
                end
       # want to ensure the indexer is set to nil not [] if these are not present, keeping the field off the doc entirely
-      values.presence
+      values.presence&.sort
     end
 
     def access_mode_sufficient
-      # this one has multiple entries in one value, comma separated
-      values = @content_metadata.at_css("meta[#{@meta_attribute}='schema:accessModeSufficient']")
-      return nil if values.blank?
-      values = @epub_2 ? values['content']&.split(',') : values.text&.split(',')
-      values&.reject(&:blank?)&.map(&:strip)
+      # this one has multiple entries in separate meta tags, each of which can have one or more comma-separated values in it
+      values = @content_metadata.css("meta[#{@meta_attribute}='schema:accessModeSufficient']")
+
+      values = if @epub_2
+                 values&.map { |value| value['content']&.strip }
+               else
+                 values&.map { |value| value&.text&.strip }
+               end
+      # want to ensure the indexer is set to nil not [] if these are not present, keeping the field off the doc entirely
+      values.presence&.sort
     end
 
     def conforms_to
+      # need to check for both the EPUB Accessibility 1.1 style and the older 1.0 style, see:
+      # https://kb.daisy.org/publishing/docs/metadata/evaluation.html#a11y-transition
+
+      # check for 1.1 first
       value = @content_metadata.at_css("meta[#{@meta_attribute}='dcterms:conformsTo']")
+
+      value = if value.present?
+                @epub_2 ? value['content']&.strip : value.text&.strip
+              end
+      return value if value.present?
+
+      # look for EPUB Accessibility 1.0 style instead
+      value = @content_metadata.at_css("link[rel='dcterms:conformsTo']")
+      value = value['href']&.strip if value.present?
+
       return nil if value.blank?
-      @epub_2 ? value['content']&.strip : value.text&.strip
+      value
     end
 
     def certified_by
@@ -114,10 +133,10 @@ class EpubAccessibilityMetadataIndexingService
 
     def screen_reader_friendly
       if @access_mode_sufficient.present?
-        if @access_mode_sufficient.count == 1 && @access_mode_sufficient[0] == 'textual'
-          'true'
+        if @access_mode_sufficient.any? { |value| value == 'textual' }
+          'yes'
         else
-          'false'
+          'no'
         end
       else
         # I guess it's OK that this will always have a value even if all the other a11y metadata is missing.
