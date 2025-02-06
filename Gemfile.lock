@@ -20,8 +20,8 @@ GIT
 
 GIT
   remote: https://github.com/mlibrary/riiif
-  revision: 2071113f734d3965a238c231abe69b361ea547d4
-  tag: 1.4.1-railties-6
+  revision: 8c826c34c06c70439b1bb5cadf12800f9fa6e9d9
+  ref: 8c826c34c06c70439b1bb5cadf12800f9fa6e9d9
   specs:
     riiif (1.4.1)
       railties (>= 4.2, < 7)
@@ -34,6 +34,14 @@ GIT
     swagger_client (1.0.0)
       json (~> 2.1, >= 2.1.0)
       typhoeus (~> 1.0, >= 1.0.1)
+
+GIT
+  remote: https://github.com/sethaj/fcrepo_wrapper
+  revision: 7742d81d741e3ee1c2b8a5d6617c3a1475a8bb4a
+  branch: file-exists-to-file-exist
+  specs:
+    fcrepo_wrapper (0.10.0)
+      ruby-progressbar
 
 GEM
   remote: https://rubygems.org/
@@ -148,7 +156,7 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
-    bagit (0.4.6)
+    bagit (0.6.0)
       docopt (~> 0.5.0)
       validatable (~> 1.6)
     bcp47 (0.3.3)
@@ -177,8 +185,8 @@ GEM
       blacklight (~> 7.0)
       oai (~> 1.2)
       rexml
-    bootsnap (1.4.9)
-      msgpack (~> 1.0)
+    bootsnap (1.18.4)
+      msgpack (~> 1.2)
     bootstrap (4.6.2)
       autoprefixer-rails (>= 9.1.0)
       popper_js (>= 1.16.1, < 2)
@@ -343,7 +351,7 @@ GEM
     fakefs (2.5.0)
     faker (3.2.3)
       i18n (>= 1.8.11, < 2)
-    faraday (1.10.3)
+    faraday (1.10.4)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)
@@ -363,17 +371,15 @@ GEM
     faraday-follow_redirects (0.3.0)
       faraday (>= 1, < 3)
     faraday-httpclient (1.0.1)
-    faraday-multipart (1.0.4)
-      multipart-post (~> 2)
-    faraday-net_http (1.0.1)
+    faraday-multipart (1.1.0)
+      multipart-post (~> 2.0)
+    faraday-net_http (1.0.2)
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
     faraday-retry (1.0.3)
     faraday_middleware (1.2.0)
       faraday (~> 1.0)
-    fcrepo_wrapper (0.5.2)
-      ruby-progressbar
     ffi (1.16.3)
     flipflop (2.7.1)
       activesupport (>= 4.0)
@@ -681,14 +687,14 @@ GEM
     mini_magick (4.12.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.5)
-    minitar (0.9)
+    minitar (0.12.1)
     minitest (5.21.2)
     mize (0.5.0)
     mono_logger (1.1.2)
-    msgpack (1.7.2)
+    msgpack (1.7.5)
     multi_json (1.15.0)
     multi_xml (0.6.0)
-    multipart-post (2.3.0)
+    multipart-post (2.4.1)
     mustermann (2.0.2)
       ruby2_keywords (~> 0.0.1)
     mysql2 (0.5.6)
@@ -742,7 +748,7 @@ GEM
       scrub_rb (~> 1.0)
     orm_adapter (0.5.0)
     os (1.1.4)
-    ostruct (0.6.0)
+    ostruct (0.6.1)
     parallel (1.24.0)
     parser (3.3.0.5)
       ast (~> 2.4.1)
@@ -1025,7 +1031,7 @@ GEM
     ruby-next-core (1.0.1)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    rubyzip (2.3.2)
+    rubyzip (2.4.1)
     ruumba (0.1.2)
       rubocop
     safe_yaml (1.0.5)
@@ -1254,7 +1260,7 @@ DEPENDENCIES
   aws-sdk-s3 (~> 1)
   bagit
   blacklight_oai_provider (~> 7.0.2)
-  bootsnap (~> 1.4.6)
+  bootsnap (~> 1.18)
   bootstrap (~> 4.0)
   byebug
   canister (~> 0.9.0)
@@ -1272,7 +1278,7 @@ DEPENDENCIES
   faker
   faraday (~> 1.0)
   faraday_middleware (~> 1.0)
-  fcrepo_wrapper (= 0.5.2)
+  fcrepo_wrapper!
   font-awesome-sass (>= 6.0)
   handle_rest!
   hyrax (= 4.0)

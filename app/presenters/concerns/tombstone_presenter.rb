@@ -20,6 +20,6 @@ module TombstonePresenter
 
   def tombstone_thumbnail_tag(width, options = {})
     options[:style] = "max-width: #{width}px"
-    ActionController::Base.helpers.image_tag('tombstone.svg', options)
+    ActionController::Base.helpers.image_tag('tombstone.svg', **options)
   end
 end
