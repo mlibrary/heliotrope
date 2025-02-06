@@ -7,7 +7,7 @@
 # HELIO-4361 run on the first of the month for the previous month
 # Deliver via SFTP
 
-require 'net/ftp'
+require 'net/sftp'
 
 class PsiReportJob < ApplicationJob
   def perform(subdomain = "michigan", given_start_date = nil, given_end_date = nil)
@@ -66,7 +66,7 @@ class PsiReportJob < ApplicationJob
               "Affiliation",
               "Funders"]
 
-    csv = CSV.generate({}) do |row|
+    csv = CSV.generate do |row|
       row << header
 
       counter.each do |c|

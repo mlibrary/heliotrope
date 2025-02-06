@@ -73,13 +73,14 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'blacklight_oai_provider', "~> 7.0.2"
 
 # HELIO-2531
-#gem "sassc", ">= 2.0.0"
-#gem "bootstrap-sass", ">= 3.4.1"
+# gem "sassc", ">= 2.0.0"
+# gem "bootstrap-sass", ">= 3.4.1"
 
 # A rails 5.2 thing. Might make startup faster. Not sure if it really matters though.
 # I guess we'll see.
 # https://github.com/Shopify/bootsnap
-gem 'bootsnap', '~> 1.4.6'
+# gem 'bootsnap', '~> 1.4.6'
+gem 'bootsnap', '~> 1.18'
 
 # This is installed via yarn instead for heliotrope so it's in package.json
 # But there's *something* in the stack that needs it here.
@@ -167,7 +168,7 @@ gem 'pragmatic_segmenter', '~> 0.3'
 
 # Turn page image epub chapters into pdfs
 gem 'prawn', '~> 2.2'
- 
+
 gem "rails_semantic_logger", '~> 4.14'
 
 gem 'redcarpet', '~> 3.5.1'
@@ -179,7 +180,7 @@ gem 'resque', '~> 2.6.0'
 gem 'resque-pool'
 gem 'resque-web', '~> 0.0.12', require: 'resque_web'
 
-gem 'riiif', git: 'https://github.com/mlibrary/riiif', tag: '1.4.1-railties-6'
+gem 'riiif', git: 'https://github.com/mlibrary/riiif', ref: '8c826c34c06c70439b1bb5cadf12800f9fa6e9d9'
 
 gem 'rsolr', '>= 1.1.2', '< 3'
 
@@ -229,7 +230,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem "fakefs", require: "fakefs/safe"
   gem "faker"
-  gem 'fcrepo_wrapper', '0.5.2'
+  gem 'fcrepo_wrapper', git: 'https://github.com/sethaj/fcrepo_wrapper', branch: 'file-exists-to-file-exist'
   gem 'json_schemer'
   gem 'rails-controller-testing', '~> 1.0.5'
   gem 'rspec-context-private'
