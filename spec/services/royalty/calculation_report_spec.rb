@@ -130,7 +130,7 @@ RSpec.describe Royalty::CalculationReport do
     end
   end
 
-  describe "different case rightsholders have seperate reports" do
+  describe "different case rightsholders" do
     # See HELIO-3361
     let(:items) do
       [{ "Parent_Proprietary_ID": "AAAAAAAAA",
@@ -211,10 +211,7 @@ RSpec.describe Royalty::CalculationReport do
       allow(counter_report).to receive(:report).and_return(item_report)
     end
 
-    it "sends the reports" do
-      allow(Net::FTP).to receive(:open).and_return(ftp)
-      allow(ftp).to receive(:mkdir).with("Library PTG Box/HEB/HEB Royalty Reports/2019-01_to_2019-02").and_return(true)
-
+    it "have seperate reports" do
       @reports = subject
 
       expect(@reports.keys).to eq ["Assumed_rights.calc.201901-201902.csv", "Assumed_Rights.calc.201901-201902.csv", "calc_combined.201901-201902.csv"]
@@ -227,6 +224,8 @@ RSpec.describe Royalty::CalculationReport do
       # Jeremy's got a processes to check correctness of reports out of Box. If the numbers are off, I guess
       # we'll just have to figure it out when that happens (only twice a year, so, meh)
       # See HELIO-3361 for more info.
+      # Update: we don't use Box any more, UMich doesn't use Box anymore. But I'll leave this spec (without the Box stuff)
+      # since it demonstrates a kind of weird edge case involving upper/lower case.
     end
   end
 
