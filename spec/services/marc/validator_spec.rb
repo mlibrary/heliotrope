@@ -49,7 +49,7 @@ RSpec.describe Marc::Validator do
         validator = described_class.new(marc_file)
         expect(MarcLogger).to receive(:error).twice
         expect(validator.valid?).to be false
-        expect(validator.error).to match("unparsable_9781951519803.mrc ruby-marc can't open record! undefined method `pack' for nil:NilClass")
+        expect(validator.error).to match("Marc::Validator\tunparsable_9781951519803.mrc ruby-marc can't open record! undefined method `pack' for nil")
       end
     end
   end
