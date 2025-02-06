@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'net/ftp'
-
 module Royalty
   module Reportable # rubocop:disable Metrics/ModuleLength
     extend ActiveSupport::Concern

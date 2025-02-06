@@ -60,7 +60,7 @@ class CounterReporterService
   def self.csv(report) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
     # CSV for COUNTER is just weird and not normal
     # https://docs.google.com/spreadsheets/d/1fsF_JCuOelUs9s_cvu7x_Yn8FNsi5xK0CR3bu2X_dVI/edit#gid=1932253188
-    CSV.generate({}) do |csv| # rubocop:disable Metrics/BlockLength
+    CSV.generate do |csv| # rubocop:disable Metrics/BlockLength
       row = []
       # header rows
       report[:header]&.each do |k, v|
@@ -102,7 +102,7 @@ class CounterReporterService
     params = CounterReporter::ReportParams.new('counter4_br2', params)
     return({ header: params.errors, items: [] }) unless params.validate!
     report = CounterReporter::Counter4BookReport.new(params).report
-    CSV.generate({}) do |csv|
+    CSV.generate do |csv|
       report[:header].each do |row|
         csv << row
       end
