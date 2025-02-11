@@ -37,11 +37,6 @@ module PDFEbook
 end
 
 #
-# Require Dependencies
-#
-require 'origami'
-
-#
 # Require Relative
 #
 require_relative './pdf_ebook/interval'
