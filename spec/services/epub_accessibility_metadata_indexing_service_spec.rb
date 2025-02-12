@@ -148,7 +148,8 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
 
       let(:missing_a11y_metadata_doc_sans_epub_version) { { "epub_a11y_access_mode_ssim" => nil,
                                                             "epub_a11y_access_mode_sufficient_ssim" => nil,
-                                                            "epub_a11y_accessibility_features_ssim" => nil,
+                                                            "epub_a11y_accessibility_feature_ssim" => nil,
+                                                            "epub_a11y_accessibility_hazard_ssim" => nil,
                                                             "epub_a11y_accessibility_summary_ssi" => nil,
                                                             "epub_a11y_certified_by_ssi" => nil,
                                                             "epub_a11y_certifier_credential_ssi" => nil,
@@ -159,16 +160,18 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
                                                         "epub_a11y_access_mode_sufficient_ssim" => ["textual",
                                                                                                     "textual,visual",
                                                                                                     "textual,visual"],
-                                                        "epub_a11y_accessibility_features_ssim" => ["ARIA",
-                                                                                                    "alternativeText",
-                                                                                                    "displayTransformability",
-                                                                                                    "index",
-                                                                                                    "pageBreakMarkers",
-                                                                                                    "pageNavigation",
-                                                                                                    "printPageNumbers",
-                                                                                                    "readingOrder",
-                                                                                                    "structuralNavigation",
-                                                                                                    "tableOfContents"],
+                                                        "epub_a11y_accessibility_feature_ssim" => ["ARIA",
+                                                                                                   "alternativeText",
+                                                                                                   "displayTransformability",
+                                                                                                   "index",
+                                                                                                   "pageBreakMarkers",
+                                                                                                   "pageNavigation",
+                                                                                                   "printPageNumbers",
+                                                                                                   "readingOrder",
+                                                                                                   "structuralNavigation",
+                                                                                                   "tableOfContents"],
+                                                        "epub_a11y_accessibility_hazard_ssim" => ["flashing",
+                                                                                                  "motionSimulation"],
                                                         "epub_a11y_accessibility_summary_ssi" => "A very complex book with 15 images, 10 tables, and complex formatting...",
                                                         "epub_a11y_certified_by_ssi" => "A11yCo",
                                                         "epub_a11y_certifier_credential_ssi" => "https://a11yfoo.org/certification",
@@ -214,7 +217,8 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
                   <meta property="schema:accessibilityFeature">index</meta>
                   <meta property="schema:accessibilityFeature">structuralNavigation</meta>
                   <meta property="schema:accessibilityFeature">displayTransformability</meta>
-                  <meta property="schema:accessibilityHazard">none</meta>
+                  <meta property="schema:accessibilityHazard">flashing</meta>
+                  <meta property="schema:accessibilityHazard">motionSimulation</meta>
                   <meta property="schema:accessibilitySummary">A very complex book with 15 images, 10 tables, and complex formatting...</meta>
                   <meta property="dcterms:conformsTo">EPUB Accessibility 1.1 - WCAG 2.1 Level AA</meta>
                   <meta property="a11y:certifiedBy">A11yCo</meta>
@@ -371,7 +375,8 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
                   <meta name="schema:accessibilityFeature" content="index"/>
                   <meta name="schema:accessibilityFeature" content="structuralNavigation"/>
                   <meta name="schema:accessibilityFeature" content="displayTransformability"/>"
-                  <meta name="schema:accessibilityHazard" content="none"/>
+                  <meta name="schema:accessibilityHazard" content="flashing"/>
+                  <meta name="schema:accessibilityHazard" content="motionSimulation"/>
                   <meta name="schema:accessibilitySummary" content="A very complex book with 15 images, 10 tables, and complex formatting..."/>
                   <meta name="dcterms:conformsTo" content="EPUB Accessibility 1.1 - WCAG 2.1 Level AA"/>
                   <meta name="a11y:certifiedBy" content="A11yCo"/>
