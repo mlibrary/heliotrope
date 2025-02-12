@@ -24,6 +24,8 @@ RSpec.describe "monograph_catalog/index.html.erb" do
   let(:solr_doc) { SolrDocument.new(id: 'mono_id', title_tesim: ["Untitled"], has_model_ssim: ['Monograph']) }
   let(:monograph_presenter) { Hyrax::MonographPresenter.new(solr_doc, current_ability) }
   let(:ebook_download_presenter) { double("ebook_download_presenter") }
+  # this value in the response is checked to decide whether to show the "assets" tab or not
+  let(:blacklight_response) { { "response" => { "numFound" => 0 } } }
 
   before do
     ActiveFedora::SolrService.add([solr_doc.to_h])
@@ -32,6 +34,7 @@ RSpec.describe "monograph_catalog/index.html.erb" do
     stub_template "catalog/_search_results" => "<!-- render-template-catalog/_search_results -->"
     assign(:monograph_presenter, monograph_presenter)
     assign(:ebook_download_presenter, ebook_download_presenter)
+    assign(:response, blacklight_response)
     allow(view).to receive(:t).with(any_args) { |value| value }
     allow(monograph_presenter).to receive(:date_uploaded).and_return(DateTime.now)
     allow(monograph_presenter).to receive(:creator).and_return([])

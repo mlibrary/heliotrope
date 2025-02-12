@@ -323,7 +323,7 @@
 </div><!-- /.monograph-info-epub -->
 
 <!-- RESOURCES -->
-<% if @monograph_presenter.assets?(@valid_share_link) %>
+<% if @response['response']['numFound'] > 0 %>
   <div class="row monograph-assets">
     <div class="col-sm-12">
       <h2>Resources</h2>

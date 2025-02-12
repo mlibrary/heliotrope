@@ -4,67 +4,6 @@ module CommonWorkPresenter
   extend ActiveSupport::Concern
   include Skylight::Helpers
 
-  # yes, I need this and `assets?` is completely geared towards whether the "resources" tab should show or not
-  # so this is `ordered_file_sets_ids` with the visibility and permissions removed
-  instrument_method
-  def non_representative_file_sets?
-    non_representative_file_set_ids.present?
-  end
-
-  instrument_method
-  def non_representative_file_set_ids # rubocop:disable Metrics/CyclomaticComplexity
-    return @non_representative_file_set_ids if @non_representative_file_set_ids
-    file_sets_ids = []
-    ordered_member_docs.each do |doc|
-      next if doc['has_model_ssim'] != ['FileSet'].freeze
-      next if doc.id == representative_id
-      next if featured_representatives.map(&:file_set_id).include?(doc.id)
-
-      file_sets_ids.append doc.id
-    end
-    @non_representative_file_set_ids = file_sets_ids
-  end
-
-  instrument_method
-  def assets?(valid_share_link = false)
-    ordered_file_sets_ids(valid_share_link).present?
-  end
-
-  instrument_method
-  def ordered_file_sets_ids(valid_share_link = false) # rubocop:disable Metrics/PerceivedComplexity, Metrics/CyclomaticComplexity
-    return @ordered_file_sets_ids if @ordered_file_sets_ids
-    file_sets_ids = []
-    ordered_member_docs.each do |doc|
-      next if doc['has_model_ssim'] != ['FileSet'].freeze
-      next if doc.id == representative_id
-      next if featured_representatives.map(&:file_set_id).include?(doc.id)
-      next if doc['visibility_ssi'] != 'open' && !(current_ability&.can?(:read, doc.id) || valid_share_link)
-
-      file_sets_ids.append doc.id
-    end
-    @ordered_file_sets_ids = file_sets_ids
-  end
-
-  instrument_method
-  def ordered_member_docs
-    return @ordered_member_docs if @ordered_member_docs
-
-    ids = Array(solr_document['ordered_member_ids_ssim'])
-
-    if ids.blank?
-      @ordered_member_docs = []
-      @ordered_member_docs
-    else
-      query_results = ActiveFedora::SolrService.query("{!terms f=id}#{ids.join(',')}", rows: ids.count)
-
-      docs_hash = query_results.each_with_object({}) do |res, h|
-        h[res['id']] = ::SolrDocument.new(res)
-      end
-
-      @ordered_member_docs = ids.map { |id| docs_hash[id] }
-    end
-  end
-
   def thumbnail_tag(width, options = {})
     options['style'] = "filter: grayscale(1)" if respond_to?(:tombstone?) && tombstone?
     if representative_id.present?
