@@ -647,7 +647,8 @@ HELIO-4376
   margin: 1rem auto 1rem auto;
   position: relative;
   overflow: visible;
-  border: 9px solid transparent;
+  /* see HELIO-4832 RE: pdf.js's page border removal */
+  /* border: 9px solid transparent; */
   background-clip: content-box;
 /*  -o-border-image: url(/mozilla-pdf-viewer/web/images/shadow.png) 9 9 repeat;
      border-image: url(/mozilla-pdf-viewer/web/images/shadow.png) 9 9 repeat;*/
