@@ -32,13 +32,14 @@ namespace :heliotrope do
     # Also, I'm starting to suspect that using the "low level" cache in this way is usually related to
     # a model in rails. Or some object that should respond to "expired?" anyway.... Which we're not doing.
     # We might be using this in a way that isn't supported by Rails.cache.cleanup.
-    Dir.glob(Rails.root.join("tmp", "cache", "[A-Z0-9][A-Z0-9][A-Z0-9]", "[A-Z0-9][A-Z0-9][A-Z0-9]", "*")).each do |path|
+    Dir.glob(File.join(Rails.cache.cache_path, "[A-Z0-9][A-Z0-9][A-Z0-9]", "[A-Z0-9][A-Z0-9][A-Z0-9]", "*")).each do |path|
+    # Dir.glob(Rails.root.join("tmp", "cache", "[A-Z0-9][A-Z0-9][A-Z0-9]", "[A-Z0-9][A-Z0-9][A-Z0-9]", "*")).each do |path|
       # Test the file via "read", which will likely delete it, if it's timestamp is 30 days or older
       if File.exist?(path) && 30.days.ago >= File.mtime(path)
+        Rails.logger.info("clean_cache deleted: #{path}")
         Rails.cache.read(CGI.unescape(File.basename(path)))
       end
     end
-    Rails.logger.info("clean_cache cleaned up cache")
 
 
     # 2. IIIF stores its "base"/full images in Settings.riiif_network_files_path (HELIO-4470)
@@ -81,13 +82,38 @@ namespace :heliotrope do
 
     # 3. tmp/uploads  should be cleaned out as well since we don't
     #    need these files after they've been processed
-    uploads_path = File.join(Settings.scratch_space_path, 'uploads')
-
-    Dir.glob("#{uploads_path}/*") do |dir|
+    # uploads_path = File.join(Settings.scratch_space_path, 'uploads')
+    Dir.glob("#{Settings.uploads_path}/*") do |dir|
       if Dir.exist?(dir) && 7.days.ago >= File.mtime(dir)
         Rails.logger.info("clean_cache deleted: #{dir}")
         FileUtils.remove_entry_secure(dir)
       end
     end
+
+    # 4. We've started putting temp files in a "scratch" dir and now it's full of old files from ingest
+    # or maybe pdf or apache tika processing. Lots of files that look like:
+    #
+    # -rw------- 1 2600062 1001460   42M Feb 13 19:46 5425kd82720250213-1519359-hxpnve
+    # -rw------- 1 2600062 1001460   13M Feb 13 19:46 fj236582q20250213-1519348-1a31izh
+    # -rw------- 1 2600062 1001460     0 Feb 13 19:46 6q182p56620250213-2118841-135env7
+    # -rw------- 1 2600062 1001460   39M Feb 13 19:46 df65vc29520250213-2118822-z3lvh0
+    # -rw------- 1 2600062 1001460  121M Feb 13 19:46 0z709084720250213-2118805-1k7hc7e 
+    #
+    # We don't need these. Should be safe to delete them if they're older than a day
+    # Dir.glob(File.join(Settings.scratch_space_path, "*")).each do |path|
+    #   if File.basename(path).match?(/^\w{17}\-\d{7}\-\w{6}$/)
+    #     # Yesterday is less than today. Last week is less than yesterday.
+    #     if File.mtime(path) < 1.day.ago
+    #       Rails.logger.info("clean_cache deleted: #{path}")
+    #       FileUtils.remove_entry_secure(path)
+    #     end
+    #   end
+    # end
+
+    # UPDATE see HELIO-4833
+    # It turns out we have a cron in production the deletes from scratch every night. I've decided to just add that to
+    # staging as well. Preview doesn't need it since it's scratch space in in "app tmp" so gets rolled out with each new deploy.
+    # I'll leave the above code commented out. We could do something with it in the future if we want to.
+
   end
 end
