@@ -79,6 +79,47 @@ RSpec.describe Press, type: :model do
       expect(press.valid?).to eq false
       expect(press.errors.messages[:press_url]).to eq ["can't be blank", "is invalid"]
     end
+
+    describe 'accessibility_webpage_url' do
+      # press.valid? will be initially true for this fresh-from-the-FactoryBot press
+      let(:press) { create(:press) }
+
+      it 'is optional' do
+        press.accessibility_webpage_url = nil
+        expect(press.valid?).to eq true
+        expect(press.errors.messages[:accessibility_webpage_url]).to eq []
+      end
+
+      it 'must validate as a URL if present' do
+        press.accessibility_webpage_url = 'blah'
+        expect(press.valid?).to eq false
+        expect(press.errors.messages[:accessibility_webpage_url]).to eq ["is invalid"]
+
+        press.accessibility_webpage_url = 'http://blah.blah'
+        expect(press.valid?).to eq true
+        expect(press.errors.messages[:accessibility_webpage_url]).to eq []
+      end
+    end
+
+    describe 'accessible_copy_request_form_url' do
+      # press.valid? will be initially true for this fresh-from-the-FactoryBot press
+      let(:press) { create(:press) }
+
+      it 'is optional' do
+        expect(press.valid?).to eq true
+        expect(press.errors.messages[:accessible_copy_request_form_url]).to eq []
+      end
+
+      it 'must validate as a URL' do
+        press.accessible_copy_request_form_url = 'blah'
+        expect(press.valid?).to eq false
+        expect(press.errors.messages[:accessible_copy_request_form_url]).to eq ["is invalid"]
+
+        press.accessible_copy_request_form_url = 'http://blah.blah'
+        expect(press.valid?).to eq true
+        expect(press.errors.messages[:accessible_copy_request_form_url]).to eq []
+      end
+    end
   end
 
   describe "to_param" do

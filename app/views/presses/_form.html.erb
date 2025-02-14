@@ -40,6 +40,8 @@
   <%= f.input :restricted_message, label: 'Message for restricted works (if any). HTML is ok' %>
   <%= f.input :tombstone_message, label: 'Message for tombstone works (if any). HTML is ok' %>
   <%= f.input :content_warning_information, label: 'Default content warning information text (for Monographs that have a content warning but no custom content warning information text).' %>
+  <%= f.input :accessibility_webpage_url %>
+  <%= f.input :accessible_copy_request_form_url %>
   <%= f.input :show_irus_stats, label: 'Show IRUS stats on Monograph catalog pages?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: true %>
   <%= f.input :share_links, label: 'Allow "share links" for temporary access of restricted materials?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
   <%= f.input :watermark, label: 'Apply watermark to downloaded ebooks?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
