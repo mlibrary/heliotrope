@@ -40,7 +40,8 @@ class EpubAccessibilityMetadataIndexingService
 
       # for these schema values see https://kb.daisy.org/publishing/docs/metadata/schema.org/
       solr_doc['epub_a11y_accessibility_summary_ssi'] = accessibility_summary
-      solr_doc['epub_a11y_accessibility_features_ssim'] = accessibility_features
+      solr_doc['epub_a11y_accessibility_feature_ssim'] = accessibility_features
+      solr_doc['epub_a11y_accessibility_hazard_ssim'] = accessibility_hazard
       solr_doc['epub_a11y_access_mode_ssim'] = access_mode
       @access_mode_sufficient = access_mode_sufficient
       solr_doc['epub_a11y_access_mode_sufficient_ssim'] = @access_mode_sufficient
@@ -63,6 +64,19 @@ class EpubAccessibilityMetadataIndexingService
     def accessibility_features
       # this involves multiple entries in separate meta tags
       values = @content_metadata.css("meta[#{@meta_attribute}='schema:accessibilityFeature']")
+
+      values = if @epub_2
+                 values&.map { |value| value['content']&.strip }
+               else
+                 values&.map { |value| value&.text&.strip }
+               end
+      # want to ensure the indexer is set to nil not [] if these are not present, keeping the field off the doc entirely
+      values.presence&.sort
+    end
+
+    def accessibility_hazard
+      # this involves multiple entries in separate meta tags
+      values = @content_metadata.css("meta[#{@meta_attribute}='schema:accessibilityHazard']")
 
       values = if @epub_2
                  values&.map { |value| value['content']&.strip }
