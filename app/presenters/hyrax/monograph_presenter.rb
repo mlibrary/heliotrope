@@ -5,6 +5,7 @@ module Hyrax
     include CommonWorkPresenter
     include CitableLinkPresenter
     include EditionPresenter
+    include EpubAccessibilityMetadataPresenter
     include FeaturedRepresentatives::MonographPresenter
     include OpenUrlPresenter
     include SocialShareWidgetPresenter
