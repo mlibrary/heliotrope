@@ -12,7 +12,7 @@
       <% level += 1 %>
       <ul class="toc section">
         <% if index > show_limit %>
-        <li class="can-be-hidden" style="display: none;" aria-hidden="true">
+        <li id="toc-hidden" style="display: none;" aria-hidden="true">
         <% else %>
         <li>
         <% end %>
@@ -69,23 +69,23 @@
 </div>
 <% if ebook_presenter.intervals.count > show_limit %>
   <div class="text-center">
-    <button class="btn btn-default" id="show-more">Display full Table of Contents</button>
+    <button class="btn btn-default" id="show-more-toc">Display full Table of Contents</button>
   </div>
   <script type="text/javascript">
-  var moreButton = document.getElementById('show-more');
-  var hidden = true;
+  var moreButton = document.getElementById('show-more-toc');
+  var tocHidden = true;
 
   moreButton.addEventListener('click', function () {
-    if (hidden === true) {
-      $(".can-be-hidden").removeAttr('style');
-      $(".can-be-hidden").removeAttr('aria-hidden');
+    if (tocHidden === true) {
+      $("#toc-hidden").removeAttr('style');
+      $("#toc-hidden").removeAttr('aria-hidden');
       moreButton.innerHTML = "Display partial Table of Contents";
-      hidden = false;
+      tocHidden = false;
     } else {
-      $(".can-be-hidden").attr('style', 'display: none');
-      $(".can-be-hidden").attr('aria-hidden', 'true');
+      $("#toc-hidden").attr('style', 'display: none');
+      $("#toc-hidden").attr('aria-hidden', 'true');
       moreButton.innerHTML = "Display full Table of Contents";
-      hidden = true;
+      tocHidden = true;
     }
   });
   </script>

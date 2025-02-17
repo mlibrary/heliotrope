@@ -1,0 +1,60 @@
+<%# epub_a11y_screen_reader_friendly will always have a value so there's no need to conditionally hide the tab %>
+<% if @presenter.epub_a11y_screen_reader_friendly.present? %>
+  <b>Screen Reader Friendly:</b> <%= @presenter.epub_a11y_screen_reader_friendly %><br /><br />
+<% end %>
+
+<% if @presenter.epub_a11y_accessibility_summary.present? %>
+  <b>Accessibility Summary:</b> <%= @presenter.epub_a11y_accessibility_summary %><br /><br />
+<% end %>
+
+<% if @presenter.epub_a11y_conforms_to.present? %>
+  <b>Accessibility Conformance:</b> <%= @presenter.epub_a11y_conforms_to %><br /><br />
+<% end %>
+
+<% if @presenter.epub_a11y_certified_by.present? %>
+  <b>Certified By:</b> <%= @presenter.epub_a11y_certified_by %><br /><br />
+<% end %>
+
+<% if @presenter.epub_a11y_accessibility_hazards.present? %>
+  <b>Accessibility Hazard:</b> <%= @presenter.epub_a11y_accessibility_hazards.join(', ') %><br /><br />
+<% end %>
+
+<% if @presenter.hidden_a11y_data_is_present? %>
+  <div id="a11y-hidden" style="display: none;" aria-hidden="true">
+    <% if @presenter.epub_a11y_accessibility_hazards.present? %>
+      <b>Accessibility Features:</b> <%= @presenter.epub_a11y_accessibility_features.join(', ') %><br /><br />
+    <% end %>
+
+    <% if @presenter.epub_a11y_access_modes.present? %>
+      <b>Access Modes:</b> <%= @presenter.epub_a11y_access_modes.join(', ') %><br /><br />
+    <% end %>
+
+    <% if @presenter.epub_a11y_access_modes_sufficient.present? %>
+      <b>Sufficient Access Modes:</b> <%= @presenter.epub_a11y_access_modes_sufficient.join('; ') %><br /><br />
+    <% end %>
+  </div>
+<% end %>
+
+<% if @presenter.hidden_a11y_data_is_present? %>
+  <div class="text-center">
+    <button class="btn btn-default" id="show-more-a11y">Display all accessibility info</button>
+  </div>
+  <script type="text/javascript">
+  var moreButtonA11y = document.getElementById('show-more-a11y');
+  var a11yHidden = true;
+
+  moreButtonA11y.addEventListener('click', function () {
+    if (a11yHidden === true) {
+      $("#a11y-hidden").removeAttr('style');
+      $("#a11y-hidden").removeAttr('aria-hidden');
+      moreButtonA11y.innerHTML = "Display partial accessibility info";
+      a11yHidden = false;
+    } else {
+      $("#a11y-hidden").attr('style', 'display: none');
+      $("#a11y-hidden").attr('aria-hidden', 'true');
+      moreButtonA11y.innerHTML = "Display all accessibility info";
+      a11yHidden = true;
+    }
+  });
+  </script>
+<% end %>
