@@ -18,9 +18,9 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
                                            'epub_a11y_accessibility_feature_ssim' => epub_a11y_accessibility_feature_ssim,
                                            'epub_a11y_accessibility_hazard_ssim' => ['flashing', 'motionSimulation'],
                                            'epub_a11y_accessibility_summary_ssi' => 'A very complex book with 15 images, 10 tables, and complex formatting...',
-                                           'epub_a11y_certified_by_ssi' => 'A11yCo',
-                                           'epub_a11y_certifier_credential_ssi' => 'https://a11yfoo.org/certification',
-                                           'epub_a11y_conforms_to_ssi' => 'EPUB Accessibility 1.1 - WCAG 2.1 Level AA',
+                                           'epub_a11y_certified_by_ssi' => epub_a11y_certified_by_ssi,
+                                           'epub_a11y_certifier_credential_ssi' => epub_a11y_certifier_credential_ssi,
+                                           'epub_a11y_conforms_to_ssi' => epub_a11y_conforms_to_ssi,
                                            'epub_a11y_screen_reader_friendly_ssi' => 'yes' }) }
 
   let(:epub_a11y_access_mode_ssim) { ['textual', 'visual'] }
@@ -29,7 +29,9 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
                                                 'annotations',
                                                 'ARIA',
                                                 'audioDescription',
+                                                'bookmarks',
                                                 'braille',
+                                                'captions',
                                                 'ChemML',
                                                 'closedCaptions',
                                                 'describedMath',
@@ -46,6 +48,7 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
                                                 'none',
                                                 'openCaptions',
                                                 'pageBreakMarkers',
+                                                'printPageNumbers',
                                                 'pageNavigation',
                                                 'readingOrder',
                                                 'rubyAnnotations',
@@ -62,7 +65,13 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
                                                 'unlocked',
                                                 'verticalWriting',
                                                 'withAdditionalWordSegmentation',
-                                                'withoutAdditionalWordSegmentation'] }
+                                                'withoutAdditionalWordSegmentation',
+                                                # this is to test that unmapped values are retained in the output of...
+                                                # `epub_a11y_accessibility_features`
+                                                'unknownRandomValue'] }
+  let(:epub_a11y_certified_by_ssi) { 'A11yCo' }
+  let(:epub_a11y_certifier_credential_ssi) { 'https://a11yfoo.org/certification' }
+  let(:epub_a11y_conforms_to_ssi) { 'EPUB Accessibility 1.1 - WCAG 2.1 Level AA' }
   let(:presenter) { self.class::Presenter.new(solr_document) }
 
   describe 'Presenter' do
@@ -99,7 +108,9 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
                          'Annotations',
                          'ARIA roles',
                          'Audio description',
+                         'Bookmarks',
                          'Braille',
+                         'Captions',
                          'ChemML markup',
                          'Closed captions',
                          'Textual descriptions for math equations',
@@ -132,7 +143,8 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
                          'No digital rights management (DRM)',
                          'Vertical writing',
                          'Additional word segmentation to improve readability',
-                         'No additional word segmentation']
+                         'No additional word segmentation',
+                         'unknownRandomValue']
     end
   end
 
@@ -152,27 +164,149 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
     end
   end
 
-  describe '#epub_a11y_certified_by' do
-    subject { presenter.epub_a11y_certified_by }
+  describe 'Accessibility Certification (organization and authority)' do
+    describe '#epub_a11y_certified_by' do
+      subject { presenter.epub_a11y_certified_by }
 
-    it 'outputs the correct field value' do
-      is_expected.to eq 'A11yCo'
+      context 'value is *not* "Benetech"' do
+        context 'epub_a11y_certifier_credential value is a link' do
+          it 'outputs the field value' do
+            is_expected.to eq 'A11yCo'
+          end
+        end
+
+        context 'epub_a11y_certifier_credential value is *not* a link' do
+          let(:epub_a11y_certifier_credential_ssi) { 'Certification' }
+
+          it 'outputs the field value' do
+            is_expected.to eq 'A11yCo'
+          end
+        end
+      end
+
+      context 'value is "Benetech"' do
+        let(:epub_a11y_certified_by_ssi) { 'Benetech' }
+
+        context 'epub_a11y_certifier_credential value is a link' do
+          it 'outputs nothing as this will be combined with the certifier credential value instead' do
+            is_expected.to be_nil
+          end
+        end
+
+        context 'epub_a11y_certifier_credential value is *not* a link' do
+          let(:epub_a11y_certifier_credential_ssi) { 'Certification' }
+
+          it 'outputs the field value' do
+            is_expected.to eq 'Benetech'
+          end
+        end
+      end
     end
-  end
 
-  describe '#epub_a11y_certifier_credential' do
-    subject { presenter.epub_a11y_certifier_credential }
+    describe '#epub_a11y_certifier_credential' do
+      subject { presenter.epub_a11y_certifier_credential }
 
-    it 'outputs the correct field value' do
-      is_expected.to eq 'https://a11yfoo.org/certification'
+      context 'epub_a11y_certifier_credential value is a link' do
+        context 'epub_a11y_certified_by_ssi value is *not* "Benetech"' do
+          it 'outputs the link as-is' do
+            is_expected.to eq '<a href="https://a11yfoo.org/certification" target="_blank">https://a11yfoo.org/certification</a>'
+          end
+        end
+
+        context 'epub_a11y_certified_by value is "Benetech"' do
+          let(:epub_a11y_certified_by_ssi) { 'Benetech' }
+
+          context 'epub_a11y_certifier_credential value is a link' do
+            let(:epub_a11y_certifier_credential_ssi) { 'Certification' }
+
+            it 'outputs the link with Benetech text' do
+              '<a href="https://a11yfoo.org/certification" target="_blank">GCA Certified by Benetech</a>'
+            end
+          end
+        end
+      end
+
+      context 'epub_a11y_certifier_credential value is *not"" a link' do
+        let(:epub_a11y_certifier_credential_ssi) { 'Certification' }
+
+        context 'epub_a11y_certified_by value is *not* "Benetech"' do
+          it 'outputs the value as-is' do
+            is_expected.to eq 'Certification'
+          end
+        end
+
+        context 'epub_a11y_certified_by value is "Benetech"' do
+          let(:epub_a11y_certified_by_ssi) { 'Benetech' }
+
+          context 'epub_a11y_certifier_credential value is a link' do
+            it 'outputs the value as-is' do
+              is_expected.to eq 'Certification'
+            end
+          end
+        end
+      end
     end
   end
 
   describe '#epub_a11y_conforms_to' do
     subject { presenter.epub_a11y_conforms_to }
 
-    it 'outputs the correct field value' do
-      is_expected.to eq 'EPUB Accessibility 1.1 - WCAG 2.1 Level AA'
+    describe "EPUB Accessibility 1.0 specification links (there are seemingly many but we'll check two)" do
+      it 'outputs the field value' do
+        is_expected.to eq 'EPUB Accessibility 1.1 - WCAG 2.1 Level AA'
+      end
+
+      context 'Proposed Specification 30 November 2016 links' do
+        context 'Level A' do
+          let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20160801.html#wcag-a' }
+
+          it 'outputs the correct named link' do
+            is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level A conformance</a>.'.html_safe
+          end
+        end
+
+        context 'Level AA' do
+          let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20160801.html#wcag-aa' }
+
+          it 'outputs the correct named link' do
+            is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level AA conformance</a>.'.html_safe
+          end
+        end
+
+        context 'Level AA' do
+          let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20160801.html#wcag-aaa' }
+
+          it 'outputs the correct named link' do
+            is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level AAA conformance</a>.'.html_safe
+          end
+        end
+      end
+    end
+
+    context 'Recommended Specification 5 January 2017 links' do
+      context 'Level A' do
+        let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20170105.html#wcag-a' }
+
+        it 'outputs the correct named link' do
+          is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20170105.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20170105.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level A conformance</a>.'.html_safe
+        end
+      end
+
+      context 'Level AA' do
+        let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20170105.html#wcag-aa' }
+
+        it 'outputs the correct named link' do
+          is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20170105.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20170105.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level AA conformance</a>.'.html_safe
+        end
+      end
+
+      context 'Level AA' do
+        let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20170105.html#wcag-aaa' }
+
+        it 'outputs the correct named link' do
+          is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20170105.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20170105.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level AAA conformance</a>.'.html_safe
+        end
+      end
     end
   end
 
