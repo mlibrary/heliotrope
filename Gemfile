@@ -162,9 +162,6 @@ gem "nokogiri", ">= 1.13.6"
 
 gem "okcomputer", "~> 1.18.4"
 
-# Read PDF ToC
-gem 'origami'
-
 # Force epub search results to be sentences
 gem 'pragmatic_segmenter', '~> 0.3'
 

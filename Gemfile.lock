@@ -226,7 +226,6 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     colorator (1.1.0)
-    colorize (0.8.1)
     commonjs (0.2.7)
     concurrent-ruby (1.2.3)
     config (5.1.0)
@@ -741,8 +740,6 @@ GEM
     openurl (1.0.0)
       marc
       scrub_rb (~> 1.0)
-    origami (2.1.0)
-      colorize (~> 0.7)
     orm_adapter (0.5.0)
     os (1.1.4)
     ostruct (0.6.0)
@@ -1302,7 +1299,6 @@ DEPENDENCIES
   oauth
   oauth2 (~> 1.2)
   okcomputer (~> 1.18.4)
-  origami
   pragmatic_segmenter (~> 0.3)
   prawn (~> 2.2)
   pry-rails
