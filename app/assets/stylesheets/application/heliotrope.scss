@@ -120,7 +120,7 @@ $gray-60: #686868;
 ///////////////////////////////////
 body  {
   a {
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
   margin-bottom: 0 !important;
