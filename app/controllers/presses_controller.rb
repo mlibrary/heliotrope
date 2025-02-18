@@ -80,7 +80,9 @@ class PressesController < ApplicationController
                                     :interval,
                                     :tombstone_message,
                                     :content_warning_information,
-                                    :show_irus_stats
+                                    :show_irus_stats,
+                                    :accessibility_webpage_url,
+                                    :accessible_copy_request_form_url
                                    )
     end
 end

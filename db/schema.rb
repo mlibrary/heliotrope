@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `rails
+# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_02_15_200557) do
+ActiveRecord::Schema.define(version: 2025_02_14_181049) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.integer "user_id"
@@ -128,9 +128,9 @@ ActiveRecord::Schema.define(version: 2024_02_15_200557) do
     t.string "doi_batch_id"
     t.integer "initial_http_status"
     t.text "initial_http_message"
-    t.text "submission_xml", limit: 16777215
+    t.text "submission_xml", size: :medium
     t.string "status"
-    t.text "response_xml", limit: 16777215
+    t.text "response_xml", size: :medium
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "file_name"
@@ -159,7 +159,7 @@ ActiveRecord::Schema.define(version: 2024_02_15_200557) do
 
   create_table "ebook_table_of_contents_caches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "noid"
-    t.text "toc", limit: 16777215
+    t.text "toc", size: :medium
   end
 
   create_table "epub_search_logs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
@@ -167,7 +167,7 @@ ActiveRecord::Schema.define(version: 2024_02_15_200557) do
     t.text "query"
     t.integer "time"
     t.integer "hits"
-    t.text "search_results", limit: 16777215
+    t.text "search_results", size: :medium
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "user"
@@ -444,6 +444,8 @@ ActiveRecord::Schema.define(version: 2024_02_15_200557) do
     t.text "tombstone_message"
     t.string "google_analytics_4"
     t.text "content_warning_information"
+    t.string "accessibility_webpage_url"
+    t.string "accessible_copy_request_form_url"
     t.index ["parent_id"], name: "index_presses_on_parent_id"
   end
 
