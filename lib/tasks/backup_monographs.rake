@@ -21,6 +21,19 @@ namespace :heliotrope do
       fail message
     end
 
+    # See the `.nfs` file problem mentioned above the `Dir.mktmpdir` block below. This loop will hopefully delete any...
+    # temporary directories that couldn't be deleted by said block on the previous run.
+    Dir.glob("#{File.join(Settings.scratch_space_path)}/backup-monograph-*").each do |leftover_backup_directory|
+      FileUtils.rm_rf(leftover_backup_directory)
+
+      # I don't know if the `rescue` is necessary, but I'm adding it anyway because continuing on to the actual...
+      # backup part could be critical. And, who knows?... Maybe this could fail to delete too on occasion?
+      # Probably not though. I've run the task manually back-to-back and directories which failed to be removed...
+      # in the first run were deleted here in the second run.
+    rescue StandardError => e
+      puts "FileUtils.rm_rf raised #{e}"
+    end
+
     count = 0
     docs = monograph_docs
 
@@ -28,21 +41,28 @@ namespace :heliotrope do
       output_tar_file_path = File.join(args.backup_directory, monograph_doc['press_tesim']&.first, "#{monograph_doc.id}.tar")
 
       if args.refresh_all_backups || !deposit_up_to_date?(monograph_doc, output_tar_file_path)
-        Dir.mktmpdir(["backup-monograph-#{monograph_doc.id}-"], File.join(Settings.scratch_space_path)) do |temp_directory|
-          # to prevent absolute paths being stored in the archive we'll `cd` to the temp folder...
-          Dir.chdir(temp_directory) do
-            # ...and export into a NOID-named folder inside that.
-            temporary_noid_directory = File.join(temp_directory, monograph_doc.id)
-            FileUtils.mkdir_p(temporary_noid_directory)
-            Export::Exporter.new(monograph_doc.id).extract(File.join(temporary_noid_directory), true)
+        # We *do* need to wrap this in a rescue clause because `.nfs` files can randomly prevent `Dir.mktmpdir` from...
+        # deleting the temporary directory at the end of the block, as it is meant to do. This small problem can then...
+        # kill the task and stop all following Monographs from being backed up that night.
+        begin
+          Dir.mktmpdir(["backup-monograph-#{monograph_doc.id}-"], File.join(Settings.scratch_space_path)) do |temp_directory|
+            # to prevent absolute paths being stored in the archive we'll `cd` to the temp folder...
+            Dir.chdir(temp_directory) do
+              # ...and export into a NOID-named folder inside that.
+              temporary_noid_directory = File.join(temp_directory, monograph_doc.id)
+              FileUtils.mkdir_p(temporary_noid_directory)
+              Export::Exporter.new(monograph_doc.id).extract(File.join(temporary_noid_directory), true)
 
-            output_press_directory = File.dirname(output_tar_file_path)
-            FileUtils.mkdir_p(output_press_directory) unless Dir.exist?(output_press_directory)
-            # note we're using the relative NOID path here so the tar won't contain absolute paths
-            Minitar.pack(monograph_doc.id, output_tar_file_path, 'wb')
+              output_press_directory = File.dirname(output_tar_file_path)
+              FileUtils.mkdir_p(output_press_directory) unless Dir.exist?(output_press_directory)
+              # note we're using the relative NOID path here so the tar won't contain absolute paths
+              Minitar.pack(monograph_doc.id, output_tar_file_path, 'wb')
 
-            count += 1
+              count += 1
+            end
           end
+        rescue StandardError => e
+          puts "Dir.mktmpdir raised #{e}"
         end
       else
         next
