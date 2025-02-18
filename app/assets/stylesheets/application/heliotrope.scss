@@ -119,6 +119,10 @@ $gray-60: #686868;
 // BODY
 ///////////////////////////////////
 body  {
+  a {
+    overflow-wrap: anywhere;
+  }
+
   margin-bottom: 0 !important;
 }
 ///////////////////////////////////
