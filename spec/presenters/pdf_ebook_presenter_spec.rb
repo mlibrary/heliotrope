@@ -92,7 +92,7 @@ RSpec.describe PDFEbookPresenter do
           expect(presenter.intervals[0].cfi).to eq "page=3"
           expect(presenter.intervals[0].level).to be 1
           expect(presenter.intervals[3].level).to be 2
-          expect(presenter.intervals[6].title).to eq "1914 translation by H. Rackham"
+          expect(presenter.intervals[7].title).to eq "1914 translation by H. Rackham again"
         end
       end
     end

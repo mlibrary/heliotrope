@@ -56,6 +56,8 @@ class UnpackJob < ApplicationJob
       unpack_zipped_js_app(id, kind, root_path, file)
     when 'pdf_ebook'
       pdf = linearize_pdf(root_path, file)
+      # we have to create a PDF's chapter files *before* caching the ToC because the latter uses the existence of...
+      # each file to cache a `downloadable?` flag for that interval/chapter
       create_pdf_chapters(id, pdf, root_path) if File.exist? pdf
       cache_pdf_toc(id, pdf) if File.exist? pdf
       file_set.parent.update_index if file_set.parent.present? # index the ToC to the monograph
@@ -123,10 +125,14 @@ class UnpackJob < ApplicationJob
       chapters = []
       pdf_ebook.intervals.each do |interval|
         chapters << { level: interval.level,
-                      start_page: interval.cfi.gsub('page=', '').to_i }
+                      start_page: interval.cfi.gsub('page=', '').to_i } # note ''.to_i == 0, which is where the 0's below come from!
       end
 
       chapters.each_with_index do |chapter, index|
+        # for the purposes of chapter file creation we need to skip any ToC entries that are missing a destination...
+        # page, but we still want them in the array so that ToC entry indices match the created chapter files' names.
+        next if chapter[:start_page] == 0
+
         chapters[0...index].map do |chapter_out|
           # if we just moved back up to a "higher" ToC level (lower level number!), then all previous sections on...
           # this ToC level or "below" (their nested children with a higher level number) are terminated.
@@ -142,7 +148,12 @@ class UnpackJob < ApplicationJob
       chapter_dir = prepare_chapter_dir(id, 'pdf_ebook', root_path)
 
       chapters.each_with_index do |chapter_out, index|
-        raise "This ToC has bookmarks pointing to page 0" if chapter_out[:start_page] == 0 || chapter_out[:end_page] == 0
+        # for the purposes of chapter file creation we need to skip any ToC entries that are missing a destination...
+        # page, but we still want them in the array so that ToC entry indices match the created chapter files' names.
+        next if chapter_out[:start_page] == 0
+
+        # this shouldn't be possible
+        raise "Chapter file processing failed! Calculated chapter end page cannot be 0!" if chapter_out[:end_page] == 0
         if chapter_out[:end_page].present?
           run_command("qpdf --empty --pages #{file.path} #{chapter_out[:start_page]}-#{chapter_out[:end_page]} -- #{chapter_dir}/#{index}.pdf")
         else
