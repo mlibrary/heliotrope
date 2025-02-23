@@ -5,6 +5,12 @@ en:
   hyrax:
     account_name: "Fulcrum"
     base:
+      form_files:
+        local_upload_html: |
+          <p>You can add one or more files to associate with this work.</p>
+          <p>Uploads are limited to %{upload_file_limit} files, 2GB each.<br />
+          Each file upload must complete within 300 seconds due to timeout rules.</p>
+          <p>Contact a Fulcrum developer for larger files, or if you encounter issues.</p>
       items:
         set_representative: "Set Representative"
     directory:
