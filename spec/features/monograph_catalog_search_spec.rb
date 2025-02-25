@@ -56,13 +56,6 @@ describe 'Monograph Catalog Search' do
 
     expect(page).to_not have_content("Your search has returned")
 
-    # Selectors needed for assets/javascripts/ga_event_tracking.js
-    # If these change, fix here then update ga_event_tracking.js
-    expect(page).to have_selector('#documents .document h4.index_title a')
-    expect(page).to have_selector('#monograph-buy-btn')
-    expect(page).to have_selector('#resources-search-submit')
-    expect(page).to have_selector('#resources_search')
-
     fill_in 'resources_search', with: 'Unruly'
     click_button 'resources-search-submit'
     expect(page).to have_content 'Unruly Puddles'

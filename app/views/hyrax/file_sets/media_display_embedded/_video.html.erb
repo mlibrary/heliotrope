@@ -61,21 +61,3 @@
   <%# there a way to turn the interactive transcript off (without hacks). So keep it below the embedded iframe window. %>
   <div id="video-hidden-transcript-container"></div>
 <% end %>
-
-<script>
-  $(document).ready(function() {
-    setupVideoAnalytics();
-  });
-
-  function setupVideoAnalytics() {
-    if (typeof(ga) == typeof(Function)) {
-      var video = $('#video').get(0);
-      video.addEventListener("play", function() {
-        press_tracker_event('e_reader', 'play_video', window.location.href);
-      });
-      video.addEventListener("pause", function() {
-        press_tracker_event('e_reader', 'stop_video', window.location.href);
-      });
-    }
-  }
-</script>

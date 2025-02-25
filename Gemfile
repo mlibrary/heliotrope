@@ -210,12 +210,6 @@ gem 'tinymce-rails', '~> 5.10'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '~> 4.2'
 
-# Talking to Google Analytics
-gem 'legato', '~> 0.3'
-gem 'oauth'
-gem 'oauth2', '~> 1.2'
-gem 'signet'
-
 # performance profiling
 gem 'skylight', '~> 5.3.4'
 
