@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
+require 'open3'
+
 class RecacheInCommonMetadataJob < ApplicationJob
-  XML_FILE = File.join(Settings.scratch_space_path, 'InCommon-metadata.xml')
-  DOWNLOAD_CMD = "curl --silent https://md.incommon.org/InCommon/InCommon-metadata.xml > #{XML_FILE}"
-  JSON_FILE = File.join(Settings.scratch_space_path, 'InCommon-metadata.json')
-  RAILS_CACHE_KEY = 'in_common_metadata'
+  INCOMMON_XML_FILE = File.join(Settings.scratch_space_path, 'InCommon-metadata.xml')
+  INCOMMON_DOWNLOAD_CMD = "curl --silent http://metadata.ukfederation.org.uk/ukfederation-metadata.xml > #{INCOMMON_XML_FILE}"
+  OPENATHENS_XML_FILE = File.join(Settings.scratch_space_path, 'OpenAthens-metadata.xml')
+  OPENATHENS_DOWNLOAD_CMD = "curl --silent http://fed.openathens.net/oafed/metadata > #{OPENATHENS_XML_FILE}"
+  RAILS_CACHE_KEY = 'federated-shib-metadata'
+  JSON_FILE = File.join(Settings.scratch_space_path, "federated-shib-metadata.json")
 
   EntityDescriptor = Struct.new(:es) do
     def to_json # rubocop:disable Metrics/CyclomaticComplexity
@@ -63,10 +67,6 @@ class RecacheInCommonMetadataJob < ApplicationJob
       end
   end
 
-  def self.system_call(command)
-    system(command)
-  end
-
   def perform
     return false unless download_xml
     return false unless parse_xml
@@ -76,24 +76,35 @@ class RecacheInCommonMetadataJob < ApplicationJob
   end
 
   def download_xml
-    command = DOWNLOAD_CMD
-    rvalue = self.class.system_call(command)
-    return true if rvalue
-    case rvalue
-    when false
-      Rails.logger.error("ERROR Command #{command} error code #{self.class.system_call($?)}")
-    else
-      Rails.logger.error("ERROR Command #{command} not found #{self.class.system_call($?)}")
+    rvalue = true
+    [INCOMMON_DOWNLOAD_CMD, OPENATHENS_DOWNLOAD_CMD].each do |command|
+      Rails.logger.info("Running '#{command}'")
+      stdin, stdout, stderr, wait_thr = Open3.popen3(command)
+      stdin.close
+      stdout.close
+      err = stderr.read
+      stderr.close
+
+      if wait_thr.value.success?
+        rvalue = true
+      else
+        Rails.logger.error("ERROR Command #{command} error #{err}")
+        return false
+      end
     end
-    false
+
+    rvalue
   end
 
   def parse_xml
     first = true
-    File.open(JSON_FILE, 'w') do |file|
+    File.open(JSON_FILE, 'w') do |file| # rubocop:disable Metrics/BlockLength
       file << "[\n"
-      if File.exist?(XML_FILE)
-        Nokogiri::XML::Reader(File.open(XML_FILE)).each do |node|
+
+      xml_file = INCOMMON_XML_FILE
+      if File.exist?(xml_file)
+        Rails.logger.info("Parsing #{xml_file}")
+        Nokogiri::XML::Reader(File.open(xml_file)).each do |node|
           if node.name == 'EntityDescriptor' && node.node_type == Nokogiri::XML::Reader::TYPE_ELEMENT
             file << ",\n" unless first
             file << EntityDescriptor.new(Nokogiri::XML(node.outer_xml).at('EntityDescriptor')).to_json
@@ -101,6 +112,24 @@ class RecacheInCommonMetadataJob < ApplicationJob
           end
         end
       end
+
+      # open athens is different apparently I don't know why
+      xml_file = OPENATHENS_XML_FILE
+      if File.exist?(xml_file)
+        Rails.logger.info("Parsing #{xml_file}")
+        Nokogiri::XML::Reader(File.open(xml_file)).each do |node|
+          if node.name == 'md:EntitiesDescriptor'
+            node.each do |n|
+              if n.name == 'md:EntityDescriptor' && n.node_type == Nokogiri::XML::Reader::TYPE_ELEMENT
+                file << ",\n" unless first
+                file << EntityDescriptor.new(Nokogiri::XML(n.outer_xml).remove_namespaces!.at('EntityDescriptor')).to_json
+                first = false
+              end
+            end
+          end
+        end
+      end
+
       file << "\n]\n"
     end
     true
@@ -130,6 +159,7 @@ class RecacheInCommonMetadataJob < ApplicationJob
 
     Greensub::Institution.update_all(in_common: false) # rubocop:disable Rails/SkipsModelValidations
     entity_ids = Set.new(Greensub::Institution.where("entity_id <> ''").map(&:entity_id))
+
     if entity_ids.present?
       load_json.each do |entry|
         next unless entry["entityID"].in?(entity_ids)
