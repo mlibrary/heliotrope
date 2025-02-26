@@ -111,6 +111,11 @@ describe 'Create a monograph' do
       expect(page).to have_link(nil, href: 'https://creativecommons.org/publicdomain/mark/1.0/')
       expect(page.find(:css, 'a[href="https://creativecommons.org/publicdomain/mark/1.0/"]')[:target]).to eq '_blank'
 
+      # language - We cannot guarantee the order in which the two languages will appear as they are stored in an...
+      # `ActiveTriples::Relation`.
+      expect(page).to have_content("Language:")
+      expect(page).to have_content("English")
+
       # The press-level content warning information is not used with no content warning on the Monograph.
       expect(page).not_to have_content 'Some Press-level content warning information, with a link.'
 
@@ -165,6 +170,12 @@ describe 'Create a monograph' do
       # ISBN
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content '123-456-7891'
+
+      # language - We cannot guarantee the order in which the two languages will appear as they are stored in an...
+      # `ActiveTriples::Relation`.
+      expect(page).to have_content("Language:")
+      expect(page).to have_content("English")
+      expect(page).to have_content("German")
 
       expect(page).to have_content 'Monograph content warning text'
       # the content warning information is shown only when this JS-triggering link is clicked, hence `visible:false`

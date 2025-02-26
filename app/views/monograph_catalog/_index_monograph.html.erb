@@ -298,6 +298,12 @@
         <span class="meta-label">License:</span> <a aria-label="<%= @monograph_presenter.license_alt_text %>" rel="license" href="<%= @monograph_presenter.license.first %>" target="_blank"><%= @monograph_presenter.license_link_content %></a></span>
       </div>
       <% end %>
+      <!-- LANGUAGE -->
+      <% if @monograph_presenter.language.present? %>
+        <div>
+          <span class="meta-label">Language:</span> <%= @monograph_presenter.language.join(', ') %>
+        </div>
+      <% end %>
       <!-- ISBN -->
       <% if @monograph_presenter.isbn.present? %>
         <div class="isbns">
