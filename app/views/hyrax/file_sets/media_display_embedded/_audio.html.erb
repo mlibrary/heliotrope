@@ -10,26 +10,6 @@
   <script src="/ableplayer-4.5/build/ableplayer.js"></script>
 <% end %>
 
-<script>
-  var timer;
-
-  $(document).ready(function() {
-    setupAudioAnalytics();
-  });
-
-  function setupAudioAnalytics() {
-    if (typeof(ga) == typeof(Function)) {
-      var audio = $('#audio').get(0)
-      audio.addEventListener("play", function() {
-        press_tracker_event('e_reader', 'play_audio', window.location.href);
-      });
-      audio.addEventListener("pause", function() {
-        press_tracker_event('e_reader', 'stop_audio', window.location.href);
-      });
-    }
-  }
-</script>
-
 <% if file_set.closed_captions.present? %>
   <div id="audio-transcript-container"></div>
 <% end %>

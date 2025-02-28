@@ -67,14 +67,6 @@ describe 'Press Catalog' do
         # thumbnail link
         expect(page).to have_selector("img[alt='']")
         expect(page).to have_link('', href: monograph_catalog_path(red, locale: 'en'))
-
-        # Selectors needed for assets/javascripts/application/ga_event_tracking.js
-        # If these change, fix here then update ga_event_tracking.js
-        expect(page).to have_selector('a.navbar-brand')
-        expect(page).to have_selector('#documents .document a')
-        expect(page).to have_selector('footer.press a')
-        expect(page).to have_selector('#keyword-search-submit')
-        expect(page).to have_selector('#catalog_search')
       end
 
       it 'visits the catalog page for a press with the press name capitalized' do
