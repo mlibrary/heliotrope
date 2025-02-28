@@ -113,7 +113,11 @@ class PressCatalogController < ::CatalogController
         if ['heb', 'bigten'].include? @press.subdomain
           blacklight_config.add_facet_field 'publisher_sim', label: "Publisher", limit: false, url_method: :facet_url_helper, sort: sort
         end
-        blacklight_config.add_facet_field 'series_sim', label: "Series", limit: false, url_method: :facet_url_helper, sort: sort
+        if @press.subdomain == 'livedplaces'
+          blacklight_config.add_facet_field 'series_sim', label: "Collection", limit: false, url_method: :facet_url_helper, sort: sort
+        else
+          blacklight_config.add_facet_field 'series_sim', label: "Series", limit: false, url_method: :facet_url_helper, sort: sort
+        end
         blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: false, url_method: :facet_url_helper, sort: sort
         if Sighrax.platform_admin?(current_actor)
           blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: false
@@ -125,7 +129,11 @@ class PressCatalogController < ::CatalogController
         if ['heb', 'bigten'].include? @press.subdomain
           blacklight_config.add_facet_field 'publisher_sim', label: "Publisher", limit: 5, url_method: :facet_url_helper, sort: sort
         end
-        blacklight_config.add_facet_field 'series_sim', label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
+        if @press.subdomain == 'livedplaces'
+          blacklight_config.add_facet_field 'series_sim', label: "Collection", limit: 5, url_method: :facet_url_helper, sort: sort
+        else
+          blacklight_config.add_facet_field 'series_sim', label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
+        end
         blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: 5, url_method: :facet_url_helper, sort: sort
 
         if Sighrax.platform_admin?(current_actor)
