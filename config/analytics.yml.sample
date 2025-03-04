@@ -1,3 +1,5 @@
+# See HELIO-4489 this is no longer used
+#
 # Loads configuration options from config/analytics.yml. Expected structure:
 analytics:
   app_name: 'My App Name'

@@ -214,10 +214,6 @@ describe 'Edit a file set' do
       expect(find_link('external link')[:target]).to eq '_blank'
       expect(find_link('internal link')[:target]).to be nil
 
-      # Selectors needed for assets/javascripts/application/ga_event_tracking.js
-      # If these change, fix here then update ga_event_tracking.js
-      expect(page).to have_selector('ul.nav.nav-tabs li a', count: 2)
-
       # check facet results - bug #772
       # multi-word primary creator role facet
       click_link 'on screen talent'
