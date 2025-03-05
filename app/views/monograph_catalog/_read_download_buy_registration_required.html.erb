@@ -1,8 +1,10 @@
 <%# This mapping will move to the parent partial if this functionality proliferates... %>
 <%# outside the `ee` Press before HELIO-4503 is completed %>
 <%# Note: You can use any ISBN stored on Fulcrum here. HELIO-4503 will remove this workaround anyway. %>
+<%# NB! You must make sure the pdf_ebook is set to `allow_download == 'yes'` or none of this will work (no button will appear) %>
 <% form_link_ids = { '9781607858768' => '1FAIpQLScLWwaa-BzbDUvJ_tdWsGDX6wBialALOs1cceMCpFUkZ5qFuA', # Circuit Analysis and Design
                      '9781607858270' => '1FAIpQLSeABECySpr4LMPo_4LtaCEFih4EuIHzDOEzDGhSmc0rp542vw', # Control Systems: An Introduction
+                     '9781607859123' => '1FAIpQLSc9y8BHQfw761ZnyeJF1fPq36qBbdMXtHBClISSqwghd4a6Cg', # Electromagnetics for Engineers
                      '9781607858249' => '1FAIpQLSdwS2OFvMreCd0zeQNcSq49jNxKXG6-WjLOxOp58ATj1ff68Q', # Foundations of Applied Electromagnetics
                      '9781607854890' => '1FAIpQLSfa_lqrrhWPEXZ97DjMQTAt_cdEl4JIO-R-C93kNJyJneP0uA', # Image Processing for Engineers
                      '9781607858294' => '1FAIpQLSdL_V7gW7_N0UOtZNwrOwZlGHJn99cxIIgutunrKwUJB9UXhg', # Introduction to ARM Assembler
@@ -20,6 +22,7 @@
     <%# For `oa_registration_required` Monographs, both read and download are controlled by an external "registration" Google Form %>
     <%# which will assume that the book is _both_ readable and downloadable, per the current use case.
     <%# One button for both Read _and_ Download, essentially %>
+    <%# NB! You must make sure the pdf_ebook is set to `allow_download == 'yes'` or none of this will work (no button will appear) %>
     <% if !(@disable_read_button || @monograph_presenter.tombstone?) && (@monograph_presenter.reader_ebook? && @ebook_download_presenter.downloadable_ebooks?) %>
       <a id="monograph-read-btn"
          <%= "href=\"#{form_link}\"".html_safe if form_link.present? %>
