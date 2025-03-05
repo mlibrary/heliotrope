@@ -84,8 +84,7 @@ namespace :heliotrope do
       "pb." => 11,
       "pb. : alk. paper" => 12,
       "paper with cd" => 13,
-      "paper plus cd rom" => 14,
-      "print" => 15 # added vs BuildKbartJob
+      "paper plus cd rom" => 14
     }
 
     priority_isbn(isbns, priority_list)
