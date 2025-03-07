@@ -21,7 +21,7 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
                                            'epub_a11y_certified_by_ssi' => epub_a11y_certified_by_ssi,
                                            'epub_a11y_certifier_credential_ssi' => epub_a11y_certifier_credential_ssi,
                                            'epub_a11y_conforms_to_ssi' => epub_a11y_conforms_to_ssi,
-                                           'epub_a11y_screen_reader_friendly_ssi' => 'yes' }) }
+                                           'epub_a11y_screen_reader_friendly_ssi' => epub_a11y_screen_reader_friendly_ssi }) }
 
   let(:epub_a11y_access_mode_ssim) { ['textual', 'visual'] }
   let(:epub_a11y_access_mode_sufficient_ssim) { ['textual', 'textual,visual', 'textual,visual'] }
@@ -72,6 +72,7 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
   let(:epub_a11y_certified_by_ssi) { 'A11yCo' }
   let(:epub_a11y_certifier_credential_ssi) { 'https://a11yfoo.org/certification' }
   let(:epub_a11y_conforms_to_ssi) { 'EPUB Accessibility 1.1 - WCAG 2.1 Level AA' }
+  let(:epub_a11y_screen_reader_friendly_ssi) { 'yes' }
   let(:presenter) { self.class::Presenter.new(solr_document) }
 
   describe 'Presenter' do
@@ -313,8 +314,26 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
   describe '#epub_a11y_screen_reader_friendly' do
     subject { presenter.epub_a11y_screen_reader_friendly }
 
-    it 'outputs the correct field value' do
-      is_expected.to eq 'yes'
+    context '`epub_a11y_screen_reader_friendly_ssi` has a value other than "unknown"' do
+      it 'outputs the correct field value' do
+        is_expected.to eq 'yes'
+      end
+    end
+
+    context '`epub_a11y_screen_reader_friendly_ssi` has a value of "unknown"' do
+      let(:epub_a11y_screen_reader_friendly_ssi) { 'unknown' }
+
+      it 'outputs the correct field value' do
+        is_expected.to eq 'No information is available'
+      end
+    end
+
+    context '`epub_a11y_screen_reader_friendly_ssi` is not present' do
+      let(:epub_a11y_screen_reader_friendly_ssi) { nil }
+
+      it 'outputs the correct field value' do
+        is_expected.to eq 'No information is available'
+      end
     end
   end
 
