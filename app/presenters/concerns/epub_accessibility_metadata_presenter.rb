@@ -107,10 +107,16 @@ module EpubAccessibilityMetadataPresenter
   end
 
   def epub_a11y_screen_reader_friendly
-    @epub_a11y_screen_reader_friendly ||= if solr_document['epub_a11y_screen_reader_friendly_ssi'] == 'unknown'
+    value = solr_document['epub_a11y_screen_reader_friendly_ssi']
+    # The "Accessibility Claims" tab will show if either an `epub` or `pdf_ebook` representative is present. For now,...
+    # no PDFs will offer any accessibility metadata. Some corner-case EPUBs might not have any either.
+    # This method always returns a value, which conveniently means the tab will never be empty, even if something...
+    # goes awry with the indexing of `epub_a11y_screen_reader_friendly_ssi`, which we also ensure happens for...
+    # "reader ebook" Monographs for faceting purposes. See `MonographIndexer.maybe_index_accessibility_metadata()`
+    @epub_a11y_screen_reader_friendly ||= if value.blank? || value == 'unknown'
                                             'No information is available'
                                           else
-                                            solr_document['epub_a11y_screen_reader_friendly_ssi']
+                                            value
                                           end
   end
 
