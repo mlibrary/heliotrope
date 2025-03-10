@@ -138,7 +138,84 @@
             location: 'Ann Arbor, MI',
             press_subdomain: '<%= @subdomain %>',
             noid: '<%= @noid %>',
-          }
+          },
+          themes: [
+            {
+              name: 'Solarized Light',
+              klass: 'solarized-light',
+              rules: {
+                body: {
+                  background: '#fdf6e3',
+                  color: '#657b83',
+                  margin: '0 auto',
+                  padding: '1 em'
+                },
+                code: {
+                  'background-color': '#eee8d5',
+                  padding: '2px'
+                },
+                a: {
+                  color: '#b58900'
+                },
+                'a:visited': {
+                  color: '#cb4b16'
+                },
+                'a:hover': {
+                  color: '#cb4b16'
+                },
+                h1: { color: '#d33682', 'font-size': '2.8em' },
+                h2: { color: '#859900', 'font-size': '2.4em' },
+                h3: { color: '#859900', 'font-size': '1.8em' },
+                h4: { color: '#859900', 'font-size': '1.4em' },
+                h5: { color: '#859900', 'font-size': '1.3em' },
+                h6: { color: '#859900', 'font-size': '1.15em' },
+                pre: {
+                  'background-color': '#fdf6e3',
+                  color: '#657b83',
+                  border: '1pt solid #93a1a1',
+                  padding: '1em',
+                  'box-shadow': '5pt 5pt 8pt #eee8d5'
+                }
+              }
+            },
+            {
+              name: 'Solarized Dark',
+              klass: 'solarized-dark',
+              rules: {
+                body: {
+                  background: '#002b36',
+                  color: '#839496',
+                  margin: '0 auto',
+                  padding: '1 em'
+                },
+                code: {
+                  'background-color': '#073642',
+                  padding: '2px'
+                },
+                a: {
+                  color: '#b58900'
+                },
+                'a:visited': {
+                  color: '#cb4b16'
+                },
+                'a:hover': {
+                  color: '#cb4b16'
+                },
+                h1: { color: '#93a1a1', 'font-size': '2.8em' },
+                h2: { color: '#93a1a1', 'font-size': '2.4em' },
+                h3: { color: '#93a1a1', 'font-size': '1.8em' },
+                h4: { color: '#93a1a1', 'font-size': '1.4em' },
+                h5: { color: '#93a1a1', 'font-size': '1.3em' },
+                h6: { color: '#93a1a1', 'font-size': '1.15em' },
+                pre: {
+                  'background-color': '#f5f5f5',
+                  color: '#586e75',
+                  border: '1pt solid #cccccc',
+                  padding: '1em'
+                }
+              }
+            }
+          ]
         });
 
         <%= render partial: "cozy_controls_top", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
