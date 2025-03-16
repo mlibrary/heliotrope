@@ -12,14 +12,14 @@
       <% level += 1 %>
       <ul class="toc section">
         <% if index > show_limit %>
-        <li id="toc-hidden" style="display: none;" aria-hidden="true">
+        <li class="hidden-toc-item" style="display: none;" aria-hidden="true">
         <% else %>
         <li>
         <% end %>
     <% elsif interval.level == level %>
        </li>
         <% if index > show_limit %>
-        <li class="can-be-hidden" style="display: none;" aria-hidden="true">
+        <li class="hidden-toc-item" style="display: none;" aria-hidden="true">
         <% else %>
        <li>
        <% end %>
@@ -31,7 +31,7 @@
         </li>
       <% end %>
       <% if index > show_limit %>
-      <li class="can-be-hidden" style="display: none;" aria-hidden="true">
+      <li class="hidden-toc-item" style="display: none;" aria-hidden="true">
       <% else %>
       <li>
       <% end %>
@@ -72,19 +72,19 @@
     <button class="btn btn-default" id="show-more-toc">Display full Table of Contents</button>
   </div>
   <script type="text/javascript">
-  var moreButton = document.getElementById('show-more-toc');
+  var moreButtonToc = document.getElementById('show-more-toc');
   var tocHidden = true;
 
-  moreButton.addEventListener('click', function () {
+  moreButtonToc.addEventListener('click', function () {
     if (tocHidden === true) {
-      $("#toc-hidden").removeAttr('style');
-      $("#toc-hidden").removeAttr('aria-hidden');
-      moreButton.innerHTML = "Display partial Table of Contents";
+      $(".hidden-toc-item").removeAttr('style');
+      $(".hidden-toc-item").removeAttr('aria-hidden');
+      moreButtonToc.innerHTML = "Display partial Table of Contents";
       tocHidden = false;
     } else {
-      $("#toc-hidden").attr('style', 'display: none');
-      $("#toc-hidden").attr('aria-hidden', 'true');
-      moreButton.innerHTML = "Display full Table of Contents";
+      $(".hidden-toc-item").attr('style', 'display: none');
+      $(".hidden-toc-item").attr('aria-hidden', 'true');
+      moreButtonToc.innerHTML = "Display full Table of Contents";
       tocHidden = true;
     }
   });
