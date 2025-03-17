@@ -20,7 +20,7 @@
 <% end %>
 
 <% if @presenter.hidden_a11y_data_is_present? %>
-  <div id="a11y-hidden" style="display: none;" aria-hidden="true">
+  <div id="hidden-a11y-items" style="display: none;" aria-hidden="true">
     <% if @presenter.epub_a11y_accessibility_hazards.present? %>
       <b>Accessibility Features:</b> <%= @presenter.epub_a11y_accessibility_features.join(', ') %><br /><br />
     <% end %>
@@ -45,13 +45,13 @@
 
   moreButtonA11y.addEventListener('click', function () {
     if (a11yHidden === true) {
-      $("#a11y-hidden").removeAttr('style');
-      $("#a11y-hidden").removeAttr('aria-hidden');
+      $("#hidden-a11y-items").removeAttr('style');
+      $("#hidden-a11y-items").removeAttr('aria-hidden');
       moreButtonA11y.innerHTML = "Display partial accessibility info";
       a11yHidden = false;
     } else {
-      $("#a11y-hidden").attr('style', 'display: none');
-      $("#a11y-hidden").attr('aria-hidden', 'true');
+      $("#hidden-a11y-items").attr('style', 'display: none');
+      $("#hidden-a11y-items").attr('aria-hidden', 'true');
       moreButtonA11y.innerHTML = "Display all accessibility info";
       a11yHidden = true;
     }
