@@ -7,7 +7,8 @@ RSpec.describe Marc::Validator do
     context "the happy path, everything validates" do
       let(:doi) { "10.3998/mpub.10209707" }
       let(:noid) { "999999999" }
-      let!(:monograph) { create(:public_monograph, press: "leverpress", id: noid, title: ["Something"], doi: doi) }
+      let(:press) { create(:press, subdomain: "leverpress") }
+      let!(:monograph) { create(:public_monograph, press: press.subdomain, id: noid, title: ["Something"], doi: doi) }
 
       context ".mrc format" do
         let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', 'valid_marc.mrc').to_s }
@@ -113,7 +114,8 @@ RSpec.describe Marc::Validator do
   describe "#exists_in_fulcrum?" do
     context "with a valid marc file" do
       let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', 'valid_marc.xml').to_s }
-      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: ["leverpress"], doi_ssim: ["10.3998/mpub.10209707"]) }
+      let(:press) { create(:press, subdomain: "leverpress") }
+      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: [press.subdomain], doi_ssim: ["10.3998/mpub.10209707"]) }
 
       before do
         ActiveFedora::SolrService.add(doc.to_h)
@@ -131,7 +133,8 @@ RSpec.describe Marc::Validator do
 
     context "when the marc file has a handle and not a doi" do
       let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', '024_handle_instead_of_doi.xml').to_s }
-      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: ["leverpress"]) }
+      let(:press) { create(:press, subdomain: "leverpress") }
+      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: [press.subdomain]) }
       let(:hdl_row) { double("hdl_row", url_value: "https://www.fulcrum.org/concern/monograph/999999999") }
 
       before do
@@ -151,7 +154,8 @@ RSpec.describe Marc::Validator do
 
     context "when the marc record's doi or handle does not match a monograph in fulcrum" do
       let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', '024_bad_doi.xml').to_s }
-      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: ["leverpress"], doi_ssim: ["10.3998/mpub.10209707"]) }
+      let(:press) { create(:press, subdomain: "leverpress") }
+      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: [press.subdomain], doi_ssim: ["10.3998/mpub.10209707"]) }
 
       before do
         ActiveFedora::SolrService.add(doc.to_h)
@@ -182,6 +186,26 @@ RSpec.describe Marc::Validator do
           expect(validator.group_key).to eq "unknown_group_key"
           expect(validator.error).to eq "Marc::Validator\t024_bad_doi.xml does not have a DOI or Handle that is in fulcrum, 024$a value is 'not-a-real-doi'. The record will be retried nightly until a match in Fulcrum is found."
         end
+      end
+    end
+
+    context "when the parent press relates to the product, not the monograph's child press" do
+      let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', 'valid_marc.xml').to_s }
+      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: [child_press.subdomain], doi_ssim: ["10.3998/mpub.10209707"]) }
+      let(:parent_press) { create(:press, subdomain: "michigan") }
+      let(:child_press) { create(:press, subdomain: "childpress", parent_id: parent_press.id) }
+
+      before do
+        ActiveFedora::SolrService.add(doc.to_h)
+        ActiveFedora::SolrService.commit
+      end
+
+      it "returns true and correctly populates the parent press group_key" do
+        validator = described_class.new(marc_file)
+        record = validator.reader.first
+        expect(validator.exists_in_fulcrum?(record)).to be true
+        expect(validator.group_key).to eq "umpebc"
+        expect(validator.noid).to eq "999999999"
       end
     end
   end
@@ -255,7 +279,8 @@ RSpec.describe Marc::Validator do
     end
 
     context "a BAR group_key" do
-      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: ["bar"], doi_ssim: ["10.3998/mpub.10209707"]) }
+      let(:press) { create(:press, subdomain: "bar") }
+      let(:doc) { SolrDocument.new(id: '999999999', press_tesim: [press.subdomain], doi_ssim: ["10.3998/mpub.10209707"]) }
 
       before do
         ActiveFedora::SolrService.add(doc.to_h)
