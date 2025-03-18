@@ -24,6 +24,11 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
         # See #401
         if file.is_a? String
           # For derivatives stored on the local file system
+          if thumbnail? || jpeg? || video? || sound? || animated_gif?
+            # response.headers['Cache-Control'] = 'public, max-age=604800'
+            # https://developers.cloudflare.com/cache/concepts/cache-behavior/#interaction-of-set-cookie-response-header-with-cache
+            response.headers.except! 'Cache-Control'
+          end
           response.headers['Accept-Ranges'] = 'bytes'
           response.headers['Content-Length'] = File.size(file).to_s
           updated_file_path = file.sub(/releases\/\d+/, "current")
