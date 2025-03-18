@@ -525,12 +525,32 @@ RSpec.describe BuildKbartJob, type: :job do
       expect(subject.first_author_last_name(monograph)).to eq "Lastname"
     end
 
+    # This turned into a bit of a mess. Lots of ways it can go wrong I guess.
+    # HELIO-4457 and HELIO-4457
     context "when there is no name/creator" do
-      # This shouldn't happen, but it has for historical HEB metadata, HELIO-4457
-      let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(creator_tesim: [nil]), nil) }
+      context "when the creator array exists, but has nil in it" do
+        # This shouldn't happen, but it has for historical HEB metadata, HELIO-4457
+        let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(creator_tesim: [nil]), nil) }
 
-      it "returns the empty string" do
-        expect(subject.first_author_last_name(monograph)).to eq ""
+        it "returns the empty string" do
+          expect(subject.first_author_last_name(monograph)).to eq ""
+        end
+      end
+
+      context "when the array exists but is empty" do
+        let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(creator_tesim: []), nil) }
+
+        it "returns the empty string" do
+          expect(subject.first_author_last_name(monograph)).to eq ""
+        end
+      end
+
+      context "when it's just not there at all" do
+        let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(title_tesim: ["No Author Book"]), nil) }
+
+        it "returns the empty string" do
+          expect(subject.first_author_last_name(monograph)).to eq ""
+        end
       end
     end
   end

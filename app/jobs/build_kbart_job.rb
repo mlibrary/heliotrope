@@ -300,13 +300,12 @@ class BuildKbartJob < ApplicationJob
   end
 
   def first_author_last_name(monograph)
-    # HELIO-4457
-    # An empty creator in a Monograph is: []
-    # In the solr_document of the presenter it looks like: [nil]
-    return "" if monograph.solr_document["creator_tesim"].first.blank?
-    # Just in case though...
+    # HELIO-4457, HELIO-4864
+    # An empty creator in a Monograph is: [nil] or [] or it's nil. Not super consistent.
+    return "" if monograph.solr_document["creator_tesim"].nil?
     return "" if monograph.solr_document["creator_tesim"].empty?
-    #
+    return "" if monograph.solr_document["creator_tesim"]&.first.blank?
+
     # creators are "Lastname, Firstname\nLastname, Firstname"
     monograph.solr_document["creator_tesim"]&.first.split(",")[0] || ""
   end
