@@ -78,9 +78,10 @@ module Marc
       # When we do that, we also will get the group_key
       purl = record["024"]["a"]
       doc = ActiveFedora::SolrService.query("+doi_ssim:#{purl}", fl: ['id', 'press_tesim'], rows: 1)&.first
+
       if doc.present?
         @noid = doc['id']
-        @group_key = Marc::DirectoryMapper.press_group_key[doc['press_tesim'].first]
+        @group_key = Marc::DirectoryMapper.press_group_key[parent_press(doc['press_tesim'].first)]
       else
         row = HandleDeposit.where(handle: purl).first
         if row.present?
@@ -89,7 +90,7 @@ module Marc
           @noid = m[1] if m[1].present?
           doc = ActiveFedora::SolrService.query("{!terms f=id}#{@noid}", fl: ['press_tesim'], rows: 1)&.first
           if doc.present?
-            @group_key = Marc::DirectoryMapper.press_group_key[doc['press_tesim'].first]
+            @group_key = Marc::DirectoryMapper.press_group_key[parent_press(doc['press_tesim'].first)]
           end
         end
       end
@@ -108,6 +109,15 @@ module Marc
       end
 
       true
+    end
+
+    # The monograph may be part of a child press which does not translate directly to a group_key/product.
+    # Only parent presses are in products/have group_keys. Right now. So far.
+    # This is really only for michigan, I don't think we use child presses anywhere else. So far.
+    def parent_press(subdomain)
+      press = Press.where(subdomain: subdomain).first
+      press = press.parent_id.present? ? Press.find(press.parent_id) : press
+      press.subdomain
     end
 
     # Some documentation on what we expect in MARC fields. This is for BAR and HEB but a lot of it will apply

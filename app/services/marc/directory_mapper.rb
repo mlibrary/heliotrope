@@ -6,8 +6,9 @@
 module Marc
   class DirectoryMapper
     # HELIO-4760
-    # "press_cataloging" is TEMPORARY :)
+    # press -> group_key is temporary :)
     # For now we can map Press to cataloging location bypassing the need for Product.group_key to exist
+    # by using the table below instead of relying on a monograph to be in a Product at all.
     # That way we can correctly categorize MARC records before they have a Product or Component (when they're still Draft)
     def self.press_group_key
       {
