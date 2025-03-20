@@ -27,7 +27,7 @@ RSpec.describe AuthenticationsController, type: :controller do
     end
 
     context ':press param' do
-      subject { get :show, { params: { press: press.subdomain } } }
+      subject { get :show, params: { press: press.subdomain } }
 
       let(:press) { create(:press) }
 
@@ -43,7 +43,7 @@ RSpec.describe AuthenticationsController, type: :controller do
     end
 
     context 'monograph :id param' do
-      subject { get :show, { params: { id: monograph.id } } }
+      subject { get :show, params: { id: monograph.id } }
 
       let(:monograph) { create(:monograph) }
 
@@ -59,7 +59,7 @@ RSpec.describe AuthenticationsController, type: :controller do
     end
 
     context 'file_set :id param' do
-      subject { get :show, { params: { id: file_set.id } } }
+      subject { get :show, params: { id: file_set.id } }
 
       let(:monograph) do
         m = create(:monograph)
@@ -83,7 +83,7 @@ RSpec.describe AuthenticationsController, type: :controller do
     end
 
     context 'optional filter param' do
-      subject { get :show, { params: { filter: true } } }
+      subject { get :show, params: { filter: true } }
 
       before { allow(AuthenticationPresenter).to receive(:for).with(actor, nil, nil, "true").and_call_original }
 

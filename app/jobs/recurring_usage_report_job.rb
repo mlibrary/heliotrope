@@ -131,7 +131,7 @@ class RecurringUsageReportJob < ApplicationJob
         "Reporting_Period_Total"
       ]
 
-      csv = CSV.generate({}) do |row|
+      csv = CSV.generate do |row|
         row << header
 
         monograph_presenters.values.sort_by(&:page_title).each do |monograph_presenter|
