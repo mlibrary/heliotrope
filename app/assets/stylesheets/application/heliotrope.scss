@@ -1868,6 +1868,31 @@ footer.press {
   }
 }
 
+// themes for CSB, correspond to themes
+// at line 142 of /app/views/e_pubs/show.html.erb
+#reader.cozy-theme-dark {
+  background-color: #000000;
+  color: #FFF;
+
+  .cozy-h1 {
+    color: #FFF;
+  }
+
+  .cozy-module-main {
+    background-color: #121212;
+  }
+
+  .cozy-control button {
+    background-color: #474C50 !important;
+  }
+
+  .cozy-control .button--sm.cozy-preferences {
+    color: #FFF;
+  }
+
+
+}
+
 /* CSB v2 - PdeC EReader */
 .too {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
