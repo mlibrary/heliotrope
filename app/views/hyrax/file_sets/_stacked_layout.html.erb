@@ -16,7 +16,7 @@
             <span class="section">From <em><%= link_to @presenter.parent.title, main_app.monograph_catalog_path(@presenter.monograph_id) %></em>
               <% authorship_display = @presenter.parent.authors %>
               <% if authorship_display.present? %>
-                by <%= render_markdown authorship_display %>
+                <br /><%= render_markdown authorship_display %>
               <% end %>
           </span>
         </div>
