@@ -335,6 +335,16 @@ RSpec.describe Marc::Validator do
         expect(validator.valid_020?(record)).to be false
       end
     end
+
+    context "multiple 020 fields" do
+      let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', 'isbn_bug_HELIO-4853.xml').to_s }
+
+      it "returns true" do
+        validator = described_class.new(marc_file)
+        record = validator.reader.first
+        expect(validator.valid_020?(record)).to be true
+      end
+    end
   end
 
   describe "#valid_856?" do
