@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<collection xmlns="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+  <record>
+    <leader>02600nam a2200397 i 4500</leader>
+    <controlfield tag="001">10.3998/mpub.12775372</controlfield>
+    <controlfield tag="003">MiU</controlfield>
+    <controlfield tag="005">20250303090103.0</controlfield>
+    <controlfield tag="006">m     o  d        </controlfield>
+    <controlfield tag="007">cr#unu||||||||</controlfield>
+    <controlfield tag="008">250228t20252025miu     ob    000 0 eng d</controlfield>
+    <datafield ind1=" " ind2=" " tag="020">
+      <subfield code="q">9780472077557</subfield>
+      <subfield code="q">(hardcover)</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="020">
+      <subfield code="q">9780472057559</subfield>
+      <subfield code="q">(paperback)</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="020">
+      <subfield code="a">9780472905119</subfield>
+      <subfield code="q">(open access ebook)</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="020">
+      <subfield code="a">0472905112</subfield>
+      <subfield code="q">(open access ebook)</subfield>
+    </datafield>
+    <datafield ind1="7" ind2=" " tag="024">
+      <subfield code="a">10.3998/mpub.12775372</subfield>
+      <subfield code="2">doi</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="040">
+      <subfield code="a">EYM</subfield>
+      <subfield code="b">eng</subfield>
+      <subfield code="e">rda</subfield>
+      <subfield code="e">pn</subfield>
+      <subfield code="c">EYM</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="4" tag="050">
+      <subfield code="a">PL2357</subfield>
+    </datafield>
+    <datafield ind1="1" ind2=" " tag="100">
+      <subfield code="a">He, Man,</subfield>
+      <subfield code="e">author.</subfield>
+    </datafield>
+    <datafield ind1="1" ind2="0" tag="245">
+      <subfield code="a">Backstaging modern Chinese theatre :</subfield>
+      <subfield code="b">intellectuals, amateurs, and cultural entrepreneurs, 1910s-1940s /</subfield>
+      <subfield code="c">Man He.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="1" tag="264">
+      <subfield code="a">Ann Arbor  :</subfield>
+      <subfield code="b">University of Michigan Press,</subfield>
+      <subfield code="c">2025.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="4" tag="264">
+      <subfield code="c">&#xA9;2025.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="300">
+      <subfield code="a">1 online resource (326 pages)</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="336">
+      <subfield code="a">text</subfield>
+      <subfield code="b">txt</subfield>
+      <subfield code="2">rdacontent</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="337">
+      <subfield code="a">computer</subfield>
+      <subfield code="b">c</subfield>
+      <subfield code="2">rdamedia</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="338">
+      <subfield code="a">online resource</subfield>
+      <subfield code="b">cr</subfield>
+      <subfield code="2">rdacarrier</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="504">
+      <subfield code="a">Includes bibliographical references and index.</subfield>
+    </datafield>
+    <datafield ind1="0" ind2=" " tag="506">
+      <subfield code="a">Open access</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="520">
+      <subfield code="a">Modern Chinese theatre once entailed a variety of forms, but now it primarily refers to spoken drama, or huaju. Backstaging Modern Chinese Theatre looks beyond scripts to examine  visuality, acoustics, and performance between the two World Wars, the period when huaju gained canonical status. The backstage in this study expands from being a physical place offstage to a culturally and historically constructed social network that encompasses theatre networks, academies, and government institutions--as well as the collective work of dramatists, amateurs, and cultural entrepreneurs. Early huaju was not a mere imitation of Western realist theatre, as it is commonly understood, but a creative synthesis of Chinese and Western aesthetics. Charting huaju's evolution from American colleges to China's coastal cities and then to its rural hinterland, Man He demonstrates how the formation of modern Chinese theatre challenges dominant understandings of modernism and brings China to the center of discussions on transnational modernities and world theatres.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="542">
+      <subfield code="a">This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License</subfield>
+      <subfield code="u">http://creativecommons.org/licenses/by-nc/4.0/</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="588">
+      <subfield code="a">Description based on information from the publisher.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="0" tag="650">
+      <subfield code="a">Chinese drama</subfield>
+      <subfield code="y">20th century</subfield>
+      <subfield code="x">History and criticism.</subfield>
+    </datafield>
+    <datafield ind1=" " ind2="4" tag="655">
+      <subfield code="a">Electronic books.</subfield>
+    </datafield>
+    <datafield ind1="2" ind2=" " tag="710">
+      <subfield code="a">Michigan Publishing (University of Michigan),</subfield>
+      <subfield code="e">publisher.</subfield>
+    </datafield>
+    <datafield ind1="4" ind2="0" tag="856">
+      <subfield code="u">https://doi.org/10.3998/mpub.12775372</subfield>
+      <subfield code="7">0</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="914">
+      <subfield code="a">No-worldcat</subfield>
+    </datafield>
+    <datafield ind1=" " ind2=" " tag="933">
+      <subfield code="a">MPubCataloging</subfield>
+    </datafield>
+  </record>
+</collection>

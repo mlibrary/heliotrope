@@ -179,9 +179,18 @@ module Marc
     #     hardcover
     def valid_020?(record)
       # I think I'm not going to validate any kind of controlled vocabulary, we'll just make sure it's got
-      # some kind of ISBN somewhere
-      if record["020"].blank? || (record["020"]["a"].blank? && record["020"]["z"].blank?)
-        log_message("020$a and 020$z have no ISBN values")
+      # at least one $a (preferred) or $z in any 020 entry.
+      # https://www.loc.gov/marc/bibliographic/bd020.html
+      rvalue = false
+
+      # no "each" here, it's a Proc
+      record.each_by_tag("020") do |data_field|
+        rvalue = true if data_field["a"].present?
+        rvalue = true if data_field["z"].present?
+      end
+
+      if rvalue == false
+        log_message("has no ISBN 020$a or 020$z fields")
         return false
       end
 
