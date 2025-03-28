@@ -72,6 +72,24 @@ RSpec.describe PressPresenter do
       end
     end
 
+    describe "#accessibility_webpage_url" do
+      let(:press) { create(:press, subdomain: "blah", accessibility_webpage_url: accessibility_webpage_url) }
+      let(:accessibility_webpage_url) { "https://mypublisher.com/a11y-stuff" }
+
+      it "returns the restricted_message" do
+        expect(subject.accessibility_webpage_url).to eq accessibility_webpage_url
+      end
+    end
+
+    describe "#accessible_copy_request_form_url" do
+      let(:press) { create(:press, subdomain: "blah", accessible_copy_request_form_url: accessible_copy_request_form_url) }
+      let(:accessible_copy_request_form_url) { "https://mypublisher.com/a11y-form" }
+
+      it "returns the restricted_message" do
+        expect(subject.accessible_copy_request_form_url).to eq accessible_copy_request_form_url
+      end
+    end
+
     describe "when a child press has a parent" do
       let(:parent_press) {
         create(:press, subdomain: "blue",

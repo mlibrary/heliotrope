@@ -100,6 +100,14 @@ class PressPresenter < ApplicationPresenter
     true
   end
 
+  def accessibility_webpage_url
+    @press&.accessibility_webpage_url.presence
+  end
+
+  def accessible_copy_request_form_url
+    @press&.accessible_copy_request_form_url.presence
+  end
+
   private
 
     def initialize(subdomain, press)
