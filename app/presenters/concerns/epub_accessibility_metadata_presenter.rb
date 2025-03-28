@@ -107,6 +107,8 @@ module EpubAccessibilityMetadataPresenter
   end
 
   def epub_a11y_screen_reader_friendly
+    return @epub_a11y_screen_reader_friendly if @epub_a11y_screen_reader_friendly.present?
+
     value = solr_document['epub_a11y_screen_reader_friendly_ssi']
     # The "Accessibility Claims" tab will show if either an `epub` or `pdf_ebook` representative is present. For now,...
     # no PDFs will offer any accessibility metadata. Some corner-case EPUBs might not have any either.
@@ -116,8 +118,33 @@ module EpubAccessibilityMetadataPresenter
     @epub_a11y_screen_reader_friendly ||= if value.blank? || value == 'unknown'
                                             'No information is available'
                                           else
+                                            # value here can only be 'yes' based on the logic in...
+                                            # EpubAccessibilityMetadataIndexingService.screen_reader_friendly()
                                             value
                                           end
+  end
+
+  def show_request_accessible_copy_button?
+    @show_request_accessible_copy_button ||= epub_a11y_screen_reader_friendly != 'yes'
+  end
+
+  def prepopulated_link_for_accessible_copy_request_form
+    # If a custom URL is stored on the Press, that will be used directly from the view, because PressPresenter exists!
+    # If not, which is the more likely use case, the view logic will use this method.
+    return @prepopulated_link_for_accessible_copy_request_form if @prepopulated_link_for_accessible_copy_request_form.present?
+
+    link = "https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo?noid=#{solr_document.id}"
+    link += "&press=#{solr_document['press_tesim'].first}" if solr_document['press_tesim']&.first&.present?
+
+    populate_params = []
+    populate_params << "%22QID3%22:%22#{CGI.escape(MarkdownService.markdown_as_text(solr_document.title&.first))}%22" if solr_document.title&.first.present?
+    populate_params << "%22QID4%22:%22#{CGI.escape(solr_document.creator_full_name)}%22" if solr_document&.creator_full_name.present?
+    populate_params << "%22QID5%22:%22#{CGI.escape(solr_document.isbn.first)}%22" if solr_document.isbn&.first.present?
+    populate_params << "%22QID14%22:%22#{CGI.escape(solr_document.publisher.first)}%22" if solr_document.publisher&.first.present?
+
+    link += "&Q_PopulateResponse={#{populate_params.join(',')}}" if populate_params.present?
+
+    @prepopulated_link_for_accessible_copy_request_form = link
   end
 
   def hidden_a11y_data_is_present?

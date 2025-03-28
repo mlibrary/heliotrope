@@ -337,6 +337,119 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
     end
   end
 
+  describe '#show_request_accessible_copy_button?' do
+    subject { presenter.show_request_accessible_copy_button? }
+
+    context '`epub_a11y_screen_reader_friendly_ssi` has a value of "yes"' do
+      it 'returns false' do
+        is_expected.to eq false
+      end
+    end
+
+    context '`epub_a11y_screen_reader_friendly_ssi` has a value of "no"' do
+      let(:epub_a11y_screen_reader_friendly_ssi) { 'no' }
+
+      it 'returns true' do
+        is_expected.to eq true
+      end
+    end
+
+    context '`epub_a11y_screen_reader_friendly_ssi` has a value of "unknown"' do
+      let(:epub_a11y_screen_reader_friendly_ssi) { 'unknown' }
+
+      it 'returns true' do
+        is_expected.to eq true
+      end
+    end
+
+    context '`epub_a11y_screen_reader_friendly_ssi` is not present' do
+      let(:epub_a11y_screen_reader_friendly_ssi) { nil }
+
+      it 'returns true' do
+        is_expected.to eq true
+      end
+    end
+  end
+
+  describe '#prepopulated_link_for_accessible_copy_request_form' do
+    subject { presenter.prepopulated_link_for_accessible_copy_request_form }
+
+    context 'only id is available' do
+      let(:solr_document) { SolrDocument.new(id: '999999999') }
+
+      it 'only pre-populates the URL with the ID' do
+        is_expected.to eq "https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo?noid=#{solr_document.id}"
+      end
+    end
+
+    context 'id and press are available' do
+      let(:solr_document) { SolrDocument.new(id: '999999999',
+                                             'press_tesim' => ['blah-press']) }
+
+      it 'pre-populates the URL with ID and press' do
+        is_expected.to eq "https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo?noid=999999999&press=blah-press"
+      end
+    end
+
+    context 'id, press and title are available' do
+      let(:solr_document) { SolrDocument.new(id: '999999999',
+                                             'press_tesim' => ['blah-press'],
+                                             'title_tesim' => ['A Fantastic Title: Stuff']) }
+
+      it 'pre-populates the URL with ID, press and title' do
+        is_expected.to eq "https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo?noid=999999999&press=blah-press" \
+                          "&Q_PopulateResponse={%22QID3%22:%22A+Fantastic+Title%3A+Stuff%22}"
+      end
+    end
+
+    context 'id, press, title and creator are available' do
+      let(:solr_document) { SolrDocument.new(id: '999999999',
+                                             'press_tesim' => ['blah-press'],
+                                             'title_tesim' => ['A Fantastic Title: Stuff'],
+                                             'creator_full_name_tesim' => ['First, Author']) }
+
+      it 'pre-populates the URL with ID, press, title and creator' do
+        is_expected.to eq "https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo?noid=999999999&press=blah-press" \
+                          "&Q_PopulateResponse={%22QID3%22:%22A+Fantastic+Title%3A+Stuff%22," \
+                          "%22QID4%22:%22First%2C+Author%22}"
+      end
+    end
+
+    context 'id, press, title, creator and isbn are available' do
+      let(:solr_document) { SolrDocument.new(id: '999999999',
+                                             'press_tesim' => ['blah-press'],
+                                             'title_tesim' => ['A Fantastic Title: Stuff'],
+                                             'creator_full_name_tesim' => ['First, Author'],
+                                             'isbn_tesim' => ['978-0-472-12665-1 (ebook)', '978-0-472-13189-1 (hardcover)']) }
+
+      it 'pre-populates the URL with ID, press, title, creator and the first isbn' do
+        is_expected.to eq "https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo?noid=999999999&press=blah-press" \
+                          "&Q_PopulateResponse={" \
+                          "%22QID3%22:%22A+Fantastic+Title%3A+Stuff%22," \
+                          "%22QID4%22:%22First%2C+Author%22," \
+                          "%22QID5%22:%22978-0-472-12665-1+%28ebook%29%22}"
+      end
+    end
+
+    context 'id, press, title, creator, isbn and publisher are available' do
+      let(:solr_document) { SolrDocument.new(id: '999999999',
+                                             'press_tesim' => ['blah-press'],
+                                             'title_tesim' => ['A Fantastic Title: Stuff'],
+                                             'creator_full_name_tesim' => ['First, Author'],
+                                             'isbn_tesim' => ['978-0-472-12665-1 (ebook)', '978-0-472-13189-1 (hardcover)'],
+                                             'publisher_tesim' => 'Blah Press Publishing Company') }
+
+      it 'pre-populates the URL with ID, press, title, creator, the first isbn and publisher' do
+        is_expected.to eq "https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo?noid=999999999&press=blah-press" \
+                          "&Q_PopulateResponse={" \
+                          "%22QID3%22:%22A+Fantastic+Title%3A+Stuff%22," \
+                          "%22QID4%22:%22First%2C+Author%22," \
+                          "%22QID5%22:%22978-0-472-12665-1+%28ebook%29%22," \
+                          "%22QID14%22:%22Blah+Press+Publishing+Company%22}"
+      end
+    end
+  end
+
   describe '#hidden_a11y_data_is_present?' do
     subject { presenter.hidden_a11y_data_is_present? }
 

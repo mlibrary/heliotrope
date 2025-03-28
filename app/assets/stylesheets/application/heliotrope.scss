@@ -1241,6 +1241,27 @@ footer.press {
           margin-bottom: 11px;
         }
       }
+
+      #accessibility-claims {
+        p b {
+          font-weight: 600;
+        }
+
+        .a11y-buttons {
+          display: flex;
+          justify-content: space-evenly;
+          padding: 1em 0;
+        }
+
+        .a11y-info, .a11y-copy {
+          padding-bottom: 1.2em;
+        }
+
+        .a11y-statement {
+          border-top: 1px solid #ddd;
+          padding-top: 1em;
+        }
+      }
     }
 
     #documents, #resource-page-svgicon {
