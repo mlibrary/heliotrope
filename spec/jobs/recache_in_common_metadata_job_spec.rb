@@ -91,7 +91,30 @@ RSpec.describe RecacheInCommonMetadataJob, type: :job do
     end
 
     describe '#download_xml' do
-      pending("TODO")
+      context "when both downloads succeed" do
+        it "returns true" do
+          [RecacheInCommonMetadataJob::INCOMMON_DOWNLOAD_CMD, RecacheInCommonMetadataJob::OPENATHENS_DOWNLOAD_CMD].each do |cmd|
+            allow(Open3).to receive(:popen3).with(cmd).and_return(
+              [double('stdin', close: true), double('stdout', close: true), double('stderr', close: true, read: ''), double('wait_thr', value: double('process_status', success?: true))]
+            )
+          end
+
+          expect(described_class.new.download_xml).to be true
+        end
+      end
+
+      context "when any download fails" do
+        it "returns false and logs an error" do
+          command = RecacheInCommonMetadataJob::INCOMMON_DOWNLOAD_CMD
+          allow(Open3).to receive(:popen3).with(command).and_return(
+            [double('stdin', close: true), double('stdout', close: true), double('stderr', close: true, read: 'Some error'), double('wait_thr', value: double('process_status', success?: false))]
+          )
+
+          expect(Rails.logger).to receive(:error).with(/ERROR Command #{Regexp.escape(command)} error Some error/)
+
+          expect(described_class.new.download_xml).to be false
+        end
+      end
     end
 
     describe '#parse_xml' do
