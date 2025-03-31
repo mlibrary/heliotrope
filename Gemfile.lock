@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/mlibrary/fcrepo_wrapper
+  revision: d09cf630cb403d4b513201c091430ce30a3909f1
+  branch: file-exists-and-downloader-update
+  specs:
+    fcrepo_wrapper (0.10.0)
+      http
+      ruby-progressbar
+
+GIT
   remote: https://github.com/mlibrary/handle_rest
   revision: ed06ef9342639ad82aaad7da2a78eea0cdb6e3c8
   tag: v0.0.5
@@ -34,14 +43,6 @@ GIT
     swagger_client (1.0.0)
       json (~> 2.1, >= 2.1.0)
       typhoeus (~> 1.0, >= 1.0.1)
-
-GIT
-  remote: https://github.com/sethaj/fcrepo_wrapper
-  revision: 7742d81d741e3ee1c2b8a5d6617c3a1475a8bb4a
-  branch: file-exists-to-file-exist
-  specs:
-    fcrepo_wrapper (0.10.0)
-      ruby-progressbar
 
 GEM
   remote: https://rubygems.org/
@@ -159,6 +160,7 @@ GEM
     bagit (0.6.0)
       docopt (~> 0.5.0)
       validatable (~> 1.6)
+    base64 (0.2.0)
     bcp47 (0.3.3)
       i18n
     bcrypt (3.1.20)
@@ -267,6 +269,7 @@ GEM
       representable (>= 3.1.1, < 4)
     docile (1.4.0)
     docopt (0.5.0)
+    domain_name (0.6.20240107)
     draper (4.0.2)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
@@ -381,6 +384,9 @@ GEM
     faraday_middleware (1.2.0)
       faraday (~> 1.0)
     ffi (1.16.3)
+    ffi-compiler (1.3.2)
+      ffi (>= 1.15.5)
+      rake
     flipflop (2.7.1)
       activesupport (>= 4.0)
       terminal-table (>= 1.8)
@@ -424,6 +430,15 @@ GEM
     hashie (5.0.0)
     hiredis (0.6.3)
     htmlentities (4.3.4)
+    http (5.2.0)
+      addressable (~> 2.8)
+      base64 (~> 0.1)
+      http-cookie (~> 1.0)
+      http-form_data (~> 2.2)
+      llhttp-ffi (~> 0.5.0)
+    http-cookie (1.0.8)
+      domain_name (~> 0.5)
+    http-form_data (2.3.0)
     http_logger (0.7.0)
     http_parser.rb (0.8.0)
     httpclient (2.8.3)
@@ -658,6 +673,9 @@ GEM
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
+    llhttp-ffi (0.5.1)
+      ffi-compiler (~> 1.0)
+      rake (~> 13.0)
     logger (1.6.0)
     loofah (2.22.0)
       crass (~> 1.0.2)

@@ -230,7 +230,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem "fakefs", require: "fakefs/safe"
   gem "faker"
-  gem 'fcrepo_wrapper', git: 'https://github.com/sethaj/fcrepo_wrapper', branch: 'file-exists-to-file-exist'
+  gem 'fcrepo_wrapper', git: 'https://github.com/mlibrary/fcrepo_wrapper', branch: 'file-exists-and-downloader-update'
   gem 'json_schemer'
   gem 'rails-controller-testing', '~> 1.0.5'
   gem 'rspec-context-private'
