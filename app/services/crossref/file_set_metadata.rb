@@ -101,6 +101,8 @@ module Crossref
       return "audio/basic" if mime == "audio/x-wave"
       # HELIO-4183
       return "video/mp4" if mime == "video/x-m4v"
+      # HELIO-4872
+      return "text/plain" if mime == "text/vtt"
       mime
     end
 
