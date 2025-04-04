@@ -156,7 +156,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             get api_opds_amherst_path, headers: headers
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
-            # expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(1)
             expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id)).to_json))
           end
@@ -229,7 +229,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             get api_opds_bigten_path, headers: headers
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
-            # expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(1)
             expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id)).to_json))
           end
@@ -302,7 +302,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             get api_opds_leverpress_path, headers: headers
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
-            # expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(1)
             expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id)).to_json))
           end
@@ -429,7 +429,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             get api_opds_umpebc_path, headers: headers
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
-            # expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(2)
             expect(response_body['publications']).to contain_exactly(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id)).to_json), JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_oa.id)).to_json))
           end
@@ -438,7 +438,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             get api_opds_umpebc_oa_path, headers: headers
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
-            # expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(1)
             expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_oa.id)).to_json))
           end
@@ -504,7 +504,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
         get api_opds_amherst_path, headers: headers, params: { filterByEntityId: entity_id }
         expect(response.content_type).to eq("application/opds+json")
         expect(response).to have_http_status(:ok)
-        # expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+        expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
         expect(response_body['publications'].count).to eq(1)
         expect(response_body['publications'].first).to eq(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id), entity_id).to_json))
         expect(response_body['publications'].first["links"].first["href"]).to eq "http://test.host/ebooks/#{epub.id}/download?entityID=https%3A%2F%2Fshibboleth.umich.edu%2Fidp%2Fshibboleth"
@@ -588,7 +588,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
         get api_opds_umpebc_path, headers: headers, params: { filterByEntityId: entity_id }
         expect(response.content_type).to eq("application/opds+json")
         expect(response).to have_http_status(:ok)
-        # expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+        expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
         expect(response_body['publications'].count).to eq(2)
         expect(response_body['publications']).to contain_exactly(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_2020.id), entity_id).to_json),
                                                                  JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_oa.id), entity_id).to_json))
@@ -683,7 +683,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
           get api_opds_heb_path, headers: headers
           expect(response.content_type).to eq("application/opds+json")
           expect(response).to have_http_status(:ok)
-          # expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+          expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
           expect(response_body['publications'].count).to eq(2)
           expect(response_body['publications']).to contain_exactly(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id)).to_json),
                                                                    JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_oa.id)).to_json))
@@ -702,7 +702,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             get api_opds_heb_path, headers: headers, params: { filterByEntityId: entity_id }
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
-            # expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(2)
             expect(response_body['publications']).to contain_exactly(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph.id), entity_id).to_json),
                                                                      JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_oa.id), entity_id).to_json))
@@ -714,7 +714,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
             get api_opds_heb_path, headers: headers, params: { filterByEntityId: entity_id }
             expect(response.content_type).to eq("application/opds+json")
             expect(response).to have_http_status(:ok)
-            # expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
+            expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(1)
             expect(response_body['publications']).to contain_exactly(JSON.parse(Opds::Publication.new_from_monograph(Sighrax.from_noid(monograph_oa.id), entity_id).to_json))
           end
