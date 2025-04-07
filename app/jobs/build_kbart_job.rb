@@ -308,6 +308,9 @@ class BuildKbartJob < ApplicationJob
 
     # creators are "Lastname, Firstname\nLastname, Firstname"
     monograph.solr_document["creator_tesim"]&.first.split(",")[0] || ""
+  rescue StandardError => e
+    MarcLogger.error("Error in BuildKbartJob.first_author_last_name for #{monograph.id}: #{e}")
+    ""
   end
 
   def title_id(monograph)
