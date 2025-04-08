@@ -975,7 +975,7 @@ GEM
       sass-rails
       twitter-bootstrap-rails
     retriable (3.1.2)
-    rexml (3.2.6)
+    rexml (3.3.9)
     rouge (3.30.0)
     rsolr (2.5.0)
       builder (>= 2.1.2)
