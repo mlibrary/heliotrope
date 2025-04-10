@@ -552,6 +552,32 @@ RSpec.describe BuildKbartJob, type: :job do
           expect(subject.first_author_last_name(monograph)).to eq ""
         end
       end
+
+      context "when it's an empty array inside an empty array" do
+        let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(title_tesim: [[]]), nil) }
+
+        it "returns an empty string" do
+          expect(subject.first_author_last_name(monograph)).to eq ""
+        end
+      end
+
+      # This is still crashing mysteriously (sometimes! not always!) I just don't know anymore
+      # HELIO-4877
+      context "when there's an exception" do
+        let(:monograph) { Hyrax::MonographPresenter.new(SolrDocument.new(id: '999999999', creator_tesim: ['Test']), nil) }
+
+        before do
+          allow(monograph).to receive(:id).and_return('999999999')
+          allow(monograph).to receive(:solr_document).and_raise(StandardError, 'test exception')
+          allow(MarcLogger).to receive(:error)
+        end
+
+        it "logs the exception and returns an empty string" do
+          result = subject.first_author_last_name(monograph)
+          expect(result).to eq ""
+          expect(MarcLogger).to have_received(:error).with("Error in BuildKbartJob.first_author_last_name for 999999999: test exception")
+        end
+      end
     end
   end
 
