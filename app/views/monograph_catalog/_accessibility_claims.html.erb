@@ -36,7 +36,7 @@
 <% end %>
 
 <div class="a11y-buttons row">
-<% if @presenter.show_request_accessible_copy_button? %>
+<% if @auth.actor_authorized? && @presenter.show_request_accessible_copy_button? %>
   <% press_accessible_copy_request_form_url = press_presenter.accessible_copy_request_form_url
 
      a11y_request_button_link = if press_accessible_copy_request_form_url.present?
