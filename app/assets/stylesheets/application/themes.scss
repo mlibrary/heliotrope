@@ -14233,8 +14233,7 @@ $sarpress-accent-link: $sarpress-blue;
 
     .navbar-brand {
       color: $sarpress-black-80;
-      font-weight: 700;
-      text-transform: uppercase;
+      font-weight: 700;      
       letter-spacing: 1.1px;
       @include palatino;
       font-size: 1.5em;
