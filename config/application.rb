@@ -164,7 +164,10 @@ module Heliotrope
     # https://github.com/samvera/hyrax/blob/4c1a99a6a52c973781dff090c2c98c044ea65e42/lib/hyrax/configuration.rb#L321
     ENV['HYRAX_UPLOAD_PATH'] = Settings.uploads_path
 
-    # Allow `rails webpacker:compile` to run on node versions >= 17 (see HELIO-4624)
+    # Allow `rails webpacker:compile` to run on node versions >= 17 (see HELIO-4624 and https://nodejs.org/en/blog/release/v17.0.0#openssl-30)
+    # note: webpacker:compile basically just runs `bin/webpack`. To see the `error:0308010C:digital envelope routines::unsupported`...
+    # messages we're avoiding with this you can run the following on a production instance:
+    # `NODE_ENV=production ./bin/webpack --progress --config config/webpack/production.js`
     node_major_version = `node -v || nodejs -v`.to_s.scan(/\d/)[0, 2].join.to_i
     # not sure why this doesn't work on CircleCI, TBH. Is it not actually using the version of Node we think it is?
     ENV['NODE_OPTIONS'] = '--openssl-legacy-provider' unless node_major_version < 17 || ENV['CIRCLECI']
