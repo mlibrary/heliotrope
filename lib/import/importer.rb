@@ -19,13 +19,20 @@ module Import
       @quiet = quiet
       @reuse_noids = reuse_noids
 
+      # visibility is set according to this hierarchy:
+      #  1) if present, the importer visibility parameter (likely from command line `-v` option) trumps everything for all objects in the current import
+      #  2) a `Published?` value present on an object's CSV row will be used for that object
+      #  3) otherwise, for FileSets with no `Published?` value on their CSV row, the Monograph's visibility will be used
+      #  4) when no visibility is set at all, it defaults to draft/restricted
+
+      @explicit_visibility = visibility.present?
+      @visibility = @explicit_visibility ? visibility : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
+
       if monograph_id.present?
         raise "No monograph found with id '#{monograph_id}'" if @reimport_mono.blank?
         @reimporting = true
       else
         @press_subdomain = press
-        @explicit_visibility = visibility.present?
-        @visibility = @explicit_visibility ? visibility : Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE
         @monograph_title = monograph_title
       end
     end
@@ -179,14 +186,13 @@ module Import
       attrs['import_uploaded_files_ids'] = uploaded_files.map { |f| f&.id }
       attrs['import_uploaded_files_attributes'] = attrs.delete('files_metadata')
 
-      # If an explicit visibility (likely command line option) was used to instantiate the importer then strip any...
-      # visibility values from the files' metadata. This means they will use the Monograph's visibility as normal.
-      attrs['import_uploaded_files_attributes'].each { |fattr| fattr.delete('visibility') if @explicit_visibility || @reimporting }
+      # Always use a user-provided visibility, even for additional/"reimported" FileSets. This usually comes from...
+      # the command-line `-v` option
+      if @explicit_visibility
+        attrs['import_uploaded_files_attributes'].each { |fattr| fattr['visibility'] = @visibility }
+      end
 
       if reimporting
-        # Note that the post-import visibility of the Monograph and all newly-imported FileSets will be the same...
-        # as that pre-existing Monograph's visibility when 'reimporting', which is a rare use case in production.
-        attrs['visibility'] = reimport_mono.visibility
         Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(@reimport_mono, Ability.new(user), attrs))
       else
         attrs['press'] = press_subdomain

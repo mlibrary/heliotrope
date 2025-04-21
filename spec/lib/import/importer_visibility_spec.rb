@@ -343,7 +343,7 @@ describe Import::Importer do
           let(:importer_visibility) { public_vis }
           let(:reimport_monograph_visibility) { private_vis }
 
-          it "imports the Monograph and FileSets with the existing Monograph's visibility" do
+          it "adds/'reimports' the new FileSets with the specified public visibility" do
             expect { importer.run }
               .to change(Monograph, :count)
                     .by(0)
@@ -355,14 +355,14 @@ describe Import::Importer do
 
             expect(monograph.title).to eq ['Blah']
             expect(monograph.visibility).to eq 'restricted'
-            expect(f1.visibility).to eq 'restricted'
-            expect(f2.visibility).to eq 'restricted'
-            expect(f3.visibility).to eq 'restricted'
-            expect(f4.visibility).to eq 'restricted'
-            expect(f5.visibility).to eq 'restricted'
-            expect(f6.visibility).to eq 'restricted'
-            expect(f7.visibility).to eq 'restricted'
-            expect(f8.visibility).to eq 'restricted'
+            expect(f1.visibility).to eq 'open'
+            expect(f2.visibility).to eq 'open'
+            expect(f3.visibility).to eq 'open'
+            expect(f4.visibility).to eq 'open'
+            expect(f5.visibility).to eq 'open'
+            expect(f6.visibility).to eq 'open'
+            expect(f7.visibility).to eq 'open'
+            expect(f8.visibility).to eq 'open'
           end
         end
 
@@ -370,7 +370,7 @@ describe Import::Importer do
           let(:importer_visibility) { private_vis }
           let(:reimport_monograph_visibility) { public_vis }
 
-          it "imports the Monograph and FileSets with the existing Monograph's visibility" do
+          it "adds/'reimports' the new FileSets with the specified private visibility" do
             expect { importer.run }
               .to change(Monograph, :count)
                     .by(0)
@@ -382,6 +382,77 @@ describe Import::Importer do
 
             expect(monograph.title).to eq ['Blah']
             expect(monograph.visibility).to eq 'open'
+            expect(f1.visibility).to eq 'restricted'
+            expect(f2.visibility).to eq 'restricted'
+            expect(f3.visibility).to eq 'restricted'
+            expect(f4.visibility).to eq 'restricted'
+            expect(f5.visibility).to eq 'restricted'
+            expect(f6.visibility).to eq 'restricted'
+            expect(f7.visibility).to eq 'restricted'
+            expect(f8.visibility).to eq 'restricted'
+          end
+        end
+      end
+
+      context "'Published?' column present in CSV" do
+        let(:root_dir) { File.join(fixture_path, 'csv', 'import_visibility', 'reimporting', 'visibility_column') }
+
+        # For easier reference, CSV values look like this:
+        #
+        # File Name,	       Title,	                           External Resource URL,	Published?
+        # ://:MONOGRAPH://:, Visibility Settin’ CSV Monograph,		                    true
+        #                  , External Resource FileSet 1,	     http://www.blah.com/1,	true
+        #                  , External Resource FileSet 2,	     http://www.blah.com/2,	true
+        #                  , External Resource FileSet 3,	     http://www.blah.com/3,	blah
+        #                  , External Resource FileSet 4,	     http://www.blah.com/4,	false
+        #                  , External Resource FileSet 5,	     http://www.blah.com/5,	false
+        #                  , External Resource FileSet 6,	     http://www.blah.com/6,
+        #                  , External Resource FileSet 7,	     http://www.blah.com/7, false
+        #                  , External Resource FileSet 8,	     http://www.blah.com/8,	true
+
+        context "No visibility set on importer object" do
+          let(:importer_visibility) { nil }
+          let(:reimport_monograph_visibility) { private_vis }
+
+          it "imports the FileSets with the specified visibility, falling back to the existing Monograph's visibility" do
+            expect { importer.run }
+              .to change(Monograph, :count)
+                    .by(0)
+                    .and(change(FileSet, :count)
+                           .by(8))
+
+            monograph = Monograph.first
+            f1, f2, f3, f4, f5, f6, f7, f8 = monograph.ordered_members.to_a
+
+            expect(monograph.title).to eq ['Blah']
+            expect(monograph.visibility).to eq 'restricted'
+            expect(f1.visibility).to eq 'open'
+            expect(f2.visibility).to eq 'open'
+            expect(f3.visibility).to eq 'restricted'
+            expect(f4.visibility).to eq 'restricted'
+            expect(f5.visibility).to eq 'restricted'
+            expect(f6.visibility).to eq 'restricted'
+            expect(f7.visibility).to eq 'restricted'
+            expect(f8.visibility).to eq 'open'
+          end
+        end
+
+        context "Public visibility set on importer object" do
+          let(:importer_visibility) { public_vis }
+          let(:reimport_monograph_visibility) { private_vis }
+
+          it "adds/'reimports' the new FileSets with the specified public visibility" do
+            expect { importer.run }
+              .to change(Monograph, :count)
+                    .by(0)
+                    .and(change(FileSet, :count)
+                           .by(8))
+
+            monograph = Monograph.first
+            f1, f2, f3, f4, f5, f6, f7, f8 = monograph.ordered_members.to_a
+
+            expect(monograph.title).to eq ['Blah']
+            expect(monograph.visibility).to eq 'restricted'
             expect(f1.visibility).to eq 'open'
             expect(f2.visibility).to eq 'open'
             expect(f3.visibility).to eq 'open'
@@ -392,109 +463,36 @@ describe Import::Importer do
             expect(f8.visibility).to eq 'open'
           end
         end
-      end
 
-      context "'Published?' column present in CSV" do
-        context 'Monograph is marked as published in CSV' do
-          let(:root_dir) { File.join(fixture_path, 'csv', 'import_visibility', 'reimporting', 'visibility_column', 'published_monograph') }
+        context "Private visibility set on importer object" do
+          let(:importer_visibility) { private_vis }
+          let(:reimport_monograph_visibility) { public_vis }
 
-          # For easier reference, CSV values look like this:
-          #
-          # File Name,	       Title,	                           External Resource URL,	Published?
-          # ://:MONOGRAPH://:, Visibility Settin’ CSV Monograph,		                    true
-          #                  , External Resource FileSet 1,	     http://www.blah.com/1,	true
-          #                  , External Resource FileSet 2,	     http://www.blah.com/2,	true
-          #                  , External Resource FileSet 3,	     http://www.blah.com/3,	blah
-          #                  , External Resource FileSet 4,	     http://www.blah.com/4,	false
-          #                  , External Resource FileSet 5,	     http://www.blah.com/5,	false
-          #                  , External Resource FileSet 6,	     http://www.blah.com/6,
-          #                  , External Resource FileSet 7,	     http://www.blah.com/7, false
-          #                  , External Resource FileSet 8,	     http://www.blah.com/8,	true
+          it "adds/'reimports' the new FileSets with the specified private visibility" do
+            expect { importer.run }
+              .to change(Monograph, :count)
+                    .by(0)
+                    .and(change(FileSet, :count)
+                           .by(8))
 
-          context "No visibility set on importer object" do
-            let(:importer_visibility) { nil }
-            let(:reimport_monograph_visibility) { private_vis }
+            monograph = Monograph.first
+            f1, f2, f3, f4, f5, f6, f7, f8 = monograph.ordered_members.to_a
 
-            it "imports the Monograph and FileSets with the existing Monograph's visibility" do
-              expect { importer.run }
-                .to change(Monograph, :count)
-                      .by(0)
-                      .and(change(FileSet, :count)
-                             .by(8))
-
-              monograph = Monograph.first
-              f1, f2, f3, f4, f5, f6, f7, f8 = monograph.ordered_members.to_a
-
-              expect(monograph.title).to eq ['Blah']
-              expect(monograph.visibility).to eq 'restricted'
-              expect(f1.visibility).to eq 'restricted'
-              expect(f2.visibility).to eq 'restricted'
-              expect(f3.visibility).to eq 'restricted'
-              expect(f4.visibility).to eq 'restricted'
-              expect(f5.visibility).to eq 'restricted'
-              expect(f6.visibility).to eq 'restricted'
-              expect(f7.visibility).to eq 'restricted'
-              expect(f8.visibility).to eq 'restricted'
-            end
-          end
-
-          context "Public visibility set on importer object" do
-            let(:importer_visibility) { public_vis }
-            let(:reimport_monograph_visibility) { private_vis }
-
-            it "imports the Monograph and FileSets with the existing Monograph's visibility" do
-              expect { importer.run }
-                .to change(Monograph, :count)
-                      .by(0)
-                      .and(change(FileSet, :count)
-                             .by(8))
-
-              monograph = Monograph.first
-              f1, f2, f3, f4, f5, f6, f7, f8 = monograph.ordered_members.to_a
-
-              expect(monograph.title).to eq ['Blah']
-              expect(monograph.visibility).to eq 'restricted'
-              expect(f1.visibility).to eq 'restricted'
-              expect(f2.visibility).to eq 'restricted'
-              expect(f3.visibility).to eq 'restricted'
-              expect(f4.visibility).to eq 'restricted'
-              expect(f5.visibility).to eq 'restricted'
-              expect(f6.visibility).to eq 'restricted'
-              expect(f7.visibility).to eq 'restricted'
-              expect(f8.visibility).to eq 'restricted'
-            end
-          end
-
-          context "Private visibility set on importer object" do
-            let(:importer_visibility) { private_vis }
-            let(:reimport_monograph_visibility) { public_vis }
-
-            it "imports the Monograph and FileSets with the existing Monograph's visibility" do
-              expect { importer.run }
-                .to change(Monograph, :count)
-                      .by(0)
-                      .and(change(FileSet, :count)
-                             .by(8))
-
-              monograph = Monograph.first
-              f1, f2, f3, f4, f5, f6, f7, f8 = monograph.ordered_members.to_a
-
-              expect(monograph.title).to eq ['Blah']
-              expect(monograph.visibility).to eq 'open'
-              expect(f1.visibility).to eq 'open'
-              expect(f2.visibility).to eq 'open'
-              expect(f3.visibility).to eq 'open'
-              expect(f4.visibility).to eq 'open'
-              expect(f5.visibility).to eq 'open'
-              expect(f6.visibility).to eq 'open'
-              expect(f7.visibility).to eq 'open'
-              expect(f8.visibility).to eq 'open'
-            end
+            expect(monograph.title).to eq ['Blah']
+            expect(monograph.visibility).to eq 'open'
+            expect(f1.visibility).to eq 'restricted'
+            expect(f2.visibility).to eq 'restricted'
+            expect(f3.visibility).to eq 'restricted'
+            expect(f4.visibility).to eq 'restricted'
+            expect(f5.visibility).to eq 'restricted'
+            expect(f6.visibility).to eq 'restricted'
+            expect(f7.visibility).to eq 'restricted'
+            expect(f8.visibility).to eq 'restricted'
           end
         end
 
-        context 'Monograph is marked as draft in CSV' do
-          let(:root_dir) { File.join(fixture_path, 'csv', 'import_visibility', 'reimporting', 'visibility_column', 'draft_monograph') }
+        context "'Published?' column is not present in CSV" do
+          let(:root_dir) { File.join(fixture_path, 'csv', 'import_visibility', 'reimporting', 'no_visibility_column') }
 
           # For easier reference, CSV values look like this:
           #
@@ -522,7 +520,7 @@ describe Import::Importer do
 
               monograph = Monograph.first
               f1, f2, f3, f4, f5, f6, f7, f8 = monograph.ordered_members.to_a
-              pp 'ASDFASDFASDF'
+
               expect(monograph.title).to eq ['Blah']
               expect(monograph.visibility).to eq 'open'
               expect(f1.visibility).to eq 'open'
@@ -540,7 +538,7 @@ describe Import::Importer do
             let(:importer_visibility) { public_vis }
             let(:reimport_monograph_visibility) { private_vis }
 
-            it "imports the Monograph and FileSets with the existing Monograph's visibility" do
+            it "adds/'reimports' the new FileSets with the specified public visibility" do
               expect { importer.run }
                 .to change(Monograph, :count)
                       .by(0)
@@ -552,14 +550,14 @@ describe Import::Importer do
 
               expect(monograph.title).to eq ['Blah']
               expect(monograph.visibility).to eq 'restricted'
-              expect(f1.visibility).to eq 'restricted'
-              expect(f2.visibility).to eq 'restricted'
-              expect(f3.visibility).to eq 'restricted'
-              expect(f4.visibility).to eq 'restricted'
-              expect(f5.visibility).to eq 'restricted'
-              expect(f6.visibility).to eq 'restricted'
-              expect(f7.visibility).to eq 'restricted'
-              expect(f8.visibility).to eq 'restricted'
+              expect(f1.visibility).to eq 'open'
+              expect(f2.visibility).to eq 'open'
+              expect(f3.visibility).to eq 'open'
+              expect(f4.visibility).to eq 'open'
+              expect(f5.visibility).to eq 'open'
+              expect(f6.visibility).to eq 'open'
+              expect(f7.visibility).to eq 'open'
+              expect(f8.visibility).to eq 'open'
             end
           end
 
@@ -567,7 +565,7 @@ describe Import::Importer do
             let(:importer_visibility) { private_vis }
             let(:reimport_monograph_visibility) { public_vis }
 
-            it "imports the Monograph and FileSets with the existing Monograph's visibility" do
+            it "adds/'reimports' the new FileSets with the specified private visibility" do
               expect { importer.run }
                 .to change(Monograph, :count)
                       .by(0)
@@ -579,14 +577,14 @@ describe Import::Importer do
 
               expect(monograph.title).to eq ['Blah']
               expect(monograph.visibility).to eq 'open'
-              expect(f1.visibility).to eq 'open'
-              expect(f2.visibility).to eq 'open'
-              expect(f3.visibility).to eq 'open'
-              expect(f4.visibility).to eq 'open'
-              expect(f5.visibility).to eq 'open'
-              expect(f6.visibility).to eq 'open'
-              expect(f7.visibility).to eq 'open'
-              expect(f8.visibility).to eq 'open'
+              expect(f1.visibility).to eq 'restricted'
+              expect(f2.visibility).to eq 'restricted'
+              expect(f3.visibility).to eq 'restricted'
+              expect(f4.visibility).to eq 'restricted'
+              expect(f5.visibility).to eq 'restricted'
+              expect(f6.visibility).to eq 'restricted'
+              expect(f7.visibility).to eq 'restricted'
+              expect(f8.visibility).to eq 'restricted'
             end
           end
         end
