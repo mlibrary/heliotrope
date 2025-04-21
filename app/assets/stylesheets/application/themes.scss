@@ -14141,6 +14141,406 @@ $reki-black-80: #342f2e;
 }
 ///////////////////////////////////////////////
 //
+// School of Advanced Research Press (SAR)
+//
+///////////////////////////////////////////////
+// colors
+$sarpress-brand-color: #a75534; /*rust*/
+$sarpress-accent-color: #f0ebd9; /*beige*/
+$sarpress-accent-color-2: #f0ead9; /*beige*/
+$sarpress-blue: #004852; /*dark blue*/
+$sarpress-green: #2d9b77; /*seafoam*/
+$sarpress-lightblue: #0976A0; /*light blue*/
+$sarpress-brown: #675f58;
+$sarpress-grey-1: #d6d2c4;
+$sarpress-grey-2: #94a596;
+$sarpress-grey-3: #f4f4f4;
+$sarpress-white: #fff;
+$sarpress-black-80: #342f2e;
+$sarpress-link: $sarpress-lightblue;
+$sarpress-accent-link: $sarpress-blue;
+
+// typography
+@mixin gill-sans {
+  font-family: gill-sans-nova, sans-serif; 
+}
+
+@mixin palatino {
+  font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;
+}
+
+.sarpress {
+
+  // svgicon
+  #documents, #resource-page-svgicon {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(22%) sepia(92%) saturate(3706%) hue-rotate(340deg) brightness(87%) contrast(89%); // $sarpress-link: #d3273e;
+    }
+
+  }
+
+  // typography
+  @include gill-sans;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-weight: 700;
+    @include palatino;
+  }
+
+  // links
+  a {
+    color: $sarpress-link;
+  }
+
+  a:hover,
+  a:active {
+    color: $sarpress-accent-link;
+  }
+
+  // buttons
+
+  .btn-default,
+  .btn {
+    @include button-background-color($sarpress-brand-color);
+    @include button-font-color($sarpress-white);
+    border-color: $sarpress-brand-color;
+  }
+
+
+  .btn-default:hover,
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
+    @include button-hover-background-color($sarpress-brown);
+    @include button-hover-font-color($sarpress-white);
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $sarpress-grey-3;
+  }
+
+  #brand-bar {
+    background-color: $sarpress-accent-color-2;
+
+    .navbar-brand {
+      color: $sarpress-black-80;
+      font-weight: 700;      
+      letter-spacing: 1.1px;
+      @include palatino;
+      font-size: 1.5em;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $sarpress-link;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover {
+        background-color: $sarpress-grey-3;
+      }
+    }
+
+    button.search-submit {
+      background-color: $sarpress-brand-color;
+      color: $sarpress-white;
+    }
+
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    background-color: $sarpress-blue;
+    font-weight: 400;
+    padding-top: 1.5em;
+    padding-bottom: 3cm;
+    color: $sarpress-white;
+    border-radius: 0px;
+
+    p {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+
+    .container {
+      margin-top: 0;
+    }
+
+    .logo {
+
+      img {
+        width: 115px;
+        margin-right: 3em;
+      }
+
+    }
+
+  }
+
+  .press {
+    .results-container {
+
+      .document {
+        h3 {
+          font-weight: 600;
+        }
+        a {
+          color: #333;
+        }
+      }
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: #fafafa;
+  }
+
+  .search-form.panel-body {
+    background-color: #fff;
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: $sarpress-white;
+    background-color: $sarpress-brand-color;
+    border-color: $sarpress-brand-color;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: $sarpress-white;
+    background-color: $sarpress-brown;
+
+    .caret {
+      color: $sarpress-white;
+    }
+
+  .blacklight-icons svg {
+    fill: $sarpress-white;
+  }
+
+  a:hover .blacklight-icons svg {
+    color: $sarpress-white;
+  } 
+
+  }
+
+  // search resources
+  button.search-submit {
+    background-color: $sarpress-brand-color;
+    color: $sarpress-white;
+  }
+
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $sarpress-brand-color;
+       border-color: $sarpress-brand-color;
+       color: $sarpress-white;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $sarpress-brown;
+       border-color: $sarpress-brand-color;
+       color: $sarpress-white;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $sarpress-white;
+       border-color: $sarpress-brand-color;
+       color: $sarpress-brand-color;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+      background-color: $sarpress-white;
+      border-color: $sarpress-brand-color;
+      color: $sarpress-brown;
+     }
+  }
+
+  //footer
+  footer {
+    a,
+    a:hover,
+    a:active {
+      color: $sarpress-white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $sarpress-brand-color;
+      font-weight: 400;
+
+      a,
+      a:hover,
+      a:active {
+        display:none;
+      }
+
+      img {
+        width: 75px;
+      }
+
+    }
+    .press-block-c {
+      background-color: $sarpress-accent-color-2;
+      color: $sarpress-black-80;
+      text-transform: uppercase;
+      letter-spacing: 1.1px;
+      @include palatino;
+
+      img {
+        width: auto !important;
+        margin-right: 1em;
+        height: 25px;
+      }
+    }
+    .platform {
+       background-color: $sarpress-brand-color;       
+    }
+  }
+
+  // e-book reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($sarpress-brand-color,$sarpress-brown,$sarpress-white);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($sarpress-brand-color,$sarpress-brown,$sarpress-white);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($sarpress-brand-color,$sarpress-brown,$sarpress-white);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($sarpress-brand-color,$sarpress-brown,$sarpress-white);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($sarpress-brand-color,$sarpress-brown,$sarpress-white);
+      color: $sarpress-white;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($sarpress-grey-1);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($sarpress-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $sarpress-brand-color;
+    }
+
+  }
+
+}
+
+@media(max-width: 768px) {
+  .sarpress .monograph .message {
+    padding: 1.5em;
+
+    .wrapper {
+      width: auto;
+    }
+    .text {
+      width: 70%;
+    }
+    .dismiss {
+      width: 20%;
+      padding-left: 10%;
+    }
+  }
+}
+
+///////////////////////////////////////////////
+//
 // University of Sussex Library
 //
 ///////////////////////////////////////////////
