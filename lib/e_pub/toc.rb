@@ -23,17 +23,17 @@ module EPub
         ::EPub.logger.info("Warning: Missing nav type toc node") if nav_tocs.empty?
         ::EPub.logger.info("Warning: Multiple nav type toc nodes!") if nav_tocs.length != 1
         nav_tocs.each do |nav_toc|
-          title = nav_toc.xpath("//a[@href='#{chapter_href}']").text
+          title = nav_toc.xpath(%{//a[@href="#{chapter_href}"]}).text
 
           # Many more ifs will come to infest this space...
           if title.blank?
             base_href = File.basename(chapter_href)
-            title = nav_toc.xpath("//a[@href='#{base_href}']").text
+            title = nav_toc.xpath(%{//a[@href="#{base_href}"]}).text
           end
 
           if title.blank?
             upone_href = "../" + chapter_href
-            title = nav_toc.xpath("//a[@href='#{upone_href}']").text
+            title = nav_toc.xpath(%{//a[@href="#{upone_href}"]}).text
           end
 
           break # use the first found toc only!
