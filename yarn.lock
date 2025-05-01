@@ -2429,9 +2429,9 @@ cosmiconfig@^6.0.0:
     path-webpack "0.0.3"
     portfinder "^1.0.28"
 
-"cozy-sun-bear@git+https://github.com/mlibrary/cozy-sun-bear.git":
+"cozy-sun-bear@git+https://github.com/mlibrary/cozy-sun-bear.git#CSB-287/text_resize_slider_label":
   version "1.0.0"
-  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#25979a5f40fd278cbddd4d6edf13914d01da742a"
+  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#95d26092cf2cb0698fb87e00f35c9b151ba53a97"
   dependencies:
     ajv "^6.12.6"
     core-js "^3.6.5"
