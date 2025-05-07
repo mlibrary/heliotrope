@@ -53,7 +53,7 @@ module EmbedCodePresenter
 
   def responsive_embed_code
     <<~END
-      <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:#{embed_width}px; margin:auto; background-color:#000'>
+      <div style='width:#{outer_div_width}; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:#{embed_max_width}px; margin:auto; background-color:#000'>
         <div style='overflow:hidden; padding-bottom:#{padding_bottom}%; position:relative; height:0;'>#{embed_height_string}
           <iframe loading='lazy' src='#{embed_link}' title='#{embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'#{frameborder}></iframe>
         </div>
@@ -65,11 +65,11 @@ module EmbedCodePresenter
   def responsive_embed_code_css
     <<~END
       #fulcrum-embed-outer-#{id} {
-        width:auto;
+        width:#{outer_div_width};
         page-break-inside:avoid;
         -webkit-column-break-inside:avoid;
         break-inside:avoid;
-        max-width:#{embed_width}px;
+        max-width:#{embed_max_width}px;
         margin:auto;
         background-color:#000;
       }
@@ -121,7 +121,7 @@ module EmbedCodePresenter
   # This value is used as the max-width of the responsive divs, so 1000px is a fallback when characterization has...
   # failed to store a width value for the media, or when the embedded FileSet is an interactive map (zip) where...
   # `hydra-file_characterization` knows nothing about how to get the dimensions of the map inside.
-  def embed_width
+  def embed_max_width
     width_ok? ? width : 1000
   end
 
@@ -167,6 +167,15 @@ module EmbedCodePresenter
     else
       return 60 unless width.present? && height.present?
       width > height ? 60 : 80
+    end
+  end
+
+  def outer_div_width
+    # we'll restrict portrait-orientation videos to 40% width, leaving some room for the figcaption etc beneath
+    if (video? || youtube_player_video?) && (width_ok? && height_ok?) && (height >= width)
+      '40vh'
+    else
+      'auto'
     end
   end
 
