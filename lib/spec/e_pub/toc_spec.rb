@@ -4,7 +4,7 @@ RSpec.describe EPub::Toc do
   subject { described_class.new(toc_doc.remove_namespaces!) }
 
   let(:toc_doc) do
-    Nokogiri::XML('
+    Nokogiri::XML(%Q|
       <html>
         <body>
           <nav type="toc" id="toc">
@@ -13,6 +13,7 @@ RSpec.describe EPub::Toc do
               <li><a href="../Text/c04.xhtml">4. The World and the Chläus</a></li>
               <li><a href="chapter1.xhtml">Something...</a></li>
               <li><a href="chapter2.xhtml">Chapter 2</a><li>
+              <li><a href="xhtml/07_Gel'man_Chapter07.xhtml">CHAPTER 7: The Politics of Bad Governance: Russia in Comparative Perspective</a></li>
               <ol>
                 <li><a href="10_Chapter02.1.xhtml">Section 2 1</a><li>
                 <ol>
@@ -37,7 +38,7 @@ RSpec.describe EPub::Toc do
           </nav>
         </body>
       </html>
-    ')
+    |)
   end
 
   describe "#chapter_title" do
@@ -47,6 +48,13 @@ RSpec.describe EPub::Toc do
         let(:simple) { Nokogiri::XML('<item id="Chapter01" href="09_Chapter01.xhtml" media-type="application/xhtml+xml"/>') }
 
         it { expect(subject.chapter_title(simple.children[0])).to eq '1 From Spoilers to Spinoffs: A Theory of Paratexts' }
+      end
+
+      # HELIO-4821
+      context "with a single quote in the file name" do
+        let(:single_quote) { Nokogiri::XML(%{<item id="c14" href="xhtml/07_Gel'man_Chapter07.xhtml" media-type="application/xhtml+xml"/>}) }
+
+        it { expect(subject.chapter_title(single_quote.children[0])).to eq 'CHAPTER 7: The Politics of Bad Governance: Russia in Comparative Perspective' }
       end
 
       context "with a one higher directory match (../)" do
