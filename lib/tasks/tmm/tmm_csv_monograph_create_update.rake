@@ -6,27 +6,32 @@
 
 desc 'Task to be called by a cron for Monographs create/edit from TMM CSV files'
 namespace :heliotrope do
-  task :tmm_csv_monograph_create_update, [:tmm_csv_dir] => :environment do |_t, args|
+  # `dry_run` and `skip_ftp` can be useful to test this task in development/staging etc
+  task :tmm_csv_monograph_create_update, [:tmm_csv_dir, :dry_run, :skip_ftp] => :environment do |_t, args|
     # Usage: bundle exec rails "heliotrope:tmm_csv_monograph_create_update[/path/to/tmm_csv_dir]"
+    # Dev, dry-run, no-FTP usage: bundle exec rails "heliotrope:tmm_csv_monograph_create_update[/path/to/tmm_csv_dir, dry_run, skip_ftp]"
+    # Dev no-FTP usage: bundle exec rails "heliotrope:tmm_csv_monograph_create_update[/path/to/tmm_csv_dir, false, skip_ftp]"
 
     # note: fail messages will be emailed to MAILTO by cron *unless* you use 2>&1 at the end of the job line
     fail "CSV directory not found: '#{args.tmm_csv_dir}'" unless Dir.exist?(args.tmm_csv_dir)
 
-    yaml = Rails.root.join('config', 'firebrand_sftp.yml')
-    fail "FTP YML config file not found at '#{yaml}'" unless File.exist? yaml
-    config = YAML.safe_load(File.read(yaml))
-
     todays_filename = "TMMData_#{Time.now.getlocal.strftime('%Y-%m-%d')}.csv"
     todays_local_file_path = File.join(args.tmm_csv_dir, "TMMData_#{Time.now.getlocal.strftime('%Y-%m-%d')}.csv")
 
-    firebrand_sftp = config['firebrand_sftp_credentials']
-    begin
-      Net::SFTP.start(firebrand_sftp["sftp"], firebrand_sftp["user"], password: firebrand_sftp["password"]) do |sftp|
-        puts "Downloading 'ToFulcrum/#{todays_filename}' from sftp://hosted.ftp.firebrandtech.com to '#{todays_local_file_path}'"
-        sftp.download!("ToFulcrum/#{todays_filename}", todays_local_file_path)
+    unless args.skip_ftp == 'skip_ftp'
+      yaml = Rails.root.join('config', 'firebrand_sftp.yml')
+      fail "FTP YML config file not found at '#{yaml}'" unless File.exist? yaml
+      config = YAML.safe_load(File.read(yaml))
+      firebrand_sftp = config['firebrand_sftp_credentials']
+
+      begin
+        Net::SFTP.start(firebrand_sftp["sftp"], firebrand_sftp["user"], password: firebrand_sftp["password"]) do |sftp|
+          puts "Downloading 'ToFulcrum/#{todays_filename}' from sftp://hosted.ftp.firebrandtech.com to '#{todays_local_file_path}'"
+          sftp.download!("ToFulcrum/#{todays_filename}", todays_local_file_path)
+        end
+      rescue RuntimeError, Net::SFTP::StatusException => e
+        fail "SFTP ERROR: #{e}"
       end
-    rescue RuntimeError, Net::SFTP::StatusException => e
-      fail "SFTP ERROR: #{e}"
     end
 
     input_file = Dir.glob(File.join(args.tmm_csv_dir, todays_filename)).sort.last
@@ -95,6 +100,18 @@ namespace :heliotrope do
         next
       end
 
+      # The series (Collection) value used within `bigten` is dictated by the "Fulcrum Products" value coming from TMM
+      if press = 'bigten'
+        products = row['Fulcrum Products']&.split(';')&.map(&:strip)
+        row['Series'] = if products.any? { |product| product == 'bigten_gender_and_sexuality_studies' }
+                          'Gender and Sexuality Studies'
+                        elsif products.any? { |product| product == 'bigten_indigenous_north_americans' }
+                          'Indigenous North Americans'
+                        else
+                          nil
+                        end
+      end
+
       # ensure we're looking for the correct Press value in Fulcrum by editing the row before lookup
       row['Press'] = press
       # A Monograph's press cannot technically be *changed* by this script as the lookup here will filter ISBN by...
@@ -136,7 +153,9 @@ namespace :heliotrope do
           puts "No Monograph found using #{identifier} on row #{row_num} .......... CREATING in press '#{attrs['press']}'"
           attrs['visibility'] = 'restricted'
 
-          Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
+          unless args.dry_run == 'dry_run'
+            Hyrax::CurationConcern.actor.create(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
+          end
         else
           if check_for_changes_identifier(monograph, identifier, attrs, row_num)
             backup_file = open_backup_file(input_file) if !backup_file_created
@@ -146,7 +165,10 @@ namespace :heliotrope do
               exporter = Export::Exporter.new(monograph.id, :monograph)
               csv << exporter.monograph_row
             end
-            Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
+
+            unless args.dry_run == 'dry_run'
+              Hyrax::CurationConcern.actor.update(Hyrax::Actors::Environment.new(monograph, current_ability, attrs))
+            end
           end
         end
       end
