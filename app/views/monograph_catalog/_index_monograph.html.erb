@@ -107,7 +107,7 @@
             </h2>
           </li>
         <% end %>
-        <% if Flipflop.show_accessibility_claims_tab? && @monograph_presenter.reader_ebook? %>
+        <% if !@monograph_presenter.tombstone? && Flipflop.show_accessibility_claims_tab? && @monograph_presenter.reader_ebook? %>
           <li role="presentation">
             <h2>
               <a id="tab-accessibility-claims" href="#accessibility-claims" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Accessibility Claims</a>
@@ -177,7 +177,7 @@
             </div>
           </section>
         <% end %>
-        <% if Flipflop.show_accessibility_claims_tab? && @monograph_presenter.reader_ebook? %>
+        <% if !@monograph_presenter.tombstone? && Flipflop.show_accessibility_claims_tab? && @monograph_presenter.reader_ebook? %>
           <section id="accessibility-claims" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-accessibility-claims" tabindex="0">
             <div class="col-sm-12">
               <%= render 'accessibility_claims' %>
