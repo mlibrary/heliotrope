@@ -332,7 +332,7 @@
       <!-- SUBJECT/SERIES -->
       <% if @monograph_presenter.series.present? || @monograph_presenter.subject.present? %>
         <div class="subject-series">
-          <% if @monograph_presenter.subdomain == 'livedplaces' %>
+          <% if %w[bigten livedplaces].include? @monograph_presenter.subdomain %>
             <%= @monograph_presenter.attribute_to_html(:series, label: 'Collection', render_as: :catalog_facet_attribute, subdomain: @monograph_presenter.subdomain) %>
           <% else %>
             <%= @monograph_presenter.attribute_to_html(:series, render_as: :catalog_facet_attribute, subdomain: @monograph_presenter.subdomain) %>
