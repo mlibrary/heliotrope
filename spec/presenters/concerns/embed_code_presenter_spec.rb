@@ -344,6 +344,41 @@ RSpec.describe EmbedCodePresenter do
         }
       END
     }
+    let(:portrait_video_embed_code) {
+      <<~END
+        <div style='width:40vh; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:412px; margin:auto; background-color:#000'>
+          <div style='overflow:hidden; padding-bottom:177.18%; position:relative; height:0;'><!-- actual video height: 1460px -->
+            <iframe loading='lazy' src='#{presenter.embed_link}' title='#{presenter.embed_code_title}' style='overflow:hidden; border-width:0; left:0; top:0; width:100%; height:100%; position:absolute;'></iframe>
+          </div>
+        </div>
+      END
+    }
+    let(:portrait_video_embed_code_css) {
+      <<~END
+        #fulcrum-embed-outer-fileset_id {
+          width:40vh;
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          break-inside:avoid;
+          max-width:412px;
+          margin:auto;
+          background-color:#000;
+        }
+        #fulcrum-embed-inner-fileset_id {
+          overflow:hidden;
+          padding-bottom:177.18%;
+          position:relative; height:0;
+        }
+        iframe#fulcrum-embed-iframe-fileset_id {
+          overflow:hidden;
+          border-width:0;
+          left:0; top:0;
+          width:100%;
+          height:100%;
+          position:absolute;
+        }
+      END
+    }
     let(:dimensionless_video_embed_code) {
       <<~END
         <div style='width:auto; page-break-inside:avoid; -webkit-column-break-inside:avoid; break-inside:avoid; max-width:1000px; margin:auto; background-color:#000'>
@@ -531,12 +566,26 @@ RSpec.describe EmbedCodePresenter do
       end
     end
 
-    context 'video FileSet' do
+    context 'video FileSet (landscape)' do
       let(:mime_type) { 'video/mp4' }
 
       it 'returns the expected embed codes and css' do
         expect(presenter.embed_code).to eq video_embed_code
         expect(presenter.embed_code_css).to eq video_embed_code_css
+      end
+    end
+
+    context 'video FileSet (portrait)' do
+      let(:mime_type) { 'video/mp4' }
+
+      before do
+        allow(presenter).to receive(:width).and_return(824)
+        allow(presenter).to receive(:height).and_return(1460)
+      end
+
+      it 'returns the expected embed codes and css' do
+        expect(presenter.embed_code).to eq portrait_video_embed_code
+        expect(presenter.embed_code_css).to eq portrait_video_embed_code_css
       end
     end
 
