@@ -105,7 +105,7 @@ namespace :heliotrope do
         products = row['Fulcrum Products']&.split(';')&.map(&:strip)
         row['Series'] = if products.any? { |product| product == 'bigten_gender_and_sexuality_studies' }
                           'Gender and Sexuality Studies'
-                        elsif products.any? { |product| product == 'bigten_indigenous_north_americans' }
+                        elsif products.any? { |product| product == 'bigten_indigenous' }
                           'Indigenous North Americans'
                         else
                           nil
