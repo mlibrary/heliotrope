@@ -101,7 +101,7 @@ namespace :heliotrope do
       end
 
       # The series (Collection) value used within `bigten` is dictated by the "Fulcrum Products" value coming from TMM
-      if press = 'bigten'
+      if press == 'bigten'
         products = row['Fulcrum Products']&.split(';')&.map(&:strip)
         row['Series'] = if products.any? { |product| product == 'bigten_gender_and_sexuality_studies' }
                           'Gender and Sexuality Studies'
