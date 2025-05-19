@@ -2429,9 +2429,9 @@ cosmiconfig@^6.0.0:
     path-webpack "0.0.3"
     portfinder "^1.0.28"
 
-"cozy-sun-bear@git+https://github.com/mlibrary/cozy-sun-bear.git":
+"cozy-sun-bear@git+https://github.com/mlibrary/cozy-sun-bear.git#CSB-283/font_selection":
   version "1.0.0"
-  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#bb6992d48d19ec553720807a555e64aa7442a783"
+  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#044822906589d166049d8b61ceeceddcfbd4e421"
   dependencies:
     ajv "^6.12.6"
     core-js "^3.6.5"
