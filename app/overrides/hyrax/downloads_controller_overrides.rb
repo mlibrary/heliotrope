@@ -39,7 +39,11 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
             send_file_headers! content_options.merge(disposition: disposition(presenter))
             response.headers['Content-Length'] ||= file.size.to_s
             response.headers['Last-Modified'] = asset.modified_date.utc.strftime("%a, %d %b %Y %T GMT")
-            stream_body file.stream
+            time_taken = Benchmark.realtime do
+              stream_body file.stream
+            end
+            # HELIO-4827
+            Yabeda.fedora_file_download_duration.measure({ status: response.status.to_s }, time_taken)
           end
         end
       else
