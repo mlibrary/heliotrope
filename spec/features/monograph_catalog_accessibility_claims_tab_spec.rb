@@ -5,6 +5,7 @@ require 'rails_helper'
 describe "Monograph Catalog Accessibility Claims Tab" do
   let(:press) { create(:press) }
   let(:monograph_id) { '999999999' }
+  let(:product) { 0 } # unrestricted
   let(:monograph_doc) do
     {
       has_model_ssim: ['Monograph'],
@@ -15,6 +16,7 @@ describe "Monograph Catalog Accessibility Claims Tab" do
       visibility_ssi: 'open',
       suppressed_bsi: false,
       press_tesim: [press.subdomain],
+      products_lsim: [product],
       epub_a11y_screen_reader_friendly_ssi: epub_a11y_screen_reader_friendly_ssi
     }
   end
@@ -61,7 +63,7 @@ describe "Monograph Catalog Accessibility Claims Tab" do
 
       context 'Monograph is protected, i.e. anonymous user is not authed to it' do
         let(:parent) { Sighrax.from_noid(monograph_id) }
-        before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+        let(:product) { 999 } # an actual product, i.e. this Monograph/EPUB is "restricted"
 
         it 'shows the tab, but does not show the "Request Accessible Copy" button' do
           visit monograph_catalog_path(id: monograph_id)

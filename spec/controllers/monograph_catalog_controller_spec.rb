@@ -98,11 +98,11 @@ RSpec.describe MonographCatalogController, type: :controller do
         end
       end
 
-      context 'show_read_button' do
-        context 'draft ebook FeaturedRepresentative FileSet' do
+      context 'reader_links_display' do
+        context 'draft ebook FeaturedRepresentative FileSet, e.g. a "Forthcoming Monograph"' do
           it "doesn't show the read button" do
             get :index, params: { id: monograph.id }
-            expect(assigns(:show_read_button)).to eq false
+            expect(assigns(:reader_links_display)).to eq :not_shown
           end
 
           context 'with a valid share link' do
@@ -110,9 +110,9 @@ RSpec.describe MonographCatalogController, type: :controller do
               JsonWebToken.encode(data: monograph.id, exp: Time.now.to_i + 28 * 24 * 3600)
             end
 
-            it "shows the read button" do
+            it "shows the read button, _linked_" do
               get :index, params: { id: monograph.id, share: valid_share_token }
-              expect(assigns(:show_read_button)).to eq true
+              expect(assigns(:reader_links_display)).to eq :linked
             end
           end
         end
@@ -122,7 +122,25 @@ RSpec.describe MonographCatalogController, type: :controller do
 
           it "shows the read button" do
             get :index, params: { id: monograph.id }
-            expect(assigns(:show_read_button)).to eq true
+            expect(assigns(:reader_links_display)).to eq :linked
+          end
+
+          context '`ee` press' do
+            let(:monograph) { create(:public_monograph, press: 'ee') }
+
+            it "does not show the read button" do
+              get :index, params: { id: monograph.id }
+              expect(assigns(:reader_links_display)).to eq :not_shown
+            end
+          end
+
+          context 'tombstoned Monograph' do
+            let(:monograph) { create(:public_monograph, tombstone: 'yes') }
+
+            it "does not show the read button" do
+              get :index, params: { id: monograph.id }
+              expect(assigns(:reader_links_display)).to eq :not_shown
+            end
           end
         end
       end
@@ -193,7 +211,7 @@ RSpec.describe MonographCatalogController, type: :controller do
           expect(assigns(:search_ongoing)).to eq false
         end
         it 'sets show_read_button to false' do
-          expect(assigns(:show_read_button)).to eq false
+          expect(assigns(:reader_links_display)).to eq :not_shown
         end
       end
 
@@ -210,7 +228,7 @@ RSpec.describe MonographCatalogController, type: :controller do
             expect(response).not_to render_template('monograph_catalog/index')
           end
           it 'does not set show_read_button' do
-            expect(assigns(:show_read_button)).to eq nil
+            expect(assigns(:reader_links_display)).to eq nil
           end
           it 'redirects to login page' do
             expect(response).to redirect_to(new_user_session_path)
@@ -256,8 +274,8 @@ RSpec.describe MonographCatalogController, type: :controller do
           it 'sets search_ongoing to false' do
             expect(assigns(:search_ongoing)).to eq false
           end
-          it 'sets show_read_button to false' do
-            expect(assigns(:show_read_button)).to eq false
+          it 'sets reader_links_display to `:not_shown`' do
+            expect(assigns(:reader_links_display)).to eq :not_shown
           end
 
           context 'textbox search term in play' do
@@ -266,8 +284,8 @@ RSpec.describe MonographCatalogController, type: :controller do
             it 'sets search_ongoing to true' do
               expect(assigns(:search_ongoing)).to eq true
             end
-            it 'sets show_read_button to false' do
-              expect(assigns(:show_read_button)).to eq false
+            it 'sets reader_links_display to `:not_shown`' do
+              expect(assigns(:reader_links_display)).to eq :not_shown
             end
           end
         end
