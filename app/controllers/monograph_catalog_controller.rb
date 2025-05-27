@@ -152,10 +152,17 @@ class MonographCatalogController < ::CatalogController
       auth_for(Sighrax.from_presenter(@monograph_presenter))
       for_access_icons
       @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
-      # The monograph catalog page is completely user-facing, apart from a small admin menu. The "Read" button should...
-      # never show up if there is no published ebook for CSB to use! This is important for the "Forthcoming" workflow.
-      @show_read_button = @monograph_presenter.reader_ebook? && (@monograph_presenter&.reader_ebook['visibility_ssi'] == 'open' || valid_share_link?)
-      @disable_read_button = disable_read_button?
+      # The monograph catalog page is completely user-facing, apart from a small, distinct admin menu. Any UI...
+      # elements which need to be hidden/altered depending on whether a regular user can or cannot use the e-reader...
+      # can use this variable. This is especially important for the "Forthcoming" workflow, when there is no...
+      # published ebook for CSB to use.
+      #
+      # These UI elements include:
+      # - The "Read" button itself, which may be shown grayed-out/disabled, shown linked or not shown at all.
+      # - The ToC elements, which are always shown if present, but may or may not actually link into the reader
+      # - The "Accessibility Claims" tab, which displays as long as the Read button is shown (linked or unlinked)
+      # - The "Request Accessible Copy" button in the "Accessibility Claims" tab, which displays when the Read button is present and linked
+      @reader_links_display = reader_links_display
     end
 
     instrument_method
@@ -171,9 +178,27 @@ class MonographCatalogController < ::CatalogController
     end
 
     instrument_method
-    def disable_read_button?
-      return true if @monograph_presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? && @monograph_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :restricted
-      false
+    def reader_links_display
+      # Reminder that this logic is for non-admin-facing UI elements. Not super easy to follow, but at least it's in one place?!
+
+      # HELIOTROPE METADATA LOGIC
+      # `ee` press does not allow the use of CSB at all, instead it does a flavor of OA where registration (via Google Form) is required to download the `pdf_ebook`
+      return :not_shown if @monograph_presenter.tombstone? || @monograph_presenter.subdomain == 'ee' || !@monograph_presenter.reader_ebook?
+
+      # HYRAX/SAMVERA VISIBILITY LOGIC
+      # the share link gets to short-circuit visibility for, e.g. an author reviewing their draft Monograph on Fulcrum
+      # this checking of the share link URL param or session variable is the reason this logic can't all be in the presenter
+      return :linked if valid_share_link?
+      return :not_shown unless @monograph_presenter&.reader_ebook['visibility_ssi'] == 'open'
+
+      # GREENSUB COMPONENTS/PRODUCTS/LICENSES LOGIC
+      # When a Monograph has a readable ebook but the user is not licensed to it, we show the button but disable it (no link set)
+      # Similarly we show the ToC entries but do not link them. This is a hint/tease that they need to authenticate to get access.
+      if @monograph_presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? && @monograph_presenter.access_level(@actor_product_ids, @allow_read_product_ids).level == :restricted
+        :not_linked
+      else
+        :linked
+      end
     end
 
     instrument_method
