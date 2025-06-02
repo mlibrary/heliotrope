@@ -14,10 +14,12 @@ describe "Monograph Catalog Accessibility Claims Tab" do
       read_access_group_ssim: ['public'],
       visibility_ssi: 'open',
       suppressed_bsi: false,
-      press_sim: press.subdomain
+      press_tesim: [press.subdomain],
+      epub_a11y_screen_reader_friendly_ssi: epub_a11y_screen_reader_friendly_ssi
     }
   end
 
+  let(:epub_a11y_screen_reader_friendly_ssi) { nil }
   let(:epub_id) { '000000000' }
   let(:epub_doc) do
     {
@@ -33,34 +35,118 @@ describe "Monograph Catalog Accessibility Claims Tab" do
     FeaturedRepresentative.create(work_id: monograph_id, file_set_id: epub_id, kind: 'epub')
   end
 
-  context '`Flipflop.show_accessibility_claims_tab?` returns the default value of `false`' do
-    it 'does not show the tab' do
-      visit monograph_catalog_path(id: monograph_id)
-      expect(page).to_not have_selector('#tab-accessibility-claims')
-      expect(page).to_not have_selector('#accessibility-claims')
-      expect(page).to_not have_link('Request Accessible Copy')
+  describe 'Flipflop.show_accessibility_claims_tab?' do
+    context 'returns the default value of `false`' do
+      it 'does not show the tab' do
+        visit monograph_catalog_path(id: monograph_id)
+        # 'Accessibility Claims' tab
+        expect(page).to_not have_selector('#tab-accessibility-claims')
+        expect(page).to_not have_selector('#accessibility-claims')
+        # metadata block on the tab
+        expect(page).to_not have_link('Request Accessible Copy')
+      end
+    end
+
+    context 'returns `true`' do
+      before { allow(Flipflop).to receive(:show_accessibility_claims_tab?).and_return(true) }
+
+      it 'shows the tab with the "Request Accessible Copy" button' do
+        visit monograph_catalog_path(id: monograph_id)
+        # 'Accessibility Claims' tab
+        expect(page).to have_selector('#tab-accessibility-claims')
+        expect(page).to have_selector('#accessibility-claims')
+        # metadata block on the tab
+        expect(page).to have_link('Request Accessible Copy')
+      end
+
+      context 'Monograph is protected, i.e. anonymous user is not authed to it' do
+        let(:parent) { Sighrax.from_noid(monograph_id) }
+        before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+
+        it 'shows the tab, but does not show the "Request Accessible Copy" button' do
+          visit monograph_catalog_path(id: monograph_id)
+          # 'Accessibility Claims' tab
+          expect(page).to have_selector('#tab-accessibility-claims')
+          expect(page).to have_selector('#accessibility-claims')
+          # metadata block on the tab
+          expect(page).to_not have_link('Request Accessible Copy')
+        end
+      end
     end
   end
 
-  context '`Flipflop.show_accessibility_claims_tab?` returns `true`' do
+  describe 'Press options' do
     before { allow(Flipflop).to receive(:show_accessibility_claims_tab?).and_return(true) }
 
-    it 'shows the tab with the "Request Accessible Copy" button' do
-      visit monograph_catalog_path(id: monograph_id)
-      expect(page).to have_selector('#tab-accessibility-claims')
-      expect(page).to have_selector('#accessibility-claims')
-      expect(page).to have_link('Request Accessible Copy')
+    context 'show_accessibility_metadata' do
+      # For the purposes of testing the effect of  the Press show_accessibility_metadata option, a minimal piece of...
+      # metadata must be present to display. So this Monograph must be "screen-reader friendly", meaning
+      # epub_a11y_screen_reader_friendly_ssi is indexed as 'yes'
+      let(:epub_a11y_screen_reader_friendly_ssi) { 'yes' }
+
+      context 'returns the default value of `true`' do
+        it 'shows the metadata on the tab' do
+          visit monograph_catalog_path(id: monograph_id)
+          # 'Accessibility Claims' tab
+          expect(page).to have_selector('#tab-accessibility-claims')
+          expect(page).to have_selector('#accessibility-claims')
+          # metadata block on the tab
+          expect(page).to have_content 'Screen Reader Friendly: yes'
+          # this is not present because the EPUB is "screen-reader friendly"
+          expect(page).to_not have_link('Request Accessible Copy')
+        end
+      end
+
+      context 'returns `false`' do
+        let(:press) { create(:press, show_accessibility_metadata: false) }
+
+        it 'shows the tab but does not show accessibility metadata' do
+          visit monograph_catalog_path(id: monograph_id)
+          # 'Accessibility Claims' tab
+          expect(page).to have_selector('#tab-accessibility-claims')
+          expect(page).to have_selector('#accessibility-claims')
+          # metadata block on the tab
+          expect(page).to_not have_content 'Screen Reader Friendly: yes'
+          # this is not present because it sits inside the metadata section which is prevented from displaying (plus...
+          # the EPUB is "screen-reader friendly" so it wouldn't show up anyway ;-)
+          expect(page).to_not have_link('Request Accessible Copy')
+        end
+      end
     end
 
-    context 'Monograph is protected, i.e. anonymous user is not authed to it' do
-      let(:parent) { Sighrax.from_noid(monograph_id) }
-      before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+    context 'show_request_accessible_copy_button' do
+      # For the purposes of testing the effect of show_request_accessible_copy_button, the metadata itself must be...
+      # visible, given the fact that the 'Request Accessible Copy' button nests inside it.
+      # Additionally, the EPUB must *not* have been indexed on the Monograph Solr doc as "screen-reader friendly",...
+      # meaning epub_a11y_screen_reader_friendly_ssi is anything other than 'yes'
+      let(:epub_a11y_screen_reader_friendly_ssi) { 'unknown' }
 
-      it 'shows the tab, but does not show the "Request Accessible Copy" button' do
-        visit monograph_catalog_path(id: monograph_id)
-        expect(page).to have_selector('#tab-accessibility-claims')
-        expect(page).to have_selector('#accessibility-claims')
-        expect(page).to_not have_link('Request Accessible Copy')
+      context 'returns the default value of `true`' do
+        it 'shows the "Request Accessible Copy" button on the tab' do
+          visit monograph_catalog_path(id: monograph_id)
+          # 'Accessibility Claims' tab
+          expect(page).to have_selector('#tab-accessibility-claims')
+          expect(page).to have_selector('#accessibility-claims')
+          # metadata block on the tab
+          expect(page).to have_content 'Screen Reader Friendly: No information is available'
+          expect(page).to have_link('Request Accessible Copy')
+        end
+      end
+
+      context 'returns `false`' do
+        let(:press) { create(:press, show_request_accessible_copy_button: false) }
+
+        it 'does not show the "Request Accessible Copy" button on the tab' do
+          visit monograph_catalog_path(id: monograph_id)
+          # 'Accessibility Claims' tab
+          expect(page).to have_selector('#tab-accessibility-claims')
+          expect(page).to have_selector('#accessibility-claims')
+          # metadata block on the tab
+          expect(page).to have_content 'Screen Reader Friendly: No information is available'
+          # this is not present because it sits inside the metadata section which is prevented from displaying (plus...
+          # the EPUB is "screen-reader friendly" so it wouldn't show up anyway ;-)
+          expect(page).to_not have_link('Request Accessible Copy')
+        end
       end
     end
   end
