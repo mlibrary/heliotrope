@@ -124,10 +124,6 @@ module EpubAccessibilityMetadataPresenter
                                           end
   end
 
-  def show_request_accessible_copy_button?
-    @show_request_accessible_copy_button ||= epub_a11y_screen_reader_friendly != 'yes'
-  end
-
   def prepopulated_link_for_accessible_copy_request_form
     # If a custom URL is stored on the Press, that will be used directly from the view, because PressPresenter exists!
     # If not, which is the more likely use case, the view logic will use this method.

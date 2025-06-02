@@ -756,9 +756,30 @@ footer.press {
 ///////////////////////////////////
 // PRESS ADD/EDIT FORM
 ///////////////////////////////////
-.press-form-logo {
-  height: 100px;
-  width: auto;
+.simple_form.edit_press {
+  .press-form-logo {
+    height: 100px;
+    width: auto;
+  }
+
+  .help-block {
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+
+  fieldset {
+    legend {
+      width: auto;
+    }
+
+    border: 1px solid;
+    margin: 1rem;
+    padding: 0.35em 0.75em;
+  }
+
+  .radio {
+    padding-left: 10px;
+  }
 }
 ///////////////////////////////////
 // MONOGRAPH FORM

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_02_25_213311) do
+ActiveRecord::Schema.define(version: 2025_05_31_171419) do
 
   create_table "api_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.integer "user_id"
@@ -302,17 +302,6 @@ ActiveRecord::Schema.define(version: 2025_02_25_213311) do
     t.index ["user_id"], name: "index_job_io_wrappers_on_user_id"
   end
 
-  create_table "job_statuses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
-    t.text "command", size: :medium
-    t.string "task"
-    t.string "noid"
-    t.boolean "completed", default: false
-    t.boolean "error", default: false
-    t.text "error_message", size: :medium
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "license_affiliations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "license_id"
     t.string "affiliation"
@@ -446,6 +435,8 @@ ActiveRecord::Schema.define(version: 2025_02_25_213311) do
     t.string "google_analytics_4"
     t.text "content_warning_information", size: :medium
     t.string "accessibility_webpage_url"
+    t.boolean "show_accessibility_metadata", default: true
+    t.boolean "show_request_accessible_copy_button", default: true
     t.string "accessible_copy_request_form_url"
     t.index ["parent_id"], name: "index_presses_on_parent_id"
   end

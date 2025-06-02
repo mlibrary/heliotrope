@@ -101,6 +101,51 @@ RSpec.describe Press, type: :model do
       end
     end
 
+    describe "#show_accessibility_metadata?" do
+      subject { press.show_accessibility_metadata }
+
+      context "is set to true" do
+        let(:press) { build(:press, show_accessibility_metadata: true) }
+
+        it { expect(subject).to be true }
+      end
+
+      context "is set to false" do
+        let(:press) { build(:press, show_accessibility_metadata: false) }
+
+        it { expect(subject).to be false }
+      end
+
+      context "defaults to true" do
+        let(:press) { build(:press) }
+
+        it { expect(subject).to be true }
+      end
+    end
+
+    describe "#show_request_accessible_copy_button?" do
+      subject { press.show_request_accessible_copy_button }
+
+      context "is set to true" do
+        let(:press) { build(:press, show_request_accessible_copy_button: true) }
+
+        it { expect(subject).to be true }
+      end
+
+      context "is set to false" do
+        let(:press) { build(:press, show_request_accessible_copy_button: false) }
+
+        it { expect(subject).to be false }
+      end
+
+      context "defaults to true" do
+        let(:press) { build(:press) }
+
+        it { expect(subject).to be true }
+      end
+    end
+
+
     describe 'accessible_copy_request_form_url' do
       # press.valid? will be initially true for this fresh-from-the-FactoryBot press
       let(:press) { create(:press) }
