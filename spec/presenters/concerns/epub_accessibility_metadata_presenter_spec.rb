@@ -337,40 +337,6 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
     end
   end
 
-  describe '#show_request_accessible_copy_button?' do
-    subject { presenter.show_request_accessible_copy_button? }
-
-    context '`epub_a11y_screen_reader_friendly_ssi` has a value of "yes"' do
-      it 'returns false' do
-        is_expected.to eq false
-      end
-    end
-
-    context '`epub_a11y_screen_reader_friendly_ssi` has a value of "no"' do
-      let(:epub_a11y_screen_reader_friendly_ssi) { 'no' }
-
-      it 'returns true' do
-        is_expected.to eq true
-      end
-    end
-
-    context '`epub_a11y_screen_reader_friendly_ssi` has a value of "unknown"' do
-      let(:epub_a11y_screen_reader_friendly_ssi) { 'unknown' }
-
-      it 'returns true' do
-        is_expected.to eq true
-      end
-    end
-
-    context '`epub_a11y_screen_reader_friendly_ssi` is not present' do
-      let(:epub_a11y_screen_reader_friendly_ssi) { nil }
-
-      it 'returns true' do
-        is_expected.to eq true
-      end
-    end
-  end
-
   describe '#prepopulated_link_for_accessible_copy_request_form' do
     subject { presenter.prepopulated_link_for_accessible_copy_request_form }
 

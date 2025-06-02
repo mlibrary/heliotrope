@@ -756,9 +756,30 @@ footer.press {
 ///////////////////////////////////
 // PRESS ADD/EDIT FORM
 ///////////////////////////////////
-.press-form-logo {
-  height: 100px;
-  width: auto;
+.simple_form.edit_press {
+  .press-form-logo {
+    height: 100px;
+    width: auto;
+  }
+
+  .help-block {
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+
+  fieldset {
+    legend {
+      width: auto;
+    }
+
+    border: 1px solid;
+    margin: 1rem;
+    padding: 0.35em 0.75em;
+  }
+
+  .radio {
+    padding-left: 10px;
+  }
 }
 ///////////////////////////////////
 // MONOGRAPH FORM
@@ -1247,6 +1268,11 @@ footer.press {
           font-weight: 600;
         }
 
+        .a11y-metadata {
+          border-bottom: 1px solid #ddd;
+          margin-bottom: 1em;
+        }
+
         .a11y-buttons {
           display: flex;
           justify-content: space-evenly;
@@ -1255,11 +1281,6 @@ footer.press {
 
         .a11y-info, .a11y-copy {
           padding-bottom: 1.2em;
-        }
-
-        .a11y-statement {
-          border-top: 1px solid #ddd;
-          padding-top: 1em;
         }
       }
     }

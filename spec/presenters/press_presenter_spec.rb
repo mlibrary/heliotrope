@@ -81,6 +81,46 @@ RSpec.describe PressPresenter do
       end
     end
 
+    describe "#show_accessibility_metadata?" do
+      context "is set to true" do
+        let(:press) { create(:press, show_accessibility_metadata: true) }
+
+        it { expect(subject.show_accessibility_metadata?).to be true }
+      end
+
+      context "is set to false" do
+        let(:press) { create(:press, show_accessibility_metadata: false) }
+
+        it { expect(subject.show_accessibility_metadata?).to be false }
+      end
+
+      context "defaults to true" do
+        let(:press) { create(:press) }
+
+        it { expect(subject.show_accessibility_metadata?).to be true }
+      end
+    end
+
+    describe "#show_request_accessible_copy_button?" do
+      context "is set to true" do
+        let(:press) { create(:press, show_request_accessible_copy_button: true) }
+
+        it { expect(subject.show_request_accessible_copy_button?).to be true }
+      end
+
+      context "is set to false" do
+        let(:press) { create(:press, show_request_accessible_copy_button: false) }
+
+        it { expect(subject.show_request_accessible_copy_button?).to be false }
+      end
+
+      context "defaults to true" do
+        let(:press) { create(:press) }
+
+        it { expect(subject.show_request_accessible_copy_button?).to be true }
+      end
+    end
+
     describe "#accessible_copy_request_form_url" do
       let(:press) { create(:press, subdomain: "blah", accessible_copy_request_form_url: accessible_copy_request_form_url) }
       let(:accessible_copy_request_form_url) { "https://mypublisher.com/a11y-form" }

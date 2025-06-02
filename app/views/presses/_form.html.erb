@@ -13,6 +13,8 @@
   <%= f.input :name, label: 'Publisher Name', required: true %>
   <%= f.input :subdomain, label: 'fulcrum.org Subdomain', required: true %>
   <%= f.input :description, required: true %>
+  <%= f.input :location, label: 'Publisher Location' %>
+  <%= f.input :parent_id, collection: Press.parent_presses, include_blank: true, prompt: "Choose a parent press (optional)" %>
   <div class="form-group string logo_path">
     <label class="control-label string required" for="logo_path">* Upload a Logo</label>
     <%= f.file_field :logo_path %>
@@ -25,23 +27,35 @@
     <% end %>
   </div>
   <%= f.input :press_url, label: 'Publisher\'s Current Website Address', required: true %>
-  <%= f.input :google_analytics, label: 'Google Analytics Tracking ID' %>
-  <%= f.input :google_analytics_4, label: 'Google Analytics 4 Tracking ID' %>
-  <%= f.input :google_analytics_url, label: 'Google Analytics Data Studio URL' %>
+  <fieldset>
+    <legend>Google Analytics</legend>
+    <%= f.input :google_analytics, label: 'Google Analytics Tracking ID' %>
+    <%= f.input :google_analytics_4, label: 'Google Analytics 4 Tracking ID' %>
+    <%= f.input :google_analytics_url, label: 'Google Analytics Data Studio URL' %>
+  </fieldset>
   <%= f.input :readership_map_url, label: '(MPub) Readership Map URL' %>
   <%= f.input :typekit, label: 'Typekit ID' %>
   <%= f.input :twitter, label: 'Twitter Handle' %>
-  <%= f.input :location, label: 'Publisher Location' %>
-  <%= f.input :footer_block_a %>
-  <%= f.input :footer_block_b %>
-  <%= f.input :footer_block_c %>
-  <%= f.input :navigation_block %>
-  <%= f.input :parent_id, collection: Press.parent_presses, include_blank: true, prompt: "Choose a parent press (optional)" %>
+  <fieldset>
+    <legend>Page Layout HTML Blocks</legend>
+      <%= f.input :footer_block_a %>
+      <%= f.input :footer_block_b %>
+      <%= f.input :footer_block_c %>
+      <%= f.input :navigation_block %>
+  </fieldset>
   <%= f.input :restricted_message, label: 'Message for restricted works (if any). HTML is ok' %>
   <%= f.input :tombstone_message, label: 'Message for tombstone works (if any). HTML is ok' %>
   <%= f.input :content_warning_information, label: 'Default content warning information text (for Monographs that have a content warning but no custom content warning information text).' %>
-  <%= f.input :accessibility_webpage_url %>
-  <%= f.input :accessible_copy_request_form_url %>
+  <fieldset>
+    <legend>"Accessibility Claims" Tab</legend>
+    <%= f.input :accessibility_webpage_url,
+                label: 'Accessibility Webpage URL',
+                hint: 'This always displays. If no specific URL is provided, the value https://www.fulcrum.org/accessibility/ will be used.' %>
+    <%= f.input :show_accessibility_metadata, label: 'Display Accessibility Metadata?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: true %>
+    <%= f.input :show_request_accessible_copy_button, label: 'Display "Request Accessible Copy" Button?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: true,
+                hint: 'Note this button <u>cannot display</u> if the accessibility metadata is <u>not</u> displayed.'.html_safe %>
+    <%= f.input :accessible_copy_request_form_url, label: 'Accessible Copy Request Form URL' %>
+  </fieldset>
   <%= f.input :show_irus_stats, label: 'Show IRUS stats on Monograph catalog pages?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: true %>
   <%= f.input :share_links, label: 'Allow "share links" for temporary access of restricted materials?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
   <%= f.input :watermark, label: 'Apply watermark to downloaded ebooks?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
