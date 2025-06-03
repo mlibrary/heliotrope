@@ -1127,6 +1127,9 @@ GEM
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
+    sniffer (0.5.0)
+      anyway_config (>= 1.0)
+      dry-initializer (~> 3)
     solr_wrapper (2.2.0)
       faraday
       retriable
@@ -1249,6 +1252,12 @@ GEM
       anyway_config (>= 1.0, < 3)
       concurrent-ruby
       dry-initializer
+    yabeda-activejob (0.5.0)
+      rails (>= 5.2)
+      yabeda (~> 0.6)
+    yabeda-http_requests (0.2.1)
+      sniffer
+      yabeda
     yabeda-prometheus (0.9.1)
       prometheus-client (>= 3.0, < 5.0)
       rack
@@ -1367,6 +1376,8 @@ DEPENDENCIES
   web-console (>= 3.3.0)
   webdrivers (~> 5.0)
   webpacker (~> 5.4.2)
+  yabeda-activejob
+  yabeda-http_requests
   yabeda-prometheus
   yabeda-puma-plugin
   yabeda-rails

@@ -75,4 +75,8 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # HELIO-4827 Observability metrics for development
+  # In prod this is configured in puma.rb
+  config.middleware.use(Yabeda::Prometheus::Exporter, path: "/metrics")
 end

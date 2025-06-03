@@ -217,10 +217,13 @@ gem 'skylight', '~> 5.3.4'
 # Rails Webpack Tool
 gem 'webpacker', '~> 5.4.2'
 
-# puma monitoring, HELIO-3388
+# Puma monitoring, HELIO-3388
+# Rails, ActiveJob, Fedora/Solr HTTP monitoring, HELIO-4827
 gem 'yabeda-rails'
 gem 'yabeda-puma-plugin'
 gem 'yabeda-prometheus'
+gem 'yabeda-activejob'
+gem 'yabeda-http_requests'
 
 group :development, :test do
   gem 'byebug'
