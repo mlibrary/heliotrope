@@ -104,6 +104,16 @@ class PressPresenter < ApplicationPresenter
     @press&.accessibility_webpage_url.presence
   end
 
+  def show_accessibility_metadata?
+    return false if press.show_accessibility_metadata == false
+    true
+  end
+
+  def show_request_accessible_copy_button?
+    return false if press.show_request_accessible_copy_button == false
+    true
+  end
+
   def accessible_copy_request_form_url
     @press&.accessible_copy_request_form_url.presence
   end
