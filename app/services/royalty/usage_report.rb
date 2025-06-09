@@ -25,6 +25,8 @@ module Royalty
       # HELIO-3572
       items = add_hebids(items)
       items = reclassify_isbns(items)
+      # HELIO-4886 Metric_Type changed from "Total_Item_Requests" to the made-up "Total_Title_Requests"
+      items = total_item_to_title(items)
       # create and sent reports
       reports = copyholder_reports(items)
       reports = combined_report(reports, items)
@@ -95,6 +97,13 @@ module Royalty
           }
         end
         reports
+      end
+
+      def total_item_to_title(items)
+        # HELIO-4886 Metric_Type value changed from "Total_Item_Requests" to the made-up "Total_Title_Requests"
+        # We know that there's no such thing as a "Total_Title_Requests" metric type in COUNTER 5 and 5.1 but we're doing this anyway.
+        items.filter_map { |item| item["Metric_Type"] = "Total_Title_Requests" }
+        items
       end
 
       def remove_extra_lines(items)
