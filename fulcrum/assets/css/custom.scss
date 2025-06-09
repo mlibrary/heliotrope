@@ -560,6 +560,19 @@ h2#services {
   list-style: none;
 }
 
+/**
+ * Accessibility
+ */
+ .a11y-toc {
+  position: sticky;
+  top: 5rem;
+  right: 0;
+  z-index: 2;
+  height: calc(100vh - 7rem);
+  overflow-y: auto;
+  grid-area: toc;
+}
+
 
 // blog
 .post-feature-image {
