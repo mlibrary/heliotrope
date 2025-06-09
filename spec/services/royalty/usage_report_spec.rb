@@ -9,6 +9,7 @@ RSpec.describe Royalty::UsageReport do
        "Section_Type": "Chapter",
        "ISBN": "9780520047983 (hardcover), 9780520319196 (ebook), 9780520319189 (paper)",
        "Publisher": "U of A",
+       "Metric_Type": "Total_Item_Requests",
        "Reporting_Period_Total": 2300,
        "Jan-2019": 0,
        "Feb-2019": 0,
@@ -22,6 +23,7 @@ RSpec.describe Royalty::UsageReport do
        "Section_Type": "Chapter",
        "ISBN": "9780813915425 (hardcover), 9780813915432 (paper)",
        "Publisher": "U of B",
+       "Metric_Type": "Total_Item_Requests",
        "Reporting_Period_Total": 5,
        "Jan-2019": 0,
        "Feb-2019": 2,
@@ -36,6 +38,7 @@ RSpec.describe Royalty::UsageReport do
        "ISBN": "9780520047983 (hardcover), 9780520319196 (ebook), 9780520319189 (paper)",
        "Publisher": "U of A",
        "Access_Type": "OA_Gold",
+       "Metric_Type": "Total_Item_Requests",
        "Reporting_Period_Total": 9,
        "Jan-2019": 3,
        "Feb-2019": 3,
@@ -50,6 +53,7 @@ RSpec.describe Royalty::UsageReport do
        "ISBN": "9780520047983 (hardcover), 9780520319196 (ebook), 9780520319189 (paper)",
        "Publisher": "U of A",
        "Access_Type": "Controlled",
+       "Metric_Type": "Total_Item_Requests",
        "Reporting_Period_Total": 0,
        "Jan-2019": 0,
        "Feb-2019": 0,
@@ -97,15 +101,18 @@ RSpec.describe Royalty::UsageReport do
       expect(@reports.keys).to eq ["Copyright_A.usage.201901-201906.csv", "Copyright_B.usage.201901-201906.csv", "usage_combined.201901-201906.csv"]
       expect(@reports["Copyright_A.usage.201901-201906.csv"][:items].length).to eq 2
       expect(@reports["Copyright_B.usage.201901-201906.csv"][:items].length).to eq 1
+      expect(@reports["Copyright_B.usage.201901-201906.csv"][:items][0]["Metric_Type"]).to eq "Total_Title_Requests"
       # note that the "Proprietary_ID": "333333333" and "Access_Type": "Controlled" row has
       # been removed by the remove_extra_lines method
       expect(@reports["usage_combined.201901-201906.csv"][:items].length).to eq 3
       # make sure we have the right formatting for larger numbers (commas)
       expect(@reports["usage_combined.201901-201906.csv"][:header][:"Total Hits (All Titles, All Rights Holders)"]).to eq "2,314"
       expect(@reports["usage_combined.201901-201906.csv"][:items][0]["Jun-2019"]).to eq "1,300"
+      expect(@reports["usage_combined.201901-201906.csv"][:items][0]["Metric_Type"]).to eq "Total_Title_Requests"
       expect(@reports["Copyright_B.usage.201901-201906.csv"][:items][0]["Parent_ISBN"]).to be nil
       expect(@reports["Copyright_B.usage.201901-201906.csv"][:items][0]["Parent_Print_ISSN"]).to be nil
       expect(@reports["Copyright_B.usage.201901-201906.csv"][:items][0]["Parent_Online_ISSN"]).to be nil
+      expect(@reports["Copyright_B.usage.201901-201906.csv"][:items][0]["Metric_Type"]).to eq "Total_Title_Requests"
       expect(@reports["Copyright_B.usage.201901-201906.csv"][:items][0]["hebid"]).to eq "heb33333.0001.001"
     end
   end
