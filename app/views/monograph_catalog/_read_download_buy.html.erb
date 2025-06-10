@@ -1,24 +1,22 @@
 <div class="btn-toolbar" role="toolbar">
   <div class="btn-group btn-group-lg" role="group">
-    <% if @show_read_button %>
-      <% if @disable_read_button || @monograph_presenter.tombstone? %>
-        <a id="monograph-read-btn"
-           href=""
-           title="<%= t('monograph_catalog.index.read_book') %>"
-           aria-label="<%= t('monograph_catalog.index.read_book') %>"
-           class="btn btn-default disabled"
-           data-turbolinks="false"
-           aria-disabled="true">
-          <%= t('monograph_catalog.index.read_book') %>
-        </a>
-      <% else %>
-        <a id="monograph-read-btn"
-           href="<%= princess_de_cleves ? epub_ebook_path(@monograph_presenter.reader_ebook) : epub_path(@monograph_presenter.reader_ebook) %>"
-           class="btn btn-default"
-           data-turbolinks="false">
-          <%= t('monograph_catalog.index.read_book') %>
-        </a>
-      <% end %>
+    <% if @reader_links_display == :not_linked %>
+      <a id="monograph-read-btn"
+         href=""
+         title="<%= t('monograph_catalog.index.read_book') %>"
+         aria-label="<%= t('monograph_catalog.index.read_book') %>"
+         class="btn btn-default disabled"
+         data-turbolinks="false"
+         aria-disabled="true">
+        <%= t('monograph_catalog.index.read_book') %>
+      </a>
+    <% elsif @reader_links_display == :linked %>
+      <a id="monograph-read-btn"
+         href="<%= princess_de_cleves ? epub_ebook_path(@monograph_presenter.reader_ebook) : epub_path(@monograph_presenter.reader_ebook) %>"
+         class="btn btn-default"
+         data-turbolinks="false">
+        <%= t('monograph_catalog.index.read_book') %>
+      </a>
     <% end %>
     <% if @ebook_download_presenter.downloadable_ebooks? && !@monograph_presenter.tombstone? %>
       <div class="btn-group btn-group-lg">

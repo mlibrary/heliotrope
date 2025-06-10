@@ -37,21 +37,18 @@
       <% end %>
     <% end %>
     <div class="section-container">
-      <% if @monograph_presenter.tombstone? || @auth.actor_unauthorized? %>
-        <span><%= interval.title %></span>
-      <% else %>
-        <% if oa_registration_required %>
-          <%= interval.title %>
-        <% else %>
-          <a class="toc-link" href="<%= (princess_de_cleves ? epub_ebook_path(@presenter.reader_ebook) : epub_path(id: ebook_presenter.id)) + '#' + interval.cfi  %>" data-turbolinks="false"><%= interval.title %></a>
-        <% end %>
-        <%# `oa_registration_required` should be unnecessary here thanks to Press-level settings or other methods, but just in case! %>
-        <% if interval.downloadable? && permit_download_buttons && !oa_registration_required %>
+      <% if @reader_links_display == :linked %>
+        <a class="toc-link" href="<%= (princess_de_cleves ? epub_ebook_path(@presenter.reader_ebook) : epub_path(id: ebook_presenter.id)) + '#' + interval.cfi  %>" data-turbolinks="false"><%= interval.title %></a>
+        <% if interval.downloadable? && permit_download_buttons %>
           <div class="btn-group download" role="group" aria-label="Download Section">
             <a class="btn btn-default btn-sm toc-download-link" href="<%= epub_download_interval_path(id: ebook_presenter.id, title: interval.title, chapter_index: index) %>" data-turbolinks="false">
-            <i id="download" class="oi" data-glyph="data-transfer-download" title="Download section" aria-hidden="true"></i> Download</a>
+              <i id="download" class="oi" data-glyph="data-transfer-download" title="Download section" aria-hidden="true"></i> Download</a>
           </div>
         <% end %>
+      <% else %>
+        <%# even if an ebook can't be read on Fulcrum, we still show the ToC, it just won't be linked %>
+        <%# I guess this is good as a preview/teaser in some instances, and for SEO %>
+        <span><%= interval.title %></span>
       <% end %>
     </div>
     <%# The final interval might not have a level == 1, it could be arbitrarily nested in which case we need... %>

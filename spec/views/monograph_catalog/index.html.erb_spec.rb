@@ -39,9 +39,6 @@ RSpec.describe "monograph_catalog/index.html.erb" do
     allow(monograph_presenter).to receive(:date_uploaded).and_return(DateTime.now)
     allow(monograph_presenter).to receive(:creator).and_return([])
     allow(ebook_download_presenter).to receive(:downloadable_ebooks?).and_return(false)
-
-    # see `ApplicationController::auth_for()`
-    assign(:auth, Auth.new(Anonymous.new({}), Sighrax.from_presenter(monograph_presenter)))
   end
 
   describe 'provide: page_title' do
@@ -285,31 +282,80 @@ RSpec.describe "monograph_catalog/index.html.erb" do
                                                                                         title: 'Foreword | Timmy B. Wright',
                                                                                         level: 1, cfi: 'page=8',
                                                                                         'downloadable?': true)])
-
-          allow_any_instance_of(Auth).to receive(:actor_unauthorized?).and_return(false)
         end
 
-        context 'normal Monograph that does not require Google Form registration to access' do
-          before do
-            allow(monograph_presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
-            assign(:show_read_button, true)
-            render
+        describe 'normal Monograph that does not require Google Form registration to access' do
+          context 'MonographCatalogController sets @reader_links_display to :linked' do
+            before do
+              allow(monograph_presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
+              assign(:reader_links_display, :linked)
+              render
+            end
+
+            it 'uses the standard "read/download/buy" partial with linked Read button, links ToC entries' do
+              debug_puts subject.to_s
+              is_expected.to render_template(partial: '_read_download_buy')
+              is_expected.to_not render_template(partial: '_read_download_buy_registration_required')
+              # Read button present and linked
+              is_expected.to have_link(t('monograph_catalog.index.read_book'), href: epub_path(monograph_presenter.reader_ebook))
+              # No "Registration required to download" Google Form
+              is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
+              # ToC entries from _index_epub_toc.html.erb are present and linked
+              is_expected.to match 'Foreword | Timmy B. Wright'
+              is_expected.to match 'toc-link'
+            end
           end
 
-          it 'uses the standard "read/download/buy" partial, links ToC entries' do
-            debug_puts subject.to_s
-            is_expected.to render_template(partial: '_read_download_buy')
-            is_expected.to_not render_template(partial: '_read_download_buy_registration_required')
-            is_expected.to match 'monograph_catalog.index.read_book'
-            is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
-            is_expected.to match 'toc-link'
+          context 'MonographCatalogController sets @reader_links_display to :not_linked' do
+            before do
+              allow(monograph_presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
+              assign(:reader_links_display, :not_linked)
+              render
+            end
+
+            it 'uses the standard "read/download/buy" partial with unlinked Read button, does link ToC entries' do
+              debug_puts subject.to_s
+              is_expected.to render_template(partial: '_read_download_buy')
+              is_expected.to_not render_template(partial: '_read_download_buy_registration_required')
+              # Read button present but not linked
+              is_expected.to match 'monograph_catalog.index.read_book'
+              is_expected.to_not have_link(t('monograph_catalog.index.read_book'), href: epub_path(monograph_presenter.reader_ebook))
+              # No "Registration required to download" Google Form
+              is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
+              # ToC entries from _index_epub_toc.html.erb are present but not linked
+              is_expected.to match 'Foreword | Timmy B. Wright'
+              is_expected.to_not match 'toc-link'
+            end
+          end
+
+          context 'MonographCatalogController sets @reader_links_display to :not_shown' do
+            before do
+              allow(monograph_presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "ISBN-EBOOK"])
+              assign(:reader_links_display, :not_shown)
+              render
+            end
+
+            it 'uses the standard "read/download/buy" partial with no Read button, links ToC entries' do
+              debug_puts subject.to_s
+              is_expected.to render_template(partial: '_read_download_buy')
+              is_expected.to_not render_template(partial: '_read_download_buy_registration_required')
+              # No Read button at all
+              is_expected.to_not match 'monograph_catalog.index.read_book'
+              is_expected.to_not have_link(t('monograph_catalog.index.read_book'), href: epub_path(monograph_presenter.reader_ebook))
+              # No "Registration required to download" Google Form
+              is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
+              # ToC entries from _index_epub_toc.html.erb are present but not linked
+              is_expected.to match 'Foreword | Timmy B. Wright'
+              is_expected.to_not match 'toc-link'
+            end
           end
         end
 
-        context 'Monograph that requires Google Form registration to access' do
+        describe 'Monograph that requires Google Form registration to access' do
           before do
             allow(monograph_presenter).to receive(:subdomain).and_return('ee')
             allow(monograph_presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "9781607857471"])
+            assign(:reader_links_display, :not_linked)
             render
           end
 
@@ -363,9 +409,9 @@ RSpec.describe "monograph_catalog/index.html.erb" do
                                                                                         'downloadable?': true)])
         end
 
-        context 'user is authed' do
+        context 'reader_links_display returns :linked' do
           before do
-            allow_any_instance_of(Auth).to receive(:actor_unauthorized?).and_return(false)
+            assign(:reader_links_display, :linked)
             render
           end
 
@@ -375,9 +421,9 @@ RSpec.describe "monograph_catalog/index.html.erb" do
           end
         end
 
-        context 'user is not authed' do
+        context 'reader_links_display returns :not_linked' do
           before do
-            allow_any_instance_of(Auth).to receive(:actor_unauthorized?).and_return(true)
+            assign(:reader_links_display, :not_linked)
             render
           end
 

@@ -1,5 +1,4 @@
 <% princess_de_cleves = @monograph_presenter.subdomain == 'leverpress' && (@monograph_presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }) %>
-<% oa_registration_required = @monograph_presenter.subdomain == 'ee' %>
 <!-- ADMIN TOOLS (in spite of the CSS class name, these are necessary, not only for platform admins, but also for Press admins, editors and analysts) -->
 <div class="row platform-admin">
   <%# The outer conditional is to catch all roles... from Press analyst on up. Dunno if there's a better way. This seems to work (see view spec). %>
@@ -63,7 +62,7 @@
     <!-- READ, DOWNLOAD, BUY BUTTONS -->
     <%# ensure all of the toolbar's internal components' conditionals are present here to control the toolbar's appearance %>
     <% if @monograph_presenter.reader_ebook? || (@ebook_download_presenter.downloadable_ebooks? && !@monograph_presenter.tombstone?) || @monograph_presenter.buy_url? %>
-      <% if oa_registration_required %>
+      <% if @monograph_presenter.subdomain == 'ee' %>
         <%= render 'read_download_buy_registration_required' %>
       <% else %>
         <%= render "read_download_buy", princess_de_cleves: princess_de_cleves %>
@@ -100,6 +99,8 @@
             </h2>
           </li>
         <% end %>
+        <%# even if an ebook can't be read on Fulcrum, we still show the ToC, it just won't be linked %>
+        <%# I guess this is good as a preview/teaser in some instances, and for SEO %>
         <% if @monograph_presenter.toc? %>
           <li role="presentation">
             <h2>
@@ -107,10 +108,10 @@
             </h2>
           </li>
         <% end %>
-        <% if !@monograph_presenter.tombstone? && Flipflop.show_accessibility_claims_tab? && @monograph_presenter.reader_ebook? %>
+        <% if Flipflop.show_accessibility_claims_tab? && @reader_links_display != :not_shown %>
           <li role="presentation">
             <h2>
-              <a id="tab-accessibility-claims" href="#accessibility-claims" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Accessibility Claims</a>
+              <a id="tab-accessibility-claims" href="#accessibility-claims" aria-controls="accessibility-claims" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Accessibility Claims</a>
             </h2>
           </li>
         <% end %>
@@ -170,14 +171,16 @@
           </section>
         <% end %>
         <!-- TABLE OF CONTENTS -->
+        <%# even if an ebook can't be read on Fulcrum, we still show the ToC, it just won't be linked %>
+        <%# I guess this is good as a preview/teaser in some instances, and for SEO %>
         <% if @monograph_presenter.toc? %>
           <section id="toc" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-toc" tabindex="0">
             <div class="col-sm-12">
-              <%= render 'index_epub_toc', oa_registration_required: oa_registration_required, princess_de_cleves: princess_de_cleves %>
+              <%= render 'index_epub_toc', princess_de_cleves: princess_de_cleves %>
             </div>
           </section>
         <% end %>
-        <% if !@monograph_presenter.tombstone? && Flipflop.show_accessibility_claims_tab? && @monograph_presenter.reader_ebook? %>
+        <% if Flipflop.show_accessibility_claims_tab? && @reader_links_display != :not_shown %>
           <section id="accessibility-claims" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-accessibility-claims" tabindex="0">
             <div class="col-sm-12">
               <%= render 'accessibility_claims' %>
