@@ -73,7 +73,7 @@
           <div id="content-warning-icon">
             <%= image_tag "exclamation-triangle-fill.svg", alt: "Warning Icon", 'aria-hidden': "true" %>
           </div>
-          <div id="content-warning-text"><%= @monograph_presenter.content_warning %>
+          <div id="content-warning-text"><%= raw @monograph_presenter.content_warning %>
           <% if content_warning_information.present? %>
             <a id="warning-button" role="button" data-toggle="collapse" href="#content-warning-information" aria-expanded="false" aria-controls="content-warning-information">
               <span class="text-collapsed">Expand to read full warning statement...</span>
