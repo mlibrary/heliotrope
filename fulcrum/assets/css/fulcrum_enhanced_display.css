@@ -1,5 +1,17 @@
-/* SPECIAL STYLESHEET USED TO DISPLAY EMBEDDED
-   MEDIA in U-M PRESS EPUB FILES on FULCRUM */
+/* This CSS File is "injected" into epub.js renditions in heliotrope/cozy-sun-bear/epub.js like so:
+  https://github.com/mlibrary/heliotrope/blob/d7ace773607f2d34d829c846f7c3815168176c33/app/views/e_pubs/show.html.erb#L135
+  https://github.com/mlibrary/cozy-sun-bear/blob/b5cf04680e19b72d7301f567409a9475c80d66c9/src/reader/Reader.EpubJS.js#L175
+  https://github.com/futurepress/epub.js/blob/f09089cf77c55427bfdac7e0a4fa130e373a19c8/src/rendition.js#L1024
+
+  There is no other way (unless we were to add other overridden CSS injection methods) to alter styles *inside* the...
+  epub.js "EPUB reader" iframe, which otherwise only uses the CSS inside the EPUB archive.
+*/
+
+/* Add OpenDyslexic into the reader iframe: */
+@import url('https://fonts.cdnfonts.com/css/opendyslexic');
+
+/* THESE STYLES ARE USED TO DISPLAY EMBEDDED
+MEDIA in EPUB FILES IN FULCRUM's READER */
 
 /* Hide default media blocks, such as image thumbnails */
 .default-media-display {
