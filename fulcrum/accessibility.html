@@ -1,114 +1,49 @@
 ---
-layout: page
+layout: page-accessibility
 title: Accessibility
 permalink: /accessibility/
 ---
 
-<p class="milli">Last updated: November 6, 2024</p>
-<p>Accessibility is a core value and design component of Fulcrum.  As part of the ongoing development of Fulcrum, we work to make the platform and its content inclusive, accessible, and usable for all readers.</p>
-
-<div class="a11y-toc col s4">
-<nav id="TableOfContents">
-  <ul>
-    <li>Accessibility Conformance Report and VPATs</li>
-    <li>Accessibility Timeline and Roadmap</li>
-    <li>Compatibility with Keyboards and Screen Readers</li>
-    <li>Accessibility Features</li>
-    <li>Accessibility of Content on Fulcrum</li>
-    <li>Resources for Creating Accessible Content</li>
-  </ul>
-</nav>
+<div class="a11y-toc col s12 m12 l4">
+  <nav id="TableOfContents">
+    <div class="content">
+    <ol>
+      <li><a href="#conformance">Conformance Status and VPATs</a></li>
+      <li><a href="#compatibility">Compatibility with Assistive Technology</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#content">Conformance of Content</a></li>
+      <li><a href="#resources">Resources for Creating Accessible Content</a></li>
+    </ol>
+    </div>
+    <div class="help">
+      <h2>Need Help?</h2>
+      <p>If you need to be provided with an accessible version of a book, please complete our <a href="https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo">accessible file request form</a>.</p>    
+      <p>If you would like to report an issue, share general comments, suggestions, or other ideas about accessibility, please use our <a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?url=https://www.fulcrum.org/accessibility">feedback form</a>.</p>
+    </div>
+  </nav>
 </div>
-
-<div class="a11y-content col s8">
+<div class="a11y-content col s12 m12 l7">
+  <p class="intro">Accessibility is a core value and design component of Fulcrum.  As part of the ongoing development of Fulcrum, we work to make the platform and its content inclusive, accessible, and usable for all readers.</p>
+<p class="milli">Last updated: June 26, 2025</p>
 <p>Fulcrum makes every reasonable effort to have its products and services available to all customers and users, especially those with disabilities, allocating significant time and resources towards ensuring Fulcrum users have equal access. We approach this with three guiding principles:</p>
   <ol>
     <li><strong>Be responsive</strong> to requests for remediation or reported accessibility issues. We aim to respond to requests within 2 business days.</li>
     <li><strong>Be proactive</strong> by identifying and working on known platform issues and remediation of content for most likely to be used and essential functions of the platform.</li>
     <li><strong>Be transparent</strong> as to what we are planning and doing to support accessibility requirements for the platform and its content.</li>
   </ol>
+<p>You can follow our accessibility journey in the <a href="#roadmap">Accessibility Roadmap</a>.</p>
 
-<h2>Conformance Status</h2>
+<h2 id="conformance">Conformance Status and VPAT®s</h2>
 <p>Fulcrum aims to meet the latest <a href="https://www.w3.org/WAI/WCAG22/quickref/?versions=2.2" title="Web Content Accessibility Guidelines 2.2 AA">WCAG 2 AA Standards</a> (currently WCAG 2.2 AA) in two ways:</p>
 <ul>
-  <li>Developing a platform with infrastructure that meets web accessibility guidelines and includes accessibility features.</li>
-  <li>Creating and sharing resources that help publishers produce accessible content.</li>
+  <li>Developing a platform with infrastructure that meets web accessibility guidelines and includes accessibility features. We report Fulcrum's compliance with WCAG 2.2 and Section 508 in a <a href="/docs/Fulcrum-VPAT2.5INT-MASTER-20250625.pdf">Voluntary Product Accessibility Template (VPAT®) Version 2.5 INT</a>. </li>
+  <li>Creating and sharing resources that help publishers produce accessible content. We report content compliance <a href="#content">in collection specific VPAT®s</a>.</li>
 </ul>
-<p>We report Fulcrum's compliance with WCAG 2.2 and Section 508 in a <a href="/docs/Fulcrum-VPAT2.5INT-MASTER-20240522.pdf">Voluntary Product Accessibility Template (VPAT®) Version 2.5 INT</a>. We report content compliance <a href="#content">in collection specific VPATs</a>.</p>
-<p>Accessibility features, compatibility, and known issues are also summarized on this page.</p>
+
 <p>Fulcrum's conformance status is assessed through a combination of self-evaluation, user testing and feedback, and third-party evaluation.</p>
 
-<div class="help">
-    <h2>Need Help?</h2>
-    <p>If you need to be provided with an accessible version of a book or need other assistance using the platform, please email <a href="mailto:fulcrum-info@umich.edu">fulcrum-info@umich.edu</a>.</p>    
-    <p>If you would like to report an issue, share general comments, suggestions, or other ideas about accessibility, please use our <a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?url=https://www.fulcrum.org/accessibility">feedback form</a>.</p>
-</div>
-
-<div class="toc">
-  <h2>Contents</h2>
-  <ol>
-    <li><a href="#timeline">Accessibility Timeline and Roadmap</a></li>
-    <li><a href="#compatibility">Compatibility with Keyboards and Screen Readers</a></li>
-    <li><a href="#features">Accessibility Features</a></li>
-    <li><a href="#content">Accessibility of Content on Fulcrum</a></li>
-    <li><a href="#resources">Resources for Creating Accessible Content</a></li>
-  </ol>
-</div>
-
-<h2 id="timeline">Accessibility Timeline and Roadmap</h2>
-<h3>2025</h3>
-<p>Throughout 2025 we plan to release platform features to help with assessing the accessibility of content on Fulcrum:</p>
-  <ul>
-    <li>Introduce title-level accessibility metadata to help users identify accessibility features available within an ebook.</li>
-    <li>Enable searching and browsing of content based on accessibility conformance status and accessibility features.</li>
-  </ul>
-<p>By June 2025 we aim to upgrade any WCAG 2.2 AA criteria identified in the <a href="https://www.fulcrum.org/docs/Fulcrum-VPAT2.5INT-MASTER-20240522.pdf">current platform VPAT®</a> as "partially supports" to "supports".</p>
-<h3>2024</h3>
-<p>Several VPAT®s were revised and updated including the core master VPAT for Fulcrum. VPAT®s were upgraded to report conformance on WCAG 2.2 and follow VPAT® Version 2.5 INT.</p>
-<p>Work on assessing the accessibility gaps of several collections containing deep backlist titles (pre 2010) has begun for determining remediation needs to meet the European Accessibility Act requirements which go into effect in June 2025.</p>
-<p>Several accessibility issues were addressed in September and October 2024, specifically:</p> 
-  <ul>
-    <li>Ensuring information buttons on authentication page have unique values.</li>
-    <li>Configuring the time-based media player's headings and values to be unique and assigned correct heading level when embedded into ebook content in the Fulcrum Reader.</li>
-    <li>Ensuring pagination links distinguish themselves from surrounding non-linked text.</li>
-    <li>Announcing loading status to assistive technologies when content is loading in the Fulcrum Reader.</li>
-  </ul>
-
-<h3>2023</h3>
-<p>In January 2023, several VPAT®s were revised and updated including the core master VPAT for Fulcrum.</p>
-
-<h3>2022</h3>
-<p>In January 2022, the Fulcrum team upgraded its time-based media player, AblePlayer, to a more current version to improve support for video description and interactive transcripts.</p>
-<p>We released Audio/Video Guidelines for accessibility, ensuring authors have instructions for creating accessible multimedia.</p> 
-<p>We updated the core version behind the Fulcrum PDF Reader to improve and fix accessibility and other issues. We improved focus states, focus orders, and table display in the Fulcrum Reader and added ARIA labels to improve display of DOIs.</p>
-<p>We revised VPAT®s and Roadmaps for ACLS HEB, as well as continued a project to reformat fixed layout page-image ebooks into more structured and accessible PDF formats.</p>
-<p>In December 2022, we modified our EPUB workflow to ensure that downloaded EPUBs do not fail EPUBCheck and remediated over 80 UMP EBC EPUBs to add long descriptions to complex images.</p>
-
-
-<h3>2021</h3>
-<p>In June 2021, we updated all VPAT®s to Version 2.4 INT and worked with the <a href="http://www.daisy.org/">DAISY Consortium</a> to have the Fulcrum Reader tested with NVDA and Microsoft Edge Read Aloud.</p>
-<p>In December 2021, the Fulcrum team held two sprints focused on usability and accessibility improvements to the platform, resolving several outstanding issues around semantic encoding and screen reader support that had been identified in previous accessibility evaluations.</p>
-
-<h3>2020</h3>
-<p>From January to March 2020, in collaboration with <a href="https://web.archive.org/web/20191126203807/https://uarc.msu.edu/">Michigan State University Usability and Accessibility Research Consulting (archived site)</a>, Fulcrum was tested by assistive technology and limited dexterity users. User testing helped identify usability and accessibility issues, specifically with the Fulcrum Reader, which we are working to address.</p>
-
-<p>In March and May 2020, we worked to update our Voluntary Product Assessment Template from 2.1 to VPAT® Version 2.3 INT. In addition, we released collection-specific VPAT®s for the University of Michigan E-Book Collection, the ACLS Humanities E-Book Collection, and the BAR Digital Collection.</p>
-
-<p>Over the course of 2020, we released several accessibility improvements to Fulcrum including: accessible link labels, a more usable and accessible search and browse experience, improved color contrast, and support for transcripts and visual descriptions of audio and video content hosted on Fulcrum.</p>
-
-<h3>2019</h3>
-<p>In August and September 2019, the Fulcrum team collaborated with the <a href="http://www.daisy.org/">DAISY Consortium</a> to have the Fulcrum Reader evaluated for <a href="http://epubtest.org">http://epubtest.org</a>. Several accessibility and usability issues and best practices were identified and Fulcrum developers are working to address identified issues. We will continue to work with the DAISY Consortium to have future versions of the Fulcrum Reader evaluated.</p>
-
-<p>In August and September 2019, the <a href="https://fulcrum.org/michigan">University of Michigan Press Ebook Collection</a> received a high-level accessibility evaluation and a PDF accessibility evaluation. These evaluations were conducted by Deque on behalf of the <a href="https://www.btaa.org/library/accessibility/reports">Big Ten Academic Alliance (BTAA) E-Resources Committee</a>. The resulting <a href="https://www.btaa.org/docs/default-source/library/accessibility-reports/btaa-ebook-accessibilityreview-caveritt-2019.pdf?sfvrsn=876549f3_8">reports were published</a> alongside our response. Several new accessibility issues were identified and are currently being addressed by the Fulcrum development team.</p>
-
-<p>In January 2019, Fulcrum released the <a href="https://github.com/mlibrary/fulcrum-epub-spec/">Fulcrum EPUB Specification</a>.</p>
-
-<h3>2018</h3>
-<p>From June to August 2018, Michigan Publishing and Fulcrum worked with Luke Kudryashov through the <a href="https://www.rackham.umich.edu/publicscholarship/programs/rackham-public-engagement-fellowships/">Rackham Public Engagement Fellowship program</a> to conduct an accessibility evaluation of the Fulcrum platform. Building on the previous usability testing, Luke completed a VPAT 2.1 by testing the platform with the use of assistive technology, documented additional accessibility and usability issues, and also worked with Emma DiPasquale, the Fulcrum community manager, to provide more detailed accessibility documentation for the Fulcrum website.</p>
-<p>From January to March 2018, in collaboration with <a href="https://web.archive.org/web/20191126203807/https://uarc.msu.edu/">Michigan State University Usability and Accessibility Research Consulting (archived site)</a>, Fulcrum was tested by assistive technology users, identifying usability and accessibility issues, which we are actively working to address. Some of these include: usability issues for assistive technology; missing image descriptions for assistive technology navigation; and missing captions and transcripts for video and audio content.</p>
-
-
-<h2 id="compatibility">Compatibility with Keyboards and Screen Readers</h2>
+<h2 id="compatibility">Compatibility with Assistive Technology</h2>
 <h3>Screen Reader Compatibility</h3>
 <p>Fulcrum should be compatible with most major screen readers. It is optimized for use with NVDA in Firefox. New features are tested with NVDA in Firefox and VoiceOver in Safari. Fulcrum should be compatible with recent versions of the following screen readers:</p>
 <ul>
@@ -183,13 +118,25 @@ permalink: /accessibility/
 </ul>
 
 <h2 id="features">Accessibility Features</h2>
+<h3>Discovering Accessible Content</h3>
+<ul>
+  <li>All book pages on Fulcrum include an "Accessibility Claims" tab that includes accessibility information about the book if supplied by the publisher.</li>
+  <li>If a book is not screen reader-friendly or has no supplied accessibility information, a button to request an accessible file for the book will be available. If the book is restricted access, you must be authenticated and authorized to the book or product for this button to appear.</li>
+</ul>
+
+<h3>Fulcrum Reader</h3>
 <ul>
   <li>For certain content, users can choose between page-by-page and scroll view in the Fulcrum Reader. To switch views, select the Preferences and Settings button and choose your preferred Display mode.</li>
-  <li>AblePlayer video and audio player has the capability for captions, audio descriptions, and transcripts, though not all publishers may provide these features. The caption font, size, color, and location can be adjusted in the player settings. Captions and transcripts are available when provided by the publisher. As of January 2022, the current version of AblePlayer on Fulcrum has a known issue where audio descriptions can auto-play based on the time codes when users activate descriptions to be read aloud by the player. Turning off the read aloud function of the descriptions will resolve this issue.</li>
   <li>Image descriptions are enabled for screen readers through alt-text attributes and linked extended descriptions when necessary (and when provided by publisher).</li>
   <li>While there is no built-in text-to-speech feature, screen readers and text-to-speech browser extensions such as Read Aloud for Chrome should work with the Fulcrum Reader as well as all of the book, publisher, and media pages.</li>
 </ul>
-<p>For readers with low vision:</p>
+
+<h3>Time-based Media</h3>
+<ul>
+  <li>AblePlayer video and audio player has the capability for captions, audio descriptions, and transcripts, though not all publishers may provide these features. The caption font, size, color, and location can be adjusted in the player settings. Captions and transcripts are available when provided by the publisher. As of January 2022, the current version of AblePlayer on Fulcrum has a known issue where audio descriptions can auto-play based on the time codes when users activate descriptions to be read aloud by the player. Turning off the read aloud function of the descriptions will resolve this issue.</li>
+</ul>
+
+<h3>For readers with low vision</h3>
 <ul>
   <li>In the Fulcrum Reader, a book's text can be zoomed up to 400% through the Preferences and Settings menu. Switching to scroll view is recommended when enlarging the text as this will shift the text from two columns to one.</li>
   <li>Operating system text zoom and font accessibility settings and browser extensions such as Zoom Text Only for Chrome should work with all of the other text on book, publisher, and media pages, as well as the menu bars in the Fulcrum Reader.</li>
@@ -198,8 +145,660 @@ permalink: /accessibility/
   <li>Operating system contrast accessibility features and browser extensions such as High Contrast for Chrome should work with the Fulcrum Reader in addition to all other Fulcrum pages.</li>
 </ul>
 
-<h2 id="content">Accessibility of Content on Fulcrum</h2>
-<p>Fulcrum provides hosting for a number of different publishers and we are a signatory of the <a href="https://www.accessiblebooksconsortium.org/documents/abc/docs/abc_charter.pdf" target="_blank">Accessible Book Consortium's Charter for Accessible Publishing</a>. Accessible content is the primary responsibility of each publisher yet to uphold our accessibility commitments to the ABC, we work with publishers to support and improve the accessibility of their content. Below you will find a list of accessibility features and known content issues in large collections hosted on Fulcrum.</p>
+<h2 id="roadmap">Accessibility Roadmap</h2>
+<p>Four areas of focus guide the Fulcrum Accessibility Roadmap:</p>
+
+  <ul>
+    <li>Make it easy to request accessible copies of books that do not meet accessibility requirements.</li>
+    <li>Clearly communicate a book's accessibility conformance and features.</li>
+    <li>Provide evidence of a plan to remediate books that do not meet accessibility requirements.</li>
+    <li>Ensure the platform and its functionality are as accessible as possible.</li>
+  </ul>
+
+<table class="a11y-table">
+    <caption class="visuallyhidden">Fulcrum's accessibility roadmap contains past, present, and future accessibility activies with estimated timelines and status updates.</caption>
+    <thead>
+      <tr>
+        <th scope="col">
+          <p class="heading--1">Activity</span>
+        </th>
+        <th scope="col">
+          <p class="heading--1">Outcome</p>
+        </th>
+        <th scope="col">
+          <p class="heading--1">Timeline</p>
+        </th>
+        <th scope="col">
+          <p class="heading--1">Status</p>
+        </th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Support applicable WCAG 2.2 AA criteria that are only "partially supported"
+          </div>
+        </th>
+        <td>
+          Improve platform conformance with WCAG 2.2 AA.
+        </td>
+        <td>
+          Q2/Q3 2025
+        </td>
+        <td>
+          In progress
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Add help support for using system-based text-to-speech tools in Fulcrum Reader
+          </div>
+        </th>
+        <td>
+          Users have detailed guidance on using a variety of text-to-speech tools in the Fulcrum Reader.
+        </td>
+        <td>
+          Q2/Q3 2025
+        </td>
+        <td>
+          In progress
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Assess accessibility gaps in content and create detailed remediation plans for publishers
+          </div>
+        </th>
+        <td>
+          Action plans for remediating the most used and relevant backlist content hosted on Fulcrum with timelines for title by title remediation.
+        </td>
+        <td>
+          Q2/Q3 2025
+        </td>
+        <td>
+          In progress
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Enable Theme options in the Fulcrum Reader
+          </div>
+        </th>
+        <td>
+          Users will be able to change the background color and text colors for a customized reading experience.
+        </td>
+        <td>
+          Q3 2025
+        </td>
+        <td>
+          In progress
+        </td>
+      </tr>
+      
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Add the ability for users to modify text display in Fulcrum Reader
+          </div>
+        </th>
+        <td>
+          Users can adjust word spacing, letter spacing, line heights, margins, and paragraphs to create a customized reading experience.
+        </td>
+        <td>
+          Q2/Q3 2025
+        </td>
+        <td>
+          In progress
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Enable searching and browsing of content based on accessibility conformance
+          </div>
+        </th>
+        <td>
+          Users can find content that meets accessibility standards
+        </td>
+        <td>
+          Q3 2025
+        </td>
+        <td>
+          Planned
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Complete medium priority accessibility improvements to the Fulcrum Reader
+          </div>
+        </th>
+  
+        <td>
+          Improve the usability of keyboard and assistive technology navigation of the Fulcrum Reader. 
+        </td>
+        <td>
+          Q1 2026
+        </td>
+        <td>
+          Planned
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Add accessibility metadata for PDF book content
+          </div>
+        </th>
+  
+        <td>
+          Users can easily identify accessibility features available in PDF ebooks. 
+        </td>
+        <td>
+          Q1 2026
+        </td>
+        <td>
+          Planned
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Improve the usability of navigating search hit highlights in Fulcrum Reader
+          </div>
+        </th>
+  
+        <td>
+          Enables equitable access to search highlighting for assistive technology users by not solely relying on color to indicate search result matches in text. 
+        </td>
+        <td>
+          -
+        </td>
+        <td>
+          Not yet planned
+        </td>
+      </tr>
+
+        <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Add the ability to insert language tags to metadata fields
+          </div>
+        </th>
+  
+        <td>
+          Allows additional metadata fields to indicate language shifts from English. 
+        </td>
+        <td>
+          -
+        </td>
+        <td>
+          Not yet planned
+        </td>
+      </tr>
+
+        <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Maintain keyboard focus on search page when applying filters
+          </div>
+        </th>
+  
+        <td>
+          Keyboard and assistive technology users maintain their location on the page when searching and browsing content, providing a better user experience. 
+        </td>
+        <td>
+          -
+        </td>
+        <td>
+          Not yet planned
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="col" colspan="4">
+          <span class="heading--2">
+        Completed Work
+      </span>
+        </th>
+      </tr>
+
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Enable users to customize fonts in Fulcrum Reader
+          </div>
+        </th>
+        <td>
+          Users can apply serif, sans serif, monospace, or dyslexic fonts to EPUBs in the Fulcrum Reader.
+        </td>
+        <td>
+          Q2 2025
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Display "Request Accessible Copy" button for titles that do not meet accessibility conformance
+          </div>
+        </th>
+        <td>
+          Make it easy to request file for accessibility remediation.
+        </td>
+        <td>
+          Q2 2025
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Display title-level accessibility metadata
+          </div>
+        </th>
+        <td>
+          Users can easily identify accessibility features available within an ebook.
+        </td>
+        <td>
+          Q2 2025
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Revise and update several VPAT®s, including the platform VPAT
+          </div>
+        </th>
+        <td>
+          VPAT®s upgraded to report conformance on WCAG 2.2 and follow VPAT® Version 2.5 INT, providing a more comprehensive and up-to-date assessment of platform accessibility.
+        </td>
+        <td>
+          Q2 2025
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Update Fulcrum EPUB Specification
+          </div>
+        </th>
+        <td>
+          Now includes more examples and details on making EPUB accessible, along with best practices and guidelines for semantic markup of HTML.
+        </td>
+        <td>
+          Q1 2025
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Ensure information buttons on the authentication page have unique values.
+          </div>
+        </th>
+        <td>
+          Screen reader users can now accurately identify and interact with information buttons on the authentication page.
+        </td>
+        <td>
+          Q3 2024
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Configuring the time-based media player's headings and values to be unique and assigned the correct heading level in the Fulcrum Reader
+          </div>
+        </th>
+        <td>
+          Screen reader users can now better understand the structure and controls of embedded media players within ebooks.
+        </td>
+        <td>
+          Q3 2024
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Ensure links distinguish themselves from surrounding non-linked text
+          </div>
+        </th>
+        <td>
+          Users with low vision or color blindness can clearly identify and navigate links.
+        </td>
+        <td>
+          Q3 2024
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Announce loading status to assistive technologies when content is loading in the Fulcrum Reader
+          </div>
+        </th>
+        <td>
+          Screen reader users are now informed when ebook content is loading, providing better feedback and reducing confusion.
+        </td>
+        <td>
+          Q3 2024
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Revised several VPAT®s including core master VPAT®
+          </div>
+        </th>
+        <td>
+          Up-to-date accessibility documentation conformance documentation.
+        </td>
+        <td>
+          Q1 2023
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Upgraded AblePlayer to a newer version
+          </div>
+        </th>
+        <td>
+          Screen reader users can now access improved video descriptions and interact with transcripts more effectively.
+        </td>
+        <td>
+          Q1 2022
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Released Audio/Video Guidelines for accessibility
+          </div>
+        </th>
+        <td>
+          Authors can now follow clear guidance to create accessible multimedia content.
+        </td>
+        <td>
+          Q1 2022
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Updated Fulcrum PDF Reader core version
+          </div>
+        </th>
+        <td>
+          Users can now experience better focus management, improved table rendering, and clearer DOI information through ARIA labels.
+        </td>
+        <td>
+          Q1 2022
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Reformatted all fixed-layout page-image ebooks into structured PDFs
+          </div>
+        </th>
+        <td>
+          Screen reader users can now more easily navigate and understand older e-book formats.
+        </td>
+        <td>
+          Q2 2022
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Remediated over 80 EPUBs and updated EPUB workflow
+          </div>
+        </th>
+        <td>
+          Users can now download EPUBs that meet accessibility standards and include long descriptions for complex images.
+        </td>
+        <td>
+          Q4 2022
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Updated all VPAT®s to Version 2.4 INT
+          </div>
+        </th>
+        <td>
+          Users can now reference standardized accessibility reports across all collections.
+        </td>
+        <td>
+          Q3 2021
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Collaborated with DAISY Consortium to test Fulcrum Reader with NVDA and Edge Read Aloud
+          </div>
+        </th>
+        <td>
+          Screen reader users can now expect improved compatibility and functionality with popular tools.
+        </td>
+        <td>
+          Q3 2021
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Conducted two accessibility-focused sprints addressing issues from MSU UARC usability testing
+          </div>
+        </th>
+        <td>
+          Screen reader users can now benefit from enhanced semantic encoding and better overall support.
+        </td>
+        <td>
+          Q3 2021
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Conducted assistive technology usability testing with MSU UARC
+          </div>
+        </th>
+        <td>
+          Identified issues for assistive technology users and users with limited dexterity, created plans and work ticket to address issues.
+        </td>
+        <td>
+          Q1 2020
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Updated VPAT®s from Version 2.1 to 2.3 INT and added collection-specific VPAT®s
+          </div>
+        </th>
+        <td>
+          Users can now access more granular accessibility details per collection.
+        </td>
+        <td>
+          Q1/Q2 2020
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Released multiple platform-wide accessibility improvements
+          </div>
+        </th>
+        <td>
+          Users can now navigate content more easily with clearer links, improved contrast, and available transcripts.
+        </td>
+        <td>
+          Q3 2020
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Collaborated with DAISY Consortium for EPUBTest evaluation
+          </div>
+        </th>
+        <td>
+          Users can now expect ongoing improvements as accessibility gaps are identified and resolved.
+        </td>
+        <td>
+          Q3 2019
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Underwent high-level PDF and accessibility evaluations by Deque for BTAA
+          </div>
+        </th>
+        <td>
+          Users can now access evaluations and see improvements based on third-party recommendations.
+        </td>
+        <td>
+          Q3 2019
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Released Fulcrum EPUB Specification
+          </div>
+        </th>
+        <td>
+         Authors and publishers can now create EPUBs that adhere to consistent accessibility standards.
+        </td>
+        <td>
+          Q1 2019
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Conducted accessibility evaluation through Rackham Public Engagement Fellowship
+          </div>
+        </th>
+        <td>
+          Screen reader users can now navigate the platform more effectively due to identified improvements.
+        </td>
+        <td>
+          Q3 2018
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">
+          <div class="feature-name">
+            Conducted user testing with MSU Usability and Accessibility Research Consulting (MSU UARC)
+          </div>
+        </th>
+        <td>
+          Users can now benefit from platform changes informed by real-world testing of assistive technology.
+        </td>
+        <td>
+          Q1 2018
+        </td>
+        <td>
+          Completed
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+<h2 id="content">Conformance of Content</h2>
+<p>Fulcrum provides hosting for a number of different publishers and we are a signatory of the <a href="https://www.accessiblebooksconsortium.org/documents/abc/docs/abc_charter.pdf" target="_blank">Accessible Book Consortium's Charter for Accessible Publishing</a>. Accessible content is the primary responsibility of each publisher yet to uphold our accessibility commitments to the ABC, we work with publishers to support and improve the accessibility of their content. Below you will find links to VPATs and accessibility features for large collections hosted on Fulcrum.</p>
 
 <h3>ACLS Humanities E-Book</h3>
 <p><a href="/docs/Fulcrum-HEB-VPAT2.4INT-20221014.pdf">ACLS HEB Voluntary Product Accessibility Template (VPAT®) Version 2.4 INT</a></p>
@@ -211,24 +810,34 @@ permalink: /accessibility/
   <li>Beginning in 2020, PDFs provided by publishers include OCR or born-digital text, bookmarks, but do not include structural markup and tagging. These titles are available for chapter download only in PDF format. PDF watermarks applied to each page of the downloaded file are read aloud by screenreaders and assistive technology.</li>
 </ul> 
 <p>ACLS HEB titles do not contain textual descriptions of images.</p>
-<p>To request remediation of any content in the ACLS HEB, it is recommended to first contact the publisher of that title. The publisher information can either be found in the Get Citation tool in the Fulcrum Reader, or found on the title landing page beneath the author name, and may include a link to the publisher's webpage. If you cannot find the publisher information, please send an email with the title of the content, your preferred format, and the URL to <a href="mailto:fulcrum-info@umich.edu">fulcrum-info@umich.edu</a>.</p>
+<p>To request remediation of any content in the ACLS HEB, please complete <a href="https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo">Fulcrum's accessible file request form</a>.</p>
 
-<h3>University of Michigan Press Ebook Collection</h3>
-<p><a href="/docs/Fulcrum-UMPEBC-VPAT2.4INT-20230113.pdf">UMP EBC Voluntary Product Accessibility Template (VPAT®) Version 2.4 INT</a></p>
-<p>In addition to the UMP EBC VPAT®, more detail is made available in an <a href="/docs/ConformanceandRemediationRoadmap-FulcrumUMPEBC-January2023.pdf">Accessibility Conformance and Remediation Roadmap (January 2023)</a> which describes timelines, development plans, and workarounds for issues identified in the VPAT®.</p>
-<p>All titles in the University of Michigan Press Ebook Collection (UMP EBC) are available for download in EPUB and PDF formats, with the exception of a handful of titles only available in one format. In all cases, we recommend the EPUB format as the accessible format – all EPUBs in the UMP EBC have been designed following the Fulcrum EPUB Specification, designed to ensure compatibility with assistive technology and are more likely to contain image descriptions. However, we recognize not all print disabled users prefer EPUB and will remediate PDF files with textual descriptions of images upon request.</p>
-<p>All titles published after 2019 contain at least basic textual descriptions of images, however these descriptions are only contained within EPUB files. All titles published in 2022 and after contain complete textual descriptions through a combination of alt text and long/extended descriptions. All audio and video associated with books produced after 2018 have transcripts or captions available. Some supplemental content has been reformatted from print to digital and may not contain Optical Character Recognition text. If OCR text has been included it has not been corrected.</p>
-<p>Beginning with titles published in 2021, most titles are certified accessible by the <a href="https://bornaccessible.benetech.org/certified-publishers/">Benetech Global Certified Accessible program</a> and meet WCAG AA. Titles that are not certified accessible by Benetech are indicated as such in the EPUB metadata.</p>
-<p>To request remediation of any content in the UMP EBC, please send an email with the title of the content, your preferred format, and the URL to <a href="umpress.accessibility@umich.edu">umpress.accessibility@umich.edu</a>.</p>
+<!-- New statement
+
+<p>Please see the ACLS Humanities Ebook accessibility page for VPATs and detailed accessibility conformance information.</p>
+
+-->
+
+<h3>BAR Digital Collection</h3>
+<p><a href="/docs/Fulcrum-BAR-VPAT2.4INT-20230112.pdf">BAR Digital Collection Voluntary Product Accessibility Template (VPAT®) Version 2.4 INT</a></p>
+<p>To request remediation of any content in the BAR Digital Collection, please complete <a href="https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo">Fulcrum's accessible file request form</a>.</p>
+
+<h3>Big Ten Open Books Collection</h3>
+<p>All titles in the Big Ten Open Books Collection have been reformatted to meet WCAG 2 AA and EPUB 1.1 Accessibility requirements.</p>
+<p>A VPAT® for the collection will be available in August 2025.</p>
 
 <h3>Lever Press</h3>
 <p>It is the goal of Lever Press that every title containing illustrations also include textual descriptions of those images, and that audio and video content associated with titles include transcripts and captions.</p>
 <p>Lever Press titles are open access and freely available.</p>
 <p>To request remediation or a file download of any Lever Press title, send and email with the title of the content, your preferred format, and the URL to <a href="mpub-help@umich.edu">mpub-help@umich.edu</a>.</p>
 
-<h3>BAR Digital Collection</h3>
-<p><a href="/docs/Fulcrum-BAR-VPAT2.4INT-20230112.pdf">BAR Digital Collection Voluntary Product Accessibility Template (VPAT®) Version 2.4 INT</a></p>
-<p>To request remediation of any content in the BAR Digital Collection, please send an email with the title of the content, your preferred format, and the URL to <a href="fulcrum-info@umich.edu">fulcrum-info@umich.edu</a>.</p>
+<h3>Lived Places Publishing</h3>
+<p>A detailed accessibility evaluation of content is currently underway and a VPAT® will be available by Fall 2025.</p>
+<p>To request remediation of any content in the Lived Places Publishing collections, please complete <a href="https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo">Fulcrum's accessible file request form</a>.</p>
+
+<h3>University of Michigan Press Ebook Collection</h3>
+Please see the <a href="https://ebc.press.umich.edu/accessibility">U-M Press Ebook Collection accessibility page</a> for VPATs and detailed accessibility conformance information.
+
 
 <h2 id="resources">Resources for Creating Accessible Content</h2>
 <p>There are several resources the Fulcrum team has developed to assist publishers in the creation of accessible content. These resources, as well as others on the web are detailed below.</p>
