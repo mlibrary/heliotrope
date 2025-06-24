@@ -85,7 +85,7 @@ gem 'bootsnap', '~> 1.18'
 # This is installed via yarn instead for heliotrope so it's in package.json
 # But there's *something* in the stack that needs it here.
 # I suspect it's related to resque-web
-gem 'bootstrap', '~> 4.0'
+gem 'bootstrap', '~> 4.6'
 
 # Canister provides containers
 gem 'canister', '~> 0.9.0'
