@@ -33,7 +33,7 @@ module BreadcrumbsHelper
   private
 
     def file_sets
-      @crumbs << { href: main_app.monograph_catalog_path(@presenter.parent.id), text: @presenter.parent.title, class: "" }
+      @crumbs << { href: main_app.monograph_catalog_path(@presenter.parent.id), text: @presenter.parent.title, class: "", 'data-turbolinks': false }
       @crumbs << { href: "", text: @presenter.title, class: "active" }
     end
 
