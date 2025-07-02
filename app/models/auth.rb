@@ -40,10 +40,21 @@ class Auth
   end
 
   instrument_method
+  # NB: This method has one specific use atop the Monograph Catalog's `_access_options.html.erb` partial.
+  # That partial displays to a user whether or not they can read this Monograph on Fulcrum, or whether they need to...
+  # log in as an individual or institution first.
+  # The method as a whole does not take Hyrax auth into account, due to the "expense-saving" if condition.
+  # `EPubPolicy` itself does take both the Hyrax and Greensub authorization systems into account, so it's tempting to...
+  # simply defer to its logic altogether. But these checks _are_ expensive, so the if condition probably has value.
+  # In any case do not use this method where, e.g. Hyrax publication status needs to be factored in.
+  # This method is best used only in this one place and nowhere else!
   def actor_authorized?
     return @actor_authorized if defined? @actor_authorized
 
-    @actor_authorized = if !@monograph.restricted? || @monograph.open_access?
+    # The if condition seeks to avoid some of the complexity in EPUBPolicy.show? by jumping straight to the checks...
+    # near the end of the logic chain in `EbookOperation.unrestricted?`, after the Hyrax read/edit/visibility checks,...
+    # and some other stuff which are not
+    @actor_authorized = if @monograph.open_access? || !@monograph.restricted?
                           true
                         else
                           EPubPolicy.new(@actor, @monograph.ebook, false).show?
@@ -51,6 +62,10 @@ class Auth
   end
 
   instrument_method
+  # NB: This method only has one use, in the `_access_options.html.erb` partial on the Monograph catalog page.
+  # That partial displays whether or not a user needs to log in as an individual or institution to read the Monograph.
+  # In spite of the general-sounding name, it should not be used outside of that without careful testing. Or at all.
+  # More details above, in the `actor_authorized?` method.
   def actor_unauthorized?
     !actor_authorized?
   end
