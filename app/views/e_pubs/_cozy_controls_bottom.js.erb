@@ -77,11 +77,12 @@ cozy.control.download({
 <% if @press.allow_share_links? &&
      (@presenter.visibility == 'restricted' && (current_user.present? && (current_user.editor_presses | current_user.admin_presses)&.include?(@press)) ||
      (@presenter.visibility == 'open' && @component.present? && !@parent_presenter.open_access? && @share_link.nil?)) %>
-modal = reader.modal({
+share_link_modal = reader.modal({
         region: 'left',
         title: 'Share Temporary Access to this Book',
         template: '<p>The following URL can be shared with non-subscribing users to provide them with temporary access to this restricted work for 28 days:</p> <blockquote id="share-link" style="padding: 8px; border-left: 4px solid black; background-color: #fff; word-wrap:break-word;"></blockquote><p>The URL can be copied to your clipboard using the button below or manually copied by highlighting the text.</p><p>After 28 days the link will expire and no longer work.</p><div class="alert alert-info" id="message" style="display: none"></div>',
         fraction: 0.5,
+        className: 'modal__container',
         actions: [
           {
             label: 'Copy Link',
@@ -122,14 +123,91 @@ cozy.control.widget.button({
     $.get("<%= "#{epub_share_link_path(id: @presenter.id)}" %>", function(data) {
       console.log("SHARE_LINK:", data);
       if (data) {
-        var bq = modal._container.querySelector("#share-link");
+        var bq = share_link_modal._container.querySelector("#share-link");
         bq.innerText = data;
-        modal.activate();
+        share_link_modal.activate();
       }
     });
   }
 }).addTo(reader);
 <% end %>
+
+// modal for Text-to-Speech help
+const csb_tts_help_template = `
+<div id="text-to-speech-help-info">
+  <p>
+    Welcome to the Text-to-Speech (TTS) Help Center!</p>
+    <h4>What is Text-to-Speech (TTS)?</h4>
+    <p>It allows users to listen to the content on a page by converting
+    written text into spoken words. While the Fulcrum Reader does not currently include a built-in TTS feature, there
+    are two simple ways to enable TTS:
+  </p>
+
+  <ol>
+    <li>Built-in assistive technologies that come with most devices (like
+        VoiceOver or TalkBack)</li>
+    <li>Browser-based TTS extensions that you can install to add speech
+        functionality directly in your browser.</li>
+  </ol>
+  <p>
+    This guide will walk you through both options so you can choose the method that works best for your needs.</p>
+    <h4>Built-in Assistive Technology (AT)</h4>
+    <p>These tools are integrated into most operating systems and can read aloud content from websites and applications, including the Fulcrum Reader. You can enable them in your device&rsquo;s accessibility settings.<br><br> Widely used TTS tools supported through assistive technologies:
+  </p>
+
+  <ul>
+    <li>VoiceOver (Apple)<br>
+      It is Apple&rsquo;s built-in screen reader. <br>
+      On Mac, enable via System Preferences &rarr; Accessibility &rarr; VoiceOver.<br>On iOS, go to Settings &rarr; Accessibility &rarr; VoiceOver.<br></li>
+    <li>Talkback (Android)<br>
+      It is Android&#39;s built-in screen reader. <br>
+      Enable via Settings &rarr; Accessibility &rarr; TalkBack.<br></li>
+    <li>JAWS (Windows &ndash; Paid)<br>
+      A powerful screen reader widely used in academic and professional settings.<br>
+      <a href="https://support.freedomscientific.com/Downloads/JAWS" onclick="window.open('https://support.freedomscientific.com/Downloads/JAWS');">Learn more and download</a><br></li>
+    <li>NVDA (Windows &ndash; Free)<br>
+      A free, open-source screen reader that supports a wide range of applications.<br>
+      <a href="https://www.nvaccess.org/download/" onclick="window.open('https://www.nvaccess.org/download/');">Learn more and download</a></li>
+  </ul>
+
+  <h4>Browser-Based TTS Extensions</h4>
+    <p>Browser extensions add a speech toolbar to your reading experience. Once installed, these tools let you highlight and listen to text directly within the eReader window.
+  </p>
+  <p>To use a TTS browser extension, install one from your browser&rsquo;s extension store (such as Read Aloud from the Chrome Web Store) and pin it to your toolbar. Then, open your book in the Fulcrum Reader, click the extension icon, and press Play to begin listening. You can highlight any section of text to start from that point, and adjust the voice, pitch, or speed in the extension&rsquo;s settings to suit your preferences.</p>
+  <p>Widely used TTS browser plugins:</p>
+
+  <ul>
+    <li>Read Aloud (A text to speech voice reader) <br>
+      <a href="https://chromewebstore.google.com/detail/read-aloud-a-text-to-spee/hdhinadidafjejdhmfkjgnolgimiaplp?hl=en" onclick="window.open('https://chromewebstore.google.com/detail/read-aloud-a-text-to-spee/hdhinadidafjejdhmfkjgnolgimiaplp?hl=en');">Learn more and add to browser</a>&nbsp;- Chrome<br>
+      <a href="https://addons.mozilla.org/en-US/firefox/addon/read-aloud/" onclick="window.open('https://addons.mozilla.org/en-US/firefox/addon/read-aloud/');">Learn more and add to browser</a>&nbsp;- Firefox<br>
+      <a href="https://microsoftedge.microsoft.com/addons/detail/read-aloud-a-text-to-spe/pnfonnnmfjnpfgagnklfaccicnnjcdkm" onclick="window.open('https://microsoftedge.microsoft.com/addons/detail/read-aloud-a-text-to-spe/pnfonnnmfjnpfgagnklfaccicnnjcdkm');">Learn more and add to browser</a>&nbsp;- Microsoft Edge<br>
+    </li>
+    <li>Voice Out - Chrome<br>
+      <a href="https://chromewebstore.google.com/detail/voice-out-text-to-speech/jmodgcjbfcmningbahdmedofbabejbba?hl=en" onclick="window.open('https://chromewebstore.google.com/detail/voice-out-text-to-speech/jmodgcjbfcmningbahdmedofbabejbba?hl=en');">Learn more and add to browser</a><br></li>
+    <li>Speech Central: Text-to-Speech - Safari<br>
+      <a href="https://apps.apple.com/us/app/speech-central-text-to-speech/id1127349155" onclick="window.open('https://apps.apple.com/us/app/speech-central-text-to-speech/id1127349155');">Learn more and add to browser</a></li>
+  </ul>
+
+  <p>Unlike audiobooks and publications with full audio, however, Text-To-Speech synthesis is not an audio format. It is a way of listening to text content the reader has already obtained. On Fulcrum, readers can use a TTS application to read web pages, EPUBs, or PDFs.</p>
+</div>
+`
+
+tts_info_modal = reader.modal({
+  region: 'right',
+  title: 'Text to Speech Help',
+  template: csb_tts_help_template,
+  fraction: 0.4,
+  className: 'modal__container'
+})
+
+// text-to-speech "help info" widget
+cozy.control.widget.button({
+  region: 'top.toolbar.left',
+  template: '<button id="tts-help-btn" class="button--sm" data-toggle="button" data-slot="label" aria-label="Open Text-to-Speech Information"><i class="oi" data-glyph="volume-high" title="Open Text-to-Speech Information" aria-hidden="true"></i></button>',
+  onClick: function() {
+    tts_info_modal.activate();
+  }
+}).addTo(reader);
 
 <%# the controller only supports EPUBs and PDFs, so this logic is fine to catch the latter %>
 <% unless @parent_presenter.epub? %>
