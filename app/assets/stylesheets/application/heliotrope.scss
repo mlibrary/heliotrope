@@ -2384,6 +2384,27 @@ footer.press {
   border-left: none;
 }
 
+#text-to-speech-help-info {
+  padding: 2em;
+
+  h4 {
+    font-size: 1.2em;
+  }
+
+  a {
+    display:inline;
+    padding:0;
+    color:blue;
+    border-top: none;
+    border-bottom: none;
+  }
+
+  li {
+    list-style-type: disc;
+    padding-bottom: 1em;
+  }
+}
+
 @media screen and (max-width: 50em) {
 
   .cozy-container i[class^='icon-'] {
