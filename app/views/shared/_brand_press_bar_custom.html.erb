@@ -151,6 +151,10 @@
           <a class="navbar-brand" href="<%= press_presenter.url %>">
             <%= image_tag "UVMPRESS_Horizontal_G.svg", class: 'navbar-brand-logo', alt: '', height: 'auto', width: '170' %><div class="sr-only"><%= press_presenter.name %></div>
           </a>
+        <% elsif press_presenter.subdomain == 'democraticfutures' %>
+          <a class="navbar-brand" href="<%= press_presenter.url %>">
+            <%= image_tag "democratic-futures-horizontal.png", class: 'navbar-brand-logo', alt: '', height: 'auto', width: '300' %><div class="sr-only"><%= press_presenter.name %></div>
+          </a>
         <% end %>
         <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#brand-bar-nav" aria-controls="brand-bar-nav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>

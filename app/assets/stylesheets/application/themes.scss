@@ -9375,6 +9375,75 @@ $mps-teal-100: #e9f2f5;
 ///////////////////////////////////////////////
 //
 // Michigan Publishing Services
+// Crafting Democratic Futures (democraticfutures)
+//
+///////////////////////////////////////////////
+.democraticfutures {
+  h1, h2 {
+    font-family: 'Muli', sans-serif;
+    font-weight: 700;
+  }
+  
+  .jumbotron {
+    p.lead {
+    font-size: 18px;
+    }
+
+    .publisher-info {
+      display: none;
+    }
+  }
+
+  footer .press-block-a, footer .press-block-b {
+    background-color: #CEC1B6;
+    color: #333B2D;
+
+    a {
+      color: #333B2D;
+    }
+
+    a:hover,
+    a:focus {
+      color: #333B2D;
+      text-decoration: underline;
+    }
+
+    ul li {
+      padding-bottom: 5px;
+    }
+  }
+
+  footer .press-block-a { 
+    img {
+      display: block;
+      margin-top: 0;
+    }
+
+    img.cdf {
+      width: 150px;
+      margin-bottom: 2em;
+    }
+
+    img.css {
+      width: 180px;
+    }
+
+    img.mellon {
+      width: 160px;
+      margin-top: 20px;
+    }
+
+  }
+
+  footer.press .press-block-c {
+    color: #fff;
+  }
+
+}
+
+///////////////////////////////////////////////
+//
+// Michigan Publishing Services
 // A2RU - Alliance for the Arts in Research
 // Universities
 //
