@@ -9383,6 +9383,25 @@ $mps-teal-100: #e9f2f5;
     font-family: 'Muli', sans-serif;
     font-weight: 700;
   }
+
+  button.search-submit {
+      background-color: $mps-maize-400;
+      border-color: $mps-maize-400;
+      border-left: none !important;
+      border-radius: 0;
+      color: $mps-blue-500;
+
+      svg {
+        height: auto;
+        width: auto;
+        stroke-width: 2;
+      }
+  }
+
+  .css-logo {
+    float: right;
+    margin-top: 1em;
+  }
   
   .jumbotron {
     p.lead {
@@ -9410,6 +9429,7 @@ $mps-teal-100: #e9f2f5;
 
     ul li {
       padding-bottom: 5px;
+      font-size: 15px;
     }
   }
 
@@ -9421,16 +9441,19 @@ $mps-teal-100: #e9f2f5;
 
     img.cdf {
       width: 150px;
-      margin-bottom: 2em;
+      margin-bottom: .5em;
     }
 
     img.css {
       width: 180px;
     }
 
-    img.mellon {
-      width: 160px;
-      margin-top: 20px;
+    p {
+      margin-top: 2em;
+      img.mellon {
+        width: 160px;
+        margin-top: 10px;
+      }
     }
 
   }

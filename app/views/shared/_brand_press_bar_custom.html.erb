@@ -81,6 +81,23 @@
         </div> 
       </div>
     </div>
+    <% elsif press_presenter.subdomain == 'democraticfutures' %>
+    <div class="container py-3">
+      <div class="row">
+        <div class="col-md-8">
+          <a class="navbar-brand" href="<%= press_presenter.url %>">
+            <%= image_tag "democratic-futures-horizontal.png", class: 'navbar-brand-logo', alt: '', height: 'auto', width: '300' %><div class="sr-only"><%= press_presenter.name %></div>
+          </a>
+        </div>
+        <div class="col-md-4 pt-1">
+          <%= render 'shared/brand_site_search' %>
+          <%= image_tag "css-logo.png", class: 'navbar-brand-logo css-logo', alt: 'University of Michigan Center for Social Solutions', height: 'auto', width: '160' %>
+          <% if press_presenter.navigation_block.present? %>
+            <%= press_presenter.navigation_block.html_safe %>
+          <% end %>
+        </div> 
+      </div>
+    </div>
     <% elsif %w[aberdeenunipress].include? press_presenter.subdomain %>
     <div class="container py-3">
       <div class="row">
@@ -150,10 +167,6 @@
         <% elsif press_presenter.subdomain == 'vermont' %>
           <a class="navbar-brand" href="<%= press_presenter.url %>">
             <%= image_tag "UVMPRESS_Horizontal_G.svg", class: 'navbar-brand-logo', alt: '', height: 'auto', width: '170' %><div class="sr-only"><%= press_presenter.name %></div>
-          </a>
-        <% elsif press_presenter.subdomain == 'democraticfutures' %>
-          <a class="navbar-brand" href="<%= press_presenter.url %>">
-            <%= image_tag "democratic-futures-horizontal.png", class: 'navbar-brand-logo', alt: '', height: 'auto', width: '300' %><div class="sr-only"><%= press_presenter.name %></div>
           </a>
          <% elsif press_presenter.subdomain == 'msupress' %>
           <a class="navbar-brand" href="<%= press_presenter.url %>">
