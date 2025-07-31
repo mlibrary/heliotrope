@@ -7,7 +7,7 @@ class UnpackJob < ApplicationJob
   include Open3
   include EmbedCodeService
 
-  queue_as Hyrax.config.ingest_queue_name
+  queue_as :unpack # See HELIO-4952
 
   discard_on Resque::Job::DontPerform
 
