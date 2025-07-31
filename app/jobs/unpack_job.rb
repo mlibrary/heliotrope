@@ -44,7 +44,7 @@ class UnpackJob < ApplicationJob
       insert_embed_codes(file_set.parent.id, root_path)
       create_search_index(root_path)
       cache_epub_toc(id, root_path)
-      file_set.parent.update_index if file_set.parent.present? # index the ToC to the monograph
+      file_set.parent.update_index if file_set.parent.present? # index the ToC and "Accessibility Claims" metadata to the monograph
       create_epub_chapters(id, root_path) # has to come after cache_epub_toc()
       epub_webgl_bridge(id, root_path, kind)
     when 'webgl'
@@ -60,7 +60,7 @@ class UnpackJob < ApplicationJob
       # each file to cache a `downloadable?` flag for that interval/chapter
       create_pdf_chapters(id, pdf, root_path) if File.exist? pdf
       cache_pdf_toc(id, pdf) if File.exist? pdf
-      file_set.parent.update_index if file_set.parent.present? # index the ToC to the monograph
+      file_set.parent.update_index if file_set.parent.present? # index the ToC and "Accessibility Claims" metadata to the monograph
     else
       Rails.logger.error("Can't unpack #{kind} for #{id}")
     end
