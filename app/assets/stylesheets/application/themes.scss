@@ -9375,6 +9375,98 @@ $mps-teal-100: #e9f2f5;
 ///////////////////////////////////////////////
 //
 // Michigan Publishing Services
+// Crafting Democratic Futures (democraticfutures)
+//
+///////////////////////////////////////////////
+.democraticfutures {
+  h1, h2 {
+    font-family: 'Muli', sans-serif;
+    font-weight: 700;
+  }
+
+  button.search-submit {
+      background-color: $mps-maize-400;
+      border-color: $mps-maize-400;
+      border-left: none !important;
+      border-radius: 0;
+      color: $mps-blue-500;
+
+      svg {
+        height: auto;
+        width: auto;
+        stroke-width: 2;
+      }
+  }
+
+  .css-logo {
+    float: right;
+    margin-top: 1em;
+  }
+  
+  .jumbotron {
+    p.lead {
+    font-size: 18px;
+    }
+
+    .publisher-info {
+      display: none;
+    }
+  }
+
+  footer .press-block-a, footer .press-block-b {
+    background-color: #CEC1B6;
+    color: #333B2D;
+
+    a {
+      color: #333B2D;
+    }
+
+    a:hover,
+    a:focus {
+      color: #333B2D;
+      text-decoration: underline;
+    }
+
+    ul li {
+      padding-bottom: 5px;
+      font-size: 15px;
+    }
+  }
+
+  footer .press-block-a { 
+    img {
+      display: block;
+      margin-top: 0;
+    }
+
+    img.cdf {
+      width: 150px;
+      margin-bottom: .5em;
+    }
+
+    img.css {
+      width: 180px;
+    }
+
+    p {
+      margin-top: 2em;
+      img.mellon {
+        width: 160px;
+        margin-top: 10px;
+      }
+    }
+
+  }
+
+  footer.press .press-block-c {
+    color: #fff;
+  }
+
+}
+
+///////////////////////////////////////////////
+//
+// Michigan Publishing Services
 // A2RU - Alliance for the Arts in Research
 // Universities
 //
@@ -11832,6 +11924,454 @@ $seas-black-80: #342f2e;
   }
 
 }
+///////////////////////////////////////////////
+//
+// Michigan State University Press
+//
+///////////////////////////////////////////////
+// colors
+$msupress-green: #18453B;
+$msupress-white: #FFFFFF;
+$msupress-black: #000000;
+
+$msupress-kelly: #008208;
+$msupress-lime: #7BBD00;
+$msupress-excellence: #0B9A6D;
+$msupress-link: #09815B;
+$msupress-refresh: #008934;
+
+$msupress-neutral-500: #06080a;
+$msupress-neutral-400: #212b36;
+$msupress-neutral-300: #637381;
+$msupress-neutral-200: #8196a1;
+$msupress-neutral-100: #e5e9ed;
+
+// typography
+
+@mixin arial {
+  font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;
+}
+
+@mixin garamond {
+  font-family: Garamond,Baskerville,"Baskerville Old Face","Hoefler Text","Times New Roman",serif; 
+}
+
+
+.msupress {
+
+  // svgicon
+  #documents, #resource-page-svgicon {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(39%) sepia(36%) saturate(858%) hue-rotate(149deg) brightness(92%) contrast(96%); // $msupress-teal-400: #1d7491;
+
+    }
+
+  }
+
+  // typography
+  @include arial;
+
+  h1,
+  h2 {
+    @include garamond;
+    font-weight: 500;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  h3,
+  h4,
+  h5 {
+    @include arial;
+    font-weight: 700;
+  }
+
+  // links
+  a {
+    color: $msupress-link;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    color: $msupress-link;
+    text-decoration: underline;
+  }
+
+  // buttons
+  .btn, .btn-default {
+    @include arial;
+    background-color: $msupress-link;
+    border-color: $msupress-excellence;
+    color: white;
+  }
+
+  .btn:hover,
+  .btn:active,
+  .btn:focus,
+  .btn-default:hover,
+  .btn-default:active,
+  .btn-default:focus {
+    background-color: $msupress-green;
+    color: white;
+    text-decoration: none;
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $msupress-neutral-100;
+  }
+
+  .navbar {
+    border-radius: 0px;
+  }
+
+  #brand-bar {
+    background-color: white;
+    border-bottom: 1px solid $msupress-green;
+
+    .navbar-brand {
+      color: $msupress-black;
+      @include arial;
+      height: auto;
+      padding: 9px 40px 10px 15px;
+    }
+
+    .navbar-brand > img {
+      display: inline-block;
+      padding-right: 10px;
+    }
+
+    #brand-bar-nav {
+      justify-content: end;
+    }
+
+    .search-form {
+      margin-top: 12px;
+    }
+
+    .navbar-brand:hover,
+    .navbar-brand:active,
+    .navbar-brand:focus {
+      text-decoration: underline;
+    }
+
+    .navbar-nav {
+      a#add-content,
+      a.login,
+      a.user-display-name,
+      a.language-dropdown {
+          color: $msupress-black;
+      }
+
+      .open > a,
+      .open > a:focus,
+      .open > a:hover,
+      .open > a#add-content {
+        background-color: $msupress-neutral-100;
+        color: $msupress-black;
+      }
+    }
+
+    button.search-submit {
+      background-color: $msupress-green;
+      border-color: $msupress-green;
+      color: $msupress-white;
+    }
+
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include arial;
+  }
+
+  // press catalog
+
+  // jumbotron
+  .jumbotron {
+    @include arial;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    .container {
+      margin-top: 1em;
+    }
+
+    p.lead {
+      font-size: 16px;
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    p.publisher-info a {
+      text-decoration: underline;
+    }
+
+    .logo {
+
+      img {
+        display: none;
+      }
+
+    }
+
+  }
+
+  // sorts on press and monograph pages
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    background-color: $msupress-link;
+    color: white;
+    border-color: $msupress-excellence;
+
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    background-color: $msupress-green;
+    color: white;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: white;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover .caret,
+  #per_page-dropdown .dropdown-toggle:hover .caret,
+  #sort-dropdown .dropdown-toggle:active .caret,
+  #per_page-dropdown .dropdown-toggle:active .caret {
+    color: white;
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: white;
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include arial;
+      }
+    }
+
+    .monograph-metadata h1 {
+      font-size: 36px;
+    }
+
+    .authors, .copyright {
+      @include arial;
+    }
+
+    .monograph-cover button {
+      background-color: transparent;
+      border-color: transparent;
+    }
+  }
+
+  // pagination
+  .page-links {
+    @include arial;
+  }
+
+  .pagination {
+    @include arial;
+     li a, li span {
+       color: white;
+       background-color: $msupress-link;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $msupress-green;
+       border-color: $msupress-excellence;
+       color: white;
+     }
+  }
+
+// book page tabs
+#tabs {
+  .nav-tabs > li.active > h2 > a {
+    color: $msupress-black;
+    @include arial;
+  }
+
+  .nav-tabs > li > h2 > a {
+    @include arial;
+  }
+}
+
+
+  // assets
+  .asset-navigation {
+    @include arial;
+  }
+
+  .asset {
+    ul.nav-tabs li {
+      @include arial;
+    }
+  }
+
+  //footer
+  footer {
+    border-top: 1px solid $msupress-green;
+
+    a,
+    a:hover,
+    a:active {
+      color: white;
+    }
+    .press-block-a,
+    .press-block-b {
+      background-color:  $msupress-white;
+
+      a,
+      a:hover,
+      a:active {
+        color: white;
+      }
+
+      img {
+        width: 160px;   
+        margin-top: 30px;
+        display: block;     
+      }
+
+      p {
+        @include arial;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: unset;
+
+        a.brand {
+          display:none;
+        }
+      }
+
+    }
+    .press-block-c {
+      background-color: $msupress-green;
+      color: $msupress-white;
+      @include arial;
+    }
+    .platform {
+      background-color: $msupress-link;
+      border-left: 1px solid $msupress-green;
+    }
+  }
+
+  // e-book reader
+  #epub {
+    font-family: 'Arial', sans-serif !important;
+  }
+
+  #reader {
+    @include arial;
+
+    .cozy-control .cozy-h1 {
+      @include garamond;
+      font-size: 1.5em;
+    }
+
+    .cozy-container input[type="text"] {
+      font-family: 'Arial', sans-serif !important;
+    }
+
+    .button {
+      @include epub-button-background-color($msupress-link,$msupress-green,white);
+      @include arial;
+    }
+
+    .button--lg {
+      @include epub-button-background-color($msupress-link,$msupress-green,white);
+      @include arial;
+    }
+
+    .button--inline {
+      @include epub-button-background-color($msupress-link,$msupress-green,white);
+      @include arial;
+    }
+
+    .button--sm {
+      @include epub-button-background-color($msupress-link,$msupress-green,white);
+      @include arial;
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($msupress-link,$msupress-green,white);
+      color: white;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($msupress-green !important);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($msupress-link !important);
+      transition: 0.2s ease-in;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $msupress-green;
+    }
+
+  }
+
+  @media only screen and (max-width : 1198px) {
+
+    #brand-bar form.search-form, .navbar-form {
+      width: 200px;
+    }
+
+  }
+
+  @media only screen and (max-width : 992px) {
+    #brand-bar .navbar-brand {
+      font-size: 1.4em;
+    }
+
+    #brand-bar form.search-form, .navbar-form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+
+  }
+
+  @media only screen and (max-width : 768px) {
+    #brand-bar .navbar-brand {
+      font-size: 1.2em;
+    }
+
+  }
+
+}
+
+
 ///////////////////////////////////////////////
 //
 // University of Minnesota Press
