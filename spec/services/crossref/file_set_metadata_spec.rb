@@ -193,7 +193,7 @@ RSpec.describe Crossref::FileSetMetadata do
           expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq fs.mime_type
         end
 
-        expect(subject.xpath("//component_list/component")[i].at_css('doi').content).to eq "#{monograph.doi}.cmp.#{i + 1}"
+        expect(subject.xpath("//component_list/component")[i].at_css('doi').content).to eq "#{monograph.doi}.cmp.#{fs.id}"
         expect(subject.xpath("//component_list/component")[i].at_css('resource').content).to eq Rails.application.routes.url_helpers.hyrax_file_set_url(fs.id)
       end
     end

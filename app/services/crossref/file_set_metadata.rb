@@ -43,10 +43,10 @@ module Crossref
     end
 
     def components
-      presenters.each_with_index do |presenter, index|
+      presenters.each do |presenter|
         next if monograph_representative?(presenter)
 
-        doi = doi(presenter, index)
+        doi = doi(presenter)
         # In the future, our Crossref user may be granted the ability to create/edit DOIs under multiple prefixes.
         # At that time, this hard-coded prefix value can be moved to `crossref.yml`, along with any others.
         next unless doi.start_with?('10.3998/')
@@ -74,16 +74,15 @@ module Crossref
       desc
     end
 
-    def doi(presenter, index)
+    def doi(presenter)
       # If there's a DOI already populated, regardless of whether it is actually
       # registered with Crossref, use that. This means people can put DOIs into
-      # the importer metadata and this will use them.
+      # the *importer* metadata and this will use them.
+      # Note that the DOI textbox in the UI is disabled for presses that use auto-component-DOI registration.
       return presenter.doi if presenter.doi.present?
 
-      # Otherwise make a DOI based on the file_sets's position in ordered_members.
-      # This is fragile and probably a bad idea.
-      # What's a better way to generate predicable DOIs?
-      file_set_doi = "#{work.doi}.cmp.#{index + 1}"
+      # Otherwise make a component DOI using the FileSet's NOID
+      file_set_doi = "#{work.doi}.cmp.#{presenter.id}"
       file_sets_to_save[presenter.id] = { doi: file_set_doi }
       file_set_doi
     end
