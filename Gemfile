@@ -8,7 +8,8 @@ git_source(:github) do |repo_name|
 end
 
 gem 'railties', '> 3', '< 7'
-gem 'rails', '~> 6.0.5'
+# gem 'rails', '~> 6.0.5'
+gem 'rails', '~> 6.1.7'
 
 gem 'rails-html-sanitizer'
 
@@ -196,7 +197,9 @@ gem 'sitemap_generator', '~> 6.1.2'
 
 gem 'sinatra', '>= 0.9.2'
 
-gem 'sprockets', '~> 3.7'
+# gem 'sprockets', '~> 3.7'
+# HELIO-4954 Rails 6.1 upgrade pin Sprokets
+gem 'sprockets', '3.7.2'
 
 # sqlite for epub indexing
 gem 'sqlite3', '1.4.2'
