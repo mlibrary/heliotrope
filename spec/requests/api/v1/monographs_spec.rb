@@ -33,7 +33,7 @@ RSpec.describe "Monographs", type: :request do
     describe "GET /api/v1/monographs" do # index
       it 'empty ok' do
         get api_monographs_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
         expect(Monograph.count).to eq(0)
@@ -42,7 +42,7 @@ RSpec.describe "Monographs", type: :request do
       it 'monograph ok' do
         monograph
         get api_monographs_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to match_array([monograph_obj(monograph: monograph)])
         expect(Monograph.count).to eq(1)
@@ -52,7 +52,7 @@ RSpec.describe "Monographs", type: :request do
         monograph
         new_monograph = create(:monograph)
         get api_monographs_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to match_array([monograph_obj(monograph: monograph), monograph_obj(monograph: new_monograph)])
         expect(Monograph.count).to eq(2)
@@ -63,7 +63,7 @@ RSpec.describe "Monographs", type: :request do
       it 'not_found' do
         monograph
         get api_press_monographs_path(1), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Press")
         expect(Monograph.count).to eq(1)
@@ -73,7 +73,7 @@ RSpec.describe "Monographs", type: :request do
         monograph
         press = create(:press)
         get api_press_monographs_path(press), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
         expect(Monograph.count).to eq(1)
@@ -82,7 +82,7 @@ RSpec.describe "Monographs", type: :request do
       it 'monograph ok' do
         monograph
         get api_press_monographs_path(monograph.press), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to match_array([monograph_obj(monograph: monograph)])
         expect(Monograph.count).to eq(1)
@@ -92,7 +92,7 @@ RSpec.describe "Monographs", type: :request do
         monograph
         new_monograph = create(:monograph, press: monograph.press)
         get api_press_monographs_path(monograph.press), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to match_array([monograph_obj(monograph: monograph), monograph_obj(monograph: new_monograph)])
         expect(Monograph.count).to eq(2)
@@ -102,7 +102,7 @@ RSpec.describe "Monographs", type: :request do
     describe "GET /api/v1/monographs/:id" do # show
       it 'non existing not_found' do
         get api_monograph_path(1), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveFedora::ObjectNotFoundError: Couldn't find Monograph")
         expect(Monograph.count).to eq(0)
@@ -110,7 +110,7 @@ RSpec.describe "Monographs", type: :request do
 
       it 'existing ok' do
         get api_monograph_path(monograph.id), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect([response_body]).to match_array([monograph_obj(monograph: monograph)])
         expect(Monograph.count).to eq(1)
@@ -120,7 +120,7 @@ RSpec.describe "Monographs", type: :request do
     describe "GET /api/v1/monographs/:id/extract" do # extract
       it 'non existing not_found' do
         get api_monograph_extract_path(1), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveFedora::ObjectNotFoundError: Couldn't find Monograph")
         expect(Monograph.count).to eq(0)
@@ -139,7 +139,7 @@ RSpec.describe "Monographs", type: :request do
     describe "GET /api/v1/monographs/:id/manifest" do # manifest
       it 'non existing not_found' do
         get api_monograph_manifest_path(1), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveFedora::ObjectNotFoundError: Couldn't find Monograph")
         expect(Monograph.count).to eq(0)

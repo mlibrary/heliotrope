@@ -7,6 +7,8 @@ require "pathname"
 ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile",
   Pathname.new(__FILE__).realpath)
 
+require "logger" # fix for rails < 7.1 and concurrent-ruby 1.3.5 https://stackoverflow.com/q/79360526
+
 require "bundler/setup"
 
 require "webpacker"

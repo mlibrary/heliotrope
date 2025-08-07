@@ -8,7 +8,8 @@ git_source(:github) do |repo_name|
 end
 
 gem 'railties', '> 3', '< 7'
-gem 'rails', '~> 6.0.5'
+# gem 'rails', '~> 6.0.5'
+gem 'rails', '~> 6.1.7'
 
 gem 'rails-html-sanitizer'
 

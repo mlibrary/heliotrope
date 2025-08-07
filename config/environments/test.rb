@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require Rails.root.join('lib', 'devise', 'fake_auth_header')
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 

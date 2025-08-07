@@ -328,7 +328,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
           it 'downloads a css file' do
             get :show, params: { id: file_set.id, use_route: 'downloads', file: 'embed_css' }
             expect(response).to have_http_status(:ok)
-            expect(response.content_type).to eq('text/css')
+            expect(response.content_type).to eq('text/css; charset=utf-8')
             expect(response.body).to eq embed_css
           end
         end
@@ -339,7 +339,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
           it 'downloads a css file' do
             get :show, params: { id: file_set.id, use_route: 'downloads', file: 'embed_css' }
             expect(response).to have_http_status(:ok)
-            expect(response.content_type).to eq('text/css')
+            expect(response.content_type).to eq('text/css; charset=utf-8')
             expect(response.body).to eq embed_css
           end
         end
@@ -350,7 +350,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
           it 'downloads a css file' do
             get :show, params: { id: file_set.id, use_route: 'downloads', file: 'embed_css' }
             expect(response).to have_http_status(:ok)
-            expect(response.content_type).to eq('text/css')
+            expect(response.content_type).to eq('text/css; charset=utf-8')
             expect(response.body).to eq embed_css
           end
         end
@@ -387,7 +387,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
           it 'downloads a css file' do
             get :show, params: { id: file_set.id, use_route: 'downloads', file: 'embed_css' }
             expect(response).to have_http_status(:ok)
-            expect(response.content_type).to eq('text/css')
+            expect(response.content_type).to eq('text/css; charset=utf-8')
             expect(response.body).to eq embed_css
           end
         end

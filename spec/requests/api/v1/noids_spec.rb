@@ -32,7 +32,7 @@ RSpec.describe "Noids", type: :request do
 
         it "returns all noids" do
           get api_noids_path, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(response_body).to match_array([{ "id" => "mono" }])
         end
@@ -57,7 +57,7 @@ RSpec.describe "Noids", type: :request do
 
         it "returns the correct noid(s)" do
           get api_noids_path, params: { isbn: "978-0-472-12665-1" }, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(response_body).to match_array([{ "id" => "monoisbn" }])
         end
@@ -82,7 +82,7 @@ RSpec.describe "Noids", type: :request do
 
         it "returns the correct noid(s)" do
           get api_noids_path, params: { doi: "10.3998/mpub.7275146" }, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(response_body).to match_array([{ "id" => "monodoi" }])
         end
@@ -108,7 +108,7 @@ RSpec.describe "Noids", type: :request do
         context "bar number" do
           it "returns the correct noid(s)" do
             get api_noids_path, params: { identifier: "bar_number:S1234" }, headers: headers
-            expect(response.content_type).to eq("application/json")
+            expect(response.content_type).to eq("application/json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(response_body).to match_array([{ "id" => "monoid" }])
           end
@@ -117,7 +117,7 @@ RSpec.describe "Noids", type: :request do
         context "hebid" do
           it "returns the correct noid(s)" do
             get api_noids_path, params: { identifier: "heb_id:heb99999.0001.001" }, headers: headers
-            expect(response.content_type).to eq("application/json")
+            expect(response.content_type).to eq("application/json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(response_body).to match_array([{ "id" => "monoid" }])
           end

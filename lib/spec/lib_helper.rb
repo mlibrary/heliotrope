@@ -11,6 +11,7 @@ require 'zip'
 # set `RSpec::Mocks.configuration.allow_message_expectations_on_nil` to `false`
 RSpec::Mocks.configuration.allow_message_expectations_on_nil = false
 
+require "logger" # fix for rails < 7.1 and concurrent-ruby 1.3.5 https://stackoverflow.com/q/79360526
 # ActiveSupport
 require 'active_support'
 # present?, blank?, and other stuff...

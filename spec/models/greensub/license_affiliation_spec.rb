@@ -52,8 +52,8 @@ RSpec.describe Greensub::LicenseAffiliation, type: :model do
     expect(Greensub::LicenseAffiliation.count).to eq 1
     expect(license.destroy).to be false
     expect(license.errors.count).to eq 1
-    expect(license.errors.first[0]).to eq :base
-    expect(license.errors.first[1]).to eq "Cannot delete record because dependent license affiliations exist"
+    expect(license.errors.errors.first.attribute).to eq :base
+    expect(license.errors.errors.first.message).to eq "Cannot delete record because dependent license affiliations exist"
     license_affiliation.destroy
     expect(Greensub::LicenseAffiliation.count).to eq 0
     expect(Greensub::License.count).to eq 1

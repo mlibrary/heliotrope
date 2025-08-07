@@ -47,7 +47,7 @@ RSpec.describe "Sushi Service", type: :request do
         context 'params' do
           it do
             get api_sushi_status_path, params: params, headers: headers
-            expect(response.content_type).to eq("application/json")
+            expect(response.content_type).to eq("application/json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(response.body).not_to be_empty
           end
@@ -67,7 +67,7 @@ RSpec.describe "Sushi Service", type: :request do
         context 'params' do
           it do
             get api_sushi_members_path, params: params, headers: headers
-            expect(response.content_type).to eq("application/json")
+            expect(response.content_type).to eq("application/json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(response.body).not_to be_empty
           end
@@ -87,7 +87,7 @@ RSpec.describe "Sushi Service", type: :request do
         context 'params' do
           it do
             get api_sushi_reports_path, params: params, headers: headers
-            expect(response.content_type).to eq("application/json")
+            expect(response.content_type).to eq("application/json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(response.body).not_to be_empty
           end

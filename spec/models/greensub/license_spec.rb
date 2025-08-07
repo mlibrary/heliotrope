@@ -65,8 +65,8 @@ RSpec.describe Greensub::License, type: :model do
       it 'destroy fails' do
         expect(subject.destroy).to be false
         expect(subject.errors.count).to eq 1
-        expect(subject.errors.first[0]).to eq :base
-        expect(subject.errors.first[1]).to eq "Cannot delete record because dependent grant exist"
+        expect(subject.errors.errors.first.attribute).to eq :base
+        expect(subject.errors.errors.first.message).to eq "Cannot delete record because dependent grant exist"
       end
     end
   end
@@ -129,8 +129,8 @@ RSpec.describe Greensub::License, type: :model do
       it 'destroy fails' do
         expect(subject.destroy).to be false
         expect(subject.errors.count).to eq 1
-        expect(subject.errors.first[0]).to eq :base
-        expect(subject.errors.first[1]).to eq "Cannot delete record because dependent grant exist"
+        expect(subject.errors.errors.first.attribute).to eq :base
+        expect(subject.errors.errors.first.message).to eq "Cannot delete record because dependent grant exist"
       end
     end
   end
