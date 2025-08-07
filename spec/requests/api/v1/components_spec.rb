@@ -56,7 +56,7 @@ RSpec.describe "Components", type: :request do
 
       it 'existing find by identifier and noid ok' do
         get api_find_component_path, params: { identifier: component.identifier, noid: component.noid }, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(component_obj(component: component))
         expect(Greensub::Component.count).to eq(1)
@@ -79,7 +79,7 @@ RSpec.describe "Components", type: :request do
 
       it 'existing find by identifier ok' do
         get api_find_component_path, params: { identifier: component.identifier }, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(component_obj(component: component))
         expect(Greensub::Component.count).to eq(1)
@@ -87,7 +87,7 @@ RSpec.describe "Components", type: :request do
 
       it 'existing find by noid ok' do
         get api_find_component_path, params: { noid: component.noid }, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(component_obj(component: component))
         expect(Greensub::Component.count).to eq(1)
@@ -97,7 +97,7 @@ RSpec.describe "Components", type: :request do
     describe "GET /api/v1/components" do # index
       it 'empty ok' do
         get api_components_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
         expect(Greensub::Component.count).to eq(0)
@@ -106,7 +106,7 @@ RSpec.describe "Components", type: :request do
       it 'component ok' do
         component
         get api_components_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([component_obj(component: component)])
         expect(Greensub::Component.count).to eq(1)
@@ -116,7 +116,7 @@ RSpec.describe "Components", type: :request do
         component
         new_component = create(:component)
         get api_components_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([component_obj(component: component), component_obj(component: new_component)])
         expect(Greensub::Component.count).to eq(2)
@@ -138,7 +138,7 @@ RSpec.describe "Components", type: :request do
 
       it 'not_found' do
         get api_product_components_path(1), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product")
         expect(Greensub::Component.count).to eq(2)
@@ -146,7 +146,7 @@ RSpec.describe "Components", type: :request do
 
       it 'empty ok' do
         get api_product_components_path(product), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
         expect(Greensub::Component.count).to eq(2)
@@ -155,7 +155,7 @@ RSpec.describe "Components", type: :request do
       it 'product ok' do
         product.components << component
         get api_product_components_path(product), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([component_obj(component: component)])
         expect(Greensub::Component.count).to eq(2)
@@ -165,7 +165,7 @@ RSpec.describe "Components", type: :request do
         product.components << component
         product.components << new_component
         get api_product_components_path(product), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([component_obj(component: component), component_obj(component: new_component)])
         expect(Greensub::Component.count).to eq(2)
@@ -184,7 +184,7 @@ RSpec.describe "Components", type: :request do
 
       it 'blank identifier' do
         post api_components_path, params: params, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
         expect(response_body[:name.to_s]).to be nil
@@ -197,7 +197,7 @@ RSpec.describe "Components", type: :request do
 
         it 'existing noid' do
           post api_components_path, params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:created)
           expect(response_body[:identifier.to_s]).to eq(identifier)
           expect(response_body[:name.to_s]).to eq(name)
@@ -210,7 +210,7 @@ RSpec.describe "Components", type: :request do
 
           it do
             post api_components_path, params: params, headers: headers
-            expect(response.content_type).to eq("application/json")
+            expect(response.content_type).to eq("application/json; charset=utf-8")
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response_body[:identifier.to_s]).to be nil
             expect(response_body[:name.to_s]).to be nil
@@ -227,7 +227,7 @@ RSpec.describe "Components", type: :request do
 
         it do
           post api_components_path, params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:identifier.to_s]).to eq(["component identifier #{identifier} exists!"])
           expect(Greensub::Component.count).to eq(1)
@@ -239,7 +239,7 @@ RSpec.describe "Components", type: :request do
     describe "GET /api/v1/component/:id" do # show
       it 'non existing not_found' do
         get api_component_path(1), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component")
         expect(Greensub::Component.count).to eq(0)
@@ -247,7 +247,7 @@ RSpec.describe "Components", type: :request do
 
       it 'existing ok' do
         get api_component_path(component), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(component_obj(component: component))
         expect(Greensub::Component.count).to eq(1)
@@ -258,7 +258,7 @@ RSpec.describe "Components", type: :request do
       context 'non existing product' do
         it 'non existing component not_found' do
           get api_product_component_path(1, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component with")
           expect(Greensub::Component.count).to eq(0)
@@ -266,7 +266,7 @@ RSpec.describe "Components", type: :request do
 
         it 'existing component not_found' do
           get api_product_component_path(1, component), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
           expect(Greensub::Component.count).to eq(1)
@@ -279,7 +279,7 @@ RSpec.describe "Components", type: :request do
 
         it 'non existing component not_found' do
           get api_product_component_path(product, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component with")
           expect(Greensub::Component.count).to eq(0)
@@ -289,7 +289,7 @@ RSpec.describe "Components", type: :request do
           allow(Monograph).to receive(:find).with(component.noid).and_return(monograph)
           put api_product_component_path(product, component), headers: headers
           get api_product_component_path(product, component), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(response_body).to eq(component_obj(component: component))
           expect(product.components).to include(component)
@@ -313,7 +313,7 @@ RSpec.describe "Components", type: :request do
 
       it 'non existing not_found' do
         put api_component_path(1), params: params, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component")
         expect(Greensub::Component.count).to eq(0)
@@ -321,7 +321,7 @@ RSpec.describe "Components", type: :request do
 
       it 'existing ok' do
         put api_component_path(component.id), params: params, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body[:id.to_s]).to eq(component.id)
         expect(response_body[:name.to_s]).to eq('updated_name')
@@ -333,7 +333,7 @@ RSpec.describe "Components", type: :request do
 
         it do
           put api_component_path(component.id), params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
           expect(Greensub::Component.count).to eq(1)
@@ -345,7 +345,7 @@ RSpec.describe "Components", type: :request do
 
         it do
           put api_component_path(component.id), params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:noid.to_s]).to eq(["component noid '#{noid}' does not exists!"])
           expect(Greensub::Component.count).to eq(1)
@@ -364,7 +364,7 @@ RSpec.describe "Components", type: :request do
       context 'non existing product' do
         it 'non existing component not_found' do
           put api_product_component_path(1, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component with")
           expect(Greensub::Component.count).to eq(0)
@@ -372,7 +372,7 @@ RSpec.describe "Components", type: :request do
 
         it 'existing component not_found' do
           put api_product_component_path(1, component), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
           expect(Greensub::Component.count).to eq(1)
@@ -384,7 +384,7 @@ RSpec.describe "Components", type: :request do
 
         it 'non existing component not_found' do
           put api_product_component_path(product, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component with")
           expect(Greensub::Component.count).to eq(0)
@@ -427,7 +427,7 @@ RSpec.describe "Components", type: :request do
 
       it 'non existing not_found' do
         delete api_component_path(1), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component")
         expect(Greensub::Component.count).to eq(0)
@@ -446,7 +446,7 @@ RSpec.describe "Components", type: :request do
         product.components << component
         product.save
         delete api_component_path(component), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:accepted)
         expect(response_body[:base.to_s]).to include("Cannot delete record because dependent components products exist")
         expect(Greensub::Component.count).to eq(1)
@@ -457,7 +457,7 @@ RSpec.describe "Components", type: :request do
       context 'non existing product' do
         it 'non existing component not_found' do
           delete api_product_component_path(1, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component with")
           expect(Greensub::Component.count).to eq(0)
@@ -465,7 +465,7 @@ RSpec.describe "Components", type: :request do
 
         it 'existing component not_found' do
           delete api_product_component_path(1, component), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
           expect(Greensub::Component.count).to eq(1)
@@ -486,7 +486,7 @@ RSpec.describe "Components", type: :request do
 
         it 'non existing component not_found' do
           delete api_product_component_path(product, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Component with")
           expect(product.components).to include(component)

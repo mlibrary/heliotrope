@@ -69,16 +69,16 @@ RSpec.describe Greensub::Product, type: :model do
       subject.components << component
       expect(subject.destroy).to be false
       expect(subject.errors.count).to eq 1
-      expect(subject.errors.first[0]).to eq :base
-      expect(subject.errors.first[1]).to eq "Cannot delete record because dependent components products exist"
+      expect(subject.errors.errors.first.attribute).to eq :base
+      expect(subject.errors.errors.first.message).to eq "Cannot delete record because dependent components products exist"
     end
 
     it 'when license present' do
       license
       expect(subject.destroy).to be false
       expect(subject.errors.count).to eq 1
-      expect(subject.errors.first[0]).to eq :base
-      expect(subject.errors.first[1]).to eq "Cannot delete record because dependent licenses exist"
+      expect(subject.errors.errors.first.attribute).to eq :base
+      expect(subject.errors.errors.first.message).to eq "Cannot delete record because dependent licenses exist"
     end
 
     it 'when grant present' do
@@ -86,8 +86,8 @@ RSpec.describe Greensub::Product, type: :model do
       Authority.grant!(individual, Checkpoint::Credential::Permission.new(:read), subject)
       expect(subject.destroy).to be false
       expect(subject.errors.count).to eq 1
-      expect(subject.errors.first[0]).to eq :base
-      expect(subject.errors.first[1]).to eq "Cannot delete record because dependent grant exist"
+      expect(subject.errors.errors.first.attribute).to eq :base
+      expect(subject.errors.errors.first.message).to eq "Cannot delete record because dependent grant exist"
     end
   end
 

@@ -22,8 +22,8 @@ RSpec.describe Greensub::Individual, type: :model do
       individual.identifier = 'new_identifier'
       expect(individual.save).to be false
       expect(individual.errors.count).to eq 1
-      expect(individual.errors.first[0]).to eq :identifier
-      expect(individual.errors.first[1]).to eq "individual identifier can not be changed!"
+      expect(individual.errors.errors.first.attribute).to eq :identifier
+      expect(individual.errors.errors.first.type).to eq "individual identifier can not be changed!"
     end
   end
 
@@ -36,8 +36,8 @@ RSpec.describe Greensub::Individual, type: :model do
       license
       expect(individual.destroy).to be false
       expect(individual.errors.count).to eq 1
-      expect(individual.errors.first[0]).to eq :base
-      expect(individual.errors.first[1]).to eq "Cannot delete record because dependent licenses exist"
+      expect(individual.errors.errors.first.attribute).to eq :base
+      expect(individual.errors.errors.first.message).to eq "Cannot delete record because dependent licenses exist"
     end
   end
 
