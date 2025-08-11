@@ -33,7 +33,21 @@ namespace :heliotrope do
           #  start of the line
           # `is_a?(String)` to avoid quoting empty cells, which causes altered output in Scholarly iQ's reports, i.e.
           # blanks normally become - (hyphen) but a set of double quotes is taken as an actual value on ingest.
-          row_data = row.attributes.map { |_key, value| value.is_a?(String) ? value.squish : value } << counter_row_url(row, press_map)
+          row_data = row.attributes.map do |key, value|
+            if value.is_a?(String)
+              if key == 'noid' && row['book_segment'].present?
+                # for convenience on SiQ's side, we're adding the book segment to the Noid which will become their unique "ItemID" which is used for double-click detection etc
+                value.squish + '.' + row['book_segment'].to_s.rjust(4, '0')
+              else
+                value.squish
+              end
+            else
+              # leave NULLs/nils as "just a tab" in the TSV
+              value
+            end
+          end
+
+          row_data << counter_row_url(row, press_map)
           tsv << row_data
         end
       end
