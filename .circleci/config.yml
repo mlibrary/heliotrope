@@ -24,7 +24,7 @@ commands:
         type: string
       ruby_version:
         type: string
-        default: '2.7.4'
+        default: '3.3.5'
     steps:
     - restore_cache:
         keys:
@@ -55,10 +55,10 @@ commands:
         type: string
         default: "1"
     steps:
-    - restore_cache:
-        name: Restore yarn package cache (yarn.lock not found? HELIO-4572)
-        keys:
-          - v<< parameters.cache_version >>yarn-packages-{{ checksum "yarn.lock "}}
+    # - restore_cache:
+    #     name: Restore yarn package cache (yarn.lock not found? HELIO-4572)
+    #     keys:
+    #       - v<< parameters.cache_version >>yarn-packages-{{ checksum "yarn.lock "}}
     - run:
         name: Install yarn dependancies
         command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
@@ -133,7 +133,7 @@ jobs:
         default: '2.4.22'
       rails_version:
         type: string
-        default: '6.0.6.1'
+        default: '6.1.7.10'
     executor:
       name: 'ruby'
       ruby_version: << parameters.ruby_version >>
@@ -154,7 +154,7 @@ jobs:
           cache_version: '{{ checksum "./.circleci/.force_rebuild" }}'
           project: heliotrope
       - run:
-          name: Install nodejs/yarn
+          name: Install nodejs/yarn in bundle
           command: |
             curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
             sudo apt install -y nodejs
@@ -177,7 +177,7 @@ jobs:
         default: '2.4.22'
       rails_version:
         type: string
-        default: '6.0.6.1'
+        default: '6.1.7.10'
     executor:
       name: 'ruby'
       ruby_version: << parameters.ruby_version >>
@@ -194,7 +194,7 @@ jobs:
           cache_version: '{{ checksum "./.circleci/.force_rebuild" }}'
           project: heliotrope
       - run:
-          name: Install nodejs/yarn
+          name: Install nodejs/yarn in build
           command: |
             curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
             sudo apt install -y nodejs
@@ -231,6 +231,8 @@ jobs:
           bundler_version: << parameters.bundler_version >>
           cache_version: '{{ checksum "./.circleci/.force_rebuild" }}'
           project: heliotrope
+      - yarn_cache:
+          cache_version: '{{ checksum "./.circleci/.force_rebuild" }}'
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
@@ -242,14 +244,6 @@ jobs:
       - run:
           name: Set up rails with bin/setup_ci
           command: bin/setup_ci
-      # HELIO-4752 Commented out while updating to ruby 3.3.5 and it apparently isn't needed,
-      # likely because we're not running any system specs in circleci?
-      # This worked in ruby 2.7.4 but in 3.3.5 it gives the error:
-      # "Exited with code exit status 1"
-      # with no other info. Since all specs pass without it so we'll leave it commented out for now.
-      #- run: # Commented out in HELIO-4752
-      #    name: Precompile assets
-      #    command: RAILS_ENV=test bundle exec rails webpacker:compile
       - run:
           name: install pdftk
           command: |
@@ -351,18 +345,18 @@ executors:
 
 workflows:
   version: 2
-  ruby2-7rails6-0:
+  ruby2-7rails6-1:
     jobs:
       - bundle:
           ruby_version: '3.3.5'
-          rails_version: '6.0.6.1'
+          rails_version: '6.1.7.10'
       - build:
           ruby_version: '3.3.5'
-          rails_version: '6.0.6.1'
+          rails_version: '6.1.7.10'
           requires:
             - bundle
       - test:
-          name: "rails6-0"
+          name: "rails6-1"
           ruby_version: '3.3.5'
           requires:
             - build

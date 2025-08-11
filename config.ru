@@ -9,3 +9,4 @@ Dir[File.join(ENV.fetch("PROMETHEUS_MONITORING_DIR"), "*.bin")].each do |file_pa
 end
 
 run Rails.application
+Rails.application.load_server

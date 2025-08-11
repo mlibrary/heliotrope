@@ -132,6 +132,10 @@ RSpec.describe Hyrax::FileSetsController, type: :controller do
           .to receive(:perform_later)
           .with(file_set, user)
 
+        # HELIO-4954 In Rails 6.1 it appears the default path of fixture_file_upload has moved?
+        # This method seems to be used in hyrax specs like this one, we don't use it much in heliotrope
+        # https://api.rubyonrails.org/v6.1.0/classes/ActionDispatch/TestProcess/FixtureFile.html#method-i-fixture_file_upload
+        # I've moved a couple of files into the "default" location to make these tests pass
         file = fixture_file_upload('/lorum_ipsum_toc_cover.png', 'image/png')
         allow(Hyrax::UploadedFile)
           .to receive(:find)

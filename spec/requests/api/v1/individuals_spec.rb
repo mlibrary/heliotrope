@@ -61,7 +61,7 @@ RSpec.describe "Individuals", type: :request do
 
       it 'existing ok' do
         get api_find_individual_path, params: { identifier: individual.identifier }, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(individual_obj(individual: individual))
         expect(Greensub::Individual.count).to eq(1)
@@ -71,7 +71,7 @@ RSpec.describe "Individuals", type: :request do
     describe "GET /api/v1/individuals" do # index
       it 'empty ok' do
         get api_individuals_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
         expect(Greensub::Individual.count).to eq(0)
@@ -80,7 +80,7 @@ RSpec.describe "Individuals", type: :request do
       it 'individual ok' do
         individual
         get api_individuals_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([individual_obj(individual: individual)])
         expect(Greensub::Individual.count).to eq(1)
@@ -90,7 +90,7 @@ RSpec.describe "Individuals", type: :request do
         individual
         new_individual = create(:individual)
         get api_individuals_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to match_array([individual_obj(individual: individual), individual_obj(individual: new_individual)])
         expect(Greensub::Individual.count).to eq(2)
@@ -105,7 +105,7 @@ RSpec.describe "Individuals", type: :request do
 
       it 'empty ok' do
         get api_product_individuals_path(product), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
         expect(Greensub::Individual.count).to eq(0)
@@ -114,7 +114,7 @@ RSpec.describe "Individuals", type: :request do
       it 'individual ok' do
         individual
         get api_product_individuals_path(product), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
         individual.create_product_license(product)
@@ -127,7 +127,7 @@ RSpec.describe "Individuals", type: :request do
         individual
         new_individual = create(:individual)
         get api_product_individuals_path(product), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
         individual.create_product_license(product)
@@ -150,7 +150,7 @@ RSpec.describe "Individuals", type: :request do
 
         it 'unprocessable_entity' do
           post api_individuals_path, params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:identifier.to_s]).to eq(["can't be blank"])
           expect(response_body[:name.to_s]).to eq(["can't be blank"])
@@ -166,7 +166,7 @@ RSpec.describe "Individuals", type: :request do
 
         it 'created' do
           post api_individuals_path, params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:created)
           expect(response_body[:identifier.to_s]).to eq(identifier)
           expect(response_body[:name.to_s]).to eq(name)
@@ -182,7 +182,7 @@ RSpec.describe "Individuals", type: :request do
 
         it 'unprocessable_entity' do
           post api_individuals_path, params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:identifier.to_s]).to eq(["individual identifier #{identifier} exists!"])
           expect(Greensub::Individual.count).to eq(1)
@@ -193,7 +193,7 @@ RSpec.describe "Individuals", type: :request do
     describe "GET /api/v1/individual/:id" do # show
       it 'non existing not_found' do
         get api_individual_path(1), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual")
         expect(Greensub::Individual.count).to eq(0)
@@ -201,7 +201,7 @@ RSpec.describe "Individuals", type: :request do
 
       it 'existing ok' do
         get api_individual_path(individual), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(individual_obj(individual: individual))
         expect(Greensub::Individual.count).to eq(1)
@@ -211,14 +211,14 @@ RSpec.describe "Individuals", type: :request do
     describe "PUT /api/v1/individual" do # update
       it 'non existing not_found' do
         put api_individual_path(1), params: { individual: { name: 'updated_name' } }.to_json, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual")
       end
 
       it 'existing ok' do
         put api_individual_path(individual.id), params: { individual: { name: 'updated_name' } }.to_json, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body[:id.to_s]).to eq(individual.id)
         expect(response_body[:name.to_s]).to eq('updated_name')
@@ -226,7 +226,7 @@ RSpec.describe "Individuals", type: :request do
 
       it 'existing update identifier unprocessable_entity' do
         put api_individual_path(individual.id), params: { individual: { identifier: 'updated_identifier' } }.to_json, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_body[:identifier.to_s]).to eq(["individual identifier can not be changed!"])
       end
@@ -237,7 +237,7 @@ RSpec.describe "Individuals", type: :request do
 
       it 'non existing not_found' do
         delete api_individual_path(individual.id + 1), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual")
         expect(Greensub::Individual.count).to eq(1)
@@ -254,7 +254,7 @@ RSpec.describe "Individuals", type: :request do
       it 'existing with products accepted' do
         individual.create_product_license(product)
         delete api_individual_path(individual), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:accepted)
         expect(response_body[:base.to_s]).to include("Cannot delete record because dependent licenses exist")
         expect(Greensub::Individual.count).to eq(1)
@@ -265,14 +265,14 @@ RSpec.describe "Individuals", type: :request do
       context 'non existing product' do
         it 'non existing individual not_found' do
           get api_product_individual_license_path(1, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual not_found' do
           get api_product_individual_license_path(1, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
         end
@@ -283,14 +283,14 @@ RSpec.describe "Individuals", type: :request do
 
         it 'non existing individual not_found' do
           get api_product_individual_license_path(product, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual, no license, not_found' do
           get api_product_individual_license_path(product, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body).to eq({})
         end
@@ -298,7 +298,7 @@ RSpec.describe "Individuals", type: :request do
         it 'existing individual with full license ok' do
           pl = individual.create_product_license(product)
           get api_product_individual_license_path(product, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(response_body).to eq(license_obj(license: pl))
         end
@@ -306,7 +306,7 @@ RSpec.describe "Individuals", type: :request do
         it 'existing individual with read license ok' do
           pl = individual.create_product_license(product, type: "Greensub::ReadLicense")
           get api_product_individual_license_path(product, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(response_body).to eq(license_obj(license: pl))
         end
@@ -319,14 +319,14 @@ RSpec.describe "Individuals", type: :request do
       context 'non existing product' do
         it 'non existing individual not_found' do
           post api_product_individual_license_path(1, 1), params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual not_found' do
           post api_product_individual_license_path(1, individual), params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
         end
@@ -337,14 +337,14 @@ RSpec.describe "Individuals", type: :request do
 
         it 'non existing individual not_found' do
           post api_product_individual_license_path(product, 1), params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual setting full license ok' do
           post api_product_individual_license_path(product, individual), params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           pl = individual.find_product_license(product)
           expect(pl.type).to eq Greensub::FullLicense.to_s
@@ -355,7 +355,7 @@ RSpec.describe "Individuals", type: :request do
         it 'existing individual setting read license ok' do
           params = { license: { type: Greensub::ReadLicense.to_s } }.to_json
           post api_product_individual_license_path(product, individual), params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           pl = individual.find_product_license(product)
           expect(pl.type).to eq Greensub::ReadLicense.to_s
@@ -365,7 +365,7 @@ RSpec.describe "Individuals", type: :request do
 
         it 'existing individual setting full license then read license ok' do
           post api_product_individual_license_path(product, individual), params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           pl = individual.find_product_license(product)
           pl_id = pl.id
@@ -375,7 +375,7 @@ RSpec.describe "Individuals", type: :request do
 
           params = { license: { type: Greensub::ReadLicense.to_s } }.to_json
           post api_product_individual_license_path(product, individual), params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           pl = individual.find_product_license(product)
           expect(pl_id).to eq pl.id
@@ -387,7 +387,7 @@ RSpec.describe "Individuals", type: :request do
         it 'existing individual setting a base license unprocessable entity' do
           params = { license: { type: Greensub::License.to_s } }.to_json
           post api_product_individual_license_path(product, individual), params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body).to eq({ "exception" => "unknown attribute 'licensee' for Greensub::License." })
           expect(individual.products.include?(product)).to be false
@@ -396,7 +396,7 @@ RSpec.describe "Individuals", type: :request do
         it 'existing individual setting a empty license unprocessable entity' do
           params = { license: {} }.to_json
           post api_product_individual_license_path(product, individual), params: params, headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body).to eq({ "exception" => "unknown attribute 'licensee' for Greensub::License." })
           expect(individual.products.include?(product)).to be false
@@ -408,14 +408,14 @@ RSpec.describe "Individuals", type: :request do
       context 'non existing product' do
         it 'non existing individual not_found' do
           delete api_product_individual_license_path(1, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
 
         it 'existing individual not_found' do
           delete api_product_individual_license_path(1, individual), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Product with")
         end
@@ -426,7 +426,7 @@ RSpec.describe "Individuals", type: :request do
 
         it 'non existing individual not_found' do
           delete api_product_individual_license_path(product, 1), headers: headers
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Individual with")
         end
@@ -436,7 +436,7 @@ RSpec.describe "Individuals", type: :request do
           expect(individual.find_product_license(product)).not_to be nil
           delete api_product_individual_license_path(product, individual), headers: headers
           expect(individual.find_product_license(product)).to be nil
-          expect(response.content_type).to eq("application/json")
+          expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(response_body).to eq(license_obj(license: pl))
           expect(Greensub::Individual.count).to eq(1)

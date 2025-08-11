@@ -12,7 +12,15 @@
 <%# For now just let the user know this is UTC time, we'd need to let them pick their own zone, or... %>
 <%# detect it otherwise. And that seems OTT for this feature for our editors right now. %>
 <%# https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local#setting_timezones %>
+
+<% date_published_value = if curation_concern.date_published.empty?
+                            []
+                          else
+                            curation_concern.date_published.first.strftime('%Y-%m-%dT%H:%M:%S')
+                          end
+%>
+
 <%= f.input :date_published,
             as: :datetime, html5: true,
-            input_html: { step: "1", multiple: true, value: curation_concern&.date_published&.first&.strftime('%Y-%m-%dT%H:%M:%S') },
+            input_html: { step: "1", multiple: true, value: date_published_value },
             required: f.object.required?(:date_published) %>

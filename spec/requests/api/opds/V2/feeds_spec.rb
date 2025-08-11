@@ -83,7 +83,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
         it 'opds feed' do
           get api_opds_path, headers: headers
-          expect(response.content_type).to eq("application/opds+json")
+          expect(response.content_type).to eq("application/opds+json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
           expect(response_body).to eq(opds_feed)
@@ -126,7 +126,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
         context "with no books" do
           it 'empty feed' do
             get api_opds_amherst_path, headers: headers
-            expect(response.content_type).to eq("application/opds+json")
+            expect(response.content_type).to eq("application/opds+json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(response_body).to eq(amherst_feed)
             expect(response_body['publications']).to be_empty
@@ -154,7 +154,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
           it 'is non-empty' do
             get api_opds_amherst_path, headers: headers
-            expect(response.content_type).to eq("application/opds+json")
+            expect(response.content_type).to eq("application/opds+json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(1)
@@ -199,7 +199,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
         context "with no books" do
           it 'empty feed' do
             get api_opds_bigten_path, headers: headers
-            expect(response.content_type).to eq("application/opds+json")
+            expect(response.content_type).to eq("application/opds+json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(response_body).to eq(bigten_feed)
             expect(response_body['publications']).to be_empty
@@ -227,7 +227,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
           it 'is non-empty' do
             get api_opds_bigten_path, headers: headers
-            expect(response.content_type).to eq("application/opds+json")
+            expect(response.content_type).to eq("application/opds+json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(1)
@@ -272,7 +272,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
         context "with no books" do
           it 'empty feed' do
             get api_opds_leverpress_path, headers: headers
-            expect(response.content_type).to eq("application/opds+json")
+            expect(response.content_type).to eq("application/opds+json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(response_body).to eq(leverpress_feed)
             expect(response_body['publications']).to be_empty
@@ -300,7 +300,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
           it 'is non-empty' do
             get api_opds_leverpress_path, headers: headers
-            expect(response.content_type).to eq("application/opds+json")
+            expect(response.content_type).to eq("application/opds+json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(1)
@@ -380,7 +380,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
         it 'umpebc empty feed' do
           get api_opds_umpebc_path, headers: headers
-          expect(response.content_type).to eq("application/opds+json")
+          expect(response.content_type).to eq("application/opds+json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(response_body).to eq(umpebc_feed)
           expect(response_body['publications']).to be_empty
@@ -388,7 +388,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
         it 'umpebc_oa empty feed' do
           get api_opds_umpebc_oa_path, headers: headers
-          expect(response.content_type).to eq("application/opds+json")
+          expect(response.content_type).to eq("application/opds+json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(response_body).to eq(umpebc_oa_feed)
           expect(response_body['publications']).to be_empty
@@ -427,7 +427,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
           it 'umpebc list all monographs' do
             get api_opds_umpebc_path, headers: headers
-            expect(response.content_type).to eq("application/opds+json")
+            expect(response.content_type).to eq("application/opds+json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(2)
@@ -436,7 +436,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
           it 'umpebc_oa list only open access monographs' do
             get api_opds_umpebc_oa_path, headers: headers
-            expect(response.content_type).to eq("application/opds+json")
+            expect(response.content_type).to eq("application/opds+json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(1)
@@ -502,7 +502,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
       it "returns wayfless download urls" do
         get api_opds_amherst_path, headers: headers, params: { filterByEntityId: entity_id }
-        expect(response.content_type).to eq("application/opds+json")
+        expect(response.content_type).to eq("application/opds+json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
         expect(response_body['publications'].count).to eq(1)
@@ -586,7 +586,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
       it 'the institution only sees 2020 books and OA books, not 2022' do
         get api_opds_umpebc_path, headers: headers, params: { filterByEntityId: entity_id }
-        expect(response.content_type).to eq("application/opds+json")
+        expect(response.content_type).to eq("application/opds+json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
         expect(response_body['publications'].count).to eq(2)
@@ -633,7 +633,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
     context "with no books" do
       it 'empty feed' do
         get api_opds_heb_path, headers: headers
-        expect(response.content_type).to eq("application/opds+json")
+        expect(response.content_type).to eq("application/opds+json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(heb_feed)
         expect(response_body['publications']).to be_empty
@@ -681,7 +681,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
       context "with no entity_id" do
         it 'heb list all monographs' do
           get api_opds_heb_path, headers: headers
-          expect(response.content_type).to eq("application/opds+json")
+          expect(response.content_type).to eq("application/opds+json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
           expect(response_body['publications'].count).to eq(2)
@@ -700,7 +700,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
 
           it 'heb list all monographs' do
             get api_opds_heb_path, headers: headers, params: { filterByEntityId: entity_id }
-            expect(response.content_type).to eq("application/opds+json")
+            expect(response.content_type).to eq("application/opds+json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(2)
@@ -712,7 +712,7 @@ RSpec.describe "OPDS Feeds", type: [:request, :json_schema]  do
         context "when not subscribed" do
           it 'heb list OA monographs' do
             get api_opds_heb_path, headers: headers, params: { filterByEntityId: entity_id }
-            expect(response.content_type).to eq("application/opds+json")
+            expect(response.content_type).to eq("application/opds+json; charset=utf-8")
             expect(response).to have_http_status(:ok)
             expect(schemer_validate?(opds_feed_schemer, response_body)).to be true
             expect(response_body['publications'].count).to eq(1)

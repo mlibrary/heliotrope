@@ -66,9 +66,11 @@ class EPubsController < CheckpointController
       if File.exist? pdf
         # HELIO-4444 never cache 206 Range requests as it makes Chromium browsers act weird over EZproxy
         # The NOID part of the conditional is to allow the OCLC folks to continue their testing (HELIO-4448)
-        response.headers['Cache-Control'] = 'no-cache, no-store' if request.headers['Range'].present? && @noid != 'kw52jb973'
+        # HELIO-4954 prior to Rails 6.1 this was 'no-cache, no-store', but it seems that 'no-store' acutally encompases
+        # 'no-cache' so Rails itself just removes the 'no-cache' part when both are present causing test failures.
+        # So we'll just use 'no-store' here.
+        response.headers['Cache-Control'] = 'no-store' if request.headers['Range'].present? && @noid != 'kw52jb973'
         response.headers['Accept-Ranges'] = 'bytes'
-
         pdf.gsub!(/releases\/\d+/, "current")
         response.headers['X-Sendfile'] = pdf
         send_file pdf
