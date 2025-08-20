@@ -40,7 +40,7 @@ RSpec.describe "Presses", type: :request do
 
       it 'existing ok' do
         get api_find_press_path, params: { subdomain: press.subdomain }, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(press_obj(press: press))
         expect(Press.count).to eq(1)
@@ -50,7 +50,7 @@ RSpec.describe "Presses", type: :request do
     describe "GET /api/v1/presses" do # index
       it 'empty ok' do
         get api_presses_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([])
         expect(Press.count).to eq(0)
@@ -59,7 +59,7 @@ RSpec.describe "Presses", type: :request do
       it 'press ok' do
         press
         get api_presses_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([press_obj(press: press)])
         expect(Press.count).to eq(1)
@@ -69,7 +69,7 @@ RSpec.describe "Presses", type: :request do
         press
         new_press = create(:press)
         get api_presses_path, headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq([press_obj(press: press), press_obj(press: new_press)])
         expect(Press.count).to eq(2)
@@ -79,7 +79,7 @@ RSpec.describe "Presses", type: :request do
     describe "GET /api/v1/presses/:id" do # show
       it 'non existing not_found' do
         get api_press_path(1), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Press")
         expect(Press.count).to eq(0)
@@ -87,7 +87,7 @@ RSpec.describe "Presses", type: :request do
 
       it 'existing ok' do
         get api_press_path(press.id), headers: headers
-        expect(response.content_type).to eq("application/json")
+        expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
         expect(response_body).to eq(press_obj(press: press))
         expect(Press.count).to eq(1)

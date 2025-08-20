@@ -178,8 +178,8 @@ RSpec.describe Greensub::Institution, type: :model do
       institution.identifier = 'new_identifier'
       expect(institution.save).to be false
       expect(institution.errors.count).to eq 1
-      expect(institution.errors.first[0]).to eq :identifier
-      expect(institution.errors.first[1]).to eq "institution identifier can not be changed!"
+      expect(institution.errors.errors.first.attribute).to eq :identifier
+      expect(institution.errors.errors.first.message).to eq "institution identifier can not be changed!"
     end
   end
 
@@ -192,8 +192,8 @@ RSpec.describe Greensub::Institution, type: :model do
       license
       expect(institution.destroy).to be false
       expect(institution.errors.count).to eq 1
-      expect(institution.errors.first[0]).to eq :base
-      expect(institution.errors.first[1]).to eq "Cannot delete record because dependent licenses exist"
+      expect(institution.errors.errors.first.attribute).to eq :base
+      expect(institution.errors.errors.first.message).to eq "Cannot delete record because dependent licenses exist"
     end
   end
 

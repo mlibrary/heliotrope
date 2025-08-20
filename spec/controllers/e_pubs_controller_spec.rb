@@ -250,7 +250,7 @@ RSpec.describe EPubsController, type: :controller do
               expect(response.header['X-Sendfile']).to include("#{file_set.id.last}-pdf_ebook.pdf")
               expect(response.header['Accept-Ranges']).to eq 'bytes'
               # HELIO-4444 (Chromium caching range requests, EZproxy bug)
-              expect(response.header['Cache-Control']).to eq 'no-cache, no-store'
+              expect(response.header['Cache-Control']).to eq 'no-store'
             end
 
             context 'OCLC test PDF' do

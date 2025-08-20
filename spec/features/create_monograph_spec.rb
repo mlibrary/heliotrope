@@ -20,7 +20,7 @@ describe 'Create a monograph' do
 
       # Monograph form
       expect(page).to have_css('input#monograph_date_published', count: 1)
-      expect(page.find('input#monograph_date_published')['value']).to eq(nil)
+      expect(page.find('input#monograph_date_published')['value']).to eq("")
 
       # HELIO-4649: we only want Description (metadata) and Files tabs on the Monograph edit page
       # tab links
