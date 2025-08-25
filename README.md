@@ -1,5 +1,5 @@
 # Heliotrope
-Code: [![Build Status](https://travis-ci.org/mlibrary/heliotrope.svg?branch=master)](https://travis-ci.org/mlibrary/heliotrope)
+Code: [![CircleCI](https://dl.circleci.com/status-badge/img/gh/mlibrary/heliotrope/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/mlibrary/heliotrope/tree/master)
 [![Coverage Status](https://coveralls.io/repos/github/mlibrary/heliotrope/badge.svg?branch=master)](https://coveralls.io/github/mlibrary/heliotrope?branch=master)
 
 Thanks to [Skylight](https://www.skylight.io/support/skylight-for-open-source): [![View performance data on Skylight](https://badges.skylight.io/status/TtaAmIlZOoFS.svg)](https://oss.skylight.io/app/applications/TtaAmIlZOoFS)
