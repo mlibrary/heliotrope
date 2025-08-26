@@ -140,7 +140,7 @@ class EPubsController < CheckpointController
     chapter_file_path = File.join(chapter_dir_path, chapter_file_name)
     run_watermark_checks(chapter_file_path)
 
-    CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter_title)
+    CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter_title, book_segment: chapter_index.to_i + 1)
     send_irus_analytics_request
     send_data watermark_pdf(@entity, chapter_title, chapter_file_path, chapter_index), type: "application/pdf", filename: chapter_download_name, disposition: "inline"
   rescue StandardError => e

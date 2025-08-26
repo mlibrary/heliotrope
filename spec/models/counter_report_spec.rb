@@ -59,6 +59,18 @@ RSpec.describe CounterReport, type: :model do
     end
   end
 
+  describe "book_segment" do
+    before do
+      create(:counter_report, book_segment: 1)
+    end
+
+    after { described_class.destroy_all }
+
+    it do
+      expect(described_class.first.book_segment).to eq 1
+    end
+  end
+
   describe "chained scopes/methods for a PR report" do
     before do
       create(:counter_report, session: 1, noid: 'a', parent_noid: 'A', institution: 1, created_at: Time.parse("2018-01-02").utc)

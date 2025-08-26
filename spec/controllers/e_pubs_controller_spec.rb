@@ -567,7 +567,7 @@ RSpec.describe EPubsController, type: :controller do
         file_set.save!
         allow(EbookIntervalDownloadOperation).to receive(:new).with(anything, Sighrax.from_noid(file_set.id)).and_return ebook_interval_download_op
         allow(CounterService).to receive(:from).and_return(counter_service)
-        allow(counter_service).to receive(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+        allow(counter_service).to receive(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter', book_segment: 1)
       end
 
       after { FeaturedRepresentative.destroy_all }
@@ -593,7 +593,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('OpenSans-Regular')
             expect(response.body).to include('OpenSans-Italic')
-            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter', book_segment: 1)
           end
         end
 
@@ -612,7 +612,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('OpenSans-Regular')
             expect(response.body).to include('OpenSans-Italic')
-            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter', book_segment: 1)
           end
         end
       end
@@ -638,7 +638,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('OpenSans-Regular')
             expect(response.body).to include('OpenSans-Italic')
-            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter', book_segment: 1)
           end
         end
 
@@ -657,7 +657,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('OpenSans-Regular')
             expect(response.body).to include('OpenSans-Italic')
-            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter')
+            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter', book_segment: 1)
           end
         end
       end
