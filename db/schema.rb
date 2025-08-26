@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_08_04_194338) do
+ActiveRecord::Schema.define(version: 2025_08_25_164357) do
 
   create_table "api_requests", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "user_id"
@@ -111,6 +111,7 @@ ActiveRecord::Schema.define(version: 2025_08_04_194338) do
     t.string "model"
     t.string "section"
     t.string "section_type"
+    t.integer "book_segment"
     t.integer "investigation"
     t.integer "request"
     t.string "turnaway"
