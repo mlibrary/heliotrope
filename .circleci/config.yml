@@ -114,13 +114,20 @@ commands:
         # we're skipping the system specs here since a couple of them have on-going timing issues...
         command: |
           mkdir -p /tmp/test-results
-          COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | grep -v "spec/system/" | circleci tests split --split-by=timings)
+          COVERALLS_SERVICE_NUMBER=$CIRCLE_BUILD_NUM COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | grep -v "spec/system/" | circleci tests split --split-by=timings)
         name: Run rspec in parallel
     - store_test_results:
         path: /tmp/test-results
     - store_artifacts:
         destination: test-results
         path: /tmp/test-results
+    - run:
+        name: Notify Coveralls Parallel Build Finished
+        command: |
+          curl -X POST \
+            -H 'Content-Type: application/json' \
+            -d '{"payload":{"build_num":"'${CIRCLE_BUILD_NUM}'","status":"done"}}' \
+            "https://coveralls.io/webhook?repo_token=${COVERALLS_REPO_TOKEN}"
 
 jobs:
   bundle:
