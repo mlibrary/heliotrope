@@ -222,7 +222,7 @@ RSpec.describe "EPubs", type: :request do
 
           before do
             allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
-            allow(counter_service).to receive(:count).with(request: 1, section: 'title', section_type: 'Chapter')
+            allow(counter_service).to receive(:count).with(request: 1, section: 'title', section_type: 'Chapter', book_segment: 1)
           end
 
           it do
@@ -232,7 +232,7 @@ RSpec.describe "EPubs", type: :request do
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('OpenSans-Regular')
             expect(response.body).to include('OpenSans-Italic')
-            expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
+            expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter', book_segment: 1)
           end
         end
       end
@@ -258,7 +258,7 @@ RSpec.describe "EPubs", type: :request do
 
           before do
             allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
-            allow(counter_service).to receive(:count).with(request: 1, section: 'title', section_type: 'Chapter')
+            allow(counter_service).to receive(:count).with(request: 1, section: 'title', section_type: 'Chapter', book_segment: 1)
           end
 
           it do
@@ -268,7 +268,7 @@ RSpec.describe "EPubs", type: :request do
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('OpenSans-Regular')
             expect(response.body).to include('OpenSans-Italic')
-            expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter')
+            expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter', book_segment: 1)
           end
         end
       end

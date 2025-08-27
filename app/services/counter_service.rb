@@ -65,6 +65,7 @@ class CounterService
       cr.investigation = 1                  if !opts[:search]
       cr.section = opts[:section]           if opts[:section]
       cr.section_type = opts[:section_type] if opts[:section_type]
+      cr.book_segment = opts[:book_segment] if opts[:book_segment]
       cr.request = 1                        if opts[:request]
       cr.turnaway = "No_License"            if opts[:turnaway]
       cr.search = 1                         if opts[:search]
