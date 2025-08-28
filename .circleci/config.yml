@@ -1,6 +1,10 @@
 # A lot of this is borrowed from https://github.com/mlibrary/deepblue/tree/master/.circleci
 # which in turn was borrowed from https://github.com/samvera-labs/samvera-circleci-orb
+
 version: 2.1
+
+orbs:
+  coveralls: coveralls/coveralls@2.2.5
 
 # scratch_space_path must be set and is where short-lived files are saved
 scratch_space_path: <%= File.join(Rails.root, 'tmp') %>
@@ -276,7 +280,21 @@ jobs:
             cd lib
             bundle exec rspec --format progress
       # the "app" specs do benifit from being run in parallel though.
+      # - run:
+      #     name: Run rspec in parallel
+      #     command: |
+      #       mkdir -p /tmp/test-results
+      #       bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | grep -v "spec/system/" | circleci tests split --split-by=timings)
       - parallel_rspec
+      - coveralls/upload:
+          parallel: true
+
+  coveralls_done:
+    docker:
+      - image: cimg/ruby:3.3.5
+    steps:
+      - coveralls/upload:
+          parallel_finished: true
 
 executors:
   ruby:
@@ -360,3 +378,6 @@ workflows:
           ruby_version: '3.3.5'
           requires:
             - build
+      - coveralls_done:
+          requires:
+            - test
