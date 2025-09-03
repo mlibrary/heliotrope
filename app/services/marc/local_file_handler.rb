@@ -88,7 +88,7 @@ module Marc
 
     def rm(file_or_directory)
       FileUtils.remove_entry_secure(file_or_directory)
-    rescue Errno::ENOTEMPTY => e
+    rescue Errno::ENOTEMPTY, Errno::ENOTEMPTY, StandardError => e
       # We're getting the .nfs files that are sitting in the processing directory. Annoying.
       #
       # fulcrum@fulcrum-staging-136:~/data/scratch/marc_processing/single_record_from_alma$ rm .nfsdde4bacac1b3f4d000000003
