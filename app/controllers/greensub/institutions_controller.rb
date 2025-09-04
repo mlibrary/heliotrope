@@ -61,11 +61,11 @@ module Greensub
       end
 
       def institution_params
-        params.require(:greensub_institution).permit(:identifier, :name, :display_name, :entity_id, :catalog_url, :link_resolver_url, :location, :login, :horizontal_logo, :vertical_logo, :ror_id, :site)
+        params.require(:greensub_institution).permit(:identifier, :name, :display_name, :entity_id, :security_domain, :catalog_url, :link_resolver_url, :location, :login, :horizontal_logo, :vertical_logo, :ror_id, :site)
       end
 
       def filtering_params(params)
-        params.slice(:identifier_like, :name_like, :display_name_like, :entity_id_like)
+        params.slice(:identifier_like, :name_like, :display_name_like, :entity_id_like, :security_domain_like)
       end
   end
 end
