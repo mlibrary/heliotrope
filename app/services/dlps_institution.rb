@@ -5,6 +5,8 @@ class DlpsInstitution
 
   instrument_method
   def find(request_attributes)
+    Rails.logger.info("-----------------------------------------------------------------------")
+    Rails.logger.info("DlpsInstitution request_attributes: #{request_attributes.all}")
     retries ||= 0
     (ip_based_institutions(request_attributes) + shib_institutions(request_attributes)).uniq
   rescue  StandardError => e
