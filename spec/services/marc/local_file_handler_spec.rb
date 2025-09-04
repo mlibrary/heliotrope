@@ -17,6 +17,26 @@ RSpec.describe Marc::LocalFileHandler do
     end
   end
 
+  describe "#rm" do
+    let(:file_handler) { described_class.new }
+    let(:target) { "/tmp/fake_file_or_dir" }
+
+    before do
+      allow(MarcLogger).to receive(:info)
+    end
+
+    it "calls FileUtils.remove_entry_secure when no exception occurs" do
+      expect(FileUtils).to receive(:remove_entry_secure).with(target)
+      file_handler.rm(target)
+    end
+
+    it "logs info when FileUtils.remove_entry_secure raises an exception" do
+      allow(FileUtils).to receive(:remove_entry_secure).with(target).and_raise(StandardError.new("fail!"))
+      expect(MarcLogger).to receive(:info).with(/Failed to delete #{Regexp.escape(target)}: fail!/)
+      file_handler.rm(target)
+    end
+  end
+
   describe "#convert_to_individual_marc_files" do
     # Given local Alma generated file(s) downloaded from ftp.fulcrum.org/marc_ingest
     # Convert them to individual marc files to be validated and moved to the correct product directories
