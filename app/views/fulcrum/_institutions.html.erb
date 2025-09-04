@@ -28,6 +28,10 @@
           <div class="col-md-3"><label for="entity_id_like">Entity ID</label></div>
           <div class="col-md-9"><input type="text" name="entity_id_like" value="<%= params[:entity_id_like] %>" size="<%= size %>" aria-label="entity_id_like"></div>
         </div>
+        <div class="col-md-12">
+          <div class="col-md-3"><label for="security_domain_like">Security Domain</label></div>
+          <div class="col-md-9"><input type="text" name="security_domain_like" value="<%= params[:security_domain_like] %>" size="<%= size %>" aria-label="security_domain_like"></div>
+        </div>
       </th>
       <th>
         <div>Affiliations</div>
@@ -48,6 +52,7 @@
           <div><%= institution.name %>&nbsp;</div>
           <div><%= institution.display_name %>&nbsp;</div>
           <div><%= institution.entity_id %>&nbsp;</div>
+          <div><%= institution.security_domain %>&nbsp;</div>
         </td>
         <td>
           <div><%= link_to institution.institution_affiliations.count, greensub_institution_inst_affiliations_path(institution) %></div>

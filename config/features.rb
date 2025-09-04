@@ -12,4 +12,7 @@ Flipflop.configure do
   feature :show_accessibility_claims_tab,
           default: false,
           description: "The 'Accessibility Claims' tab will appear on Monograph catalog pages"
+  feature :use_shib_security_domain_logic,
+          default: false,
+          description: "Use security_domain logic for Shibboleth institution matching (HELIO-4961)"
 end
