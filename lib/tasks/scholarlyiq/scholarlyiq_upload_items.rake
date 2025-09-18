@@ -10,6 +10,37 @@ namespace :heliotrope do
   task :scholarlyiq_upload_items, [:output_directory] => :environment do |_t, args|
     # Usage: bundle exec rails "heliotrope:scholarlyiq_upload_items[output_directory]"
 
+    # starting with COUNTER 5.1 we need to use a controlled vocabulary for Data Type
+    # TODO: Decide on whether we want to allow the optional use of the actual COUNTER data type terms in our resource type field at some stage?
+    # Though we'd need to replace the underscore with a space in the Format facet.
+    # Another thing we might want to do is to fall back on are the FeaturedRepresentative kind values associated with the FileSet,....
+    # as well as the mime type to reduce the number of Unspecified values emitted from this.
+    RESOURCE_TYPE_TO_COUNTER_DATA_TYPE_MAP = {
+      '3d model' => 'Interactive_Resource',
+      'animated gif' => 'Multimedia',
+      'appendix' => 'Book_Segment',
+      'audio' => 'Sound',
+      'chapter' => 'Book_Segment',
+      'chart' => 'Other',
+      'code' => 'Software',
+      'database' => 'Dataset',
+      'dataset' => 'Dataset',
+      'documentary' => 'Audiovisual',
+      'external resource' => 'Other',
+      'figure' => 'Image',
+      'image' => 'Image',
+      'interactive application' => 'Interactive_Resource',
+      'interactive map' => 'Interactive_Resource',
+      'map' => 'Image',
+      'musical example' => 'Sound',
+      'pdf' => 'Other',
+      'table' => 'Dataset',
+      'text' => 'Unspecified',
+      'video' => 'Audiovisual',
+      'website' => 'Other',
+      nil => 'Unspecified'
+    }.freeze
+
     if !File.writable?(args.output_directory)
       puts "Provided directory (#{args.output_directory}) is not writable. Exiting."
       exit
@@ -20,6 +51,7 @@ namespace :heliotrope do
 
     docs = ActiveFedora::SolrService.query('+(has_model_ssim:Monograph OR has_model_ssim:FileSet)',
                                            fl: ['id',
+                                                'has_model_ssim',
                                                 'title_tesim',
                                                 'creator_ss',
                                                 'date_created_tesim',
@@ -29,7 +61,10 @@ namespace :heliotrope do
                                                 'isbn_tesim'], rows: 100_000)
 
     CSV.open(output_file, "w", col_sep: "\t") do |tsv|
+      # we'll leave the heading here as resource_type as that's what SiQ expects, even though we're converting to COUNTER 5.1 "data types" now
       tsv << %w[id title creator date_created doi identifier resource_type isbn primary_isbn]
+
+      # write all actual ActiveFedora objects, pulled from Solr
       docs.each do |doc|
         isbns = doc['isbn_tesim']&.map(&:strip)&.reject(&:blank?)
 
@@ -47,15 +82,38 @@ namespace :heliotrope do
           primary_isbn = formatless_isbns.first.delete("-")
         end
 
+        resource_type = doc['resource_type_tesim']&.map(&:strip)&.reject(&:blank?)&.first&.downcase
+        counter_data_type = if doc['has_model_ssim'].first == 'Monograph'
+                              'Book'
+                            else
+                              RESOURCE_TYPE_TO_COUNTER_DATA_TYPE_MAP[resource_type]
+                            end
+
         tsv << [doc.id,
                 doc['title_tesim']&.first&.squish,
                 doc['creator_ss'],
                 doc['date_created_tesim']&.first,
                 doc['doi_ssim']&.first,
                 doc['identifier_tesim']&.map(&:strip)&.reject(&:blank?)&.join('; '),
-                doc['resource_type_tesim']&.map(&:strip)&.reject(&:blank?)&.join('; '),
+                counter_data_type,
                 isbns&.join('; '),
                 primary_isbn]
+      end
+
+      # write all EbookTableOfContentsCache objects, pulled from MySQL, as our "Book Segments"
+      EbookTableOfContentsCache.all.each do |toc_row|
+        toc_json = toc_row.toc
+        next if toc_json.blank?
+
+        monograph_id = FeaturedRepresentative.where(file_set_id: toc_row.noid)&.first&.work_id
+        next if monograph_id.nil?
+
+        JSON.parse(toc_json).each_with_index do |entry, index|
+          book_segment_id = toc_row.noid + '.' + (index + 1).to_s.rjust(4, '0')
+          book_segment_title = entry['title'].present? ? entry['title'].gsub(/[^\w\s]/, '').squish : nil
+
+          tsv << [book_segment_id, book_segment_title, nil, nil, nil, nil, 'Book_Segment', nil, nil]
+        end
       end
     end
     # puts "Item data for ScholarlyIQ saved to #{output_file}"
