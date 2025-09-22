@@ -26,14 +26,14 @@ namespace :heliotrope do
       'database' => 'Dataset',
       'dataset' => 'Dataset',
       'documentary' => 'Audiovisual',
-      'external resource' => 'Other',
+      'external resource' => 'Dataset',
       'figure' => 'Image',
       'image' => 'Image',
       'interactive application' => 'Interactive_Resource',
       'interactive map' => 'Interactive_Resource',
       'map' => 'Image',
-      'musical example' => 'Sound',
-      'pdf' => 'Other',
+      'musical example' => 'Other',
+      'pdf' => 'Unspecified',
       'table' => 'Dataset',
       'text' => 'Unspecified',
       'video' => 'Audiovisual',
@@ -52,17 +52,19 @@ namespace :heliotrope do
     docs = ActiveFedora::SolrService.query('+(has_model_ssim:Monograph OR has_model_ssim:FileSet)',
                                            fl: ['id',
                                                 'has_model_ssim',
+                                                'monograph_id_ssim',
                                                 'title_tesim',
                                                 'creator_ss',
                                                 'date_created_tesim',
                                                 'doi_ssim',
                                                 'identifier_tesim',
                                                 'resource_type_tesim',
-                                                'isbn_tesim'], rows: 100_000)
+                                                'isbn_tesim',
+                                                'hidden_representative_bsi'], rows: 100_000)
 
     CSV.open(output_file, "w", col_sep: "\t") do |tsv|
       # we'll leave the heading here as resource_type as that's what SiQ expects, even though we're converting to COUNTER 5.1 "data types" now
-      tsv << %w[id title creator date_created doi identifier resource_type isbn primary_isbn]
+      tsv << %w[id parent_id title creator date_created doi identifier resource_type counter_data_type isbn primary_isbn]
 
       # write all actual ActiveFedora objects, pulled from Solr
       docs.each do |doc|
@@ -82,19 +84,44 @@ namespace :heliotrope do
           primary_isbn = formatless_isbns.first.delete("-")
         end
 
+        parent_id = if doc['has_model_ssim'].first == 'Monograph'
+                      doc.id
+                    else
+                      doc['monograph_id_ssim']&.first
+                    end
+
         resource_type = doc['resource_type_tesim']&.map(&:strip)&.reject(&:blank?)&.first&.downcase
         counter_data_type = if doc['has_model_ssim'].first == 'Monograph'
                               'Book'
                             else
-                              RESOURCE_TYPE_TO_COUNTER_DATA_TYPE_MAP[resource_type]
+                              kind = FeaturedRepresentative.where(file_set_id: doc.id).first&.kind
+                              if kind.present?
+                                if['audiobook', 'epub', 'mobi', 'pdf_ebook'].include?(kind)
+                                  'Book'
+                                elsif['database'].include?(kind)
+                                  'Dataset'
+                                elsif['webgl'].include?(kind)
+                                  'Interactive_Resource'
+                                else
+                                  'Other'
+                                end
+                              else
+                                if doc['hidden_representative_bsi'] == true
+                                  'Image' # has to be a cover image here
+                                end
+                              end
                             end
 
+        counter_data_type = RESOURCE_TYPE_TO_COUNTER_DATA_TYPE_MAP[resource_type] if counter_data_type.blank?
+
         tsv << [doc.id,
+                parent_id,
                 doc['title_tesim']&.first&.squish,
                 doc['creator_ss'],
                 doc['date_created_tesim']&.first,
                 doc['doi_ssim']&.first,
                 doc['identifier_tesim']&.map(&:strip)&.reject(&:blank?)&.join('; '),
+                resource_type,
                 counter_data_type,
                 isbns&.join('; '),
                 primary_isbn]
@@ -105,14 +132,45 @@ namespace :heliotrope do
         toc_json = toc_row.toc
         next if toc_json.blank?
 
-        monograph_id = FeaturedRepresentative.where(file_set_id: toc_row.noid)&.first&.work_id
+        fr = FeaturedRepresentative.where(file_set_id: toc_row.noid)&.first
+        monograph_id = fr&.work_id
         next if monograph_id.nil?
 
         JSON.parse(toc_json).each_with_index do |entry, index|
           book_segment_id = toc_row.noid + '.' + (index + 1).to_s.rjust(4, '0')
           book_segment_title = entry['title'].present? ? entry['title'].gsub(/[^\w\s]/, '').squish : nil
 
-          tsv << [book_segment_id, book_segment_title, nil, nil, nil, nil, 'Book_Segment', nil, nil]
+          tsv << [book_segment_id, toc_row.noid, book_segment_title, nil, nil, nil, nil, nil, 'Book_Segment', nil, nil]
+        end
+
+        # in the event there is a MOBI sibling to an EPUB we're working on, we'll write the entries out again...
+        # for the MOBI, which we do not unpack or store in EbookTableOfContentsCache. Purely for count explosion purposes.
+        mobi_fr = FeaturedRepresentative.where(work_id: monograph_id, kind: 'mobi')&.first
+
+        if fr&.kind == 'epub' && mobi_fr.present?
+          mobi_id = mobi_fr.file_set_id
+          # pure duplicate of the above loop with the mobi_id instead of the epub_id
+          JSON.parse(toc_json).each_with_index do |entry, index|
+            book_segment_id = mobi_id + '.' + (index + 1).to_s.rjust(4, '0')
+            book_segment_title = entry['title'].present? ? entry['title'].gsub(/[^\w\s]/, '').squish : nil
+
+            tsv << [book_segment_id, mobi_id, book_segment_title, nil, nil, nil, nil, nil, 'Book_Segment', nil, nil]
+          end
+        end
+
+        # in the event there is an audiobook sibling to an EPUB we're working on, we'll write the entries out again...
+        # for the audiobook, which we do not unpack or store in EbookTableOfContentsCache. Purely for count explosion purposes.
+        audiobook_fr = FeaturedRepresentative.where(work_id: monograph_id, kind: 'audiobook')&.first
+
+        if fr&.kind == 'epub' && audiobook_fr.present?
+          audiobook_id = audiobook_fr.file_set_id
+          # pure duplicate of the above loop with the audiobook_id instead of the epub_id/mobi_id
+          JSON.parse(toc_json).each_with_index do |entry, index|
+            book_segment_id = audiobook_id + '.' + (index + 1).to_s.rjust(4, '0')
+            book_segment_title = entry['title'].present? ? entry['title'].gsub(/[^\w\s]/, '').squish : nil
+
+            tsv << [book_segment_id, audiobook_id, book_segment_title, nil, nil, nil, nil, nil, 'Book_Segment', nil, nil]
+          end
         end
       end
     end
