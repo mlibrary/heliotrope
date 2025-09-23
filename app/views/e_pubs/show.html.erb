@@ -10,7 +10,8 @@
   <% end %>
   <% if defined? @subdomain %>
     <%# only include hypothes.is for leverpress, um press and its subpresses at this point %>
-    <% if %w[leverpress michigan cjs cseas csas lrccs ummaa amherst].include? @subdomain %>
+    <%# but do not use hypothes.is on a specific um press title HELIO-4971 %>
+    <% if %w[leverpress michigan cjs cseas csas lrccs ummaa amherst].include?(@subdomain) && @parent_presenter.doi != '10.3998/mpub.9853855' %>
     <!-- hypothes.is -->
       <script type="text/javascript">
         window.hypothesisConfig = function () {
@@ -73,7 +74,7 @@
     <script type="text/javascript">
       if ( true ) {
 
-        <% if %w[leverpress michigan cjs cseas csas lrccs ummaa amherst].include? @subdomain %>
+        <% if %w[leverpress michigan cjs cseas csas lrccs ummaa amherst].include?(@subdomain) && @parent_presenter.doi != '10.3998/mpub.9853855' %>
           // Create custom annotator button that is aware of its state
           AnnotationTool = cozy.Control.Widget.Toggle.extend({
             defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
@@ -234,7 +235,7 @@
         <%= render partial: "cozy_controls_bottom", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
 
         // Annotation widget checks and initialization
-        <% if %w[leverpress michigan cjs cseas csas lrccs ummaa amherst].include? @subdomain %>
+        <% if %w[leverpress michigan cjs cseas csas lrccs ummaa amherst].include?(@subdomain) && @parent_presenter.doi != '10.3998/mpub.9853855' %>
           var tm;
           function checkForAnnotator(cb, w) {
             if (!w) {
