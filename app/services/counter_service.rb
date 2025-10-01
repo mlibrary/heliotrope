@@ -86,27 +86,60 @@ class CounterService
     # COUNTER v5 section 3.5.3 seems to indicate that we need this
     # for epubs as well as multimedia (TR and IR reports).
     # Currently, in Checkpoint, we are restricting at the Monograph level,
-    # not the FileSet level. So we want to always use the Monograph to determine
+    # not the FileSet level. So we generally want to use the Monograph to determine
     # access_type.
-    noid = if @presenter.is_a? Hyrax::MonographPresenter
-             @presenter.id
-           else
-             @presenter.parent.id
-           end
+    # HELIO-4849 Upgraded to use COUNTER 5.1
+    monograph_noid = if @presenter.is_a? Hyrax::MonographPresenter
+                       @presenter.id
+                     else
+                       @presenter.parent.id
+                     end
 
-    oa   = if @presenter.is_a? Hyrax::MonographPresenter
-             @presenter.open_access?
-           else
-             @presenter.parent.open_access?
-           end
-    if Greensub::Component.find_by(noid: noid) && !oa
-      "Controlled"
-      # For assets if they have a permissions_expiration_date at any time, past or present
-    elsif @presenter.is_a?(Hyrax::FileSetPresenter) && @presenter&.permissions_expiration_date.present?
-      "Controlled"
-    else
-      "OA_Gold"
+    oa = if @presenter.is_a? Hyrax::MonographPresenter
+           @presenter.open_access?
+         else
+           @presenter.parent.open_access?
+         end
+
+    # This an ereader/CSB book but also any FileSet that's considered a representation of the actual book
+    # I'm surprised we don't have a method for this somewhere already, but I can't find one.
+    book_type_fileset = if @presenter.is_a?(Hyrax::FileSetPresenter) && (@presenter.parent.reader_ebook? || @presenter.parent.audiobook? || @presenter.parent.mobi?)
+                          true
+                        else
+                          false
+                        end
+
+
+    # Specifically for FileSets: if they have a permissions_expiration_date at any time, past or present
+    if @presenter.is_a?(Hyrax::FileSetPresenter) && @presenter&.permissions_expiration_date.present?
+      return "Controlled"
     end
+
+    # Any OA monograph
+    return "Open" if oa && @presenter.is_a?(Hyrax::MonographPresenter)
+    # any "book-type" Fileset with an OA parent monograph
+    return "Open" if oa && @presenter.is_a?(Hyrax::FileSetPresenter) && book_type_fileset
+
+    component = Greensub::Component.find_by(noid: monograph_noid)
+    # Monographs without a component but that are not OA are considered Free to Read
+    # This is also true for any of that Monograph's FileSets
+    return "Free_To_Read" if component.blank?
+
+    # If the Monograph has a component, then any of it's FileSets that are not "book-type"
+    # are Free to Read. This will be most Filesets.
+    return "Free_To_Read" if !book_type_fileset && @presenter.is_a?(Hyrax::FileSetPresenter)
+
+    # If the Monograph is in any product that "The World" is subscribed to, it's Free to Read for everyone
+    # Both the Monograph and any of it's FileSets, "book-type" or not
+    the_world_institution = Greensub::Institution.where(identifier: Settings.world_institution_identifier).first
+    free_to_read_products = the_world_institution.products.present? ? the_world_institution.products.map(&:identifier) : []
+    # free_to_read_products = Greensub::Institution.where(identifier: Settings.world_institution_identifier).first.products.map(&:identifier) || []
+    return "Free_To_Read" if (component.products.map(&:identifier) & free_to_read_products).any?
+
+    # Controlled is for:
+    # Monographs with a component that are not OA and not Free_to_Read
+    # FileSets (or chapters) that are "book-type" whose Monograph is a component that is not OA and not Free_to_Read
+    "Controlled"
   end
 
   def robot?

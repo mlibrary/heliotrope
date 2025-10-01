@@ -113,6 +113,10 @@ module Royalty
         # It's weird and confusing, but that's how it works in COUNTER5.
         # For these reports though, we're going to remove the "extra" row, either OA
         # or Controlled, if the row has no Hits. It will make the resulting report easier to read, probably.
+        #
+        # HELIO-4849 COUNTER 5.1 update
+        # Now we have Free_To_Read and Open as new access types which means more possible rows of nothing.
+        # But the idea is the same, just filter out whatever has no hits.
         items.filter_map { |item| item["Hits"] == 0 ? nil : item }
       end
 
@@ -124,7 +128,11 @@ module Royalty
           # Access_Type: modify the values as follows:
           # OA_Gold -> OA
           # (Controlled can remain Controlled)
-          item["Access_Type"] = "OA" if item["Access_Type"] == "OA_Gold"
+          # item["Access_Type"] = "OA" if item["Access_Type"] == "OA_Gold"
+          #
+          # HELIO-4849 COUNTER 5.1 update
+          # I guess we can just call Free_To_Read "OA" for the purposes of this report. It doesn't really matter.
+          item["Access_Type"] = "OA" if ["OA_Gold", "Open", "Free_To_Read"].any?(item["Access_Type"])
         end
 
         items
@@ -138,7 +146,7 @@ module Royalty
           press: @press.id,
           metric_type: 'Total_Item_Requests',
           data_type: 'Book',
-          access_type: ['Controlled', 'OA_Gold'],
+          access_type: ['Controlled', 'Open', 'Free_To_Read', 'OA_Gold'],
           access_method: 'Regular',
           attributes_to_show: ["Authors", "Publication_Date", "Data_Type", "YOP", "Access_Type", "Access_Method"],
           include_parent_details: "true",
