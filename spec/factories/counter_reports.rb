@@ -20,7 +20,7 @@ FactoryBot.define do
     investigation { 1 }
     request { 0 }
     access_type do
-      at = ["Controlled", "OA_Gold"]
+      at = ["Controlled", "Open"]
       at[Random.rand(2)]
     end
     press { 1 }

@@ -15,13 +15,13 @@ class CounterReport < ApplicationRecord
     dr_d1: 'Database Search and Item Usage',
     dr_d2: 'Database Access Denied',
     tr: 'Title Master Report',
-    tr_b1: 'Book Requests (Excluding OA_Gold)',
+    tr_b1: 'Book Requests (Excluding Open/OA_Gold)',
     tr_b2: 'Access Denied by Book',
     tr_b3: 'Book Usage by Access Type',
-    tr_j1: 'Journal Requests (Excluding OA_Gold)',
+    tr_j1: 'Journal Requests (Excluding Open/OA_Gold)',
     tr_j2: 'Access Denied by Journal',
     tr_j3: 'Journal Usage by Access Type',
-    tr_j4: 'Journal Requests by YOP (Excluding OA_Gold)',
+    tr_j4: 'Journal Requests by YOP (Excluding Open/OA_Gold)',
     ir: 'Item Master Report',
     ir_a1: 'Journal Article Requests',
     ir_m1: 'Multimedia Item Requests',
@@ -29,7 +29,11 @@ class CounterReport < ApplicationRecord
   }.freeze
 
   # COUNTER v5 section 3.3.5
-  validates :access_type, inclusion: { in: %w[Controlled OA_Gold] }
+  # HELIO-4849 Updated for COUNTER v5.1
+  # "Open" replaces "OA_Gold" but we won't go back and do that in the data so we'll keep
+  # both "Open" and "OA_Gold" for now
+  # https://cop5.projectcounter.org/en/5.1/03-specifications/03-counter-report-common-attributes-and-elements.html#access-types
+  validates :access_type, inclusion: { in: %w[Controlled Open Free_To_Read OA_Gold] }
 
   # We probably won't use Limit_Exceeded but it's allowed
   # COUNTER v5 section 3.3.4

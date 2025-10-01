@@ -25,7 +25,7 @@ RSpec.describe CounterReporter::PlatformReport do
       expect(subject[:header][:Institution_Name]).to eq institution.name
       expect(subject[:header][:Institution_ID]).to eq "ID:#{institution.identifier}; ROR:#{institution.ror_id}"
       expect(subject[:header][:Metric_Types]).to eq "Searches_Platform; Total_Item_Requests; Unique_Item_Requests; Unique_Title_Requests"
-      expect(subject[:header][:Report_Filters]).to eq "Platform=#{press.subdomain}; Access_Type=Controlled|OA_Gold; Access_Method=Regular"
+      expect(subject[:header][:Report_Filters]).to eq "Platform=#{press.subdomain}; Access_Type=Controlled|Open|Free_To_Read|OA_Gold; Access_Method=Regular"
       expect(subject[:header][:Report_Attributes]).to eq ""
       expect(subject[:header][:Exceptions]).to eq ""
       expect(subject[:header][:Reporting_Period]).to eq "Begin_Date=2018-01-01; End_Date=2018-02-28"

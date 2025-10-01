@@ -35,7 +35,7 @@ class OpenAccessEbookTrustJob < ApplicationJob
         press: press.id,
         metric_type: 'Total_Item_Requests',
         data_type: ["Book", "Multimedia", "Book_Segment"],
-        access_type: ['Controlled', 'OA_Gold'],
+        access_type: ['Controlled', 'OA_Gold', 'Open', 'Free_To_Read'],
         access_method: 'Regular',
         attributes_to_show: ["Authors", "Publication_Date", "Data_Type", "YOP", "Access_Type", "Access_Method"],
         include_parent_details: "true",

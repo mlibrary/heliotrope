@@ -292,6 +292,13 @@ RSpec.describe CounterReporter::ItemReport do
       end
     end
 
+    # HELIO-4849 COUNTER 5.1 update
+    # The ir_m1 report had multiple rows per access_type. So if you had a hit for a Controlled item, you'd get 2 rows,
+    # the Controlled and then a OA_Gold that was 0. It's stupid, and maybe wrong, but I was going off the examples I had,
+    # from the COUNTER folks, at the time. Now in 5.1 we're adding more access_types for the reports are getting
+    # even sillier with multiple "empty usage" rows per access_type. Luckily no on uses these any more in favor
+    # of the SIQ reports. So here, we have 3 access_types, Open, Free_To_Read and Controlled per COUNTER 5.1
+    # We will also keep OA_Gold from 5.0 for historic reasons, but they aren't in this example.
     context "an ir_m1 report" do
       let(:params_object) do
         CounterReporter::ReportParams.new('ir_m1', institution: institution.identifier,
@@ -343,25 +350,33 @@ RSpec.describe CounterReporter::ItemReport do
       end
 
       it "has to correct number of items" do
-        expect(subject[:items].length).to eq 6
+        expect(subject[:items].length).to eq 9
       end
 
       it "has the correct titles in order" do
         expect(subject[:items][0]["Parent_Title"]).to eq 'Blue'
         expect(subject[:items][1]["Parent_Title"]).to eq 'Blue'
-        expect(subject[:items][2]["Parent_Title"]).to eq 'Green'
+        expect(subject[:items][2]["Parent_Title"]).to eq 'Blue'
         expect(subject[:items][3]["Parent_Title"]).to eq 'Green'
-        expect(subject[:items][4]["Parent_Title"]).to eq 'Red'
-        expect(subject[:items][5]["Parent_Title"]).to eq 'Red'
+        expect(subject[:items][4]["Parent_Title"]).to eq 'Green'
+        expect(subject[:items][5]["Parent_Title"]).to eq 'Green'
+        expect(subject[:items][6]["Parent_Title"]).to eq 'Red'
+        expect(subject[:items][7]["Parent_Title"]).to eq 'Red'
+        expect(subject[:items][8]["Parent_Title"]).to eq 'Red'
       end
 
       it 'has both OA_Gold and Controlled' do
-        expect(subject[:items][0]["Access_Type"]).to eq 'OA_Gold'
-        expect(subject[:items][1]["Access_Type"]).to eq 'Controlled'
-        expect(subject[:items][2]["Access_Type"]).to eq 'OA_Gold'
-        expect(subject[:items][3]["Access_Type"]).to eq 'Controlled'
-        expect(subject[:items][4]["Access_Type"]).to eq 'OA_Gold'
+        expect(subject[:items][0]["Access_Type"]).to eq 'Open'
+        expect(subject[:items][1]["Access_Type"]).to eq 'Free_To_Read'
+        expect(subject[:items][2]["Access_Type"]).to eq 'Controlled'
+
+        expect(subject[:items][3]["Access_Type"]).to eq 'Open'
+        expect(subject[:items][4]["Access_Type"]).to eq 'Free_To_Read'
         expect(subject[:items][5]["Access_Type"]).to eq 'Controlled'
+
+        expect(subject[:items][6]["Access_Type"]).to eq 'Open'
+        expect(subject[:items][7]["Access_Type"]).to eq 'Free_To_Read'
+        expect(subject[:items][8]["Access_Type"]).to eq 'Controlled'
       end
 
       it 'has the correct metric type' do
@@ -369,16 +384,24 @@ RSpec.describe CounterReporter::ItemReport do
       end
 
       it 'has the correct counts' do
+        # These are all access_type Controlled. In reality we wouldn't see this for multimedia
+        # filesets which would almost always be Free_To_Read as only "book like" FileSets would be Controlled
+        # (if their Monograph is) but I wrote this spec 8 years ago and it's fine for what it is.
         expect(subject[:items][0]["Reporting_Period_Total"]).to eq 0
-        expect(subject[:items][1]["Reporting_Period_Total"]).to eq 2
-        expect(subject[:items][2]["Reporting_Period_Total"]).to eq 0
-        expect(subject[:items][3]["Reporting_Period_Total"]).to eq 2
-        expect(subject[:items][4]["Reporting_Period_Total"]).to eq 0
-        expect(subject[:items][5]["Reporting_Period_Total"]).to eq 1
+        expect(subject[:items][1]["Reporting_Period_Total"]).to eq 0
+        expect(subject[:items][2]["Reporting_Period_Total"]).to eq 2
 
-        expect(subject[:items][1]["Jan-2018"]).to eq 2
-        expect(subject[:items][3]["Feb-2018"]).to eq 2
-        expect(subject[:items][5]["Jan-2018"]).to eq 1
+        expect(subject[:items][3]["Reporting_Period_Total"]).to eq 0
+        expect(subject[:items][4]["Reporting_Period_Total"]).to eq 0
+        expect(subject[:items][5]["Reporting_Period_Total"]).to eq 2
+
+        expect(subject[:items][6]["Reporting_Period_Total"]).to eq 0
+        expect(subject[:items][7]["Reporting_Period_Total"]).to eq 0
+        expect(subject[:items][8]["Reporting_Period_Total"]).to eq 1
+
+        expect(subject[:items][2]["Jan-2018"]).to eq 2
+        expect(subject[:items][5]["Feb-2018"]).to eq 2
+        expect(subject[:items][8]["Jan-2018"]).to eq 1
       end
     end
   end

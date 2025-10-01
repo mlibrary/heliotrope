@@ -38,7 +38,7 @@ module CounterReporter
       case @report_type
       when 'pr_p1'
         @metric_types = %w[Searches_Platform Total_Item_Requests Unique_Item_Requests Unique_Title_Requests]
-        @access_types = %w[Controlled OA_Gold]
+        @access_types = %w[Controlled Open Free_To_Read OA_Gold]
         @access_methods = %w[Regular]
       when 'tr_b1'
         @metric_types = %w[Total_Item_Requests Unique_Title_Requests]
@@ -54,13 +54,13 @@ module CounterReporter
         @metric_types = %w[Total_Item_Investigations Unique_Item_Investigations Unique_Title_Investigations
                            Total_Item_Requests Unique_Item_Requests Unique_Title_Requests]
         @data_types = %w[Book]
-        @access_types = %w[Controlled OA_Gold]
+        @access_types = %w[Controlled Open Free_To_Read OA_Gold]
         @access_methods = %w[Regular]
         @attributes_to_show = %w[Access_Type]
       when 'ir_m1'
         @metric_types = %w[Total_Item_Requests]
         @data_types = %w[Multimedia]
-        @access_types = %w[OA_Gold Controlled]
+        @access_types = %w[Open Free_To_Read Controlled]
         @access_methods = %w[Regular]
       when 'counter4_br2'
         # Ideally this is very temporary
@@ -178,21 +178,26 @@ module CounterReporter
       allowed_values?('Section Type', @section_types, allowed_section_types)
     end
 
+    # HELIO-4849 COUNTER 5.1 introduces "Free_To_Read" and instead of "OA_Gold" uses "Open"
+    # so we'll need to allow all of those for now.
+    # Eventually OA_Gold will go away
+    # This is going to make for some weird looking reports, but users don't see these anymore,
+    # they should all be using SIQ reports so hopefully it's fine for now.
     def allowed_access_types
       case @report_type
       when 'pr', 'pr_p1'
         # %w[Controlled OA_Gold Other_Free_To_Read]
-        %w[Controlled OA_Gold]
+        %w[Controlled Open Free_To_Read OA_Gold]
       when 'tr', 'tr_b2', 'tr_b3', 'tr_j2', 'tr_j3'
-        %w[Controlled OA_Gold]
+        %w[Controlled Open Free_To_Read OA_Gold]
       when 'tr_b1', 'tr_j1', 'tr_j4'
         %w[Controlled]
       when 'ir', 'ir_m1'
         # %w[Controlled OA_Gold Other_Free_To_Read]
-        %w[Controlled OA_Gold]
+        %w[Controlled Open Free_To_Read OA_Gold]
       when 'counter4_br2'
         # %w[Controlled OA_Gold Other_Free_To_Read]
-        %w[Controlled OA_Gold]
+        %w[Controlled Open Free_To_Read OA_Gold]
       else
         %w[]
       end

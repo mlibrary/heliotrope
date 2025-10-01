@@ -96,8 +96,6 @@ RSpec.describe EPubsController, type: :controller do
           monograph.save!
           file_set.save!
           allow_any_instance_of(Keycard::Request::Attributes).to receive(:all).and_return(keycard)
-
-          get :show, params: { id: file_set.id }
         end
 
         after do
@@ -105,12 +103,35 @@ RSpec.describe EPubsController, type: :controller do
           CounterReport.destroy_all
         end
 
-        it "adds to the COUNTER report" do
-          expect(CounterReport.count).to eq 1
-          expect(CounterReport.first.institution).to eq 9999
-          expect(CounterReport.first.investigation).to eq 1
-          expect(CounterReport.first.request).to eq 1
-          expect(CounterReport.first.access_type).to eq 'OA_Gold'
+        context "the monograph is not in a restricted product" do
+          it "adds Free_To_Read to the COUNTER report" do
+            get :show, params: { id: file_set.id }
+            expect(CounterReport.count).to eq 1
+            expect(CounterReport.first.institution).to eq 9999
+            expect(CounterReport.first.investigation).to eq 1
+            expect(CounterReport.first.request).to eq 1
+            expect(CounterReport.first.access_type).to eq 'Free_To_Read'
+          end
+        end
+
+        context "the monograph is in a restricted product" do
+          let(:component) { Greensub::Component.create!(identifier: monograph.id, name: monograph.title, noid: monograph.id) }
+          before do
+            product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
+            product.components << component
+            product.save!
+            institution.create_product_license(product)
+            Greensub::Institution.create!(identifier: Settings.world_institution_identifier, name: "The World", display_name: "The World")
+          end
+
+          it "adds Controlled to the COUNTER report" do
+            get :show, params: { id: file_set.id }
+            expect(CounterReport.count).to eq 1
+            expect(CounterReport.first.institution).to eq 9999
+            expect(CounterReport.first.investigation).to eq 1
+            expect(CounterReport.first.request).to eq 1
+            expect(CounterReport.first.access_type).to eq 'Controlled'
+          end
         end
       end
     end
