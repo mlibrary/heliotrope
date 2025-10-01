@@ -29,7 +29,9 @@ class CounterReport < ApplicationRecord
   }.freeze
 
   # COUNTER v5 section 3.3.5
-  validates :access_type, inclusion: { in: %w[Controlled OA_Gold] }
+  # Updated for COUNTER v5.1
+  # https://cop5.projectcounter.org/en/5.1/03-specifications/03-counter-report-common-attributes-and-elements.html#access-types
+  validates :access_type, inclusion: { in: %w[Controlled Open Free_To_Read] }
 
   # We probably won't use Limit_Exceeded but it's allowed
   # COUNTER v5 section 3.3.4

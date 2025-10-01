@@ -24,8 +24,8 @@ RSpec.describe CounterService do
                      press_tesim: [press.subdomain],
                      read_access_group_ssim: ["public"])
   end
-  let(:presenter) { Hyrax::FileSetPresenter.new(fs_doc, nil) }
-  let(:monograph) { Hyrax::MonographPresenter.new(mono_doc, nil) }
+  let(:fs_presenter) { Hyrax::FileSetPresenter.new(fs_doc, nil) }
+  let(:mono_presenter) { Hyrax::MonographPresenter.new(mono_doc, nil) }
 
   before do
     ActiveFedora::SolrService.add([mono_doc.to_h, fs_doc.to_h])
@@ -35,7 +35,7 @@ RSpec.describe CounterService do
   describe '#from' do
     context "with a correct controller and presenter" do
       it "creates a CounterService object" do
-        expect(described_class.from(controller, presenter)).to be_an_instance_of(described_class)
+        expect(described_class.from(controller, fs_presenter)).to be_an_instance_of(described_class)
       end
     end
 
@@ -43,7 +43,7 @@ RSpec.describe CounterService do
       let!(:controller) { Hyrax::DownloadsController.new }
 
       it "creates a CounterService object" do
-        expect(described_class.from(controller, presenter)).to be_an_instance_of(described_class)
+        expect(described_class.from(controller, fs_presenter)).to be_an_instance_of(described_class)
       end
     end
 
@@ -51,14 +51,14 @@ RSpec.describe CounterService do
       before { allow(presenter.class).to receive(:name).and_return("OtherPresenter") }
 
       it "creates a CounterServiceNullObject" do
-        expect(described_class.from(controller, presenter)).to be_an_instance_of(CounterServiceNullObject)
+        expect(described_class.from(controller, fs_presenter)).to be_an_instance_of(CounterServiceNullObject)
       end
     end
   end
 
   describe "#null_object" do
     it "returns a CounterServiceNullObject" do
-      expect(described_class.null_object(controller, presenter).is_a?(CounterServiceNullObject)).to be true
+      expect(described_class.null_object(controller, fs_presenter).is_a?(CounterServiceNullObject)).to be true
     end
   end
 
@@ -71,9 +71,9 @@ RSpec.describe CounterService do
     end
 
     it "responds with a logged error" do
-      CounterServiceNullObject.new(controller, presenter).count
+      CounterServiceNullObject.new(controller, fs_presenter).count
       expect(@message).not_to eq 'message'
-      expect(@message).to eq "Can't use CounterService for #{controller.class.name} or #{presenter.class.name}"
+      expect(@message).to eq "Can't use CounterService for #{controller.class.name} or #{fs_presenter.class.name}"
     end
   end
 
@@ -109,65 +109,202 @@ RSpec.describe CounterService do
     end
 
     it "returns a session" do
-      expect(described_class.from(controller, presenter).session).to eq "99.99.99.99|Mozilla/5.0|2020-10-17|13"
+      expect(described_class.from(controller, fs_presenter).session).to eq "99.99.99.99|Mozilla/5.0|2020-10-17|13"
     end
   end
 
   describe "#access_type" do
-    context "with a restricted epub" do
-      before do
-        allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(true)
-      end
+    let(:fedora_monograph) { instance_double(ActiveFedora::Base, update_index: true) }
 
-      it "is 'Controlled'" do
-        expect(described_class.from(controller, presenter).access_type).to eq 'Controlled'
-      end
+    before do
+      allow(Monograph).to receive(:find).with(mono_presenter.id).and_return(fedora_monograph)
+    end
 
-      context "the Monograph is Open Access" do
-        let(:mono_doc) do
-          SolrDocument.new(id: 'mono_id',
-                           has_model_ssim: ['Monograph'],
-                           visibility_ssi: 'open',
-                           member_ids_ssim: ['id'],
-                           press_tesim: [press.subdomain],
-                           read_access_group_ssim: ["public"],
-                           open_access_tesim: ["yes"])
+    context "with a restricted book" do
+      let(:component) { Greensub::Component.create!(identifier: mono_presenter.id, name: mono_presenter.title, noid: mono_presenter.id) }
+
+      context "that is part of a free to read product" do
+        let(:product) { Greensub::Product.create!(name: "UMPEBC Free to Read Online", identifier: "ebc_free_to_read") }
+        let(:the_world_institution) { Greensub::Institution.create(indentifer: Settings.world_institution_identifier, name: "The World") }
+
+        before do
+          product.components << component
+          product.save!
+          the_world_institution.create_product_license(product)
         end
 
-        it "is 'OA_Gold'" do
-          expect(described_class.from(controller, presenter).access_type).to eq 'OA_Gold'
+        context "and the Monograph is not Open Access" do
+          it "the monograph itself is 'Free_To_Read'" do
+            expect(described_class.from(controller, mono_presenter).access_type).to eq 'Free_to_Read'
+          end
+
+          it "the book's epub is Free_To_Read" do
+            FeaturedRepresentative.create(work_id: mono_presenter.id, file_set_id: fs_presenter.id, kind: "epub")
+            expect(described_class.from(controller, fs_presenter).access_type).to eq 'Free_to_Read'
+          end
+
+          it "one of the book's non-book filesets is Free_To_Read" do
+            expect(described_class.from(controller, fs_presenter).access_type).to eq 'Free_to_Read'
+          end
+        end
+
+        # This probably won't ever happen, there's no reason to add an OA book to a free_to_read product
+        # but if it does, we want the COUNTER report to show "Open", not free to read
+        context "and the Monograph is Open Access" do
+          before do
+            allow(monograph).to receive(:open_access?).and_return(true)
+          end
+
+          it "the monograph itsel is Open" do
+            expect(described_class.from(controller, mono_presenter).access_type).to eq 'Open'
+          end
+
+          it "the book's epubis Open" do
+            FeaturedRepresentative.create(work_id: mono_presenter.id, file_set_id: fs_presenter.id, kind: "epub")
+            expect(described_class.from(controller, fs_presenter).access_type).to eq 'Free_to_Read'
+          end
+
+          # Most FileSets are going to be free to read
+          it "ne of the book's non-book filesets is Free_To_Read" do
+            expect(described_class.from(controller, fs_presenter).access_type).to eq 'Free_to_Read'
+          end
+        end
+      end
+
+      context "that is part of a normal restricted product" do
+        let(:product) { Greensub::Product.create!(name: "UMPEBC", identifier: "ebc") }
+
+        before do
+          product.components << component
+          product.save!
+        end
+
+        context "when the requesting institution has a license" do
+          let(:institution) { Greensub::Institution.create(identifier: 495, name: "a") }
+
+          before do
+            institution.create_product_license(product)
+            allow(controller).to receive(:current_institutions).and_return([institution])
+          end
+
+          context "and the Monograph is not Open Access" do
+            it "the monograph itself is Controlled" do
+              expect(described_class.from(controller, mono_presenter).access_type).to eq 'Controlled'
+            end
+
+            it "the 'book-type' FileSetis Controlled" do
+              FeaturedRepresentative.create(work_id: mono_presenter.id, file_set_id: fs_presenter.id, kind: "pdf_ebook")
+              expect(described_class.from(controller, fs_presenter).access_type).to eq 'Controlled'
+            end
+
+            it "one of the book's non-book filesets is Free_To_Read" do
+              expect(described_class.from(controller, fs_presenter).access_type).to eq 'Free_to_Read'
+            end
+          end
+
+          context "and the Monograph is Open Access" do
+            before do
+              allow(monograph).to receive(:open_access?).and_return(true)
+            end
+
+            it "the monograph itself is Open" do
+              expect(described_class.from(controller, mono_presenter).access_type).to eq 'Open'
+            end
+
+            it "a 'book-type' FileSet is Open" do
+              FeaturedRepresentative.create(work_id: mono_presenter.id, file_set_id: fs_presenter.id, kind: "audiobook")
+              expect(described_class.from(controller, fs_presenter).access_type).to eq 'Controlled'
+            end
+            # Most FileSets are going to be free to read
+            it "the book's non-book fileset is Free_To_Read" do
+              expect(described_class.from(controller, fs_presenter).access_type).to eq 'Free_to_Read'
+            end
+          end
+        end
+
+        context "when the requesting institution has no license" do
+          before do
+            allow(controller).to receive(:current_institutions).and_return([institution])
+          end
+
+          context "and the Monograph is Open Access" do
+            before do
+              allow(monograph).to receive(:open_access?).and_return(true)
+            end
+
+            it "the monograph itself is Open" do
+              expect(described_class.from(controller, mono_presenter).access_type).to eq 'Open'
+            end
+
+            it "a 'book-type' FileSet is Open" do
+              FeaturedRepresentative.create(work_id: mono_presenter.id, file_set_id: fs_presenter.id, kind: "audiobook")
+              expect(described_class.from(controller, fs_presenter).access_type).to eq 'Controlled'
+            end
+            # Most FileSets are going to be free to read
+            it "the book's non-book filesets are Free_To_Read" do
+              expect(described_class.from(controller, fs_presenter).access_type).to eq 'Free_to_Read'
+            end
+          end
+
+          context "and the Monograph is not Open Access" do
+            it "the monograph itself is Controlled" do
+              expect(described_class.from(controller, mono_presenter).access_type).to eq 'Open'
+            end
+
+            it "a 'book-type' FileSet is Contolled" do
+              FeaturedRepresentative.create(work_id: mono_presenter.id, file_set_id: fs_presenter.id, kind: "audiobook")
+              expect(described_class.from(controller, fs_presenter).access_type).to eq 'Controlled'
+            end
+            # Most FileSets are going to be free to read
+            it "the book's non-book filesets are Free_To_Read" do
+              expect(described_class.from(controller, fs_presenter).access_type).to eq 'Free_to_Read'
+            end
+          end
         end
       end
     end
 
-    context "with an unrestricted epub" do
+    context "with an unrestricted book" do
       before do
-        allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).with(noid: mono_presenter.id).and_return(false)
       end
 
-      it "is OA_Gold" do
-        expect(described_class.from(controller, monograph).access_type).to eq 'OA_Gold'
+      context "and the Monograph is not Open Access" do
+        it "is Free_To_Read" do
+          expect(described_class.from(controller, mono_presenter).access_type).to eq 'Free_to_Read'
+        end
+      end
+
+      context "and the Monograph is Open Access" do
+        before do
+          allow(monograph).to receive(:open_access?).and_return(true)
+        end
+
+        it "is Open" do
+          expect(described_class.from(controller, mono_presenter).access_type).to eq 'Open'
+        end
       end
     end
 
     context "with an asset with no permissions_expiration_date" do
       before do
-        allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).with(noid: mono_presenter.id).and_return(false)
       end
 
-      it "is OA_Gold" do
-        expect(described_class.from(controller, presenter).access_type).to eq 'OA_Gold'
+      # TODO: Should this be 'Open' or 'Free_to_Read'?
+      it "is Open" do
+        expect(described_class.from(controller, mono_presenter).access_type).to eq 'Open'
       end
     end
 
     context "with an asset with a permissions_expiration_date" do
       before do
-        allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).with(noid: mono_presenter.id).and_return(false)
         allow(presenter).to receive(:permissions_expiration_date).and_return("2020-01-27")
       end
 
       it "is Controlled" do
-        expect(described_class.from(controller, presenter).access_type).to eq 'Controlled'
+        expect(described_class.from(controller, fs_presenter).access_type).to eq 'Controlled'
       end
     end
   end
@@ -184,7 +321,7 @@ RSpec.describe CounterService do
         allow(DateTime).to receive(:now).and_return(now)
         allow(now).to receive(:strftime).with('%Y-%m-%d').and_return("2020-10-17")
         allow(now).to receive(:hour).and_return('13')
-        allow(Greensub::Component).to receive(:find_by).with(noid: monograph.id).and_return(false)
+        allow(Greensub::Component).to receive(:find_by).with(noid: mono_presenter.id).and_return(false)
       end
 
       after { CounterReport.destroy_all }
@@ -196,7 +333,7 @@ RSpec.describe CounterService do
         end
 
         it "adds an 'Unknown Institution' (aka: 'The World') COUNT" do
-          expect { described_class.from(controller, presenter).count }
+          expect { described_class.from(controller, fs_presenter).count }
             .to change(CounterReport, :count)
             .by(1)
         end
@@ -210,7 +347,7 @@ RSpec.describe CounterService do
         end
 
         it "doesn't add COUNTER stats" do
-          expect { described_class.from(controller, presenter).count }
+          expect { described_class.from(controller, fs_presenter).count }
             .to change(CounterReport, :count)
             .by(0)
         end
@@ -226,10 +363,10 @@ RSpec.describe CounterService do
 
           cr = CounterReport.first
 
-          expect(cr.noid).to eq presenter.id
+          expect(cr.noid).to eq fs_presenter.id
           expect(cr.model).to eq "FileSet"
           expect(cr.press).to eq press.id
-          expect(cr.parent_noid).to eq presenter.monograph_id
+          expect(cr.parent_noid).to eq fs_presenter.monograph_id
           expect(cr.session).to eq "99.99.99.99|Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36|2020-10-17|13"
           expect(cr.institution).to eq 495
           expect(cr.investigation).to eq 1
@@ -237,7 +374,7 @@ RSpec.describe CounterService do
           expect(cr.section_type).to be nil
           expect(cr.request).to eq 1
           expect(cr.turnaway).to be nil
-          expect(cr.access_type).to eq "OA_Gold"
+          expect(cr.access_type).to eq "Open"
         end
       end
 
@@ -248,14 +385,14 @@ RSpec.describe CounterService do
         end
 
         it "creates 2 counter report rows" do
-          expect { described_class.from(controller, presenter).count }
+          expect { described_class.from(controller, fs_presenter).count }
             .to change(CounterReport, :count)
             .by(2)
           expect(CounterReport.first.institution).to eq 12
           expect(CounterReport.second.institution).to eq 65
           expect(CounterReport.first.press).to eq press.id
-          expect(CounterReport.first.parent_noid).to eq presenter.monograph_id
-          expect(CounterReport.second.parent_noid).to eq presenter.monograph_id
+          expect(CounterReport.first.parent_noid).to eq fs_presenter.monograph_id
+          expect(CounterReport.second.parent_noid).to eq fs_presenter.monograph_id
         end
       end
 
@@ -266,7 +403,7 @@ RSpec.describe CounterService do
         end
 
         it "creates 0 counter report rows" do
-          expect { described_class.from(controller, presenter).count }
+          expect { described_class.from(controller, fs_presenter).count }
           .to change(CounterReport, :count)
           .by(0)
         end
@@ -278,7 +415,7 @@ RSpec.describe CounterService do
         end
 
         it "creates 0 counter report rows" do
-          expect { described_class.from(controller, presenter).count }
+          expect { described_class.from(controller, fs_presenter).count }
           .to change(CounterReport, :count)
           .by(0)
         end
@@ -299,7 +436,7 @@ RSpec.describe CounterService do
 
         it "doesn't add COUNTER stats" do
           expect(presenter.visibility).to eq 'restricted'
-          expect { described_class.from(controller, presenter).count }
+          expect { described_class.from(controller, fs_presenter).count }
             .to change(CounterReport, :count)
             .by(0)
         end
@@ -332,14 +469,14 @@ RSpec.describe CounterService do
       end
 
       context "if restricted" do
-        before { allow(Greensub::Component).to receive(:find_by).with(noid: presenter.id).and_return(true) }
+        before { allow(Greensub::Component).to receive(:find_by).with(noid: fs_presenter.id).and_return(true) }
 
         it "adds a Controlled Monograph COUNTER stat row" do
-          expect { described_class.from(controller, presenter).count }
+          expect { described_class.from(controller, fs_presenter).count }
             .to change(CounterReport, :count)
             .by(1)
-          expect(CounterReport.first.noid).to eq presenter.id
-          expect(CounterReport.first.parent_noid).to eq presenter.id
+          expect(CounterReport.first.noid).to eq fs_presenter.id
+          expect(CounterReport.first.parent_noid).to eq fs_presenter.id
           expect(CounterReport.first.model).to eq 'Monograph'
           expect(CounterReport.first.investigation).to eq 1
           expect(CounterReport.first.request).to be_nil
@@ -348,13 +485,13 @@ RSpec.describe CounterService do
       end
 
       context "if not restricted" do
-        before { allow(Greensub::Component).to receive(:find_by).with(noid: presenter.id).and_return(false) }
+        before { allow(Greensub::Component).to receive(:find_by).with(noid: fs_presenter.id).and_return(false) }
 
         it "adds a OA_Gold Monograph COUNTER stat row" do
-          expect { described_class.from(controller, presenter).count }
+          expect { described_class.from(controller, fs_presenter).count }
             .to change(CounterReport, :count)
             .by(1)
-          expect(CounterReport.first.access_type).to eq 'OA_Gold'
+          expect(CounterReport.first.access_type).to eq 'Open'
         end
       end
     end
@@ -374,7 +511,7 @@ RSpec.describe CounterService do
       let(:user_agent) { "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" }
 
       it "is not a robot" do
-        expect(described_class.from(controller, presenter).robot?).to eq false
+        expect(described_class.from(controller, fs_presenter).robot?).to eq false
       end
     end
 
@@ -382,7 +519,7 @@ RSpec.describe CounterService do
       let(:user_agent) { "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.2 Safari/605.1.15" }
 
       it "is not a robot" do
-        expect(described_class.from(controller, presenter).robot?).to eq false
+        expect(described_class.from(controller, fs_presenter).robot?).to eq false
       end
     end
 
@@ -390,7 +527,7 @@ RSpec.describe CounterService do
       let(:user_agent) { "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" }
 
       it "is a robot" do
-        expect(described_class.from(controller, presenter).robot?).to eq true
+        expect(described_class.from(controller, fs_presenter).robot?).to eq true
       end
     end
 
@@ -398,7 +535,7 @@ RSpec.describe CounterService do
       let(:user_agent) { "Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)" }
 
       it "is a robot" do
-        expect(described_class.from(controller, presenter).robot?).to eq true
+        expect(described_class.from(controller, fs_presenter).robot?).to eq true
       end
     end
   end
