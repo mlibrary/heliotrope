@@ -188,7 +188,7 @@
               <% end %>
             <% end %>
           <% end %>
-          <% if press_presenter.subdomain == 'vermont' %>
+          <% if %w[vermont barpublishing].include? press_presenter.subdomain %>
             <%= render 'shared/brand_site_search' %>
           <% else %>
             <%= render 'shared/site_search' %>
