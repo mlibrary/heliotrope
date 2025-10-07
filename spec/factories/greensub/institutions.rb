@@ -6,6 +6,7 @@ FactoryBot.define do
     sequence(:name) { |n| "InstitutionName#{n}" }
     sequence(:display_name) { |n| "InstitutionDisplayName#{n}" }
     sequence(:entity_id) { |n| "InstitutionEntityID#{n}" }
+    sequence(:security_domain) { |n| '' } # default is blank
     sequence(:catalog_url) { |n| "InstitutionCatalogURL#{n}" }
     sequence(:link_resolver_url) { |n| "InstitutionLinkResolverURL#{n}" }
     sequence(:location) { |n| "InstitutionLocation#{n}" }
