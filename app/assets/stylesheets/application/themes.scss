@@ -4664,16 +4664,37 @@ $barpublishing-white: #fff;
       }
     }
 
+    .search-nav-wrapper {
+      display: flex;
+      flex-direction: column;
+
+      .search-form {
+        padding-top: 1em;
+      }
+
+      .nav-browse {
+        display: flex;
+        justify-content: flex-end;
+        font-size: 14px;
+        text-transform: uppercase;
+        font-weight: bold;
+
+        a {
+          color: $barpublishing-white;
+          text-decoration: none;
+        }
+        a:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
     button.search-submit {
       background-color: $barpublishing-grey-3;
       border-color: $barpublishing-grey-3;
       color: $barpublishing-white;
       height: auto;
-    }
-
-    form.search-form {
-      float: right !important;
-      padding-top: 3.2em;
+      border-radius: 0;
     }
 
     .custom-nav {
