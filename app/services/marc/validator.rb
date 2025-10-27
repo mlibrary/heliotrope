@@ -76,7 +76,7 @@ module Marc
       # We've already determined that something exists in the 024$a field.
       # We need to match that with a monograph in fulcrum
       # When we do that, we also will get the group_key
-      purl = record["024"]["a"]
+      purl = find_doi_or_handle(record)
       doc = ActiveFedora::SolrService.query("+doi_ssim:#{purl}", fl: ['id', 'press_tesim'], rows: 1)&.first
 
       if doc.present?
@@ -109,6 +109,14 @@ module Marc
       end
 
       true
+    end
+
+    def find_doi_or_handle(record)
+      record.fields.each_by_tag("024") do |field|
+        if field.indicator1 == "7" && (field["2"] == "doi" || field["2"] == "hdl")
+          return field["a"]
+        end
+      end
     end
 
     # The monograph may be part of a child press which does not translate directly to a group_key/product.
@@ -203,17 +211,14 @@ module Marc
     # 024: Include this field with the Handle in subfield $a and the designator 'hdl' in subfield $2. The value of the First Indicator must be '7'.
     #   The Handle is the value in 856$u minus 'https://hdl.handle.net/'.
     def valid_024?(record)
-      if record["024"].blank?
-        log_message("has no 024 field")
-        return false
+      record.fields.each_by_tag("024") do |field|
+        if field.indicator1 == "7" && (field["2"] == "doi" || field["2"] == "hdl")
+          return true
+        end
       end
 
-      if record["024"]["a"].blank?
-        log_message("has no 024 $a field")
-        return false
-      end
-
-      true
+      log_message("has no valid 024 field with 'doi' or 'hdl' in $2 and first indicator '7'")
+      false
     end
 
     # BAR

@@ -109,6 +109,56 @@ RSpec.describe Marc::Validator do
         expect(validator.valid_024?(record)).to be true
       end
     end
+
+    context "024 present but no doi subfield" do
+      let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', '024_field_is_not_a_doi.xml').to_s }
+      it "returns false" do
+        validator = described_class.new(marc_file)
+        record = validator.reader.first
+        expect(MarcLogger).to receive(:error)
+        expect(validator.valid_024?(record)).to be false
+      end
+    end
+
+    context "multiple 024 fields, the second one is the doi" do
+      let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', '024_multiple_fields_one_doi.xml').to_s }
+      it "returns true" do
+        validator = described_class.new(marc_file)
+        record = validator.reader.first
+        expect(validator.valid_024?(record)).to be true
+      end
+    end
+
+    context "024 is a hdl and not a doi" do
+      let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', '024_handle_instead_of_doi.xml').to_s }
+      it "returns false" do
+        validator = described_class.new(marc_file)
+        record = validator.reader.first
+        expect(validator.valid_024?(record)).to be true
+      end
+    end
+  end
+
+  describe "#find_doi_or_handle" do
+    context "with a doi" do
+      let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', 'valid_marc.xml').to_s }
+
+      it "finds the doi in 024 field" do
+        validator = described_class.new(marc_file)
+        record = validator.reader.first
+        expect(validator.find_doi_or_handle(record)).to eq "10.3998/mpub.10209707"
+      end
+    end
+
+    context "with a handle" do
+      let(:marc_file) { Rails.root.join('spec', 'fixtures', 'marc', '024_handle_instead_of_doi.xml').to_s }
+
+      it "finds the handle in 024 field" do
+        validator = described_class.new(marc_file)
+        record = validator.reader.first
+        expect(validator.find_doi_or_handle(record)).to eq "heb40003"
+      end
+    end
   end
 
   describe "#exists_in_fulcrum?" do
