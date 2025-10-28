@@ -24,9 +24,8 @@
       <subfield code="a">0472223526</subfield>
       <subfield code="q">electronic book</subfield>
     </datafield>
-    <datafield ind1="7" ind2=" " tag="024">
-      <subfield code="a">heb40003</subfield>
-      <subfield code="2">hdl</subfield>
+    <datafield ind1="8" ind2=" " tag="024">
+      <subfield code="a">ZBWT00773155</subfield>
     </datafield>
     <datafield ind1=" " ind2=" " tag="040">
       <subfield code="a">EYM</subfield>
