@@ -62,7 +62,7 @@ RSpec.describe RecurringUsageReportJob, type: :job do
       create(:full_license, licensee: institution1, product: product)
       create(:full_license, licensee: institution2, product: product)
       create(:counter_report, press: press.id, session: 1,  noid: 'a', model: 'FileSet', parent_noid: 'red', institution: 1, created_at: Time.parse("2023-03-29").utc, access_type: "Controlled", request: 1)
-      create(:counter_report, press: press.id, session: 1,  noid: 'c', model: 'FileSet', parent_noid: 'green', institution: 1, created_at: Time.parse("2023-03-29").utc, access_type: "OA_Gold", request: 1, section: "Chapter Green", section_type: "Chapter")
+      create(:counter_report, press: press.id, session: 1,  noid: 'c', model: 'FileSet', parent_noid: 'green', institution: 1, created_at: Time.parse("2023-03-29").utc, access_type: "Open", request: 1, section: "Chapter Green", section_type: "Chapter")
       create(:counter_report, press: press.id, session: 2,  noid: 'b', model: 'FileSet', parent_noid: 'blue', institution: 2, created_at: Time.parse("2023-03-30").utc, access_type: "Controlled", request: 1, section: "Chapter R", section_type: "Chapter")
     end
 
@@ -142,7 +142,7 @@ RSpec.describe RecurringUsageReportJob, type: :job do
           b = CSV.parse(reports["U_of_B_2023-04-01.csv"])
 
           expect(a[0]).to eq ["Authors", "Publication_Date", "DOI", "Parent_Title", "Parent_DOI", "Component_Title", "Data_Type", "YOP", "Access_Type", "Reporting_Period_Total"]
-          expect(a[1]).to eq ["C FileSet Author", "2001", "doi.org/c_file_set", "Green Title", "doi.org/green_book", "Chapter Green", "Book", "2001", "OA_Gold", "1"]
+          expect(a[1]).to eq ["C FileSet Author", "2001", "doi.org/c_file_set", "Green Title", "doi.org/green_book", "Chapter Green", "Book", "2001", "Open", "1"]
           expect(a[2]).to eq ["Red Author", "2000", "doi.org/a_file_set", "Red", "doi.org/red_book", "", "Book", "2000", "Controlled", "1"]
 
           expect(b[0]).to eq ["Authors", "Publication_Date", "DOI", "Parent_Title", "Parent_DOI", "Component_Title", "Data_Type", "YOP", "Access_Type", "Reporting_Period_Total"]

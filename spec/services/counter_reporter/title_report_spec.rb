@@ -160,7 +160,7 @@ RSpec.describe CounterReporter::TitleReport do
 
       context "header" do
         it do
-          expect(subject[:header][:Report_Name]).to eq "Book Requests (Excluding OA_Gold)"
+          expect(subject[:header][:Report_Name]).to eq "Book Requests (Excluding Open/OA_Gold)"
           expect(subject[:header][:Report_ID]).to eq "TR_B1"
           expect(subject[:header][:Release]).to eq "5"
           expect(subject[:header][:Institution_Name]).to eq institution.name
@@ -292,6 +292,13 @@ RSpec.describe CounterReporter::TitleReport do
       # From that example we want each metric (of 6) for each access_type (of 2) for each book.
       # I don't really understand how a book can be both "Controlled" and then "OA_Gold", but that seems
       # to be what the example is saying. Seems like a bunch of empty rows to me. But there it is. A monstrosity.
+      # HELIO-4849 UPDATE
+      # In COUNTER 5.1 this is expanded yet again to include Free_To_Read and Open instead of OA_Gold
+      # but it's difficult to do the switch over so we'll need to support all 4(!) access_types for now
+      # making this report totally ridiculous.
+      # Luckily no one really uses these anymore, they use SiQ for reporting because running this will take a long time.
+      # There will be a lot of empty pointless rows. I don't know if the spreadsheet above is "right", but it's what
+      # we had at the time from COUNTER themselves, so it's what we're doing.
       let(:purple) do
         ::SolrDocument.new(id: 'purple',
                            has_model_ssim: ['Monograph'],
@@ -338,56 +345,58 @@ RSpec.describe CounterReporter::TitleReport do
       end
 
       it "has the correct number of items" do
-        expect(subject[:items].length).to be 60
+        expect(subject[:items].length).to be 120
       end
 
       it "has the titles in the correct order" do
         expect(subject[:items][0]["Title"]).to eq "Blue"
-        expect(subject[:items][12]["Title"]).to eq "Green"
-        expect(subject[:items][24]["Title"]).to eq "Purple"
-        expect(subject[:items][36]["Title"]).to eq "Red"
-        expect(subject[:items][48]["Title"]).to eq "Yellow"
+        expect(subject[:items][24]["Title"]).to eq "Green"
+        expect(subject[:items][48]["Title"]).to eq "Purple"
+        expect(subject[:items][72]["Title"]).to eq "Red"
+        expect(subject[:items][96]["Title"]).to eq "Yellow"
       end
 
       it "includes an Access_Type column" do
         expect(subject[:items][0]["Access_Type"]).to eq "Controlled"
-        expect(subject[:items][1]["Access_Type"]).to eq "OA_Gold"
+        expect(subject[:items][1]["Access_Type"]).to eq "Open"
+        expect(subject[:items][2]["Access_Type"]).to eq "Free_To_Read"
+        expect(subject[:items][3]["Access_Type"]).to eq "OA_Gold"
       end
 
       it "has the correct monthly counts" do
         # blue
         expect(subject[:items][0]["Aug-2018"]).to eq 1 # Controlled, Total_Item_Investigations
-        expect(subject[:items][2]["Aug-2018"]).to eq 1 # Controlled, Unique_Item_Investigations
-        expect(subject[:items][4]["Aug-2018"]).to eq 1 # Controlled, Unique_Title_Investigations
+        expect(subject[:items][4]["Aug-2018"]).to eq 1 # Controlled, Unique_Item_Investigations
+        expect(subject[:items][8]["Aug-2018"]).to eq 1 # Controlled, Unique_Title_Investigations
         # green
-        expect(subject[:items][12]["Sep-2018"]).to eq 2 # Controlled, Total_Item_Investigations
-        expect(subject[:items][14]["Sep-2018"]).to eq 2 # Controlled, Unique_Item_Investigations
-        expect(subject[:items][16]["Sep-2018"]).to eq 2 # Controlled, Unique_Title_Investigations
-        expect(subject[:items][18]["Sep-2018"]).to eq 1 # Controlled, Total_Item_Requests
-        expect(subject[:items][20]["Sep-2018"]).to eq 1 # Controlled, Unique_Item_Requests
-        expect(subject[:items][22]["Sep-2018"]).to eq 1 # Controlled, Unique_Title_Requests
+        expect(subject[:items][24]["Sep-2018"]).to eq 2 # Controlled, Total_Item_Investigations
+        expect(subject[:items][28]["Sep-2018"]).to eq 2 # Controlled, Unique_Item_Investigations
+        expect(subject[:items][32]["Sep-2018"]).to eq 2 # Controlled, Unique_Title_Investigations
+        expect(subject[:items][36]["Sep-2018"]).to eq 1 # Controlled, Total_Item_Requests
+        expect(subject[:items][40]["Sep-2018"]).to eq 1 # Controlled, Unique_Item_Requests
+        expect(subject[:items][44]["Sep-2018"]).to eq 1 # Controlled, Unique_Title_Requests
         # purple
-        expect(subject[:items][25]["Aug-2018"]).to eq 1 # OA_Gold, Total_Item_Investigations
-        expect(subject[:items][27]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Item_Investigations
-        expect(subject[:items][29]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Title_Investigations
+        expect(subject[:items][51]["Aug-2018"]).to eq 1 # OA_Gold, Total_Item_Investigations
+        expect(subject[:items][55]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Item_Investigations
+        expect(subject[:items][59]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Title_Investigations
         # red
-        expect(subject[:items][36]["Aug-2018"]).to eq 2 # Controlled, Total_Item_Investigations
-        expect(subject[:items][38]["Aug-2018"]).to eq 2 # Controlled, Unique_Item_Investigations
-        expect(subject[:items][40]["Aug-2018"]).to eq 1 # Controlled, Unique_Title_Investigations
-        expect(subject[:items][42]["Aug-2018"]).to eq 1 # Controlled, Total_Item_Requests
-        expect(subject[:items][44]["Aug-2018"]).to eq 1 # Controlled, Unique_Item_Requests
-        expect(subject[:items][46]["Aug-2018"]).to eq 1 # Controlled, Unique_Title_Requests
+        expect(subject[:items][72]["Aug-2018"]).to eq 2 # Controlled, Total_Item_Investigations
+        expect(subject[:items][76]["Aug-2018"]).to eq 2 # Controlled, Unique_Item_Investigations
+        expect(subject[:items][80]["Aug-2018"]).to eq 1 # Controlled, Unique_Title_Investigations
+        expect(subject[:items][84]["Aug-2018"]).to eq 1 # Controlled, Total_Item_Requests
+        expect(subject[:items][88]["Aug-2018"]).to eq 1 # Controlled, Unique_Item_Requests
+        expect(subject[:items][92]["Aug-2018"]).to eq 1 # Controlled, Unique_Title_Requests
         # yellow
-        expect(subject[:items][49]["Aug-2018"]).to eq 1 # OA_Gold, Total_Item_Investigations
-        expect(subject[:items][49]["Sep-2018"]).to eq 1 # OA_Gold, Total_Item_Investigations
-        expect(subject[:items][51]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Item_Investigations
-        expect(subject[:items][51]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Item_Investigations
-        expect(subject[:items][53]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Title_Investigations
-        expect(subject[:items][53]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Title_Investigations
-        expect(subject[:items][55]["Aug-2018"]).to eq 0 # OA_Gold, Total_Item_Requests
-        expect(subject[:items][55]["Sep-2018"]).to eq 1 # OA_Gold, Total_Item_Requests
-        expect(subject[:items][57]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Item_Requests
-        expect(subject[:items][59]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Title_Requests
+        expect(subject[:items][99]["Aug-2018"]).to eq 1 # OA_Gold, Total_Item_Investigations
+        expect(subject[:items][99]["Sep-2018"]).to eq 1 # OA_Gold, Total_Item_Investigations
+        expect(subject[:items][103]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Item_Investigations
+        expect(subject[:items][103]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Item_Investigations
+        expect(subject[:items][107]["Aug-2018"]).to eq 1 # OA_Gold, Unique_Title_Investigations
+        expect(subject[:items][107]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Title_Investigations
+        expect(subject[:items][111]["Aug-2018"]).to eq 0 # OA_Gold, Total_Item_Requests
+        expect(subject[:items][111]["Sep-2018"]).to eq 1 # OA_Gold, Total_Item_Requests
+        expect(subject[:items][115]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Item_Requests
+        expect(subject[:items][119]["Sep-2018"]).to eq 1 # OA_Gold, Unique_Title_Requests
       end
     end
   end

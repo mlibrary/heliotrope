@@ -22,7 +22,7 @@ RSpec.describe CounterReporter::ReportParams do
     end
 
     it "has the correct title" do
-      expect(subject.report_title).to eq 'Book Requests (Excluding OA_Gold)'
+      expect(subject.report_title).to eq 'Book Requests (Excluding Open/OA_Gold)'
     end
 
     it "has the correct access_type" do
@@ -40,7 +40,7 @@ RSpec.describe CounterReporter::ReportParams do
         press: press.id,
         institution: '1',
         metric_type: 'Total_Item_Requests',
-        access_type: 'OA_Gold',
+        access_type: 'Open',
         access_method: 'Regular'
       }
     end
@@ -54,7 +54,7 @@ RSpec.describe CounterReporter::ReportParams do
     end
 
     it "has the correct access_type" do
-      expect(subject.access_types).to eq ['OA_Gold']
+      expect(subject.access_types).to eq ['Open']
     end
   end
 

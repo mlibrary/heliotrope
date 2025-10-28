@@ -16,7 +16,7 @@ RSpec.describe CounterReporterService do
 
       it "makes an empty report" do
         expect(described_class.csv(report)).to eq <<~CSV
-          Report_Name,Book Requests (Excluding OA_Gold)
+          Report_Name,Book Requests (Excluding Open/OA_Gold)
           Report_ID,TR_B1
           Release,5
           Institution_Name,U of Something
@@ -79,7 +79,7 @@ RSpec.describe CounterReporterService do
           Institution_Name,U of Something,"","","",""
           Institution_ID,ID:1; ROR:ror,"","","",""
           Metric_Types,Searches_Platform; Total_Item_Requests; Unique_Item_Requests; Unique_Title_Requests,"","","",""
-          Report_Filters,Platform=#{press.subdomain}; Access_Type=Controlled|OA_Gold; Access_Method=Regular,"","","",""
+          Report_Filters,Platform=#{press.subdomain}; Access_Type=Controlled|Open|Free_To_Read|OA_Gold; Access_Method=Regular,"","","",""
           Report_Attributes,"","","","",""
           Exceptions,"","","","",""
           Reporting_Period,Begin_Date=2018-01-01; End_Date=2018-03-31,"","","",""
