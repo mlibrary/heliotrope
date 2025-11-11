@@ -4629,6 +4629,39 @@ $barpublishing-white: #fff;
     background-color: $barpublishing-grey-1;
   }
 
+  // HELIO-4929 relates to fixed-top header/brand-bar/navbar
+  div.skip {
+    position: absolute;
+    z-index: 1001;
+  }
+
+  .skip {
+    a {
+      position: absolute;
+      top: auto;
+      left: -10000px;
+      overflow: hidden;
+    }
+
+    a:focus {
+      top: 1.5em;
+      left: 0;
+      color: white;
+      background-color: black;
+      display: block;
+      position: relative;
+    }
+  }
+
+  .brand-auth {
+    margin-top: 6.25em;
+  }
+
+  #maincontent.authentication {
+    margin-top: 6.25em;
+  }
+  // end HELIO-4929
+
   #brand-bar {
     background-color: $barpublishing-brand-color;
     border: 0;
