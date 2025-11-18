@@ -36,6 +36,22 @@ SitemapGenerator::Sitemap.create(compress: false, create_index: true, max_sitema
   # add '/static/about_daily', changefreq: 'monthly'
   # add '/static/about_project', changefreq: 'monthly'
   # add '/static/rights', changefreq: 'monthly'
+
+  # First presses
+  Press.all.each do |press|
+    next if ['demo', 'heliotrope', 'monitoringservicetarget'].include? press.subdomain
+    most_recent_monograph_mod = ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND press_sim:#{press.subdomain}",
+                                                                fl: ['date_modified_dtsi'],
+                                                                sort: 'date_modified_dtsi desc',
+                                                                rows: 1).first&.[]('date_modified_dtsi') || press.updated_at.rfc3339
+
+
+    url = Rails.application.routes.url_helpers.press_catalog_path(press.subdomain)
+
+    add url, lastmod: most_recent_monograph_mod, priority: 1.0, changefreq: 'monthly'
+  end
+
+  # Then monographs and and file_sets
   ActiveFedora::SolrService.query("+has_model_ssim:Monograph AND -(press_sim:demo OR press_sim:heliotrope OR press_sim:monitoringservicetarget)",
                                   fl: ['id',
                                        'date_modified_dtsi',
