@@ -41,6 +41,7 @@ describe Hyrax::MonographForm do
                            member_of_collection_ids
                            admin_set_id
                            press
+                           collection
                            series
                            buy_url
                            isbn
@@ -93,6 +94,7 @@ describe Hyrax::MonographForm do
                            subject
                            keyword
                            language
+                           collection
                            series
                            buy_url
                            isbn

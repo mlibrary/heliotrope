@@ -18,7 +18,7 @@ module Hyrax
              :creator_display, :creator_full_name, :contributor, :content_warning, :content_warning_information,
              :subject, :section_titles, :based_near, :publisher, :date_published, :language,
              :isbn, :license, :rightsholder, :open_access, :funder, :funder_display, :holding_contact, :has_model,
-             :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :series,
+             :buy_url, :embargo_release_date, :lease_expiration_date, :rights, :collection, :series,
              :visibility, :identifier, :doi, :handle, :thumbnail_path, :previous_edition, :next_edition,
              :volume, :oclc_owi, :copyright_year, :award,
              to: :solr_document

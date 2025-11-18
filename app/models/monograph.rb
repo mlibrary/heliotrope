@@ -30,7 +30,11 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :series, predicate: ::RDF::Vocab::DCMIType.Collection do |index|
+  property :collection, predicate: ::RDF::Vocab::DCMIType.Collection do |index|
+    index.as :stored_searchable, :facetable
+  end
+
+  property :series, predicate: ::RDF::Vocab::SCHEMA.CreativeWorkSeries do |index|
     index.as :stored_searchable, :facetable
   end
 

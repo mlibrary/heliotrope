@@ -95,8 +95,8 @@ namespace :heliotrope do
 
       press = tmm_press_name_map[press] if tmm_press_name_map[press].present?
 
-      unless allowed_presses.include?(press) && Press.exists?(subdomain: press)
-        puts "Invalid Press value '#{press}' on row #{row_num} ... SKIPPING ROW"
+      unless press == 'bigten'# allowed_presses.include?(press) && Press.exists?(subdomain: press)
+        # puts "Invalid Press value '#{press}' on row #{row_num} ... SKIPPING ROW"
         next
       end
 
