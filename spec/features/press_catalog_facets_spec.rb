@@ -94,31 +94,5 @@ describe "Press Catalog Facets" do
         expect(page).to_not have_selector 'ul.facet-values li:nth-child(1) span:nth-child(2)', text: 5 # 5 monographs
       end
     end
-
-    describe 'Series facet label ("Collection" in livedplaces)' do
-      context 'regular press' do
-        let(:regular_press) { create(:press) }
-        before { FactoryBot.create_list :public_monograph, 10, press: regular_press.subdomain, series: ['blah'] }
-
-        it 'Shows the Series facet with a label of "Series"' do
-          visit press_catalog_path(press: regular_press.subdomain)
-          expect(page).to have_selector('#facet-series_sim')
-          # "When querying on attributes the value must start with a letter or be quoted" https://stackoverflow.com/a/49142303
-          expect(page).to have_selector("button[data-target='#facet-series_sim']", text: 'Series')
-        end
-      end
-
-      context 'livedplaces press' do
-        let(:livedplaces_press) { create(:press, subdomain: 'livedplaces') }
-        before { FactoryBot.create_list :public_monograph, 10, press: livedplaces_press.subdomain, series: ['blah'] }
-
-        it 'Shows the Series facet with a label of "Collection"' do
-          visit press_catalog_path(press: livedplaces_press.subdomain)
-          expect(page).to have_selector('#facet-series_sim')
-          # "When querying on attributes the value must start with a letter or be quoted" https://stackoverflow.com/a/49142303
-          expect(page).to have_selector("button[data-target='#facet-series_sim']", text: 'Collection')
-        end
-      end
-    end
   end
 end

@@ -12,6 +12,10 @@ module SolrDocumentExtensions
       vector('buy_url_ssim')
     end
 
+    def collection
+      vector('collection_tesim')
+    end
+
     def copyright_year
       scalar('copyright_year_tesim')
     end
