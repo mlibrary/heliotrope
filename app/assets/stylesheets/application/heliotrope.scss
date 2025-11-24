@@ -1910,30 +1910,6 @@ footer.press {
   }
 }
 
-// themes for CSB, correspond to themes
-// at line 142 of /app/views/e_pubs/show.html.erb
-#reader.cozy-theme-dark {
-  background-color: #000000;
-  color: #FFF;
-
-  .cozy-h1 {
-    color: #FFF;
-  }
-
-  .cozy-module-main {
-    background-color: #121212;
-  }
-
-  .cozy-control button {
-    background-color: #474C50 !important;
-  }
-
-  .cozy-control .button--sm.cozy-preferences {
-    color: #FFF;
-  }
-
-
-}
 
 /* CSB v2 - PdeC EReader */
 .too {
@@ -2403,6 +2379,187 @@ footer.press {
     list-style-type: disc;
     padding-bottom: 1em;
   }
+}
+
+// themes for CSB, correspond to themes
+// at line 142 of /app/views/e_pubs/show.html.erb
+#reader.cozy-theme-dark {
+  background-color: #000000;
+  color: #FFF;
+
+  .cozy-h1 {
+    color: #FFF;
+  }
+
+  .cozy-module-main {
+    background-color: #121212;
+  }
+
+  .cozy-control button,
+  .cozy-control .button--sm,
+  .cozy-control .button--sm.cozy-preferences,
+  .cozy-control.button--lg,
+  .button--inline,
+  .button--default {
+    background-color: #474C50 !important;
+    color: #FFF !important;
+    background-image: linear-gradient(to right, #656C71 50%, #474C50 50%) !important;
+    background-position: -100%;
+    background-size: 201%;
+    background-repeat: no-repeat;
+  }
+
+  .cozy-modal main fieldset {
+    border-color: #888 !important;
+  }
+
+  .cozy-control .button--sm.cozy-preferences {
+    color: #FFF;
+  }
+  
+  .cozy-panel-left .cozy-panel-feedback {
+    a {
+    color: #999 !important;
+    }
+  }
+
+  .cozy-control i[class^="icon-chevron-"]:hover {
+    color: #D1D1D1 !important;
+  }
+
+  .modal__container {
+
+    .modal__header {
+      background: #121212;
+      
+      h3, 
+      h4,
+      button.modal__close {
+        color: #a3a3a3 !important;
+      }
+    }
+
+    .modal__content {
+      background: #333;
+      color: #FFF;
+      ul li {
+        border-color: #999999;
+      }
+      a {
+        color: #FFF;
+      }
+      a:hover {
+        background-color: #555;
+        border-color: #e8e8e8;
+      }
+      blockquote#formatted {
+        background-color: #555 !important;
+      }
+      h4 {
+        color: #a3a3a3 !important;
+      }
+    }
+
+    .modal__footer {
+      background-color: #121212;
+    }
+
+  }
+
+}
+
+#reader.cozy-theme-sepia {
+  background-color: #FAF4E8;
+  color: #121212;
+
+  .cozy-h1 {
+    color: #121212;
+  }
+
+  .cozy-module-main {
+    background-color: #FBF6ED;
+  }
+
+  .cozy-control button,
+  .cozy-control .button--sm,
+  .cozy-control .button--sm.cozy-preferences,
+  .cozy-control.button--lg,
+  .button--inline,
+  .button--default {
+    background-color: #BCB194 !important;
+    color: #444 !important;
+    background-image: linear-gradient(to right, #E0DACD 50%, #BCB194 50%) !important;
+    background-position: -100%;
+    background-size: 201%;
+    background-repeat: no-repeat;
+  }
+
+  .cozy-control .annotation-count {
+    color: #444;
+  }
+
+  .cozy-control .button--sm.cozy-preferences {
+    color: #444;
+  }
+
+  .cozy-control button:hover,
+  .cozy-control .button--sm:hover,
+  .cozy-control .button--sm:focus,
+  .cozy-control .button--sm:active,
+  .cozy-control .button--sm.cozy-preferences:hover,
+  .cozy-control.button--lg:hover,
+  .button--inline:hover,
+  .button--default:hover {
+    color: #444;
+  }
+
+  .cozy-contents-toolbar.button-group .toggled {
+    box-shadow: none;
+  }
+
+  .cozy-control i[class^="icon-chevron-"]:hover {
+    color: #BCB194 !important;
+  }
+
+  .modal__container {
+
+    .modal__header {
+      background: #BCB194;
+      
+      h3, 
+      h4,
+      button.modal__close {
+        color: #121212 !important;
+      }
+    }
+
+    .modal__content {
+      background: #FAF4E8;
+      color: #121212;
+      ul li {
+        border-color: #D9C6A1;
+      }
+      a {
+        color: #444;
+      }
+      a:hover {
+        background-color: #D9C6A1;
+        border-color: #D9C6A1;
+      }
+      blockquote#formatted {
+        background-color: #FAF4E8 !important;
+      }
+      h4 {
+        color: #121212 !important;
+      }
+    }
+
+    .modal__footer {
+      background-color: #A79872;
+    }
+
+  }
+
 }
 
 @media screen and (max-width: 50em) {
