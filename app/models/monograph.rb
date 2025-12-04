@@ -30,6 +30,13 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :collection, predicate: ::RDF::Vocab::SCHEMA.Collection do |index|
+    index.as :stored_searchable, :facetable
+  end
+
+  # The `series` field was added many years before the `collection` field above. We clearly favored Dublin Core
+  # predicates at the time, but probably `RDF::Vocab::SCHEMA.CreativeWorkSeries` would have been a better choice. Not...
+  # to worry, we don't really do anything with these predicates at all. They are just a fundamental part of ActiveFedora!
   property :series, predicate: ::RDF::Vocab::DCMIType.Collection do |index|
     index.as :stored_searchable, :facetable
   end

@@ -47,6 +47,7 @@ describe 'Create a monograph' do
       fill_in 'Keywords', with: 'not a subject!'
       expect(page).to have_css('input.monograph_language', count: 1)
       fill_in 'Language', with: 'English'
+      fill_in 'Collection', with: 'Collection of Stuffs'
       fill_in 'Series', with: 'The Cereal Series'
       fill_in 'Section Titles', with: 'Intro\nChapter 1\nChapter 2'
       # HELIO-4536
@@ -144,7 +145,9 @@ describe 'Create a monograph' do
       page.all(:fillable_field, 'monograph[keyword][]').last.set('not a second subject!')
       expect(page).to have_css('input.monograph_language', count: 2)
       page.all(:fillable_field, 'monograph[language][]').last.set('German')
-      expect(page).to have_css('input.monograph_series', count: 2)
+      expect(page).to have_css('input.monograph_collection', count: 2)
+      page.all(:fillable_field, 'monograph[collection][]').last.set('Moar Collection of Stuffs')
+      expect(page).to have_css('input.monograph_collection', count: 2)
       page.all(:fillable_field, 'monograph[series][]').last.set('The Second Series')
       expect(page).to have_css('input.monograph_isbn', count: 2)
       page.all(:fillable_field, 'monograph[isbn][]').last.set('123-456-7891')
@@ -160,6 +163,9 @@ describe 'Create a monograph' do
       # check authorship override
       expect(page).to have_content "Fancy Authorship Name Stuff That Takes Precedence"
       expect(page).not_to have_content "Jimmy Johns, Sub Way and Shoppe Sandwich"
+      # collection
+      expect(page).to have_content 'Collection of Stuffs'
+      expect(page).to have_content 'Moar Collection of Stuffs'
       # series
       expect(page).to have_content 'The Cereal Series'
       expect(page).to have_content 'The Second Series'

@@ -332,15 +332,12 @@
           <span class="meta-label">BAR Number:</span> <%= @monograph_presenter.bar_number %>
         </div>
       <% end %>
-      <!-- SUBJECT/SERIES -->
-      <% if @monograph_presenter.series.present? || @monograph_presenter.subject.present? %>
+      <!-- COLLECTION/SUBJECT/SERIES -->
+      <% if @monograph_presenter.collection.present? || @monograph_presenter.series.present? || @monograph_presenter.subject.present? %>
         <div class="subject-series">
-          <% if %w[bigten livedplaces].include? @monograph_presenter.subdomain %>
-            <%= @monograph_presenter.attribute_to_html(:series, label: 'Collection', render_as: :catalog_facet_attribute, subdomain: @monograph_presenter.subdomain) %>
-          <% else %>
-            <%= @monograph_presenter.attribute_to_html(:series, render_as: :catalog_facet_attribute, subdomain: @monograph_presenter.subdomain) %>
-          <% end %>
-            <%= @monograph_presenter.attribute_to_html(:subject, render_as: :catalog_facet_attribute, subdomain: @monograph_presenter.subdomain) %>
+          <%= @monograph_presenter.attribute_to_html(:collection, render_as: :catalog_facet_attribute, subdomain: @monograph_presenter.subdomain) %>
+          <%= @monograph_presenter.attribute_to_html(:series, render_as: :catalog_facet_attribute, subdomain: @monograph_presenter.subdomain) %>
+          <%= @monograph_presenter.attribute_to_html(:subject, render_as: :catalog_facet_attribute, subdomain: @monograph_presenter.subdomain) %>
         </div>
       <% end %>
     </div>
