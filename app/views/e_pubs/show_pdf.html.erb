@@ -17,9 +17,7 @@
   <script src="/mozilla-pdf-viewer/build/pdf.js"></script>
 
   <% if defined? @subdomain %>
-    <%# only include hypothes.is for leverpress um press and its subpresses at this point %>
-    <% if %w[leverpress michigan cjs cseas csas lrccs ummaa].include? @subdomain %>
-
+    <% if @parent_presenter.use_hypothesis? %>
       <!-- hypothes.is -->
       <script type="text/javascript">
         window.hypothesisConfig = function () {
