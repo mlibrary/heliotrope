@@ -110,14 +110,11 @@ class PressCatalogController < ::CatalogController
         blacklight_config.add_facet_field 'funder_sim', label: "Funder", limit: false, url_method: :facet_url_helper, sort: sort
         blacklight_config.add_facet_field 'subject_sim', label: "Subject", limit: false, url_method: :facet_url_helper, sort: sort
         blacklight_config.add_facet_field 'creator_sim', label: "Author", limit: false, url_method: :facet_url_helper, sort: sort
-        if ['heb', 'bigten'].include? @press.subdomain
+        if ['heb', 'bigten', 'boydellandbrewer'].include? @press.subdomain
           blacklight_config.add_facet_field 'publisher_sim', label: "Publisher", limit: false, url_method: :facet_url_helper, sort: sort
         end
-        if %w[bigten livedplaces].include? @press.subdomain
-          blacklight_config.add_facet_field 'series_sim', label: "Collection", limit: false, url_method: :facet_url_helper, sort: sort
-        else
-          blacklight_config.add_facet_field 'series_sim', label: "Series", limit: false, url_method: :facet_url_helper, sort: sort
-        end
+        blacklight_config.add_facet_field 'collection_sim', label: "Collection", limit: false, url_method: :facet_url_helper, sort: sort
+        blacklight_config.add_facet_field 'series_sim', label: "Series", limit: false, url_method: :facet_url_helper, sort: sort
         blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: false, url_method: :facet_url_helper, sort: sort
         if Sighrax.platform_admin?(current_actor)
           blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: false
@@ -126,14 +123,11 @@ class PressCatalogController < ::CatalogController
         blacklight_config.add_facet_field 'funder_sim', label: "Funder", limit: 5, url_method: :facet_url_helper, sort: sort
         blacklight_config.add_facet_field 'subject_sim', label: "Subject", limit: 10, url_method: :facet_url_helper, sort: sort
         blacklight_config.add_facet_field 'creator_sim', label: "Author", limit: 5, url_method: :facet_url_helper, sort: sort
-        if ['heb', 'bigten'].include? @press.subdomain
+        if ['heb', 'bigten', 'boydellandbrewer'].include? @press.subdomain
           blacklight_config.add_facet_field 'publisher_sim', label: "Publisher", limit: 5, url_method: :facet_url_helper, sort: sort
         end
-        if %w[bigten livedplaces].include? @press.subdomain
-          blacklight_config.add_facet_field 'series_sim', label: "Collection", limit: 5, url_method: :facet_url_helper, sort: sort
-        else
-          blacklight_config.add_facet_field 'series_sim', label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
-        end
+        blacklight_config.add_facet_field 'collection_sim', label: "Collection", limit: 5, url_method: :facet_url_helper, sort: sort
+        blacklight_config.add_facet_field 'series_sim', label: "Series", limit: 5, url_method: :facet_url_helper, sort: sort
         blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: 5, url_method: :facet_url_helper, sort: sort
 
         if Sighrax.platform_admin?(current_actor)

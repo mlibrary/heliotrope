@@ -306,6 +306,8 @@ en:
         REQUIRED FOR MONOGRAPH AUTO-CITATIONS
 
         Used as publication location for monograph citations, e.g. for UofM Press enter "Ann Arbor, MI"
+      collection: |
+        If the monograph is part of one or more collections, enter them separated by semi-colons. These will be used in a Collection facet.
       series: |
         If the monograph is part of one or more series, enter them separated by semi-colons. These will be used in a Series facet.
       edition_name: |

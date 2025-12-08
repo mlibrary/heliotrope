@@ -9,7 +9,7 @@ module Hyrax
     self.terms -= %i[related_url source based_near rights_statement alternative_title abstract access_right
                      rights_notes bibliographic_citation]
     # these will hold their order, bearing in mind that required_fields are automatically removed first
-    self.terms += %i[press date_published creator_display series buy_url isbn doi hdl rightsholder open_access
+    self.terms += %i[press date_published creator_display collection series buy_url isbn doi hdl rightsholder open_access
                      funder funder_display holding_contact location section_titles
                      content_warning content_warning_information
                      edition_name previous_edition next_edition

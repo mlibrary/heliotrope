@@ -66,7 +66,7 @@ namespace :heliotrope do
     # michigan and its sub-presses are always allowed
     allowed_presses = Press.where(parent: Press.where(subdomain: 'michigan').first).map(&:subdomain).push('michigan')
     # gradually we'll be adding more allowed (non-EBC) presses to the list here
-    allowed_presses += ['bigten', 'heb', 'livedplaces']
+    allowed_presses += ['bigten', 'boydellandbrewer', 'heb', 'livedplaces']
     allowed_presses.uniq! # just in case
 
     rows.each do |row|
@@ -100,16 +100,31 @@ namespace :heliotrope do
         next
       end
 
-      # The series (Collection) value used within `bigten` is dictated by the "Fulcrum Products" value coming from TMM
+      # The Collection values used within the following presses are dictated by the "Fulcrum Products" value coming from TMM
       if press == 'bigten'
         products = row['Fulcrum Products']&.split(';')&.map(&:strip)
-        row['Series'] = if products.any? { |product| product == 'bigten_gender_and_sexuality_studies' }
-                          'Gender and Sexuality Studies'
-                        elsif products.any? { |product| product == 'bigten_indigenous' }
-                          'Indigenous North Americans'
-                        else
-                          nil
-                        end
+        row['Collection'] = if products.any? { |product| product == 'bigten_gender_and_sexuality_studies' }
+                              'Gender and Sexuality Studies'
+                            elsif products.any? { |product| product == 'bigten_indigenous' }
+                              'Indigenous North Americans'
+                            else
+                              nil
+                            end
+      elsif press == 'boydellandbrewer'
+        products = row['Fulcrum Products']&.split(';')&.map(&:strip)
+        row['Collection'] = if products.any? { |product| product == 'boydellandbrewer_african_studies' }
+                              'African Studies: Politics & Economics'
+                            elsif products.any? { |product| product == 'boydellandbrewer_medieval_history' }
+                              'Medieval History'
+                            elsif products.any? { |product| product == 'boydellandbrewer_medieval_literature' }
+                              'Medieval Literature'
+                            elsif products.any? { |product| product == 'boydellandbrewer_music' }
+                              'Music'
+                            elsif products.any? { |product| product == 'boydellandbrewer_performing_arts' }
+                              'Performing Arts'
+                            else
+                              nil
+                            end
       end
 
       # ensure we're looking for the correct Press value in Fulcrum by editing the row before lookup
