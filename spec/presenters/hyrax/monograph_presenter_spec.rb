@@ -50,6 +50,31 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end
 
+  describe '#use_hypothesis?' do
+    subject { presenter.use_hypothesis? }
+
+    let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], press_tesim: subdomain, doi_ssim: doi) }
+    let(:subdomain) { ['press_tesim'] }
+    let(:doi) { '10.1234/5678' }
+
+    context 'press not in allowlist' do
+      it { is_expected.to be false }
+    end
+
+    context 'press is in allowlist' do
+      let(:subdomain) { ['leverpress'] }
+
+      it { is_expected.to be true }
+    end
+
+    context 'press is in allowlist but Monograph is excluded by doi' do
+      let(:subdomain) { ['michigan'] }
+      let(:doi) { '10.3998/mpub.9853855' }
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe '#buy_url?' do
     context 'empty' do
       subject { presenter.buy_url? }

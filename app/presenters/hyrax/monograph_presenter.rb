@@ -213,6 +213,14 @@ module Hyrax
       monograph_coins_title.present?
     end
 
+    def use_hypothesis?
+      # see HELIO-4971 ("Remove hypothes.is from Music on the Move")
+      return false if doi == '10.3998/mpub.9853855'
+      # this specific allowlist of presses which use hypothes.is contains UMP/michigan, as well as most (but not all)...
+      # of its subpresses, as well as some others
+      %w[amherst boydellandbrewer leverpress michigan asp cjs cseas csas lrccs ummaa].include?(subdomain)
+    end
+
     def creators_with_roles
       # Wherein we hopelessly try to make structure out of an unstructured string
       # Used for sending XML to crossref to make DOIs

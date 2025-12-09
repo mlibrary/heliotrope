@@ -9,10 +9,8 @@
     <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
   <% end %>
   <% if defined? @subdomain %>
-    <%# only include hypothes.is for leverpress, um press and its subpresses at this point %>
-    <%# but do not use hypothes.is on a specific um press title HELIO-4971 %>
-    <% if %w[leverpress michigan cjs cseas csas lrccs ummaa amherst].include?(@subdomain) && @parent_presenter.doi != '10.3998/mpub.9853855' %>
-    <!-- hypothes.is -->
+    <% if @parent_presenter.use_hypothesis? %>
+      <!-- hypothes.is -->
       <script type="text/javascript">
         window.hypothesisConfig = function () {
           return {
