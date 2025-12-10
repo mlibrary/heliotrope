@@ -751,9 +751,6 @@ $aberdeenunipress-black: #000000;
   }
 }
 
-
-
-
 ///////////////////////////////////////////////
 //
 // ACLS Humanities E-Book
@@ -5227,8 +5224,6 @@ $barpublishing-white: #fff;
 
 }
 
-
-
 @media(max-width: 768px) {
   .barpublishing .monograph .message {
     padding: 1.5em;
@@ -5245,7 +5240,686 @@ $barpublishing-white: #fff;
     }
   }
 }
+///////////////////////////////////////////////
+//
+// Boydell and Brewer
+//
+///////////////////////////////////////////////
+// colors
+$boydell-brand-color: #005159;
+$boydell-brand-secondary: #063462;
+$boydell-cta: #4041cb;
+$boydell-light-background: #efefea; // on brand-color
+$boydell-white: #fff;
 
+$boydell-accent-yellow:#cdcb33;
+$boydell-accent-green:#9ec1a3;
+$boydell-accent-blue:#96b9fc;
+$boydell-accent-highlight:#e9fd5b;
+
+$boydell-headings: #002347;
+$boydell-pale-blue: #dce4ff; // on brand-secondary
+
+$boydell-text: #000;
+
+// typography
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Caladea:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+@mixin bricolage {
+  font-family: "Bricolage Grotesque", sans-serif;
+}
+
+@mixin caladea {
+  font-family: "Caladea", serif;
+}
+
+@mixin noto-sans {
+  font-family: "Noto Sans", sans-serif;
+}
+
+.boydellandbrewer {
+
+  // svgicon
+  #documents, #resource-page-svgicon {
+
+    .svgicon {
+      // To change any SVGs color see https://stackoverflow.com/a/53336754
+      filter: invert(38%) sepia(20%) saturate(1106%) hue-rotate(165deg) brightness(93%) contrast(96%); // $um-accent-link: rgb(29, 116, 145);
+
+    }
+
+  }
+
+  // typography
+  @include noto-sans;
+  font-weight: 400;
+
+  h1 {
+    @include bricolage;
+    font-weight: 500;
+    color: $boydell-headings;
+    font-size: 2em;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5 {
+    @include bricolage;
+    font-weight: 500;
+    color: $boydell-headings;
+  }
+
+  h2 {
+    font-size: 25.6px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  h4 {
+    font-size: 1.2em;
+  }
+
+  h3,
+  h4,
+  h5 {
+    margin-top: 1rem;
+  }
+
+  .bold, b, strong {
+    font-weight: 600;
+  }
+
+
+  .text-light {
+    color: #f8f9fa !important;
+  }
+
+  p, ul li, ol li, span {
+    font-weight: 400;
+    font-size: 16px;
+  }
+
+  // links
+  a:focus,
+  button:focus,
+  .form-control:focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px $boydell-cta,0 0 0 3px $boydell-cta;
+    border-radius: 0px !important;
+  }
+
+  a, .link {
+    color: $boydell-cta;
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active,
+  button:hover,
+  button:active,
+  .link:hover {
+    color: $boydell-cta;
+    text-decoration-thickness: 2px;
+  }
+
+  a.btn, a.previous, a.next {
+    text-decoration: none;
+  }
+
+  // buttons
+  .btn, .btn-group {
+    font-weight: 500;
+  }
+
+  .btn-default,
+  .btn {
+    @include button-background-color($boydell-cta);
+    @include button-font-color($boydell-white);
+    border-color: $boydell-cta;
+    font-weight: 500;
+  }
+
+  .download {
+    .btn-default, 
+    .btn {
+    @include button-background-color($boydell-cta);
+    @include button-font-color($boydell-white);
+    border-color: $boydell-cta;
+    font-weight: 500;
+    }
+  }
+
+  .btn-default:hover,
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
+    @include button-hover-background-color(#242584);
+    @include button-hover-font-color($boydell-white);
+    border-color: $boydell-cta;
+    font-weight: 500;
+  }
+
+  #sort-dropdown .dropdown-toggle .caret,
+  #per_page-dropdown .dropdown-toggle .caret {
+    color: $boydell-white;
+  }
+
+  .show > .btn-outline-secondary.dropdown-toggle {
+    background-color: $boydell-pale-blue;
+    border-color: $boydell-cta;
+    color: $boydell-brand-secondary !important;
+  }
+
+  .blacklight-icons svg {
+    fill: $boydell-white;
+  }
+
+  .monograph .monograph-metadata .btn-toolbar .btn {
+    @include caladea;
+    font-weight: 500;
+  }
+
+  // navigation menu
+
+
+  header {
+    background-color: $boydell-white;
+    border-bottom: 8px solid $boydell-brand-color;
+    hgroup {
+      height: auto;
+    }    
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end !important;
+
+      // search box and links
+      .col-md-4.pt-3 {
+        display: flex;
+        flex-direction: column;
+        padding-top: 16px;
+
+        form.navbar-form {
+          margin: 0;
+          padding: 0;
+        }
+
+        form {
+
+          .input-group {
+            display: flex;
+            position: relative;
+            width: 80%;
+            align-items: stretch;
+
+            .form-control {
+              position: relative;
+              flex: 1 1 auto;
+              width: 1%;
+              margin-bottom: 0;
+              display: block;
+              padding: 6px 12px;
+              font-size: 14px;
+              line-height: 1.5;
+              background-clip: padding-box;
+              border: 1px solid $boydell-brand-color;
+              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+              color: rgb(73, 80, 87) !important;
+            }
+          }
+
+          input.search-query {
+            background-color: #F3F3F3;
+            border-right: none !important;
+            color: rgb(73, 80, 87) !important;
+            height: 38px;
+          }
+
+          button.search-submit {
+            background-color: $boydell-cta;
+            border-top: $boydell-cta 1px solid;
+            border-right: $boydell-cta 1px solid;
+            border-bottom: $boydell-cta 1px solid;
+            border-left: none !important;
+            height: 100%;
+            padding: 0;
+            text-transform: none;
+            overflow: visible;
+            border-radius: 0;
+            margin-top: 0;
+            width: 53px;
+            height: 38px;
+
+            svg {
+              height: auto;
+              width: auto;
+              fill: $boydell-cta;
+              stroke-width: 2;
+              color: $boydell-white;
+            }
+          }
+        }
+      }
+    }
+
+    .navbar-brand-logo {
+      display: inline-block;      
+      padding-right: 1rem;
+    }
+
+    .navbar-brand {
+      display: inline-block;
+      padding-top: .3125rem;
+      padding-bottom: .3125rem;
+      margin-right: 1rem;
+      font-size: 1.25rem;
+      line-height: inherit;
+      white-space: nowrap;
+    }
+    
+    span {
+      font-size: 16px;
+    }
+  }
+
+  // container on all pages
+  #main.container {
+    max-width: 1140px;
+    padding-top: 1.5em;
+  }
+
+  // jumbotron
+  .jumbotron {
+    display: none;
+  }
+
+  // press catalog
+
+  .press .document {
+    a {
+      display: block;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  #facets a {
+    text-decoration: none;
+  }
+
+  #facets a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  // monograph catalog
+  #sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+    color: $boydell-white;
+    font-size: 14px;
+    span {
+      font-size: 14px;
+    }
+  }
+
+  // monograph
+  .monograph {
+    .documentHeader {
+      p {
+        @include noto-sans;
+      }
+    }
+
+    .authors, .copyright {
+      @include caladea;
+      font-weight: 500;
+    }
+
+    button.search-submit {
+      background-color: $boydell-cta;
+      border-color: $boydell-cta;
+      color: $boydell-white;
+      height: 38px;
+    }
+
+    .monograph-metadata #tabs .nav-tabs h2 {
+      font-size: .85rem;
+    }
+
+    .monograph-assets {
+      padding-top: 2em;
+    }
+  }
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+       color: $boydell-white;
+       background-color: $boydell-cta;
+       border-color: $boydell-cta;
+     }
+
+     li a:hover, li span:hover {
+      color: $boydell-white;
+      background-color: #242584;
+      border-color: $boydell-cta;
+     }
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $boydell-pale-blue;
+       border-color: $boydell-cta;
+       color: $boydell-brand-secondary;
+     }
+  }
+
+  // assets
+
+
+  .asset {
+
+    .able-transcript-area {
+      .panel-title {
+        margin: 0;
+        color: #fff;
+        font-size: 1em;
+      }
+    }
+  }
+
+  // tabs
+  #tabs {
+    h2 {
+      font-size: 16px;
+    }
+  }
+
+  //footer
+  footer.press {
+    background-color: $boydell-brand-color;
+    padding: 3rem 0 1rem;
+
+    img {
+      height: auto;
+      width: 175px;
+    }
+
+    img.fulcrum {
+      height: 20px !important;
+      width: auto !important;
+    }
+
+    .press-block-c {
+      padding: 0;
+      margin-top: 16px;
+    }
+  }
+
+  footer.press .press-block-a, footer.press .press-block-b {
+    background-color: $boydell-brand-color !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: 5px;
+  }
+
+  footer {
+    
+    .container {
+      max-width: 1140px;
+    }
+
+    .row {
+      display: flex;
+    }
+
+    a {
+      color: $boydell-white;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: $boydell-white !important;
+      text-decoration: underline;
+    }
+
+    .contact {
+      a.logo {
+        display: block;
+        font-weight: 400;
+        letter-spacing: 1.2px;
+        margin: 0;
+        font-size: 50px;
+        text-decoration: none;
+      }
+  
+      .logo-img img {
+        height: auto;
+        width: 200px;
+      }
+  
+      .twitter {
+        display: inline-block;
+      }
+  
+      .footer-email {
+        margin-left: .6rem;
+      }
+    }
+
+    a svg {
+      fill: $boydell-white;
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    a:focus,
+  button:focus,
+  .form-control:focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px $boydell-white,0 0 0 3px $boydell-white;
+    border-radius: 0px !important;
+  }
+
+    .press
+    .press-block-a,
+    .press-block-b,
+    .press-block-c {
+      background-color:  $boydell-brand-color !important;
+
+      small {
+        font-size: 12.8px;
+      }     
+
+    }
+
+    .press-block-c {
+      font-size: 16px;
+      a {
+        color: #f8f9fa !important;
+      }
+    }
+
+    .admin {
+      vertical-align: middle;
+    }
+
+    section {
+      ul {
+        font-size: 16px;
+      }
+    }
+
+    h2 {
+      font-size: 17px;
+      text-transform: uppercase;
+      margin-top: 0;
+    }
+
+    .block {
+      display: block;
+    }
+
+    .contact  {
+      .d-block {
+        display: block;
+        font-size: 14px;
+      }
+
+      a {
+        color: $boydell-white;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      a.logo {
+        display: block;
+        font-weight: 400;
+        letter-spacing: 1.2px;
+        margin: 0;
+        font-size: 50px;
+        color: #fff;
+        text-decoration: none;
+        padding-bottom: .5em;
+      }
+
+      .logo-img img {
+        height: auto;
+        width: 200px;
+      }
+
+      .footer-email {
+        margin-left: 9.6px;
+      }
+    
+    }
+
+    .links {
+      ul {
+        padding-top: 24px;
+        margin-bottom: 16px;
+      }
+      ul li {
+        font-size: 19.6px;
+      }
+    }
+  }
+
+  // e-book reader
+  #reader {
+
+    .cozy-control .cozy-h1 span {
+      font-size: 24px;
+    }
+
+    .button {
+      @include epub-button-background-color($boydell-cta,#242584,#fff);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($boydell-cta,#242584,#fff);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($boydell-cta,#242584,#fff);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($boydell-cta,#242584,#fff);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($boydell-cta,#242584,#fff);
+      color: #fff;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($boydell-cta);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color(#242584);
+      transition: 0.2s ease-in;
+    }
+
+    .modal__header,
+    .modal__title {
+      color: #fff;
+    }
+
+    button.modal__close,
+    button.modal__close::before {
+      color: #fff;
+    }
+
+    .cozy-control .logo {
+      background: $boydell-brand-color;
+      height: 46.6px;
+      width: 36px;
+      overflow: hidden;
+
+      img {
+        height: 36px;
+        margin-top: 6px;
+        margin-left: 11px;
+      }
+    }
+
+    .modal__footer {
+      background-color: $boydell-brand-color;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $boydell-brand-color;
+    }
+
+  }
+
+  @media(max-width: 768px) {
+
+    header {
+      height: auto;
+      text-align: center;
+    }
+  
+    header .row .col-md-4.pt-3 {
+      flex-grow: 1;
+    }
+  
+    header .row .col-md-4.pt-3 form.navbar-form {
+      width: 100%;
+      box-shadow: none;
+    }
+  
+    header .row {
+      justify-content: unset !important;
+      margin: 0 auto;
+      width: 95%;
+    }
+
+    footer .row {
+      flex-direction: column;
+    }
+  
+
+  }
+}
 
 ///////////////////////////////////////////////
 //
