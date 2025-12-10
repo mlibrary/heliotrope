@@ -5652,7 +5652,7 @@ $boydell-text: #000;
 
     img {
       height: auto;
-      width: 225px;
+      width: 175px;
     }
 
     img.fulcrum {
@@ -5716,6 +5716,21 @@ $boydell-text: #000;
         margin-left: .6rem;
       }
     }
+
+    a svg {
+      fill: $boydell-white;
+      vertical-align: middle;
+      display: inline-block;
+    }
+
+    a:focus,
+  button:focus,
+  .form-control:focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 2px $boydell-white,0 0 0 3px $boydell-white;
+    border-radius: 0px !important;
+  }
 
     .press
     .press-block-a,
