@@ -127,6 +127,34 @@ namespace :heliotrope do
                             end
       end
 
+      # another special block to edit data for boydellandbrewer, adding hyphens to ISBN values where they are missing
+      if press == 'boydellandbrewer'
+        row['ISBN(s)'] = row['ISBN(s)'].split(';').map do |isbn_with_format|
+          matches = isbn_with_format.strip.match(/^(.*)\s*\((.*)\)/)
+
+          if matches.blank?
+            # added this if block because one Monograph in boydellandbrewer has a hyphenless ISBN which lacks an ISBN format/type completely
+            # this hyphenation logic has been checked on all 194 hyphenless isbn values in boydellandbrewer metadata as of 20251211
+            if isbn_with_format[4] == '9'
+              "#{isbn_with_format[0..2]}-#{isbn_with_format[3]}-#{isbn_with_format[4..9]}-#{isbn_with_format[10..12]}-#{isbn_with_format[12]}"
+            else
+              "#{isbn_with_format[0..2]}-#{isbn_with_format[3]}-#{isbn_with_format[4..8]}-#{isbn_with_format[9..11]}-#{isbn_with_format[12]}"
+            end
+          elsif matches[1].include?('-')
+            # if the isbn part has hyphens already, then we won't mess with it
+            isbn_with_format
+          else
+            # this hyphenation logic has been checked on all 194 hyphenless isbn values in boydellandbrewer metadata as of 20251211
+            if matches[1][4] == '9'
+              "#{matches[1][0..2]}-#{matches[1][3]}-#{matches[1][4..9]}-#{matches[1][10..12]}-#{matches[1][12]} (#{matches[2]})"
+            else
+              "#{matches[1][0..2]}-#{matches[1][3]}-#{matches[1][4..8]}-#{matches[1][9..11]}-#{matches[1][12]} (#{matches[2]})"
+            end
+          end
+
+        end.join(';')
+      end
+
       # ensure we're looking for the correct Press value in Fulcrum by editing the row before lookup
       row['Press'] = press
       # A Monograph's press cannot technically be *changed* by this script as the lookup here will filter ISBN by...
