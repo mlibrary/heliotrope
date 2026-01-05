@@ -52,7 +52,7 @@ namespace :heliotrope do
         attrs = attrs.except(non_fedora_fields)
 
         if check_for_changes_identifier(object, identifier, attrs, row_num)
-          backup_file = open_backup_file(args.input_file) if !backup_file_created
+          backup_file = open_backup_file_edit_objects_via_csv(args.input_file) if !backup_file_created
           backup_file_created = true
 
           exporter = Export::Exporter.new(nil, :all)
@@ -79,7 +79,9 @@ namespace :heliotrope do
     puts "***TITLE ROW HAS UNEXPECTED VALUES!*** These columns will be skipped: #{unexpecteds.join(', ')}\n\n" if unexpecteds.present?
   end
 
-  def open_backup_file(path)
+  # methods like this need to be uniquely-named to avoid clashing with other tasks using the `:heliotrope` namespace,...
+  # and by "clashing" I mean another task's method will be run and you won't know about it!
+  def open_backup_file_edit_objects_via_csv(path)
     writable = File.writable?(File.dirname(path))
     backup_file = if writable
                     path.sub('.csv', '') + '_' + Time.now.getlocal.strftime("%Y%m%dT%H%M%S") + '.bak.csv'
