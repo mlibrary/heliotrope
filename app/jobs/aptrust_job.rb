@@ -35,8 +35,13 @@ class AptrustJob < ApplicationJob
   def deposit_up_to_date?(monograph_doc)
     record = AptrustDeposit.find_by(noid: monograph_doc['id'])
     return false unless record
+
     date_deposited = Time.parse(record.created_at.to_s).utc
     return false if Time.parse(monograph_doc['date_modified_dtsi'].to_s).utc > date_deposited
+
+    most_recently_modified_fr = FeaturedRepresentative.where(work_id: monograph_doc['id']).order(:updated_at).last
+    return false if most_recently_modified_fr.present? && Time.parse(most_recently_modified_fr.updated_at.to_s).utc > date_deposited
+
     file_set_docs(monograph_doc).each do |file_set_doc|
       return false if Time.parse(file_set_doc['date_modified_dtsi'].to_s).utc > date_deposited
     end
