@@ -76,7 +76,7 @@ describe 'Edit a file set' do
       fill_in 'Contributor', with: "Contributor, Mr A. (photographer)\nContributor, Wingperson F."
       fill_in 'Date Created', with: '2016'
       fill_in 'Sort Date', with: '2000-01-01'
-      fill_in 'Permissions Expiration Date', with: '2026-01-01'
+      fill_in 'Permissions Expiration Date', with: '2036-01-01'
       fill_in 'Display Date', with: 'circa sometime for the (premiere, Berlin, LOLZ!)'
       # add apostrophes to prevent regression of double-html-encoding bug (#772)
       fill_in 'Keywords', with: 'Conor O\'Neill\'s'
