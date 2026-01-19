@@ -40,7 +40,8 @@ namespace :heliotrope do
       "lrcss",
       "michelt",
       "michigan",
-      "mps"
+      "mps",
+      "westminster"
     ]
 
     children = []
