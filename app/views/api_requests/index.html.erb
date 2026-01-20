@@ -21,14 +21,14 @@
           <td><input type="text" name="path_like" value="<%= params[:path_like] %>" size="<%= size * 4 %>" aria-label="path_like"></td>
           <td><input type="text" name="status_like" value="<%= params[:status_like] %>" size="<%= size %>" aria-label="status_like"></td>
           <td><input type="text" name="exception_like" value="<%= params[:exception_like] %>" size="<%= size * 4 %>" aria-label="exception_like"></td>
-          <td><button name="submit" type="submit" value="filter">Filter</button</td>
+          <td><button name="submit" type="submit" value="filter">Filter</button></td>
           </form>
         </tr>
       <% @api_requests.each do |api_request| %>
         <tr>
           <td><%= api_request.created_at %></td>
           <td><%= api_request.user_id %></td>
-          <td><%= api_request.action %></td>>
+          <td><%= api_request.action %></td>
           <td><%= api_request.path %></td>
           <td><%= api_request.status %></td>
           <td><%= api_request.exception %></td>
