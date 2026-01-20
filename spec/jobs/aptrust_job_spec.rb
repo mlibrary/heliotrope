@@ -113,16 +113,17 @@ RSpec.describe AptrustJob, type: :job do
       let(:monograph_modified_date) { yesterday }
       let(:file_set_doc) { { 'date_modified_dtsi' => file_set_modified_date } }
       let(:file_set_modified_date) { yesterday }
-      let(:yesterday) { Time.zone.yesterday.to_s }
       let(:today) { Time.zone.today.to_s }
+      let(:yesterday) { Time.zone.yesterday.to_s }
+      let(:day_before_yesterday) { Time.zone.now - (2 * 24 * 60 * 60) }
 
       it { is_expected.to be false }
 
-      context 'when record' do
-        let(:record) { instance_double(AptrustDeposit, 'record', created_at: yesterday) }
+      context 'when an APTrust record exists' do
+        let(:aptrust_record) { instance_double(AptrustDeposit, 'aptrust_record', created_at: yesterday) }
 
         before do
-          allow(AptrustDeposit).to receive(:find_by).with(noid: monograph_doc['id']).and_return(record)
+          allow(AptrustDeposit).to receive(:find_by).with(noid: monograph_doc['id']).and_return(aptrust_record)
           allow(job).to receive(:file_set_docs).with(monograph_doc).and_return([file_set_doc])
         end
 
@@ -138,6 +139,26 @@ RSpec.describe AptrustJob, type: :job do
           let(:file_set_modified_date) { today }
 
           it { is_expected.to be false }
+        end
+
+        context 'FeaturedRepresentatives exist' do
+          context 'APTrust backup has happened since the FR(s) were changed' do
+            before do
+              FeaturedRepresentative.create(work_id: monograph_doc['id'], file_set_id: '000000000', kind: 'epub', updated_at: day_before_yesterday)
+              FeaturedRepresentative.create(work_id: monograph_doc['id'], file_set_id: '111111111', kind: 'pdf_ebook', updated_at: day_before_yesterday)
+            end
+
+            it { is_expected.to be true }
+          end
+
+          context 'APTrust backup has *not* happened since the FR(s) were changed' do
+            before do
+              FeaturedRepresentative.create(work_id: monograph_doc['id'], file_set_id: '000000000', kind: 'epub', updated_at: day_before_yesterday)
+              FeaturedRepresentative.create(work_id: monograph_doc['id'], file_set_id: '111111111', kind: 'pdf_ebook', updated_at: today)
+            end
+
+            it { is_expected.to be false }
+          end
         end
       end
     end

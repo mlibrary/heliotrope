@@ -116,6 +116,9 @@ def deposit_up_to_date?(monograph_doc, tar_file_path)
 
   return false if Time.zone.parse(monograph_doc['date_modified_dtsi'].to_s) > last_backup_timestamp
 
+  most_recently_modified_fr = FeaturedRepresentative.where(work_id: monograph_doc['id']).order(:updated_at).last
+  return false if most_recently_modified_fr.present? && Time.parse(most_recently_modified_fr.updated_at.to_s).utc > date_deposited
+
   file_set_docs(monograph_doc).each do |file_set_doc|
     return false if Time.zone.parse(file_set_doc['date_modified_dtsi'].to_s) > last_backup_timestamp
   end
