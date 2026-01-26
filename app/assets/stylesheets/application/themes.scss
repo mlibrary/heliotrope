@@ -137,13 +137,15 @@ $aberdeenunipress-black: #000000;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include navigo;
     font-weight: 700;
     color: $aberdeenunipress-headings;
   }
 
-  h2 {
+  h2,
+  .tab-text {
     margin-top: 2em;
     font-size: 25.6px;
   }
@@ -420,7 +422,7 @@ $aberdeenunipress-black: #000000;
       height: 34px;
     }
 
-    .monograph-metadata #tabs .nav-tabs h2 {
+    .monograph-metadata #tabs .nav-tabs .tab-text {
       font-size: .85rem;
     }
   }
@@ -477,7 +479,7 @@ $aberdeenunipress-black: #000000;
 
   // tabs
   #tabs {
-    h2 {
+    .tab-text {
       font-size: 16px;
     }
   }
@@ -813,7 +815,8 @@ $heb-black-80: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include proxima-nova;
     font-weight: 700;
     color:$heb-brand-color;
@@ -1507,13 +1510,15 @@ $aperio-white: #fff;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include gibson;
     font-weight: 500;
     color: $aperio-headings;
   }
 
-  h2 {
+  h2,
+  .tab-text {
     margin-top: 2em;
     font-size: 25.6px;
   }
@@ -1850,7 +1855,7 @@ $aperio-white: #fff;
 
   // tabs
   #tabs {
-    h2 {
+    .tab-text {
       font-size: 16px;
     }
   }
@@ -2134,7 +2139,8 @@ $ahpi-white: #fff;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 700;
     @include lato;
   }
@@ -2513,7 +2519,8 @@ $atg-black-80: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 700;
     @include open-sans;
   }
@@ -2970,7 +2977,8 @@ $amherst-grey-3: #dee2e6;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 500;
     @include abril;
   }
@@ -3505,12 +3513,14 @@ $bigten-black: #000;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 700;
     color: $bigten-headings;
   }
 
-  h2 {
+  h2,
+  .tab-text {
     margin-top: 2rem;
   }
 
@@ -4121,7 +4131,8 @@ $bridwell-black-80: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include trade-gothic;
     font-weight: 700;
   }
@@ -4564,7 +4575,8 @@ $barpublishing-white: #fff;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 600;
   }
 
@@ -4949,17 +4961,17 @@ $barpublishing-white: #fff;
   }
 
   // tabs
-  .nav-tabs > li > h2 > a {
+  .nav-tabs > li > .tab-text > a {
     color: $barpublishing-grey-3;
   }
 
-  .nav-tabs > li > h2 > a:hover {
+  .nav-tabs > li > .tab-text > a:hover {
     color: $barpublishing-brand-color;
   }
 
-  .nav-tabs > li.active > h2 > a,
-  .nav-tabs > li.active > h2 > a:hover,
-  .nav-tabs > li.active > h2 > a:focus {
+  .nav-tabs > li.active > .tab-text > a,
+  .nav-tabs > li.active > .tab-text > a:hover,
+  .nav-tabs > li.active > .tab-text > a:focus {
     color: $barpublishing-link;
     text-decoration: none;
   }
@@ -5305,13 +5317,15 @@ $boydell-text: #000;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include bricolage;
     font-weight: 500;
     color: $boydell-headings;
   }
 
-  h2 {
+  h2,
+  .tab-text {
     font-size: 25.6px;
   }
 
@@ -5589,7 +5603,7 @@ $boydell-text: #000;
       height: 38px;
     }
 
-    .monograph-metadata #tabs .nav-tabs h2 {
+    .monograph-metadata #tabs .nav-tabs .tab-text {
       font-size: .85rem;
     }
 
@@ -5641,7 +5655,7 @@ $boydell-text: #000;
 
   // tabs
   #tabs {
-    h2 {
+    .tab-text {
       font-size: 16px;
     }
   }
@@ -5762,7 +5776,8 @@ $boydell-text: #000;
       }
     }
 
-    h2 {
+    h2,
+    .tab-text {
       font-size: 17px;
       text-transform: uppercase;
       margin-top: 0;
@@ -5978,7 +5993,8 @@ $iu-midnight: #006298;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include benton-bold;
   }
 
@@ -6230,7 +6246,8 @@ $lever-black-80: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include scala-sans;
     font-weight: 700;
   }
@@ -6772,12 +6789,14 @@ $livedplaces-light-secondary: #EEE9E3;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include aleo;
     font-weight: 600;
   }
 
-  h2 {
+  h2,
+  .tab-text {
     margin-top: 2rem;
   }
 
@@ -7528,13 +7547,15 @@ $um-white: #fff;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include muli;
     font-weight: 700;
     color: $um-headings;
   }
 
-  h2 {
+  h2,
+  .tab-text {
     margin-top: 2rem;
   }
 
@@ -8161,13 +8182,15 @@ $um-white: #fff;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include muli;
     font-weight: 700;
     color: $um-headings;
   }
 
-  h2 {
+  h2,
+  .tab-text {
     margin-top: 2rem;
   }
 
@@ -8716,7 +8739,8 @@ $gabii-link-hover:    #1e5667;
   h3,
   h4,
   h5,
-  .alert {
+  .alert,
+  .tab-text {
     @include lato;
   }
 
@@ -9732,7 +9756,8 @@ $mps-teal-100: #e9f2f5;
   @include muli;
 
   h1,
-  h2 {
+  h2,
+  .tab-text {
     @include crimson;
     font-weight: 400;
   }
@@ -10120,7 +10145,9 @@ $mps-teal-100: #e9f2f5;
 //
 ///////////////////////////////////////////////
 .democraticfutures {
-  h1, h2 {
+  h1, 
+  h2,
+  .tab-text {
     font-family: 'Muli', sans-serif;
     font-weight: 700;
   }
@@ -10253,7 +10280,8 @@ $a2ru-white: #fafafa;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 500;
     @include rubik;
   }
@@ -10762,7 +10790,8 @@ $fia-teal-100: #e9f2f5;
   @include proxima-nova;
 
   h1,
-  h2 {
+  h2,
+  .tab-text {
     @include proxima-nova;
     font-weight: 600;
   }
@@ -11455,7 +11484,8 @@ $maize-black-80: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include benton;
     font-weight: 700;
   }
@@ -11861,7 +11891,8 @@ $pccn-black-80: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 700;
     @include roboto;
   }
@@ -12290,7 +12321,8 @@ $seas-black-80: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 700;
     @include montserrat;
   }
@@ -12721,7 +12753,8 @@ $msupress-neutral-100: #e5e9ed;
   @include arial;
 
   h1,
-  h2 {
+  h2,
+  .tab-text {
     @include garamond;
     font-weight: 500;
   }
@@ -12953,12 +12986,12 @@ $msupress-neutral-100: #e5e9ed;
 
 // book page tabs
 #tabs {
-  .nav-tabs > li.active > h2 > a {
+  .nav-tabs > li.active > div.tab-text > a {
     color: $msupress-black;
     @include arial;
   }
 
-  .nav-tabs > li > h2 > a {
+  .nav-tabs > li > div.tab-text > a {
     @include arial;
   }
 }
@@ -13169,7 +13202,8 @@ $umn-white: #fff;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include brandon;
   }
 
@@ -13410,7 +13444,8 @@ $unc-black-80: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 700;
     @include alegreya-sans;
   }
@@ -13796,7 +13831,8 @@ $fulcrum-light-2: #bec4cc;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include freight-sans-semi-bold;
   }
 
@@ -14035,7 +14071,8 @@ $ncid-black-80: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include skolar;
     font-weight: 700;
   }
@@ -14392,7 +14429,8 @@ $nyu-gray-2: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 600;
   }
 
@@ -14712,7 +14750,8 @@ $psu-gray-1: #3F4550;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     @include proxima-nova;
     font-weight: 600;
   }
@@ -15093,7 +15132,8 @@ $reki-black-80: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 700;
   }
 
@@ -15486,7 +15526,8 @@ $sarpress-accent-link: $sarpress-blue;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 700;
     @include palatino;
   }
@@ -15879,7 +15920,8 @@ $sussex-black-80: #342f2e;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 700;
   }
 
@@ -16287,7 +16329,8 @@ $vermont-button-hover-border-color: #9db0a9;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 600;
     @include roboto;
     color: $vermont-black-80;
@@ -17023,7 +17066,8 @@ $westminster-button-hover-border-color: #0a5554;
   h2,
   h3,
   h4,
-  h5 {
+  h5,
+  .tab-text {
     font-weight: 600;
     @include futura;
     color: $westminster-black-80;
@@ -17033,7 +17077,8 @@ $westminster-button-hover-border-color: #0a5554;
     font-size: 40px;
   }
 
-  h2 {
+  h2,
+  .tab-text {
     font-size: 32px;
   }
 
@@ -17303,8 +17348,8 @@ $westminster-button-hover-border-color: #0a5554;
     background-color: #fff;
   }
 
-  .nav-tabs > li > h2 > a,
-  .nav-tabs > li.active > h2 > a {
+  .nav-tabs > li > .tab-text > a,
+  .nav-tabs > li.active > .tab-text > a {
     font-size: 16px;
   }
 
