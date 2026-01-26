@@ -94,67 +94,49 @@
       <ul class="nav nav-tabs" role="tablist">
         <% if @monograph_presenter.description? %>
           <li role="presentation">
-            <h2>
-              <a id="tab-description" href="#description" aria-controls="description" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Overview</a>
-            </h2>
+            <a id="tab-description" href="#description" aria-controls="description" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Overview</a>
           </li>
         <% end %>
         <%# even if an ebook can't be read on Fulcrum, we still show the ToC, it just won't be linked %>
         <%# I guess this is good as a preview/teaser in some instances, and for SEO %>
         <% if @monograph_presenter.toc? %>
           <li role="presentation">
-            <h2>
-              <a id="tab-toc" href="#toc" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Contents</a>
-            </h2>
+            <a id="tab-toc" href="#toc" aria-controls="toc" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Contents</a>
           </li>
         <% end %>
         <% if Flipflop.show_accessibility_claims_tab? && @reader_links_display != :not_shown %>
           <li role="presentation">
-            <h2>
-              <a id="tab-accessibility-claims" href="#accessibility-claims" aria-controls="accessibility-claims" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Accessibility Claims</a>
-            </h2>
+            <a id="tab-accessibility-claims" href="#accessibility-claims" aria-controls="accessibility-claims" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Accessibility Claims</a>
           </li>
         <% end %>
         <% if @monograph_presenter.funder_display? %>
           <li role="presentation">
-            <h2>
-              <a id="tab-funder" href="#funder" aria-controls="funder" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Funder Information</a>
-            </h2>
+            <a id="tab-funder" href="#funder" aria-controls="funder" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Funder Information</a>
           </li>
         <% end %>
         <% if @monograph_presenter.awards.present? %>
           <li role="presentation">
-            <h2>
-              <a id="tab-award" href="#award" aria-controls="award" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Awards</a>
-            </h2>
+            <a id="tab-award" href="#award" aria-controls="award" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Awards</a>
           </li>
         <% end %>
         <% if @monograph_presenter.reviews? %>
           <li role="presentation">
-            <h2>
-              <a id="tab-reviews" href="#reviews" aria-controls="reviews" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Reviews</a>
-            </h2>
+            <a id="tab-reviews" href="#reviews" aria-controls="reviews" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Reviews</a>
           </li>
         <% end %>
         <% if @monograph_presenter.related? %>
           <li role="presentation">
-            <h2>
-              <a id="tab-related" href="#related" aria-controls="related" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Related Titles</a>
-            </h2>
+            <a id="tab-related" href="#related" aria-controls="related" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Related Titles</a>
           </li>
         <% end %>
         <% if @monograph_presenter.aboutware? %>
           <li role="presentation">
-            <h2>
-              <a id="tab-aboutware" href="#aboutware" aria-controls="aboutware" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">About</a>
-            </h2>
+            <a id="tab-aboutware" href="#aboutware" aria-controls="aboutware" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">About</a>
           </li>
         <% end %>
         <% if press_presenter.show_irus_stats? %>
           <li role="presentation">
-            <h2>
-              <a id="tab-stats" href="#stats" aria-controls="stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a>
-            </h2>
+            <a id="tab-stats" href="#stats" aria-controls="stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Stats</a>
           </li>
         <% end %>
       </ul>
