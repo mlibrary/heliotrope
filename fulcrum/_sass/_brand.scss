@@ -321,6 +321,10 @@ a {
   }
 }
 
+a.dark-link {
+  color: $brand-color;
+}
+
 // focus
 *:focus {
   outline: 0;
