@@ -53,7 +53,14 @@ namespace :heliotrope do
                                           elsif featured_representative_kinds.include? 'PDF'
                                             'PDF'
                                           end
-        featured_representative_ereader_noid = FeaturedRepresentative.where(work_id: doc.id, kind: 'epub').first&.file_set_id || FeaturedRepresentative.where(work_id: doc.id, kind: 'pdf_ebook').first&.file_set_id
+
+        featured_representative_pdf_noid = FeaturedRepresentative.where(work_id: doc.id, kind: 'pdf_ebook').first&.file_set_id
+        featured_representative_ereader_noid = FeaturedRepresentative.where(work_id: doc.id, kind: 'epub').first&.file_set_id || featured_representative_pdf_noid
+        featured_representative_pdf_page_count = if featured_representative_pdf_noid.nil?
+                                                   nil
+                                                 else
+                                                   ActiveFedora::SolrService.query("id:#{featured_representative_pdf_noid}", fl: ['page_count_tesim']).first&.fetch('page_count_tesim', [nil])&.first
+                                                 end
 
         a11y_metadata = [doc['epub_a11y_screen_reader_friendly_ssi'], doc['epub_version_ssi'], doc['epub_a11y_accessibility_summary_ssi'], doc['epub_a11y_accessibility_feature_ssim']&.join('; '), doc['epub_a11y_accessibility_hazard_ssim']&.join('; '), doc['epub_a11y_access_mode_ssim']&.join('; '), doc['epub_a11y_access_mode_sufficient_ssim']&.join('; '), doc['epub_a11y_conforms_to_ssi'], doc['epub_a11y_certified_by_ssi'], doc['epub_a11y_certifier_credential_ssi']]
 
@@ -65,10 +72,10 @@ namespace :heliotrope do
           a11y_metadata_headers = ['Screen Reader Friendly', 'EPUB Version', 'Accessibility Summary', 'Accessibility Features', 'Accessibility Hazards', 'Access Modes Sufficient', 'Access Modes', 'Accessibility Conformance', 'Certified By', 'Certifier Credential']
           exporter.write_csv_header_rows(exporter_header)
           # we only want the actual exporter headers, not the second row of metadata instructions
-          csv << (['Top-Level Press', 'Press'] + exporter_header[0] + fr_headers + a11y_metadata_headers + ['Hits'])
+          csv << (['Top-Level Press', 'Press'] + exporter_header[0] + fr_headers + ['PDF Page Count'] + a11y_metadata_headers + ['Hits'])
         end
 
-        csv << ([top_level_press, press.subdomain] + exporter.monograph_row + [featured_representative_ereader, featured_representative_kinds] + a11y_metadata + [(featured_representative_ereader_noid. present? ? reader_ebook_noid_lookup[featured_representative_ereader_noid] : nil)])
+        csv << ([top_level_press, press.subdomain] + exporter.monograph_row + [featured_representative_ereader, featured_representative_kinds] + [featured_representative_pdf_page_count] + a11y_metadata + [(featured_representative_ereader_noid. present? ? reader_ebook_noid_lookup[featured_representative_ereader_noid] : nil)])
       end
     end
 

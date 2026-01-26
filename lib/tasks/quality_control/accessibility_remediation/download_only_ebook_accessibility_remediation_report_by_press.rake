@@ -56,10 +56,10 @@ namespace :heliotrope do
         fr_ids = featured_representatives.map(&:file_set_id)
         fr_kinds = featured_representatives.map(&:kind)
 
-        fr_docs = ActiveFedora::SolrService.query("{!terms f=id}#{fr_ids.join(',')}", fl: ['id', 'label_tesim', 'allow_download_ssim'], rows: 10_000)
+        fr_docs = ActiveFedora::SolrService.query("{!terms f=id}#{fr_ids.join(',')}", fl: ['id', 'label_tesim', 'allow_download_ssim', 'page_count_tesim'], rows: 10_000)
 
         if index == 0
-          csv << (['Top-Level Press', 'Press', 'Monograph NOID', 'Monograph Title/Link', 'Ebook NOID', 'Ebook Title/Link', 'Ebook Format', 'Ebook Filename/Download Link', 'Hits'])
+          csv << (['Top-Level Press', 'Press', 'Monograph NOID', 'Monograph Title/Link', 'Ebook NOID', 'Ebook Title/Link', 'Ebook Format', 'Ebook Filename/Download Link', 'PDF Page Count', 'Hits'])
         end
 
         fr_docs.each_with_index do |fr_doc, index|
@@ -75,6 +75,7 @@ namespace :heliotrope do
                   "=HYPERLINK(\"#{Rails.application.routes.url_helpers.hyrax_file_set_url(fr_doc.id)}\", \"#{fr_doc['label_tesim']&.first.gsub('"', '""')}\")",
                   kind,
                   "=HYPERLINK(\"#{Hyrax::Engine.routes.url_helpers.download_url(fr_doc.id, host: 'www.fulcrum.org', protocol: 'https')}\", \"#{fr_doc['label_tesim']&.first.gsub('"', '""')}\")",
+                  fr_doc['page_count_tesim']&.first || nil,
                   ebook_noid_lookup[fr_doc.id]]
         end
       end
