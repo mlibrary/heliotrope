@@ -1,9 +1,15 @@
 <div id="tabs">
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><h2><a id="tab-info" href="#info" data-toggle="tab" role="tab" aria-controls="info" aria-selected="true" tabindex="-1">Info</a></h2></li>
-    <li role="presentation"><h2><a id="tab-permissions" href="#permissions" data-toggle="tab" role="tab" aria-controls="permissions" aria-selected="false" aria-expanded="false" tabindex="-1">Permissions</a></h2></li>
+    <li role="presentation" class="active">
+      <a id="tab-info" href="#info" data-toggle="tab" role="tab" aria-controls="info" aria-selected="true" tabindex="-1">Info</a>
+    </li>
+    <li role="presentation">
+      <a id="tab-permissions" href="#permissions" data-toggle="tab" role="tab" aria-controls="permissions" aria-selected="false" aria-expanded="false" tabindex="-1">Permissions</a>
+    </li>
     <% unless presenter.external_resource? || presenter.tombstone? %>
-      <li role="presentation"><h2><a id="tab-technical-info" href="#technical-info" data-toggle="tab" role="tab" aria-controls="technical-info" aria-selected="false" aria-expanded="false" tabindex="-1">Technical Info</a></h2></li>
+      <li role="presentation">
+        <a id="tab-technical-info" href="#technical-info" data-toggle="tab" role="tab" aria-controls="technical-info" aria-selected="false" aria-expanded="false" tabindex="-1">Technical Info</a>
+      </li>
     <% end %>
   </ul>
 

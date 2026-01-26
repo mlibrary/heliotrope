@@ -420,7 +420,7 @@ $aberdeenunipress-black: #000000;
       height: 34px;
     }
 
-    .monograph-metadata #tabs .nav-tabs h2 {
+    .monograph-metadata #tabs .nav-tabs {
       font-size: .85rem;
     }
   }
@@ -4948,17 +4948,17 @@ $barpublishing-white: #fff;
   }
 
   // tabs
-  .nav-tabs > li > h2 > a {
+  .nav-tabs > li > a {
     color: $barpublishing-grey-3;
   }
 
-  .nav-tabs > li > h2 > a:hover {
+  .nav-tabs > li > a:hover {
     color: $barpublishing-brand-color;
   }
 
-  .nav-tabs > li.active > h2 > a,
-  .nav-tabs > li.active > h2 > a:hover,
-  .nav-tabs > li.active > h2 > a:focus {
+  .nav-tabs > li.active > a,
+  .nav-tabs > li.active > a:hover,
+  .nav-tabs > li.active > a:focus {
     color: $barpublishing-link;
     text-decoration: none;
   }
@@ -5588,7 +5588,7 @@ $boydell-text: #000;
       height: 38px;
     }
 
-    .monograph-metadata #tabs .nav-tabs h2 {
+    .monograph-metadata #tabs .nav-tabs {
       font-size: .85rem;
     }
 
@@ -12934,12 +12934,12 @@ $msupress-neutral-100: #e5e9ed;
 
 // book page tabs
 #tabs {
-  .nav-tabs > li.active > h2 > a {
+  .nav-tabs > li.active > a {
     color: $msupress-black;
     @include arial;
   }
 
-  .nav-tabs > li > h2 > a {
+  .nav-tabs > li > a {
     @include arial;
   }
 }
@@ -17273,8 +17273,8 @@ $westminster-button-hover-border-color: #0a5554;
     background-color: #fff;
   }
 
-  .nav-tabs > li > h2 > a,
-  .nav-tabs > li.active > h2 > a {
+  .nav-tabs > li > a,
+  .nav-tabs > li.active > a {
     font-size: 16px;
   }
 
