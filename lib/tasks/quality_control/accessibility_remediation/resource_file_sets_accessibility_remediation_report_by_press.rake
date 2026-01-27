@@ -53,12 +53,12 @@ namespace :heliotrope do
 
         resource_file_set_docs = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND monograph_id_ssim:#{doc.id} AND -hidden_representative_bsi:true",
                                                                  fl: [:id, :label_tesim, :title_tesim, :visibility_ssi, :closed_captions_tesim, :visual_descriptions_tesim,
-                                                                      :resource_type_tesim, :alt_text_tesim, :external_resource_url_ssim, :allow_download_ssim],
+                                                                      :page_count_tesim, :resource_type_tesim, :alt_text_tesim, :external_resource_url_ssim, :allow_download_ssim],
                                                                  rows: 100_000)
 
         if index == 0
           csv << (['Top-Level Press', 'Press', 'Monograph NOID', 'Monograph Title/Link', 'FileSet NOID', 'FileSet Title/Link', 'File Name/Download Link',
-                   'File Extension', 'External Resource URL', 'Resource Type', 'Alt Text', 'Closed Captions Present?', 'Closed Captions Link',
+                   'File Extension', 'Page Count (if applicable)', 'External Resource URL', 'Resource Type', 'Alt Text', 'Closed Captions Present?', 'Closed Captions Link',
                    'Visual Descriptions Present?', 'Visual Descriptions Link', 'Allow Download?', 'Published?', 'Hits'])
         end
 
@@ -88,6 +88,7 @@ namespace :heliotrope do
                   "=HYPERLINK(\"#{Rails.application.routes.url_helpers.hyrax_file_set_url(resource_file_set_doc.id)}\", \"#{resource_file_set_doc['title_tesim']&.first&.gsub('"', '""')}\")",
                   "=HYPERLINK(\"#{Hyrax::Engine.routes.url_helpers.download_url(resource_file_set_doc.id, host: 'www.fulcrum.org', protocol: 'https')}\", \"#{resource_file_set_doc['label_tesim']&.first&.gsub('"', '""')}\")",
                   extension,
+                  resource_file_set_doc['page_count_tesim']&.first,
                   resource_file_set_doc['external_resource_url_ssim']&.first,
                   resource_file_set_doc['resource_type_tesim']&.first,
                   resource_file_set_doc['alt_text_tesim']&.first,
