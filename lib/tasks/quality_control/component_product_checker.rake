@@ -42,18 +42,21 @@ end
 
 # We want books that are published and not forthcoming where forthcoming means the ebook is
 # still in draft while the monograph is public.
-# If a monograph has no epub or pdf_ebook, then were going to skip it. This means books like
+# If a monograph has no epub or pdf_ebook, then we're going to skip it. This means books like
 # "ESC" in michigan, which only has audio mp3 but actually IS in a product will be skipped.
-# If will also skip forthcoming books, so public Monographs where the ebook is still draft or the
+# We will also skip forthcoming books, so public Monographs where the ebook is still draft or the
 # ebook isn't a FeaturedRepresentative yet.
 # Until we have a "proper" way to identify forthcoming books, this is the best we can do.
+# Additionally, we're going to skip Monographs and ebooks that are tombstoned in the logic, even
+# though, as of January 2026 we don't have consistent business rules whether it’s better for
+# tombstoned items to remain in thir product(s), or get removed
 def published_not_forthcoming_monographs(press)
   noids = []
-  ActiveFedora::SolrService.query("press_sim:#{press} AND has_model_ssim:Monograph AND visibility_ssi:open", rows: 100_000).each do |doc|
+  ActiveFedora::SolrService.query("press_sim:#{press} AND has_model_ssim:Monograph AND visibility_ssi:open AND -tombstone_ssim:yes", rows: 100_000).each do |doc|
     ebook_ids = FeaturedRepresentative.where(work_id: doc['id'], kind: ['epub', 'pdf_ebook']).pluck(:file_set_id)
     next if ebook_ids.empty?
-    ebook_docs = ActiveFedora::SolrService.query("{!terms f=id}#{ebook_ids.join(',')}", fl: ['visibility_ssi'], rows: 100_000)
-    noids << doc['id'] if ebook_docs.any? { |ed| ed['visibility_ssi'] == 'open' }
+    ebook_docs = ActiveFedora::SolrService.query("{!terms f=id}#{ebook_ids.join(',')}", fl: ['visibility_ssi', 'tombstone_ssim'], rows: 100_000)
+    noids << doc['id'] if ebook_docs.any? { |ed| ed['visibility_ssi'] == 'open' && ed['tombstone_ssim']&.first != 'yes' }
   end
   noids
 end
