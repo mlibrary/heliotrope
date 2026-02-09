@@ -97,7 +97,7 @@ gem 'canister', '~> 0.9.0'
 gem 'carrierwave', '~> 1.3.2'
 
 # Checkpoint provides authorization support
-gem 'checkpoint', '~> 1.1.0'
+gem 'checkpoint', '~> 1.2.0'
 
 # clamav only in production
 gem 'clamby', group: :production
@@ -145,7 +145,7 @@ gem 'jquery-turbolinks'
 gem 'jwt'
 
 # Keycard provides authentication support and user/request information
-gem 'keycard', '~> 0.2.4'
+gem 'keycard', '~> 0.4.0'
 
 # markdown support for Jekyll, CVE-2020-14001
 gem "kramdown", ">= 2.3.0"
