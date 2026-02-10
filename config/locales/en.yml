@@ -164,7 +164,7 @@ en:
   mime_type: "Mime Type"
   monograph_catalog:
     index:
-      buy: "Buy a print copy of %{title}"
+      buy: "Buy Book: Order a print copy of %{title}"
       buy_hardcover: "Order Hardcover"
       buy_hardcover_button_title: "Buy a hardcover copy of %{title}"
       buy_book: "Buy Book"
