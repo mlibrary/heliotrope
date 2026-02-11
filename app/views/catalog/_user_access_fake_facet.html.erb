@@ -14,7 +14,7 @@
     <div class="panel-body">
       <ul class="facet-values list-unstyled">
         <li>
-          <a class="facet-anchor facet_select" href="<%= url_for(params.deep_dup.except("user_access").except("page").permit!) %>">
+          <a class="facet-anchor facet-select" href="<%= url_for(params.deep_dup.except("user_access").except("page").permit!) %>">
             <span class="facet-label">
               <% if params["user_access"].nil? %>
                 <input type="radio" aria-label="View all content" name="user_access" checked> All content
@@ -25,7 +25,7 @@
           </a>
         </li>
         <li>
-          <a class="facet-anchor facet_select" href="<%= url_for(params.deep_dup.merge(user_access: "true").except("page").permit!) %>">
+          <a class="facet-anchor facet-select" href="<%= url_for(params.deep_dup.merge(user_access: "true").except("page").permit!) %>">
             <span class="facet-label">
               <% if params["user_access"] == "true" %>
                 <input type="radio" aria-label="View only content I can access" name="user_access" checked> Only content I can access
@@ -37,7 +37,7 @@
         </li>
         <% if @has_open_access %>
         <li>
-          <a class="facet-anchor facet_select" href="<%= url_for(params.deep_dup.merge(user_access: "oa").except("page").permit!) %>">
+          <a class="facet-anchor facet-select" href="<%= url_for(params.deep_dup.merge(user_access: "oa").except("page").permit!) %>">
             <span class="facet-label">
               <% if params["user_access"] == "oa" %>
                 <input type="radio" aria-label="View only open access content" name="user_access" checked> Only open access content
