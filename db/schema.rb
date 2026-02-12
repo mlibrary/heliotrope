@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_09_05_190521) do
+ActiveRecord::Schema.define(version: 2026_02_11_190613) do
 
   create_table "api_requests", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "user_id"
@@ -427,6 +427,7 @@ ActiveRecord::Schema.define(version: 2025_09_05_190521) do
     t.boolean "share_links", default: false
     t.boolean "watermark", default: false
     t.boolean "doi_creation", default: false
+    t.string "doi_prefixes"
     t.string "readership_map_url"
     t.text "navigation_block", size: :medium
     t.boolean "default_list_view", default: false

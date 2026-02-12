@@ -74,6 +74,7 @@ class PressesController < ApplicationController
                                     :share_links,
                                     :watermark,
                                     :doi_creation,
+                                    :doi_prefixes,
                                     :navigation_block,
                                     :default_list_view,
                                     :aboutware,

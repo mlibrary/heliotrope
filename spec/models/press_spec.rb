@@ -225,6 +225,49 @@ RSpec.describe Press, type: :model do
     end
   end
 
+  describe "#doi_prefixes" do
+    subject { press.doi_prefixes }
+
+    # press.valid? will be initially true for this fresh-from-the-FactoryBot press
+    let(:press) { create(:press) }
+
+    it 'is optional' do
+      expect(press.valid?).to eq true
+      expect(press.errors.messages[:doi_prefixes]).to eq []
+    end
+
+    context "Stores a string of one or more DOIs" do
+      let(:press) { build(:press, doi_prefixes: '10.77777; 10.8888') }
+
+      it { expect(subject).to eq '10.77777; 10.8888' }
+    end
+
+    it 'must validate as a semi-colon-separated list of DOI prefixes if present' do
+      press.doi_prefixes = 'blah'
+      expect(press.valid?).to eq false
+      expect(press.errors.messages[:doi_prefixes])
+        .to eq ["must be one or more valid DOI prefixes, separated by semi-colons"]
+
+      press.doi_prefixes = '10.1234'
+      expect(press.valid?).to eq true
+      expect(press.errors.messages[:doi_prefixes]).to eq []
+
+      press.doi_prefixes = '10.1234 blah'
+      expect(press.valid?).to eq false
+      expect(press.errors.messages[:doi_prefixes])
+        .to eq ["must be one or more valid DOI prefixes, separated by semi-colons"]
+
+      press.doi_prefixes = '10.1234; blah'
+      expect(press.valid?).to eq false
+      expect(press.errors.messages[:doi_prefixes])
+        .to eq ["must be one or more valid DOI prefixes, separated by semi-colons"]
+
+      press.doi_prefixes = '10.1234; 10.12345'
+      expect(press.valid?).to eq true
+      expect(press.errors.messages[:doi_prefixes]).to eq []
+    end
+  end
+
   describe "roles" do
     subject { press.roles }
 
