@@ -237,6 +237,10 @@ jobs:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
       - run:
+          name: Fix Google Chrome repository signing
+          command: |
+            wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+      - run:
           name: Install some dependencies (libxml2 and libxslt1-dev HELIO-4752)
           command: |
             sudo apt-get update
