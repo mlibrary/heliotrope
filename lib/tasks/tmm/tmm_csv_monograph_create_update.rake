@@ -66,7 +66,7 @@ namespace :heliotrope do
     # michigan and its sub-presses are always allowed
     allowed_presses = Press.where(parent: Press.where(subdomain: 'michigan').first).map(&:subdomain).push('michigan')
     # gradually we'll be adding more allowed (non-EBC) presses to the list here
-    allowed_presses += ['bigten', 'boydellandbrewer', 'heb', 'livedplaces']
+    allowed_presses += ['bigten', 'boydellandbrewer', 'heb', 'livedplaces', 'newprairiepress']
     allowed_presses.uniq! # just in case
 
     rows.each do |row|
