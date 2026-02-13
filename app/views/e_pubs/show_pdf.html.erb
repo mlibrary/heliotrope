@@ -589,6 +589,7 @@
           this._actionReset.addEventListener('click', function(event) {
             event.preventDefault();
             this._inputs.querySelector('input[value="auto"]').checked = true;
+            this._updatePreview();
           }.bind(this));
         }
 
