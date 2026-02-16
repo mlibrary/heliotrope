@@ -115,7 +115,7 @@ gem 'devise-guests', '~> 0.7'
 #     hyrax (= 2.9.5) was resolved to 2.9.5, which depends on
 #       signet was resolved to 0.12.0, which depends on
 #         faraday (~> 0.9)
-gem 'faraday', '~> 1.0'
+gem 'faraday', '~> 1.10'
 # NOTE: This is the last minor release in the v0.x series, next release will be 1.0 to match Faraday v1.0 release and from then on only fixes will be applied to v0.14.x!
 gem 'faraday_middleware', '~> 1.0'
 
