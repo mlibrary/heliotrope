@@ -12,6 +12,7 @@ class Press < ApplicationRecord
   validates :press_url, presence: true, uniqueness: { case_sensitive: true }, format: URI.regexp(%w[http https]) # rubocop:disable Rails/UniqueValidationWithoutIndex
   validates :accessibility_webpage_url, format: URI.regexp(%w[http https]), unless: Proc.new { |p| p.accessibility_webpage_url.blank? }
   validates :accessible_copy_request_form_url, format: URI.regexp(%w[http https]), unless: Proc.new { |p| p.accessible_copy_request_form_url.blank? }
+  validate :validate_doi_prefixes
 
   has_many :roles, as: :resource, dependent: :delete_all
   accepts_nested_attributes_for :roles, allow_destroy: true, reject_if: proc { |attr| attr['user_key'].blank? && attr['id'].blank? }
@@ -63,5 +64,24 @@ class Press < ApplicationRecord
   def subdomain_hyphens
     return if subdomain.blank?
     errors.add(:subdomain, :hyphens) if subdomain.start_with?('-') || subdomain.end_with?('-') || subdomain.include?('--')
+  end
+
+  def validate_doi_prefixes
+    return if doi_prefixes.blank?
+
+    # most (all?) of the time, this field will contain a single DOI prefix, like 10.1234, however, I foresee the...
+    # possibility of someone wanting to put multiple externally-owned DOIs in here, so I'm allowing that with...
+    # semicolon separation.
+    # This is clunky, but I want to make sure that whitespace-separated stuff like '10.1234 blah' doesn't get...
+    # through, so replacing that space with a semicolon will force both strings to validate in the loop below.
+    cleaned_doi_prefixes = doi_prefixes.squish.gsub('; ', ';').gsub(/\s+/, ';')
+
+    cleaned_doi_prefixes&.split(';').each do |prefix|
+      # we could put a really-elaborate regex check here. Crossref has an eye-watering one available. For now I'm...
+      # happy with this. Just to see the users are intentionally putting in something that looks like a DOI prefix.
+      if prefix[/10\.\d{4,5}/].nil?
+        errors.add(:doi_prefixes, "must be one or more valid DOI prefixes, separated by semi-colons")
+      end
+    end
   end
 end

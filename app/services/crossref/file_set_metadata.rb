@@ -2,12 +2,13 @@
 
 module Crossref
   class FileSetMetadata
-    attr_reader :work, :document, :component_file, :presenters, :file_sets_to_save
+    attr_reader :work, :press, :document, :component_file, :presenters, :file_sets_to_save
 
     def initialize(work_noid)
       @work = Sighrax.hyrax_presenter(Sighrax.from_noid(work_noid))
       raise "Work #{work.id} does not have a DOI" if @work.doi.blank?
-      raise "Press #{work.subdomain} can not make automatic DOIs" unless Press.where(subdomain: @work.subdomain).first&.create_dois?
+      @press = Press.where(subdomain: work.subdomain).first
+      raise "Press #{work.subdomain} cannot make automatic DOIs" unless press&.create_dois?
 
       @document = Nokogiri::XML(File.read(Rails.root.join("config", "crossref", "file_set_metadata_template.xml")))
       @component_file = File.read(Rails.root.join("config", "crossref", "component_template.xml"))
@@ -47,9 +48,13 @@ module Crossref
         next if monograph_representative?(presenter)
 
         doi = doi(presenter)
-        # In the future, our Crossref user may be granted the ability to create/edit DOIs under multiple prefixes.
-        # At that time, this hard-coded prefix value can be moved to `crossref.yml`, along with any others.
-        next unless doi.start_with?('10.3998/')
+
+        # This guard clause is just to bow out on any manually-populated FileSet DOI entry which uses a prefix to...
+        # which we do not have write access. Otherwise the whole submission would be rejected.
+        # Such DOIs might still have been registered to point to the Fulcrum resource page, they just won't be
+        # components of the Monograph's DOI from Crossref's perspective.
+        write_access_prefixes = ['10.3998', press.doi_prefixes.split(';')].flatten!
+        next unless write_access_prefixes.any? { |doi_prefix| doi.start_with?(doi_prefix&.strip) }
 
         fragment = Nokogiri::XML.fragment(@component_file)
         fragment.at_css('title').content = presenter.page_title
