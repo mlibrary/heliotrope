@@ -14,7 +14,7 @@ describe Hyrax::Renderers::MultilineAttributeRenderer do
     }
     let(:expected) { tr_content }
     let(:tr_content) {
-      "<tr><th>Transcript</th>\n" \
+      "<tr><th scope=\"row\">Transcript</th>\n" \
       "<td><ul class='tabular list-unstyled'><li class=\"attribute transcript\">_Bob_<br>" \
       "11:07 --&gt; 11.61<br>&gt;&gt; [LAUGH]<br>&gt;&gt; Stuff</li>" \
       "</ul></td></tr>"

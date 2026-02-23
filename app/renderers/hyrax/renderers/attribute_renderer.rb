@@ -28,7 +28,7 @@ module Hyrax
         markup << if label.empty?
                     %(<tr><td colspan="2"><ul class='tabular list-unstyled'>)
                   else
-                    %(<tr><th>#{label}</th>\n<td><ul class='tabular list-unstyled'>)
+                    %(<tr><th scope="row">#{label}</th>\n<td><ul class='tabular list-unstyled'>)
                   end
         attributes = microdata_object_attributes(field).merge(class: "attribute #{field}")
 
