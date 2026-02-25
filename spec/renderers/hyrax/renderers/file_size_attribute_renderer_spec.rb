@@ -11,7 +11,7 @@ describe Hyrax::Renderers::FileSizeAttributeRenderer do
     let(:renderer) { described_class.new(field, '29414808', label: I18n.t('file_size')) }
     let(:expected) { tr_content }
     let(:tr_content) {
-      "<tr><th>File Size</th>\n" \
+      "<tr><th scope=\"row\">File Size</th>\n" \
       "<td><ul class='tabular list-unstyled'><li class=\"attribute file_size\">28.1 MB</li></ul></td></tr>"
     }
 
