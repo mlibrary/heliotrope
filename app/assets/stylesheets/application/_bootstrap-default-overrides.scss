@@ -1,10 +1,12 @@
 @import 'bootstrap';
 
 // Brand colors
-$danger: #d33a35 !default;
-$success: #387f38 !default;
-$info: #2c76c7 !default;
-$warning: #565653 !default;
+  $danger: #d33a35;
+  $success: #387f38;
+  $info: #2c76c7;
+  $warning: #565653;
+  $primary: #006CE0;
+  $green: #208436;
 
 // Overrides for accessibility compliance
 // Testing: WAVE evaluation tool: http://wave.webaim.org/
