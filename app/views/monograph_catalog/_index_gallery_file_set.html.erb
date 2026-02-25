@@ -22,18 +22,16 @@
           render_thumbnail_tag(document, { alt: fs_presenter.alt_text.first || '' }, { suppress_link: true })
         end
       %>
-    <% end %>
-    <div class="caption">
-      <div class="col-sm-12">
-        <div class="documentHeader">
-          <h4 class="index_title">
-            <% counter = document_counter_with_offset(document_counter) %>
-            <%# disable Turbolinks at it causes "Scroll Position Lock" in moving from the Monograph catalog to the FileSet page %>
-            <%= render_markdown link_to_document document, render_markdown(document.title.first), counter: counter, 'data-turbolinks': false %>
-          </h4>
+      <div class="caption">
+        <div class="col-sm-12">
+          <div class="documentHeader">
+            <h4 class="index_title">
+              <%= render_markdown(document.title.first) %>
+            </h4>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
     <% if fs_presenter.external_resource? %>
       <% uri =  URI.parse(document.external_resource_url) %>
       <div class="external-resource-link">
