@@ -12,8 +12,8 @@ RSpec.describe Crossref::FileSetMetadata do
                        isbn_tesim: ["1234567890 (ebook)", "0987654321 (hardcover)"],
                        date_created_tesim: ['9999'],
                        doi_ssim: ['10.3998/blue.000000000'],
-                       ordered_member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777', '888888888', '999999999', 'aaaaaaaaa', 'bbbbbbbbb'],
-                       member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777', '888888888', '999999999', 'aaaaaaaaa', 'bbbbbbbbb'],
+                       ordered_member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777', '888888888', '999999999', 'aaaaaaaaa', 'bbbbbbbbb', 'ccccccccc'],
+                       member_ids_ssim: ['111111111', '222222222', '333333333', '444444444', '555555555', '666666666', '777777777', '888888888', '999999999', 'aaaaaaaaa', 'bbbbbbbbb', 'ccccccccc'],
                        hasRelatedMediaFragment_ssim: ['888888888'])
   end
 
@@ -97,12 +97,12 @@ RSpec.describe Crossref::FileSetMetadata do
                        mime_type_ssi: "image/jpg")
   end
 
-  # will be skipped, no dois when the prefix isn't ours or the press's
+  # will be added, this is our own DOI prefix, 10.3998
   let(:fs9) do
     ::SolrDocument.new(id: '999999999',
                        has_model_ssim: ['FileSet'],
                        monograph_id_ssim: '000000000',
-                       doi_ssim: ['10.9999/this.wont.work'],
+                       doi_ssim: ['10.3998/this.will.always.work'],
                        title_tesim: ["Blah!"],
                        mime_type_ssi: "image/jpg")
   end
@@ -112,7 +112,7 @@ RSpec.describe Crossref::FileSetMetadata do
     ::SolrDocument.new(id: 'aaaaaaaaa',
                        has_model_ssim: ['FileSet'],
                        monograph_id_ssim: '000000000',
-                       doi_ssim: ['10.8888/this.will.work'],
+                       doi_ssim: ['10.8888/this.will.work.when.we.have.write.access'],
                        title_tesim: ["Blah!"],
                        mime_type_ssi: "image/jpg")
   end
@@ -122,14 +122,24 @@ RSpec.describe Crossref::FileSetMetadata do
     ::SolrDocument.new(id: 'bbbbbbbbb',
                        has_model_ssim: ['FileSet'],
                        monograph_id_ssim: '000000000',
-                       doi_ssim: ['10.7777/this.will.work'],
+                       doi_ssim: ['10.7777/this.will.work.when.we.have.write.access'],
+                       title_tesim: ["Blah!"],
+                       mime_type_ssi: "image/jpg")
+  end
+
+  # will be skipped, no dois when the prefix isn't ours or the press's
+  let(:fs12) do
+    ::SolrDocument.new(id: 'ccccccccc',
+                       has_model_ssim: ['FileSet'],
+                       monograph_id_ssim: '000000000',
+                       doi_ssim: ['10.9999/this.wont.work.because.we.dont.have.write.access'],
                        title_tesim: ["Blah!"],
                        mime_type_ssi: "image/jpg")
   end
 
   before do
     ActiveFedora::SolrService.add([monograph.to_h, fs1.to_h, fs2.to_h, fs3.to_h, fs4.to_h, fs5.to_h,
-                                   fs6.to_h, fs7.to_h, fs8.to_h, fs9.to_h, fs10.to_h, fs11.to_h])
+                                   fs6.to_h, fs7.to_h, fs8.to_h, fs9.to_h, fs10.to_h, fs11.to_h, fs12.to_h,])
     ActiveFedora::SolrService.commit
     FeaturedRepresentative.create(work_id: '000000000', file_set_id: '555555555', kind: 'epub')
     FeaturedRepresentative.create(work_id: '000000000', file_set_id: '666666666', kind: 'peer_review')
@@ -178,7 +188,7 @@ RSpec.describe Crossref::FileSetMetadata do
   describe "#build" do
     subject { described_class.new('000000000').build }
 
-    let(:press) { create(:press, subdomain: "blue", name: "The Blue Press", doi_creation: true, doi_prefixes: "10.8888; 10.7777") }
+    let(:press) { create(:press, subdomain: "blue", name: "The Blue Press", doi_creation: true, doi_prefixes: doi_prefixes) }
     let(:timestamp) { "20190419111616000" }
 
     before do
@@ -186,43 +196,91 @@ RSpec.describe Crossref::FileSetMetadata do
       allow(BatchSaveJob).to receive_messages(perform_later: nil, perform_now: nil)
     end
 
-    it "returns the doi submission doc with the correct data" do
-      subject.remove_namespaces!
+    context "when the Press has no extra DOI prefix in its list" do
+      let(:doi_prefixes) { nil }
 
-      expect(subject.at_css('doi_batch_id').content).to eq "#{press.subdomain}-#{monograph.id}-filesets-#{timestamp}"
-      expect(subject.at_css('timestamp').content).to eq timestamp
-      expect(subject.at_css('sa_component').attribute('parent_doi').value).to eq monograph.doi
+      it "returns the doi submission doc with the correct data, only allowing known the prefix 10.3998" do
+        subject.remove_namespaces!
 
-      expect(described_class.new('000000000').presenters.length).to eq 11
-      # no DOIs for covers, epubs (or mobi or pdf_ebook or any other FeaturedRepresentatives), or where a manually-entered DOI has the wrong prefix
-      expect(subject.xpath("//component_list/component").length).to eq 6
+        expect(subject.at_css('doi_batch_id').content).to eq "#{press.subdomain}-#{monograph.id}-filesets-#{timestamp}"
+        expect(subject.at_css('timestamp').content).to eq timestamp
+        expect(subject.at_css('sa_component').attribute('parent_doi').value).to eq monograph.doi
 
-      [fs1, fs2, fs3, fs4, fs10, fs11].each_with_index do |fs, i|
-        # See HELIO-2739 for names in description
-        names = "Last, First. First Last, A Place, Actor, An (actor)."
+        expect(described_class.new('000000000').presenters.length).to eq 12
+        # no DOIs for covers, epubs (or mobi or pdf_ebook or any other FeaturedRepresentatives), or where a manually-entered DOI has the wrong prefix
+        expect(subject.xpath("//component_list/component").length).to eq 5
 
-        expect(subject.xpath("//component_list/component")[i].at_css('title').content).to eq fs.title.first
+        [fs1, fs2, fs3, fs4, fs9].each_with_index do |fs, i|
+          # See HELIO-2739 for names in description
+          names = "Last, First. First Last, A Place, Actor, An (actor)."
 
-        if i <= 1
-          expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.description.first + " #{names}"
-          expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq fs.mime_type
-        elsif i == 2
-          expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.caption.first + " #{names}"
-          expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq "application/vnd.ms-excel"
-        elsif i == 3
-          expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.caption.first + " #{names}"
-          expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type')).to eq nil
-          expect(subject.xpath("//component_list/component")[i].at_css('format').text).to eq 'Metadata record for externally-hosted component'
-        else
-          expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq ''
-          expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq fs.mime_type
+          expect(subject.xpath("//component_list/component")[i].at_css('title').content).to eq fs.title.first
+
+          if i <= 1
+            expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.description.first + " #{names}"
+            expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq fs.mime_type
+          elsif i == 2
+            expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.caption.first + " #{names}"
+            expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq "application/vnd.ms-excel"
+          elsif i == 3
+            expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.caption.first + " #{names}"
+            expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type')).to eq nil
+            expect(subject.xpath("//component_list/component")[i].at_css('format').text).to eq 'Metadata record for externally-hosted component'
+          else
+            expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq ''
+            expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq fs.mime_type
+          end
+
+          if i <= 3 # leaving out fs10 and fs11, which have distinct DOIs set, using a different prefix to which we have write access
+            expect(subject.xpath("//component_list/component")[i].at_css('doi').content).to eq "#{monograph.doi}.cmp.#{fs.id}"
+          end
+
+          expect(subject.xpath("//component_list/component")[i].at_css('resource').content).to eq Rails.application.routes.url_helpers.hyrax_file_set_url(fs.id)
         end
+      end
+    end
 
-        if i <= 3 # leaving out fs10 and fs11, which have distinct DOIs set, using a different prefix to which we have write access
-          expect(subject.xpath("//component_list/component")[i].at_css('doi').content).to eq "#{monograph.doi}.cmp.#{fs.id}"
+    context "when the Press has extra DOI prefixes in its list" do
+      let(:doi_prefixes) { "10.8888; 10.7777" }
+
+      it "returns the doi submission doc with the correct data, allowing 10.3998 plus the additional prefixes" do
+        subject.remove_namespaces!
+
+        expect(subject.at_css('doi_batch_id').content).to eq "#{press.subdomain}-#{monograph.id}-filesets-#{timestamp}"
+        expect(subject.at_css('timestamp').content).to eq timestamp
+        expect(subject.at_css('sa_component').attribute('parent_doi').value).to eq monograph.doi
+
+        expect(described_class.new('000000000').presenters.length).to eq 12
+        # no DOIs for covers, epubs (or mobi or pdf_ebook or any other FeaturedRepresentatives), or where a manually-entered DOI has the wrong prefix
+        expect(subject.xpath("//component_list/component").length).to eq 7
+
+        [fs1, fs2, fs3, fs4, fs9, fs10, fs11].each_with_index do |fs, i|
+          # See HELIO-2739 for names in description
+          names = "Last, First. First Last, A Place, Actor, An (actor)."
+
+          expect(subject.xpath("//component_list/component")[i].at_css('title').content).to eq fs.title.first
+
+          if i <= 1
+            expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.description.first + " #{names}"
+            expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq fs.mime_type
+          elsif i == 2
+            expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.caption.first + " #{names}"
+            expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq "application/vnd.ms-excel"
+          elsif i == 3
+            expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq fs.caption.first + " #{names}"
+            expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type')).to eq nil
+            expect(subject.xpath("//component_list/component")[i].at_css('format').text).to eq 'Metadata record for externally-hosted component'
+          else
+            expect(subject.xpath("//component_list/component")[i].at_css('description').content).to eq ''
+            expect(subject.xpath("//component_list/component")[i].at_css('format').attribute('mime_type').value).to eq fs.mime_type
+          end
+
+          if i <= 3 # leaving out fs10 and fs11, which have distinct DOIs set, using a different prefix to which we have write access
+            expect(subject.xpath("//component_list/component")[i].at_css('doi').content).to eq "#{monograph.doi}.cmp.#{fs.id}"
+          end
+
+          expect(subject.xpath("//component_list/component")[i].at_css('resource').content).to eq Rails.application.routes.url_helpers.hyrax_file_set_url(fs.id)
         end
-
-        expect(subject.xpath("//component_list/component")[i].at_css('resource').content).to eq Rails.application.routes.url_helpers.hyrax_file_set_url(fs.id)
       end
     end
   end

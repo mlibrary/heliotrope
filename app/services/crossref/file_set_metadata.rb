@@ -53,7 +53,8 @@ module Crossref
         # which we do not have write access. Otherwise the whole submission would be rejected.
         # Such DOIs might still have been registered to point to the Fulcrum resource page, they just won't be
         # components of the Monograph's DOI from Crossref's perspective.
-        write_access_prefixes = ['10.3998', press.doi_prefixes.split(';')].flatten!
+        press_doi_prefixes = press.doi_prefixes&.split(';')&.reject(&:blank?) || []
+        write_access_prefixes = ['10.3998'] + press_doi_prefixes
         next unless write_access_prefixes.any? { |doi_prefix| doi.start_with?(doi_prefix&.strip) }
 
         fragment = Nokogiri::XML.fragment(@component_file)
