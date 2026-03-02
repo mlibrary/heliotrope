@@ -218,9 +218,11 @@ RSpec.describe "EPubs", type: :request do
         end
 
         context 'chapter download' do
-          subject { get "/epubs_download_interval/#{epub.id}?title=title;chapter_index=0" }
+          subject { get "/epubs_download_interval/#{epub.id}?chapter_index=0" }
 
           before do
+            # Create a mock cached TOC entry so the controller can look up the title
+            EbookTableOfContentsCache.create(noid: epub.id, toc: [{ title: 'title', level: 1, cfi: '/6/4', downloadable?: true }].to_json)
             allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
             allow(counter_service).to receive(:count).with(request: 1, section: 'title', section_type: 'Chapter', book_segment: 1)
           end
@@ -254,9 +256,11 @@ RSpec.describe "EPubs", type: :request do
         end
 
         context 'chapter download' do
-          subject { get "/epubs_download_interval/#{epub.id}?title=title;chapter_index=0" }
+          subject { get "/epubs_download_interval/#{epub.id}?chapter_index=0" }
 
           before do
+            # Create a mock cached TOC entry so the controller can look up the title
+            EbookTableOfContentsCache.create(noid: epub.id, toc: [{ title: 'title', level: 1, cfi: '/6/4', downloadable?: true }].to_json)
             allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
             allow(counter_service).to receive(:count).with(request: 1, section: 'title', section_type: 'Chapter', book_segment: 1)
           end
