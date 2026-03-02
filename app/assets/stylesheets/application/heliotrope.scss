@@ -120,6 +120,8 @@ $gray-60: #686868;
 ///////////////////////////////////
 body  {
   a {
+    // links in body default to underlined
+    text-decoration: underline;
     overflow-wrap: break-word;
   }
 
@@ -398,6 +400,11 @@ div.skip {
 // FOOTER
 ///////////////////////////////////
 footer.press {
+  a {
+    // links in footer default to no underline
+    text-decoration: none;
+  }
+
   background-color: #262626;
   color: #fff;
   margin-top: 5em;
