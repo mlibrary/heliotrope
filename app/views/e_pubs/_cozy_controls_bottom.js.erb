@@ -88,8 +88,8 @@ share_link_modal = reader.modal({
             label: 'Copy Link',
             callback: function(event) {
               document.designMode = "on";
-              var link = self.modal._container.querySelector("#share-link");
-              var message = self.modal._container.querySelector("#message");
+              var link = share_link_modal._container.querySelector("#share-link");
+              var message = share_link_modal._container.querySelector("#message");
 
               var range = document.createRange();
               range.selectNode(link);
@@ -105,8 +105,8 @@ share_link_modal = reader.modal({
                 console.log("AHOY COPY FAILED", err);
               }
 
-              self.message.innerHTML = 'Success! Share link copied to your clipboard.';
-              self.message.style.display = 'block';
+              message.innerHTML = 'Success! Share link copied to your clipboard.';
+              message.style.display = 'block';
               sel.removeAllRanges();
               range.detach();
               document.designMode = "off";
