@@ -127,11 +127,12 @@ class EPubsController < CheckpointController
 
   def download_interval # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     return head :no_content unless EbookIntervalDownloadOperation.new(current_actor, @entity).allowed?
-    return head :no_content if params[:title].blank? || params[:chapter_index].blank?
+    return head :no_content if params[:chapter_index].blank?
     return head :no_content unless @entity.is_a?(Sighrax::EpubEbook) || @entity.is_a?(Sighrax::PdfEbook)
 
-    chapter_title = params[:title]
     chapter_index = params[:chapter_index]
+    chapter_title = get_chapter_title_from_cache(chapter_index)
+    return head :no_content if chapter_title.blank?
     chapter_file_name = chapter_index + '.pdf'
     chapter_download_name = chapter_index + '_' + chapter_title.gsub(/[^0-9A-Za-z\-]/, ' ').squish.tr(' ', '_') + '.pdf'
     chapter_dir = @entity.is_a?(Sighrax::EpubEbook) ? 'epub_chapters' : 'pdf_ebook_chapters'
@@ -260,5 +261,17 @@ class EPubsController < CheckpointController
       File.mtime(UnpackService.root_path_from_noid(@entity.noid, 'pdf_ebook_chapters')).to_i
     rescue StandardError => _e
       ''
+    end
+
+    def get_chapter_title_from_cache(chapter_index)
+      cached_toc = EbookTableOfContentsCache.find_by(noid: @noid)
+      return nil if cached_toc.blank?
+
+      toc_array = JSON.parse(cached_toc.toc)
+      chapter = toc_array[chapter_index.to_i]
+      chapter&.dig('title')
+    rescue StandardError => e
+      Rails.logger.error "EPubsController.get_chapter_title_from_cache raised #{e}"
+      nil
     end
 end
