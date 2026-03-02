@@ -5,17 +5,17 @@ require 'redcarpet/render_strip'
 class CustomMarkdownRenderer < Redcarpet::Render::HTML
   def link(link, _title, link_text)
     if external_link?(link)
-      "<a target=\"_blank\" href=\"#{link}\">#{link_text}</a>"
+      "<a target=\"_blank\" href=\"#{link}\" class=\"fulcrum-markdown-link\">#{link_text}</a>"
     else
-      "<a href=\"#{link}\">#{link_text}</a>"
+      "<a href=\"#{link}\" class=\"fulcrum-markdown-link\">#{link_text}</a>"
     end
   end
 
   def autolink(link, _link_type)
     if external_link?(link)
-      "<a target=\"_blank\" href=\"#{link}\">#{link}</a>"
+      "<a target=\"_blank\" href=\"#{link}\" class=\"fulcrum-markdown-link\">#{link}</a>"
     else
-      "<a href=\"#{link}\">#{link}</a>"
+      "<a href=\"#{link}\" class=\"fulcrum-markdown-link\">#{link}</a>"
     end
   end
 

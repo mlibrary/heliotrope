@@ -11,32 +11,32 @@ RSpec.describe MarkdownService do
       expect(rvalue).to eq("This is <em>italics</em> and this is</p>\n\n<p>a paragraph</p>\n\n<p><strong>bold</strong> a line<br>\nbreak and this is <del>strikethrough</del>")
     end
 
-    it 'link internal in same tab' do
-      expect(described_class.markdown('www.fulcrum.org')).to eq('<a href="http://www.fulcrum.org">www.fulcrum.org</a>')
+    it 'link internal in same tab, with an added `fulcrum-markdown-link` class for `text-decoration` purposes' do
+      expect(described_class.markdown('www.fulcrum.org')).to eq('<a href="http://www.fulcrum.org" class="fulcrum-markdown-link">www.fulcrum.org</a>')
     end
 
-    it 'link internal "named" in same tab' do
-      expect(described_class.markdown('[internal link name](www.fulcrumscholar.org)')).to eq('<a href="www.fulcrumscholar.org">internal link name</a>')
+    it 'link internal "named" in same tab, with an added `fulcrum-markdown-link` class for `text-decoration` purposes' do
+      expect(described_class.markdown('[internal link name](www.fulcrumscholar.org)')).to eq('<a href="www.fulcrumscholar.org" class="fulcrum-markdown-link">internal link name</a>')
     end
 
-    it 'link internal "app path" in same tab' do
-      expect(described_class.markdown('[Northwestern](/northwestern)')).to eq('<a href="/northwestern">Northwestern</a>')
+    it 'link internal "app path" in same tab, with an added `fulcrum-markdown-link` class for `text-decoration` purposes' do
+      expect(described_class.markdown('[Northwestern](/northwestern)')).to eq('<a href="/northwestern" class="fulcrum-markdown-link">Northwestern</a>')
     end
 
-    it 'autolink internal in same tab' do
-      expect(described_class.markdown('https://www.fulcrum.org')).to eq('<a href="https://www.fulcrum.org">https://www.fulcrum.org</a>')
+    it 'autolink internal in same tab, with an added `fulcrum-markdown-link` class for `text-decoration` purposes' do
+      expect(described_class.markdown('https://www.fulcrum.org')).to eq('<a href="https://www.fulcrum.org" class="fulcrum-markdown-link">https://www.fulcrum.org</a>')
     end
 
-    it 'autolink external in new tab' do
-      expect(described_class.markdown('https://www.example.com')).to eq('<a target="_blank" href="https://www.example.com">https://www.example.com</a>')
+    it 'autolink external in new tab, with an added `fulcrum-markdown-link` class for `text-decoration` purposes' do
+      expect(described_class.markdown('https://www.example.com')).to eq('<a target="_blank" href="https://www.example.com" class="fulcrum-markdown-link">https://www.example.com</a>')
     end
 
-    it 'link external in new tab' do
-      expect(described_class.markdown('www.example.com')).to eq('<a target="_blank" href="http://www.example.com">www.example.com</a>')
+    it 'link external in new tab, with an added `fulcrum-markdown-link` class for `text-decoration` purposes' do
+      expect(described_class.markdown('www.example.com')).to eq('<a target="_blank" href="http://www.example.com" class="fulcrum-markdown-link">www.example.com</a>')
     end
 
-    it 'link external "named" in new tab' do
-      expect(described_class.markdown('[external link name](www.example.com)')).to eq('<a target="_blank" href="www.example.com">external link name</a>')
+    it 'link external "named" in new tab, with an added `fulcrum-markdown-link` class for `text-decoration` purposes' do
+      expect(described_class.markdown('[external link name](www.example.com)')).to eq('<a target="_blank" href="www.example.com" class="fulcrum-markdown-link">external link name</a>')
     end
 
     it 'returns safe html' do
