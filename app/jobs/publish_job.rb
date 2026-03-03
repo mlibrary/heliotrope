@@ -54,6 +54,7 @@ class PublishJob < ApplicationJob
   def maybe_create_file_set_dois(monograph)
     return unless Press.where(subdomain: monograph.press).first&.create_dois?
     return if monograph.doi.blank?
+    return if ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND +monograph_id_ssim:#{monograph.id} AND -hidden_representative_bsi:true", rows: 10000).blank?
 
     doc = Crossref::FileSetMetadata.new(monograph.id).build
     Crossref::Register.new(doc.to_xml).post

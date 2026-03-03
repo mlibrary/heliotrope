@@ -77,6 +77,23 @@ RSpec.describe PublishJob, type: :job do
           expect(Crossref::Register).to have_received(:new)
         end
       end
+
+      context "monograph has a DOI set, but no resources attached" do
+        let(:doi) { "10.xxx/blah" }
+
+        # making the one-and-only attached FileSet a FeaturedRepresentative
+        before do
+          FeaturedRepresentative.create(work_id: monograph.id, file_set_id: file_set.id, kind: 'epub')
+          # indexing hidden_representative_bsi=true on said FileSet
+          FileSet.find(file_set.id).update_index
+        end
+
+        it "does not call FileSet DOI creation" do
+          described_class.perform_now(monograph)
+          expect(Crossref::FileSetMetadata).not_to have_received(:new)
+          expect(Crossref::Register).not_to have_received(:new)
+        end
+      end
     end
   end
 end
