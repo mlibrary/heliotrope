@@ -1,0 +1,143 @@
+<%# 
+See HELIO-5000 
+
+We have a lot of variety when it comes to analytics.
+
+GTM and GA4 are different scripts (gtm.js vs gtag.js)
+if you have a GTM you do that first, with gtm.js and the GTM tag, then you can add GA4 ids.
+If you don't have a GTM tag, you use gtag.js and just add the GA4 ids. I'm not sure if order matters here.
+You can add GA4 tags to the GTM script, as long as you do it after the GTM tag, so both scripts will accept
+GA4 tags the exact same way, but order matters with GTM.
+
+development: GA4 only
+preview: GTM and GA4
+staging: nothing currently
+production: GTM and GA4
+
+And then each press (and subpress!) can have a GA4 tag that needs to be registered too.
+But don't duplicate the tags/ids or you can get into trouble with stats and double loading (apparently).
+
+I also wanted NO CONTACT with google if there's no consent, so we're loading the scripts
+"dynamically" (says copilot, I would say "awkwardly") AFTER consent. If we don't have consent, absolutely
+nothing goes to google not even an initialization of the dataLayer or gtag function.
+
+So the js is a little extra with a lot of checking to make sure we only load things once.
+
+The js/jquery.ihavecookies.js library and css are in /fulcrum (which becomes /public) so it can also 
+be used by the jekyll site.
+%>
+<script src="/js/jquery.ihavecookies.js"></script>
+<link rel="stylesheet" href="/assets/css/ihavecookies.css">
+<script type="text/javascript">
+function initCookieConsent() {
+  function loadGTM(gtm_id) {
+    if (window.__gtmLoaded) return;
+    window.__gtmLoaded = true;
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtm.js?id=' + gtm_id;
+    document.head.appendChild(s);
+  }
+
+  function loadOnlyGA4(g_id) {
+    if (window.__gtagLoaded) return;
+    window.__gtagLoaded = true;
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + g_id;
+    document.head.appendChild(s);
+
+    gtag('js', new Date());
+    gtag('config', g_id);
+  } 
+
+  function addGA4Tags(g_ids) {
+    g_ids.forEach(function(g_id) {
+      if (window[`gtag_${g_id}`]) return;
+
+      window[`gtag_${g_id}`] = function() {
+        window.dataLayer.push(arguments);
+      };
+      window[`gtag_${g_id}`]('js', new Date());
+      window[`gtag_${g_id}`]('config', g_id);
+    });
+  }
+
+  function loadHotJar(hotjar_id) {
+    if (window.__hotjarLoaded) return;
+    window.__hotjarLoaded = true;
+
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:hotjar_id,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  }
+
+  function loadAnalytics() {
+    <% ap = ExternalAnalyticsPresenter.new(controller, press_presenter) %>
+    <% press_ga4_ids = ap.press_ga4_ids.reject(&:blank?) %>
+
+    <% if ap.tag_manager_id? %>
+      loadGTM('<%= j ap.tag_manager_id %>');
+      <% if ap.primary_ga4_id? %>
+      addGA4Tags(['<%= j ap.primary_ga4_id %>']);
+      <% end %>
+      <% if press_ga4_ids.any? %>
+       addGA4Tags(<%= press_ga4_ids.to_json.html_safe %>);
+      <% end %>
+    <% end %>
+
+    <% if ap.primary_ga4_id? && !ap.tag_manager_id? && (ap.production? || ap.preview? || ap.development?) %>
+      loadOnlyGA4('<%= j ap.primary_ga4_id %>');
+      <% if press_ga4_ids.any? %>
+      addGA4Tags(<%= press_ga4_ids.to_json.html_safe %>);
+      <% end %>
+    <% end %>
+
+    <% if ap.hotjar_id? %>
+      loadHotJar(<%= ap.hotjar_id.to_i %>);
+    <% end %>
+  }
+
+  var options = {
+    onAccept: function() {
+      if ($.fn.ihavecookies.preference('analytics') === true) {
+        loadAnalytics();
+      }
+    },
+    cookieTypes: [
+      {
+        type: 'Analytics',
+        value: 'analytics',
+        description: 'Cookies related to site visits, browser types, etc.'
+      }
+    ]
+  };
+
+  $('body').ihavecookies(options)
+
+  // This runs if the user has previously accepted analytics cookies, otherwise the onAccept callback will run
+  if ($.fn.ihavecookies.preference('analytics') === true) {
+    loadAnalytics();
+  }
+};
+
+$(document).on('turbolinks:load', initCookieConsent);
+$(document).ready(function() {
+  if (typeof Turbolinks === 'undefined' || !Turbolinks.supported) {
+    initCookieConsent();
+  }
+});
+</script>

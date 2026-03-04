@@ -1,0 +1,269 @@
+/*!
+ * ihavecookies - jQuery plugin for displaying cookie/privacy message
+ * v0.3.2
+ *
+ * Copyright (c) 2018 Ketan Mistry (https://iamketan.com.au)
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/mit-license.php
+ *
+ */
+
+/*!
+  See HELIO-5000
+  We needed a replacement for umcookieconsent.js (https://umich.edu/apis/umcookieconsent/umcookieconsent.js)
+  and this seems ok. It does need jquery > 2.2 which we get from Hyrax.
+*/ 
+(function($) {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cookie Message
+    |--------------------------------------------------------------------------
+    |
+    | Displays the cookie message on first visit or 30 days after their
+    | last visit.
+    |
+    | @param event - 'reinit' to reopen the cookie message
+    |
+    */
+    $.fn.ihavecookies = function(options, event) {
+
+        var $element = $(this);
+
+        // Set defaults
+        // HELIO-5000 we're overriding cookieTypes in shared/_cookie_consent.erb but everything
+        // else can be changed/edited here.
+        var settings = $.extend({
+            cookieTypes: [
+                {
+                    type: 'Site Preferences',
+                    value: 'preferences',
+                    description: 'These are cookies that are related to your site preferences, e.g. remembering your username, site colours, etc.'
+                },
+                {
+                    type: 'Analytics',
+                    value: 'analytics',
+                    description: 'Cookies related to site visits, browser types, etc.'
+                },
+                {
+                    type: 'Marketing',
+                    value: 'marketing',
+                    description: 'Cookies related to marketing, e.g. newsletters, social media, etc'
+                }
+            ],
+            title: 'Cookies & Privacy',
+            message: 'Fulcrum uses cookies to enhance your experience and to understand how our platform is used. We work with trusted analytics partners to improve our services and measure the impact of open access scholarship. We do not sell your information to third parties.',
+            link: 'https://www.fulcrum.org/privacy',
+            delay: 2000,
+            expires: 365,
+            moreInfoLabel: 'Read Our Privacy Policy',
+            acceptBtnLabel: 'Accept Cookies',
+            advancedBtnLabel: 'Customize Cookies',
+            cookieTypesTitle: 'Select cookies to accept',
+            fixedCookieTypeLabel:'Necessary',
+            fixedCookieTypeDesc: 'These are cookies that are essential for the website to work correctly.',
+            onAccept: function(){},
+            uncheckBoxes: false
+        }, options);
+
+        var myCookie = getCookie('fulcrum_cookie_consent');
+        var myCookiePrefs = getCookie('fulcrum_cookie_prefs');
+        if (!myCookie || !myCookiePrefs || event == 'reinit') {
+            // Remove all instances of the cookie message so it's not duplicated
+            $('#gdpr-cookie-message').remove();
+
+            // Set the 'necessary' cookie type checkbox which can not be unchecked
+            var cookieTypes = `
+                <li>
+                    <input id="gdpr-cookietype-necessary" type="checkbox" name="gdpr[]" value="necessary" checked="checked" disabled="disabled">
+                    <label for="gdpr-cookietype-necessary" title="${settings.fixedCookieTypeDesc}">${settings.fixedCookieTypeLabel}</label>
+                </li>
+            `;
+
+            // Generate list of cookie type checkboxes
+            var preferences = JSON.parse(myCookiePrefs);
+            $.each(settings.cookieTypes, function(index, field) {
+                if (field.type !== '' && field.value !== '') {
+                    var cookieTypeDescription = '';
+                    if (field.description !== false) {
+                        cookieTypeDescription = ` title="${field.description}"`;
+                    }
+                    cookieTypes += `
+                    <li>
+                        <input type="checkbox" id="gdpr-cookietype-${field.value}" name="gdpr[]" value="${field.value}" data-auto="on">
+                        <label for="gdpr-cookietype-${field.value}"${cookieTypeDescription}>${field.type}</label>
+                    </li>`;
+                }
+            });
+
+            // Display cookie message on page
+            var cookieMessage = `
+                <div id="gdpr-cookie-message" role="region" aria-label="Cookies and Privacy">
+                    <div id="gdpr-cookie-title">${settings.title}</div>
+                    <p>${settings.message}</p>
+                    <p><a href="${settings.link}">${settings.moreInfoLabel}</a></p>
+                    <div id="gdpr-cookie-types" style="display:none;">
+                        <div id="gdpr-cookie-types-title">${settings.cookieTypesTitle}</div>
+                        <ul>${cookieTypes}</ul>
+                    </div>
+                    <p>
+                        <button id="gdpr-cookie-accept" type="button">${settings.acceptBtnLabel}</button>
+                        <button id="gdpr-cookie-advanced" type="button">${settings.advancedBtnLabel}</button>
+                    </p>
+                </div>
+            `;
+            setTimeout(function(){
+                $($element).append(cookieMessage);
+                $('#gdpr-cookie-message').hide().fadeIn('slow', function(){
+                    // If reinit'ing, open the advanced section of message
+                    // and re-check all previously selected options.
+                    if (event == 'reinit') {
+                        $('#gdpr-cookie-advanced').trigger('click');
+                        $.each(preferences, function(index, field) {
+                            $('input#gdpr-cookietype-' + field).prop('checked', true);
+                        });
+                    }
+                });
+            }, settings.delay);
+
+            // When accept button is clicked drop cookie
+            $('body')
+                .off('click.ihavecookies', '#gdpr-cookie-accept')
+                .on('click.ihavecookies', '#gdpr-cookie-accept', function(){
+                    // Set cookie
+                    dropCookie(true, settings.expires);
+
+                    // If 'data-auto' is set to ON, tick all checkboxes because
+                    // the user hasn't clicked the customise cookies button
+                    $('input[name="gdpr[]"][data-auto="on"]').prop('checked', true);
+
+                    // Save users cookie preferences (in a cookie!)
+                    var prefs = [];
+                    $.each($('input[name="gdpr[]"]').serializeArray(), function(i, field){
+                        prefs.push(field.value);
+                    });
+                    setCookie('fulcrum_cookie_prefs', encodeURIComponent(JSON.stringify(prefs)), 365);
+
+                    // Run callback function
+                    settings.onAccept.call(this);
+                });
+
+            // Toggle advanced cookie options
+            $('body')
+                .off('click.ihavecookies', '#gdpr-cookie-advanced')
+                .on('click.ihavecookies', '#gdpr-cookie-advanced', function(){
+                    // Uncheck all checkboxes except for the disabled 'necessary'
+                    // one and set 'data-auto' to OFF for all. The user can now
+                    // select the cookies they want to accept.
+                    $('input[name="gdpr[]"]:not(:disabled)').attr('data-auto', 'off').prop('checked', false);
+                    $('#gdpr-cookie-types').slideDown('fast', function(){
+                        $('#gdpr-cookie-advanced').prop('disabled', true);
+                    });
+                });
+
+        } else {
+            var cookieVal = true;
+            if (myCookie == 'false') {
+                cookieVal = false;
+            }
+            dropCookie(cookieVal, settings.expires);
+        }
+
+        // Uncheck any checkboxes on page load
+        if (settings.uncheckBoxes === true) {
+            $('input[type="checkbox"].ihavecookies').prop('checked', false);
+        }
+
+    };
+
+    // Method to get cookie value
+    $.fn.ihavecookies.cookie = function() {
+        var preferences = getCookie('fulcrum_cookie_prefs');
+        // If the cookie is missing or explicitly false, return an empty array
+        if (!preferences || preferences === false) {
+            return [];
+        }
+        // Safely attempt to parse the stored preferences
+        try {
+            var parsed = JSON.parse(preferences);
+            // Ensure we always return an array
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            // On any parse error, fall back to empty preferences
+            return [];
+        }
+    };
+
+    // Method to check if user cookie preference exists
+    $.fn.ihavecookies.preference = function(cookieTypeValue) {
+        var control = getCookie('fulcrum_cookie_consent');
+        var preferences = $.fn.ihavecookies.cookie();
+        if (control === false || control === 'false') {
+            return false;
+        }
+        if (preferences === false || preferences.indexOf(cookieTypeValue) === -1) {
+            return false;
+        }
+        return true;
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | Drop Cookie
+    |--------------------------------------------------------------------------
+    |
+    | Function to drop the cookie with a boolean value of true.
+    |
+    */
+    var dropCookie = function(value, expiryDays) {
+        setCookie('fulcrum_cookie_consent', value, expiryDays);
+        $('#gdpr-cookie-message').fadeOut('fast', function() {
+            $(this).remove();
+        });
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | Set Cookie
+    |--------------------------------------------------------------------------
+    |
+    | Sets cookie with 'name' and value of 'value' for 'expiry_days'.
+    |
+    */
+    var setCookie = function(name, value, expiry_days) {
+        var d = new Date();
+        d.setTime(d.getTime() + (expiry_days*24*60*60*1000));
+        var expires = "expires=" + d.toUTCString();
+        var cookieStr = name + "=" + value + ";" + expires + ";path=/;SameSite=Lax";
+        if (typeof window !== 'undefined' && window.location && window.location.protocol === 'https:') {
+            cookieStr += ";Secure";
+        }
+        document.cookie = cookieStr;
+        return getCookie(name);
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | Get Cookie
+    |--------------------------------------------------------------------------
+    |
+    | Gets cookie called 'name'.
+    |
+    */
+    var getCookie = function(name) {
+        var cookie_name = name + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(cookie_name) === 0) {
+                return c.substring(cookie_name.length, c.length);
+            }
+        }
+        return false;
+    };
+
+}(jQuery));
