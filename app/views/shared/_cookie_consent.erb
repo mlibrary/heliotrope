@@ -1,0 +1,32 @@
+<%# See HELIO-5000 this is GDPR cookie consent, but for everyone %>
+<script type="text/javascript">
+$(document).on('turbolinks:load', function() {
+  var options = {
+    onAccept: function() {
+      if ($.fn.ihavecookies.preference('analytics') === true) {
+        console.log('Analytics cookies accepted');
+        <%= render 'shared/ga4' %>
+        <%= render 'shared/google_tag_manager' %>
+        <%= render 'shared/hotjar' %>
+      }
+    },
+    cookieTypes: [
+      {
+        type: 'Analytics',
+        value: 'analytics',
+        description: 'Cookies related to site visits, browser types, etc.'
+      }
+    ],
+  };
+
+  $('body').ihavecookies(options)
+
+  // This runs if the user has previously accepted analytics cookies, otherwise the onAccept callback will run
+  if ($.fn.ihavecookies.preference('analytics') === true) {
+    console.log('This should run because analytics has been accepted.');
+    <%= render 'shared/ga4' %>
+    <%= render 'shared/google_tag_manager' %>
+    <%= render 'shared/hotjar' %>
+  }
+});
+</script>

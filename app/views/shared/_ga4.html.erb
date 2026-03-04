@@ -4,7 +4,7 @@
   <!-- This is hard coded and temporary and only for preview -->
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RDQZEZQ73K"></script>
-  <script>
+  <script type="text/javascript">
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
@@ -18,11 +18,10 @@
   <% if ga4_id.present? %>
     <% ga4_ids = press_presenter.present? ? press_presenter.all_google_analytics_4 : [] %>
     <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ga4_id %>"></script>
-    <script>
+    <script type="text/javascript">
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', '<%= ga4_id %>');
       <% ga4_ids.each do |id| %>
         gtag('config', '<%= id %>');
@@ -38,32 +37,12 @@
 <% ga4_ids = press_presenter.present? ? press_presenter.all_google_analytics_4 : [] %>
   <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ga4_id %>"></script>
   <script type="text/javascript">
-    // Wait until the cookie is set via user interaction
-    // and only then get Analytics under way.
-    (async() => {
-      while(!Cookies.get('um_cookie_consent'))
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      setup_ga4();
-    })();
-
-    function setup_ga4() {
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments)};
       gtag('js', new Date());
-
-      var allow_cookies = Cookies.get('um_cookie_consent') || 'na';
-
-      if (allow_cookies == 'deny' || allow_cookies == 'dismiss') {
-        gtag('config', '<%= ga4_id %>', { 'anonymize_ip': true });
-        <% ga4_ids.each do |id| %>
-          gtag('config', '<%= id %>', { 'anonymize_ip': true });
-        <% end %>
-      } else { 
-        gtag('config', '<%= ga4_id %>');
-        <% ga4_ids.each do |id| %>
-          gtag('config', '<%= id %>');
-        <% end %>
-      }
-    }
+      gtag('config', '<%= ga4_id %>');
+      <% ga4_ids.each do |id| %>
+        gtag('config', '<%= id %>');
+      <% end %>
   </script>
 <% end %>
