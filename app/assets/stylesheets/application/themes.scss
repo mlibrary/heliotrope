@@ -1219,7 +1219,7 @@ button:focus {
 
   //footer
   footer.press {
-    background-color: $heb-accent-color-dark !important;
+    background-color: #5C6D7F !important;
     border-top: 2px solid $heb-red;
     padding: 48px 0 16px;
     img {
@@ -1254,7 +1254,7 @@ button:focus {
     .press-block-a,
     .press-block-b,
     .press-block-c {
-      background-color:  $heb-accent-color-dark !important;
+      background-color:  #5C6D7F !important;
 
       small {
         font-size: 12.8px;
@@ -3460,7 +3460,7 @@ $amherst-grey-3: #dee2e6;
 //
 ///////////////////////////////////////////////
 // colors
-$bigten-brand-color: #0088CE;
+$bigten-brand-color: #0076B3;
 $bigten-accent-color: #393D42;
 $bigten-accent-color-light: #E5E9ED;
 $bigten-headings: rgb(33, 43, 54);
@@ -4525,6 +4525,7 @@ $barpublishing-link-hover: #d40b13;
 $barpublishing-grey-1:#dfdfdf;
 $barpublishing-grey-2:#aeaeae;
 $barpublishing-grey-3:#606060;
+$barpublishing-grey-4:#757575;
 
 $barpublishing-background: #fafafa;
 
@@ -4803,7 +4804,7 @@ $barpublishing-white: #fff;
   }
 
   .alert.banner {
-    background-color: #dfdfdf;
+    background-color: #efefef;
     color: $barpublishing-link;
     border-color: $barpublishing-link-hover;
     font-size: 16px;
@@ -5004,8 +5005,8 @@ $barpublishing-white: #fff;
      .active>span,
      .active>span:hover,
      .active>span:focus {
-       background-color: $barpublishing-grey-2;
-       border-color: $barpublishing-grey-2;
+       background-color: $barpublishing-grey-4;
+       border-color: $barpublishing-grey-4;
        color: $barpublishing-white;
      }
 
@@ -5015,8 +5016,8 @@ $barpublishing-white: #fff;
      .disabled>a,
      .disabled>a:hover,
      .disabled>a:focus {
-      background-color: $barpublishing-grey-2;
-      border-color: $barpublishing-grey-2;
+      background-color: $barpublishing-grey-4;
+      border-color: $barpublishing-grey-4;
       color: $barpublishing-white;
      }
   }
@@ -6802,6 +6803,10 @@ $livedplaces-light-secondary: #EEE9E3;
   a, .link {
     color: $livedplaces-link;
     text-decoration: underline;
+  }
+
+  .authentication #institutionList li a {
+    color: #B6431B;
   }
 
   a:hover,
@@ -9252,6 +9257,10 @@ $gabii-link-hover:    #1e5667;
     color: #fff;
     border-radius: 0;
 
+    a {
+      color: #fff;
+    }
+
     .logo {
 	    img {
      	  width: 180px;
@@ -9517,6 +9526,10 @@ $gabii-link-hover:    #1e5667;
     background-color: $um-accent-color;
     color: #fff;
     border-radius: 0;
+
+    a {
+      color: #fff;
+    }
 
     p.lead {
       font-size: 14px;
@@ -10201,7 +10214,7 @@ $mps-teal-100: #e9f2f5;
 ///////////////////////////////////////////////
 // colors
 $a2ru-brand-color: #64b145;
-$a2ru-link: #ed1b68;
+$a2ru-link: #d9115b;
 $a2ru-accent-link: #A10941;
 $a2ru-black-80: #333;
 $a2ru-blue-light: #148ec2;
@@ -10286,7 +10299,7 @@ $a2ru-white: #fafafa;
     border-bottom: 2px solid $a2ru-link;
 
     .navbar-brand {
-      color: $a2ru-brand-color;
+      color: #467d31;
       @include rubik;
       font-weight: 400;
       text-transform: none;
@@ -12353,7 +12366,7 @@ $seas-black-80: #342f2e;
     }
 
     .navbar-nav {
-      a#add-content,
+      a#adminDropdown,
       a.login,
       a.user-display-name,
       a.language-dropdown {
@@ -12448,7 +12461,13 @@ $seas-black-80: #342f2e;
   }
 
   .btn-group .blacklight-icons svg {
-    fill: #054a92;
+    fill: $seas-blue;
+  }
+
+  .btn-group .view-type-list.active,
+  .btn-group .view-type-gallery.active,
+  .btn-group .btn-outline-secondary.active {
+    background-color: #ECEDEE;
   }
 
   
@@ -12496,7 +12515,7 @@ $seas-black-80: #342f2e;
      .active>span:focus {
        background-color: $seas-blue;
        border-color: $seas-blue;
-       color: $seas-brand-color;
+       color: white;
      }
   }
 
@@ -14900,6 +14919,7 @@ $psu-gray-1: #3F4550;
     .press-block-a,
     .press-block-b {
       background-color: $psu-brand-color-alt;
+      color: #333;
 
       .crop {
         img {
@@ -15322,6 +15342,10 @@ $reki-black-80: #342f2e;
   }
 
   //footer
+
+  footer.press {
+    color: $reki-grey-3;
+  }
   footer {
     a,
     a:hover,
@@ -15337,6 +15361,11 @@ $reki-black-80: #342f2e;
       a:hover,
       a:active {
         color: #333;
+        text-decoration: underline;
+      }
+
+      a.brand {
+        text-decoration: none;
       }
 
       img {
@@ -15351,6 +15380,7 @@ $reki-black-80: #342f2e;
     }
     .press-block-c {
       background-color: $reki-brand-color;
+      color: #fff;
     }
     .platform {
       background-color: $reki-black-80;
@@ -15813,8 +15843,8 @@ $sarpress-accent-link: $sarpress-blue;
 //
 ///////////////////////////////////////////////
 // colors
-$sussex-brand-color: #dc582a;
-$sussex-accent-color: #00afaa;
+$sussex-brand-color: #C54B20;
+$sussex-accent-color: #00807C;
 $sussex-link: #d3273e;
 $sussex-accent-link: #df465a;
 $sussex-blue: #1e428a;

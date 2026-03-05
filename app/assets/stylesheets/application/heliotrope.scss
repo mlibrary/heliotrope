@@ -69,10 +69,19 @@ $base-color-footer-link-hover: #73d2f4;
 // BOOTSTRAP OVERRIDES FOR WCAG AA/AAA COMPLIANCE
 // See https://infoguides.wtamu.edu/bootstrap/helpers
 /////////////////////////////////////////////////
+a {
+  color: #006CE0;
+}
+
 .alert-info {
   background-color:#d9edf7;
   border-color:#bce8f1;
   color:#235067;
+}
+
+.text-success,
+.facet-values li .selected {
+  color:#208436 !important;
 }
 
 .label-info {
@@ -109,6 +118,11 @@ $base-color-footer-link-hover: #73d2f4;
 
 .alert-message {
   text-align: center;
+}
+
+.footer-text a {
+  color: #efefef;
+  text-decoration: underline;
 }
 
 ///////////////////////////////////
