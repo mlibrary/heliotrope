@@ -81,7 +81,8 @@ describe 'Edit a file set' do
       # add apostrophes to prevent regression of double-html-encoding bug (#772)
       fill_in 'Keywords', with: 'Conor O\'Neill\'s'
       fill_in 'Language', with: 'English'
-      fill_in 'Transcript', with: 'This is what is transcribed for you to read'
+      # throwing in some newlines to show they'll be converted to br tags by `simple_format`
+      fill_in 'Transcript', with: "This is what\r is transcribed\n for you\r\n to read"
       fill_in 'Translation(s)', with: 'Here is what that&nbsp;means'
       fill_in 'Identifier', with: 'external_id: blahblahblah'
 
@@ -190,7 +191,10 @@ describe 'Edit a file set' do
 
       expect(page).to have_content 'Conor O\'Neill\'s'
       expect(page).to have_content 'English'
-      expect(page).to have_content 'This is what is transcribed for you to read'
+      # we're using simple_format on the transcript field to persist newlines. Checking that here as have_content ignores all white space.
+      expect(page).to have_css('.panel-default.transcript .panel-body.fixed br', count: 3)
+      expect(page).to have_css('.panel-default.transcript .panel-body.fixed', text: 'This is what is transcribed for you to read')
+      # expect(page).to have_content 'This is what is transcribed for you to read'
       expect(page).to have_content 'Here is what that means'
       expect(page).to have_content 'A Nice Museum'
       expect(page).to have_content 'Unauthorized use prohibited. A Nice Museum.'

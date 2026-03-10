@@ -25,11 +25,7 @@ module Hyrax
       def render
         markup = +''
         return markup if values.blank? && !options[:include_empty]
-        markup << if label.empty?
-                    %(<tr><td colspan="2"><ul class='tabular list-unstyled'>)
-                  else
-                    %(<tr><th scope="row">#{label}</th>\n<td><ul class='tabular list-unstyled'>)
-                  end
+        markup << %(<tr><th scope="row">#{label}</th>\n<td><ul class='tabular list-unstyled'>)
         attributes = microdata_object_attributes(field).merge(class: "attribute #{field}")
 
         maybe_sort_values_by

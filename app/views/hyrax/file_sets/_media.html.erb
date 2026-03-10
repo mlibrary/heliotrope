@@ -23,7 +23,9 @@
   <% end %>
       <figure title="<%= @presenter.alt_text.first %>">
         <%= render partial: @presenter.heliotrope_media_partial, locals: { file_set: @presenter } %>
-        <figcaption<%= ' class="text-center"'.html_safe if @presenter.center_caption? %>><%= @presenter.attribute_to_html(:caption, render_as: :markdown, label: '') %></figcaption>
+        <% if @presenter.caption.present? %>
+          <figcaption<%= ' class="text-center"'.html_safe if @presenter.center_caption? %>><%= render_markdown(@presenter.caption.first) %></figcaption>
+        <% end %>
         <div class="text-center">
         <% if @resource_download_operation_allowed %>
           <a class="btn btn-default btn-lg btn-heliotrope-download" href="<%= hyrax.download_path(@presenter) %>" target="_blank">
@@ -52,7 +54,7 @@
           <h3 class="panel-title">Transcript</h3>
         </div>
         <div class="panel-body fixed" tabindex="0">
-          <p><%= presenter.attribute_to_html(:transcript, render_as: :multiline, label: '') %></p>
+          <p><%= simple_format(presenter.transcript) %></p>
         </div>
       </div><!-- /.transcript panel -->
   <% end %>
@@ -63,7 +65,7 @@
           <h3 class="panel-title">Translation</h3>
         </div>
         <div class="panel-body fixed" tabindex="0">
-          <p><%= presenter.attribute_to_html(:translation, render_as: :markdown, label: '') %></p>
+          <p><%= simple_format(presenter.translation) %></p>
         </div>
       </div><!-- /.translation panel -->
   <% end %>
