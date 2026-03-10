@@ -604,7 +604,7 @@ RSpec.describe EPubsController, type: :controller do
 
         context 'inadequate metadata to create the full citation in the watermark/stamp' do
           it 'sends the interval as pdf' do
-            get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
+            get :download_interval, params: { id: file_set.id, chapter_index: 0 }
             expect(assigns(:entity))
             expect(response).to have_http_status(:ok)
             expect(response.headers['Content-Type']).to eq 'application/pdf'
@@ -623,7 +623,7 @@ RSpec.describe EPubsController, type: :controller do
                                    location: 'Collegeville, MN', publisher: ['Uni Press']) }
 
           it 'sends the interval as pdf' do
-            get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
+            get :download_interval, params: { id: file_set.id, chapter_index: 0 }
             expect(assigns(:entity))
             expect(response).to have_http_status(:ok)
             expect(response.headers['Content-Type']).to eq 'application/pdf'
@@ -645,21 +645,22 @@ RSpec.describe EPubsController, type: :controller do
         before do
           UnpackJob.perform_now(file_set.id, 'pdf_ebook')
           allow(UnpackService).to receive(:root_path_from_noid).and_return(fixture_path)
+          allow(counter_service).to receive(:count).with(request: 1, section: "The standard Lorem Ipsum passage, used since the 1500s", section_type: 'Chapter', book_segment: 1)
         end
 
         context 'inadequate metadata to create the full citation in the watermark/stamp' do
           it 'sends the interval as pdf' do
-            get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
+            get :download_interval, params: { id: file_set.id, chapter_index: 0 }
             expect(assigns(:entity))
             expect(response).to have_http_status(:ok)
             expect(response.headers['Content-Type']).to eq 'application/pdf'
-            expect(response.headers['Content-Disposition']).to eq %|inline; filename="0_This_is_Chapter_One_s_Title.pdf"; filename*=UTF-8''0_This_is_Chapter_One_s_Title.pdf|
+            expect(response.headers['Content-Disposition']).to eq %|inline; filename="0_The_standard_Lorem_Ipsum_passage_used_since_the_1500s.pdf"; filename*=UTF-8''0_The_standard_Lorem_Ipsum_passage_used_since_the_1500s.pdf|
             expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
             # watermarking will change the file content and add fonts
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('OpenSans-Regular')
             expect(response.body).to include('OpenSans-Italic')
-            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter', book_segment: 1)
+            expect(counter_service).to have_received(:count).with(request: 1, section: "The standard Lorem Ipsum passage, used since the 1500s", section_type: 'Chapter', book_segment: 1)
           end
         end
 
@@ -668,17 +669,17 @@ RSpec.describe EPubsController, type: :controller do
                                    location: 'Collegeville, MN', publisher: ['Uni Press']) }
 
           it 'sends the interval as pdf' do
-            get :download_interval, params: { id: file_set.id, title: "This is Chapter One's Title", chapter_index: 0 }
+            get :download_interval, params: { id: file_set.id, chapter_index: 0 }
             expect(assigns(:entity))
             expect(response).to have_http_status(:ok)
             expect(response.headers['Content-Type']).to eq 'application/pdf'
-            expect(response.headers['Content-Disposition']).to eq %|inline; filename="0_This_is_Chapter_One_s_Title.pdf"; filename*=UTF-8''0_This_is_Chapter_One_s_Title.pdf|
+            expect(response.headers['Content-Disposition']).to eq %|inline; filename="0_The_standard_Lorem_Ipsum_passage_used_since_the_1500s.pdf"; filename*=UTF-8''0_The_standard_Lorem_Ipsum_passage_used_since_the_1500s.pdf|
             expect(response.headers['Content-Transfer-Encoding']).to eq 'binary'
             # watermarking will change the file content and add fonts
             expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
             expect(response.body).to include('OpenSans-Regular')
             expect(response.body).to include('OpenSans-Italic')
-            expect(counter_service).to have_received(:count).with(request: 1, section: "This is Chapter One's Title", section_type: 'Chapter', book_segment: 1)
+            expect(counter_service).to have_received(:count).with(request: 1, section: "The standard Lorem Ipsum passage, used since the 1500s", section_type: 'Chapter', book_segment: 1)
           end
         end
       end
