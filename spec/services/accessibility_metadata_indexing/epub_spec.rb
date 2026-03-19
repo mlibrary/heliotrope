@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe EpubAccessibilityMetadataIndexingService do
+RSpec.describe AccessibilityMetadataIndexer::Epub do
   let(:epub) { create(:public_file_set) }
   let(:unpacked_epub_dir) { UnpackService.root_path_from_noid(epub.id, 'epub') }
   let(:epub_container_file_path) { File.join(unpacked_epub_dir, "META-INF/container.xml") }
@@ -30,9 +30,9 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
     allow(File).to receive(:exist?).and_call_original
     allow(File).to receive(:exist?).with(epub_container_file_path).and_return(true)
     allow(File).to receive(:exist?).with(epub_content_file_path).and_return(true)
-    allow(File).to receive(:open).and_call_original
-    allow(File).to receive(:open).with(epub_container_file_path).and_return(epub_container_file)
-    allow(File).to receive(:open).with(epub_content_file_path).and_return(epub_content_file)
+    allow(File).to receive(:read).and_call_original
+    allow(File).to receive(:read).with(epub_container_file_path).and_return(epub_container_file)
+    allow(File).to receive(:read).with(epub_content_file_path).and_return(epub_content_file)
   end
 
   describe "Indexing EPUB accessibility metadata" do
@@ -42,7 +42,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
       end
 
       it 'indexes nothing' do
-        described_class.index(epub.id, epub_solr_doc)
+        described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
         expect(epub_solr_doc).to be_empty
       end
     end
@@ -53,7 +53,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
       end
 
       it 'indexes nothing' do
-        described_class.index(epub.id, epub_solr_doc)
+        described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
         expect(epub_solr_doc).to be_empty
       end
     end
@@ -62,7 +62,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
       let(:epub_container_file) { nil }
 
       it 'indexes nothing' do
-        described_class.index(epub.id, epub_solr_doc)
+        described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
         expect(epub_solr_doc).to be_empty
       end
     end
@@ -82,7 +82,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
       end
 
       it 'indexes nothing' do
-        described_class.index(epub.id, epub_solr_doc)
+        described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
         expect(epub_solr_doc).to be_empty
       end
     end
@@ -106,7 +106,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
         end
 
         it 'indexes nothing' do
-          described_class.index(epub.id, epub_solr_doc)
+          described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
           expect(epub_solr_doc).to be_empty
         end
       end
@@ -115,7 +115,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
         let(:epub_content_file) { nil }
 
         it 'indexes nothing' do
-          described_class.index(epub.id, epub_solr_doc)
+          described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
           expect(epub_solr_doc).to be_empty
         end
       end
@@ -124,7 +124,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
         let(:epub_content_file) { nil }
 
         it 'indexes nothing' do
-          described_class.index(epub.id, epub_solr_doc)
+          described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
           expect(epub_solr_doc).to be_empty
         end
       end
@@ -141,7 +141,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
         end
 
         it 'indexes nothing' do
-          described_class.index(epub.id, epub_solr_doc)
+          described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
           expect(epub_solr_doc).to be_empty
         end
       end
@@ -160,16 +160,15 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
                                                         "epub_a11y_access_mode_sufficient_ssim" => ["textual",
                                                                                                     "textual,visual",
                                                                                                     "textual,visual"],
-                                                        "epub_a11y_accessibility_feature_ssim" => ["ARIA",
-                                                                                                   "alternativeText",
-                                                                                                   "displayTransformability",
-                                                                                                   "index",
-                                                                                                   "pageBreakMarkers",
-                                                                                                   "pageNavigation",
-                                                                                                   "printPageNumbers",
-                                                                                                   "readingOrder",
-                                                                                                   "structuralNavigation",
-                                                                                                   "tableOfContents"],
+                                                        "epub_a11y_accessibility_feature_ssim" => ["ARIA roles",
+                                                                                                   "Alternative text for images",
+                                                                                                   "Correct use of heading levels",
+                                                                                                   "Display transformability of text",
+                                                                                                   "Index",
+                                                                                                   "Logical reading order",
+                                                                                                   "Page list navigation aid",
+                                                                                                   "Page numbers",
+                                                                                                   "Table of Contents"],
                                                         "epub_a11y_accessibility_hazard_ssim" => ["flashing",
                                                                                                   "motionSimulation"],
                                                         "epub_a11y_accessibility_summary_ssi" => "A very complex book with 15 images, 10 tables, and complex formatting...",
@@ -191,7 +190,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
           end
 
           it 'only indexes epub_version_ssi and the derived epub_a11y_screen_reader_friendly_ssi field' do
-            described_class.index(epub.id, epub_solr_doc)
+            described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
             expect(epub_solr_doc).to eq(missing_a11y_metadata_doc_sans_epub_version.merge({ "epub_version_ssi" => "3.0" }))
           end
         end
@@ -231,7 +230,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
           end
 
           it 'indexes all expected fields' do
-            described_class.index(epub.id, epub_solr_doc)
+            described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
             expect(epub_solr_doc).to eq(all_a11y_metadata_doc_sans_epub_version.merge({ "epub_version_ssi" => "3.0" }))
           end
         end
@@ -250,7 +249,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
             end
 
             it 'indexes the value into "epub_a11y_conforms_to_ssi"' do
-              described_class.index(epub.id, epub_solr_doc)
+              described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
               expect(epub_solr_doc['epub_a11y_conforms_to_ssi']).to eq('http://www.idpf.org/epub/a11y/accessibility-20170105.html#wcag-aa')
             end
           end
@@ -268,7 +267,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
             end
 
             it 'indexes the value into "epub_a11y_conforms_to_ssi"' do
-              described_class.index(epub.id, epub_solr_doc)
+              described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
               expect(epub_solr_doc['epub_a11y_conforms_to_ssi']).to eq('EPUB Accessibility 1.1 - WCAG 2.0 Level AA')
             end
           end
@@ -287,7 +286,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
             end
 
             it 'indexes "unknown"' do
-              described_class.index(epub.id, epub_solr_doc)
+              described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
               expect(epub_solr_doc['epub_a11y_screen_reader_friendly_ssi']).to eq('unknown')
             end
           end
@@ -308,7 +307,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
             end
 
             it 'indexes "false"' do
-              described_class.index(epub.id, epub_solr_doc)
+              described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
               expect(epub_solr_doc['epub_a11y_screen_reader_friendly_ssi']).to eq('no')
             end
           end
@@ -329,7 +328,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
             end
 
             it 'indexes "false"' do
-              described_class.index(epub.id, epub_solr_doc)
+              described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
               expect(epub_solr_doc['epub_a11y_screen_reader_friendly_ssi']).to eq('yes')
             end
           end
@@ -349,7 +348,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
           end
 
           it 'only indexes epub_version_ssi and the derived epub_a11y_screen_reader_friendly_ssi field' do
-            described_class.index(epub.id, epub_solr_doc)
+            described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
             expect(epub_solr_doc).to eq(missing_a11y_metadata_doc_sans_epub_version.merge({ "epub_version_ssi" => "2.0" }))
           end
         end
@@ -389,7 +388,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
           end
 
           it 'indexes all expected fields' do
-            described_class.index(epub.id, epub_solr_doc)
+            described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
             expect(epub_solr_doc).to eq(all_a11y_metadata_doc_sans_epub_version.merge({ "epub_version_ssi" => "2.0" }))
           end
         end
@@ -408,7 +407,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
             end
 
             it 'indexes the value into "epub_a11y_conforms_to_ssi"' do
-              described_class.index(epub.id, epub_solr_doc)
+              described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
               expect(epub_solr_doc['epub_a11y_conforms_to_ssi']).to eq('http://www.idpf.org/epub/a11y/accessibility-20170105.html#wcag-aa')
             end
           end
@@ -426,7 +425,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
             end
 
             it 'indexes the value into "epub_a11y_conforms_to_ssi"' do
-              described_class.index(epub.id, epub_solr_doc)
+              described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
               expect(epub_solr_doc['epub_a11y_conforms_to_ssi']).to eq('EPUB Accessibility 1.1 - WCAG 2.0 Level AA')
             end
           end
@@ -445,7 +444,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
             end
 
             it 'indexes "unknown"' do
-              described_class.index(epub.id, epub_solr_doc)
+              described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
               expect(epub_solr_doc['epub_a11y_screen_reader_friendly_ssi']).to eq('unknown')
             end
           end
@@ -466,7 +465,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
             end
 
             it 'indexes "false"' do
-              described_class.index(epub.id, epub_solr_doc)
+              described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
               expect(epub_solr_doc['epub_a11y_screen_reader_friendly_ssi']).to eq('no')
             end
           end
@@ -487,7 +486,7 @@ RSpec.describe EpubAccessibilityMetadataIndexingService do
             end
 
             it 'indexes "false"' do
-              described_class.index(epub.id, epub_solr_doc)
+              described_class.new(epub.id, epub_solr_doc).index_reader_ebook_accessibility_metadata
               expect(epub_solr_doc['epub_a11y_screen_reader_friendly_ssi']).to eq('yes')
             end
           end

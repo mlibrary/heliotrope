@@ -14,7 +14,7 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
 
   let(:solr_document) { SolrDocument.new({ 'epub_a11y_access_mode_ssim' => epub_a11y_access_mode_ssim,
                                            'epub_a11y_access_mode_sufficient_ssim' => epub_a11y_access_mode_sufficient_ssim,
-                                           # see HELIO-4830: we should keep the full and updated list of values to map in here
+                                           # Values are already mapped from their raw EPUB metadata values during indexing
                                            'epub_a11y_accessibility_feature_ssim' => epub_a11y_accessibility_feature_ssim,
                                            'epub_a11y_accessibility_hazard_ssim' => ['flashing', 'motionSimulation'],
                                            'epub_a11y_accessibility_summary_ssi' => 'A very complex book with 15 images, 10 tables, and complex formatting...',
@@ -25,47 +25,46 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
 
   let(:epub_a11y_access_mode_ssim) { ['textual', 'visual'] }
   let(:epub_a11y_access_mode_sufficient_ssim) { ['textual', 'textual,visual', 'textual,visual'] }
-  let(:epub_a11y_accessibility_feature_ssim) { ['alternativeText',
-                                                'annotations',
-                                                'ARIA',
-                                                'audioDescription',
-                                                'bookmarks',
-                                                'braille',
-                                                'captions',
-                                                'ChemML',
-                                                'closedCaptions',
-                                                'describedMath',
-                                                'displayTransformability',
-                                                'fullRubyAnnotations',
-                                                'highContrastAudio',
-                                                'highContrastDisplay',
-                                                'horizontalWriting',
-                                                'index',
-                                                'largePrint',
-                                                'latex',
-                                                'longDescription',
-                                                'MathML',
-                                                'none',
-                                                'openCaptions',
-                                                'pageBreakMarkers',
-                                                'printPageNumbers',
-                                                'pageNavigation',
-                                                'readingOrder',
-                                                'rubyAnnotations',
-                                                'structuralNavigation',
-                                                'synchronizedAudioText',
-                                                'tableOfContents',
-                                                'tactileGraphic',
-                                                'tactileObject',
-                                                'taggedPDF',
-                                                'timingControl',
-                                                'transcript',
-                                                'ttsMarkup',
-                                                'unknown',
-                                                'unlocked',
-                                                'verticalWriting',
-                                                'withAdditionalWordSegmentation',
-                                                'withoutAdditionalWordSegmentation',
+  let(:epub_a11y_accessibility_feature_ssim) { ['Alternative text for images',
+                                                'Annotations',
+                                                'ARIA roles',
+                                                'Audio description',
+                                                'Bookmarks',
+                                                'Braille',
+                                                'Captions',
+                                                'ChemML markup',
+                                                'Closed captions',
+                                                'Textual descriptions for math equations',
+                                                'Display transformability of text',
+                                                'Ruby annotations for all language pronunciation',
+                                                'Audio with low or no background noise',
+                                                'High contrast text',
+                                                'Horizontal writing',
+                                                'Index',
+                                                'Formatted to meet large print guidelines',
+                                                'Math equations formatted with LaTeX',
+                                                'Textual descriptions of complex content',
+                                                'MathML markup',
+                                                'None',
+                                                'Open captions',
+                                                'Page numbers',
+                                                'Page list navigation aid',
+                                                'Logical reading order',
+                                                'Ruby annotation for some language pronunciation',
+                                                'Correct use of heading levels',
+                                                'Synchronized playback for prerecorded audio with text highlighting',
+                                                'Table of Contents',
+                                                'Access to tactile graphics',
+                                                'Includes tactile objects',
+                                                'Accessibility tags to improve readability',
+                                                'Content with timed interactions that can be controlled by the user',
+                                                'Transcripts for audio content',
+                                                'Phonetic markup to improve text-to-speech playback',
+                                                'Accessibility features unknown',
+                                                'No digital rights management (DRM)',
+                                                'Vertical writing',
+                                                'Additional word segmentation to improve readability',
+                                                'No additional word segmentation',
                                                 # this is to test that unmapped values are retained in the output of...
                                                 # `epub_a11y_accessibility_features`
                                                 'unknownRandomValue'] }
@@ -104,7 +103,7 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
   describe '#epub_a11y_accessibility_features' do
     subject { presenter.epub_a11y_accessibility_features }
 
-    it 'outputs the correctly *MAPPED* field value' do
+    it 'outputs the field values (already mapped during indexing)' do
       is_expected.to eq ['Alternative text for images',
                          'Annotations',
                          'ARIA roles',
@@ -130,7 +129,7 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
                          'Page numbers',
                          'Page list navigation aid',
                          'Logical reading order',
-                         'Ruby annotation for some language pronounciation',
+                         'Ruby annotation for some language pronunciation',
                          'Correct use of heading levels',
                          'Synchronized playback for prerecorded audio with text highlighting',
                          'Table of Contents',
@@ -446,7 +445,7 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
     context 'only `epub_a11y_access_mode_ssim` is present' do
       let(:epub_a11y_access_mode_ssim) { nil }
       let(:epub_a11y_access_mode_sufficient_ssim) { nil }
-      let(:epub_a11y_accessibility_feature_ssim) { ['alternativeText'] }
+      let(:epub_a11y_accessibility_feature_ssim) { ['Alternative text for images'] }
       it 'is true' do
         is_expected.to eq true
       end

@@ -99,22 +99,25 @@ RSpec.describe MonographIndexer do
 
       context 'Accessibility metadata' do
         context 'EPUB' do
-          context 'Runs EpubAccessibilityMetadataIndexingService' do
+          context 'Runs Epub' do
             it 'indexes fields from the EPUB OPF "package" file on the Monograph' do
-              # checking that `version` was indexed wll suffice, EpubAccessibilityMetadataIndexingServiceSpec covers them all
+              # checking that `version` was indexed will suffice, EpubSpec covers them all
               expect(subject['epub_version_ssi']).to eq("3.0")
             end
           end
         end
 
         context 'pdf_ebook' do
-          let(:pdf_file_set) { create(:file_set) }
-          before do
-            create(:featured_representative, work_id: monograph.id, file_set_id: pdf_file_set.id, kind: "pdf_ebook")
-          end
+          context 'Runs Pdf' do
+            let(:pdf_file_set) { create(:file_set) }
+            before do
+              create(:featured_representative, work_id: monograph.id, file_set_id: pdf_file_set.id, kind: "pdf_ebook")
+            end
 
-          it 'indexes "unknown" for "Screen reader friendly"' do
-            expect(subject['epub_a11y_screen_reader_friendly_ssi']).to eq('unknown')
+            it 'indexes fields on the Monograph' do
+              # checking that `screen_reader_friendly` was indexed will suffice, PdfSpec covers them all
+              expect(subject['epub_a11y_screen_reader_friendly_ssi']).to eq('unknown')
+            end
           end
         end
       end

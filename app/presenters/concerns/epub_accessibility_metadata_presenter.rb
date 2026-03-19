@@ -4,48 +4,6 @@ module EpubAccessibilityMetadataPresenter
   extend ActiveSupport::Concern
   include Skylight::Helpers
 
-  A11Y_FEATURES_MAP = { 'alternativeText' => 'Alternative text for images',
-                        'annotations' => 'Annotations',
-                        'ARIA' => 'ARIA roles',
-                        'audioDescription' => 'Audio description',
-                        'bookmarks' => 'Bookmarks', # this is deprecated and shouldn't appear in EPUB metadata
-                        'braille' => 'Braille',
-                        "captions" => 'Captions', # this is deprecated and shouldn't appear in EPUB metadata
-                        'ChemML' => 'ChemML markup',
-                        'closedCaptions' => 'Closed captions',
-                        'describedMath' => 'Textual descriptions for math equations',
-                        'displayTransformability' => 'Display transformability of text',
-                        'fullRubyAnnotations' => 'Ruby annotations for all language pronunciation',
-                        'highContrastAudio' => 'Audio with low or no background noise',
-                        'highContrastDisplay' => 'High contrast text',
-                        'horizontalWriting' => 'Horizontal writing',
-                        'index' => 'Index',
-                        'largePrint' => 'Formatted to meet large print guidelines',
-                        'latex' => 'Math equations formatted with LaTeX',
-                        'longDescription' => 'Textual descriptions of complex content',
-                        'MathML' => 'MathML markup',
-                        'none' => 'None',
-                        'openCaptions' => 'Open captions',
-                        'pageBreakMarkers' => 'Page numbers',
-                        'printPageNumbers' => 'Page numbers', # considered a quasi-deprecated synonym of `pageBreakMarkers`
-                        'pageNavigation' => 'Page list navigation aid',
-                        'readingOrder' => 'Logical reading order',
-                        'rubyAnnotations' => 'Ruby annotation for some language pronounciation',
-                        'structuralNavigation' => 'Correct use of heading levels',
-                        'synchronizedAudioText' => 'Synchronized playback for prerecorded audio with text highlighting',
-                        'tableOfContents' => 'Table of Contents',
-                        'tactileGraphic' => 'Access to tactile graphics',
-                        'tactileObject' => 'Includes tactile objects',
-                        'taggedPDF' => 'Accessibility tags to improve readability',
-                        'timingControl' => 'Content with timed interactions that can be controlled by the user',
-                        'transcript' => 'Transcripts for audio content',
-                        'ttsMarkup' => 'Phonetic markup to improve text-to-speech playback',
-                        'unknown' => 'Accessibility features unknown',
-                        'unlocked' => 'No digital rights management (DRM)',
-                        'verticalWriting' => 'Vertical writing',
-                        'withAdditionalWordSegmentation' => 'Additional word segmentation to improve readability',
-                        'withoutAdditionalWordSegmentation' => 'No additional word segmentation' }
-
   def epub_a11y_access_modes
     solr_document['epub_a11y_access_mode_ssim']
   end
@@ -54,11 +12,9 @@ module EpubAccessibilityMetadataPresenter
     solr_document['epub_a11y_access_mode_sufficient_ssim']
   end
 
-  instrument_method
   def epub_a11y_accessibility_features
-    # note: `|| value` means we'll just show the value itself if it isn't found as a key in `A11Y_FEATURES_MAP`
-    @epub_a11y_accessibility_features ||=
-      solr_document['epub_a11y_accessibility_feature_ssim']&.map { |value| A11Y_FEATURES_MAP[value] || value }&.uniq
+    # Values are already mapped from their raw EPUB metadata values during indexing
+    @epub_a11y_accessibility_features ||= solr_document['epub_a11y_accessibility_feature_ssim']&.uniq
   end
 
   def epub_a11y_accessibility_hazards
@@ -118,8 +74,8 @@ module EpubAccessibilityMetadataPresenter
     @epub_a11y_screen_reader_friendly ||= if value.blank? || value == 'unknown'
                                             'No information is available'
                                           else
-                                            # value here can only be 'yes' based on the logic in...
-                                            # EpubAccessibilityMetadataIndexingService.screen_reader_friendly()
+                                            # value here can be 'yes' or 'no' based on the logic in...
+                                            # AccessibilityMetadataIndexer::Epub.screen_reader_friendly()
                                             value
                                           end
   end

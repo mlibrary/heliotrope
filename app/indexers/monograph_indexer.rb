@@ -184,14 +184,11 @@ class MonographIndexer < Hyrax::WorkIndexer
   def maybe_index_accessibility_metadata(solr_doc)
     epub_fr = FeaturedRepresentative.where(work_id: object.id, kind: 'epub')&.first
     if epub_fr.present?
-      EpubAccessibilityMetadataIndexingService.index(epub_fr.file_set_id, solr_doc)
+      AccessibilityMetadataIndexer::Epub.new(epub_fr.file_set_id, solr_doc).index_reader_ebook_accessibility_metadata
     else
       pdf_ebook_fr = FeaturedRepresentative.where(work_id: object.id, kind: 'pdf_ebook')&.first
       if pdf_ebook_fr.present?
-        # although `EpubAccessibilityMetadataPresenter.epub_a11y_screen_reader_friendly()` will always show this...
-        # value for Screen Reader Friendly, even if it's missing, as will always be the case for PDFs (for now at...
-        # least), we still need to index it for use in facets.
-        solr_doc['epub_a11y_screen_reader_friendly_ssi'] = 'unknown'
+        AccessibilityMetadataIndexer::Pdf.new(pdf_ebook_fr.file_set_id, solr_doc).index_reader_ebook_accessibility_metadata
       end
     end
   end
