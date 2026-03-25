@@ -16,7 +16,7 @@
       <div class="previous-edition-metrics">
       <% if presenter&.previous_edition_presenter&.date_created.present? %>
         <div class="pub-date-edition-name">
-          <span aria-label="publication date" class="pub-date"><%= presenter&.previous_edition_presenter&.date_created&.first %></span><% if presenter&.previous_edition_presenter&.edition_name.present? %><span aria-label="edition name" class="edition-name"><%= sanitize presenter&.previous_edition_presenter&.edition_name %></span><% end %>
+          <span class="pub-date"><%= presenter&.previous_edition_presenter&.date_created&.first %></span><% if presenter&.previous_edition_presenter&.edition_name.present? %><span aria-label="edition name" class="edition-name"><%= sanitize presenter&.previous_edition_presenter&.edition_name %></span><% end %>
         </div>
       <% end %>
     <% if presenter&.previous_edition_presenter&.isbn_noformat&.present? %>
