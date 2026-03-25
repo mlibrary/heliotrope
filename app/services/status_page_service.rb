@@ -46,9 +46,9 @@ module StatusPageService
   def check_config_file(filename)
     file = Rails.root.join('config', filename)
     return 'NOT FOUND' unless File.exist?(file)
-    # not using `safe_load` to avoid `Psych::BadAlias: Unknown alias` stuff.
-    yaml = YAML.load(File.read(file)) if File.exist?(file)
-    yaml.present? ? 'OK' : 'ERROR'
+    config_hash = ActiveSupport::ConfigurationFile.parse(Rails.root.join(file)) if File.exist?(file)
+    # If it parsed out to a Hash, that's good enough for us. It's even OK if it's empty (file might be all comment lines)
+    config_hash.class == Hash ? 'OK' : 'ERROR'
   rescue StandardError => _e
     'ERROR'
   end
