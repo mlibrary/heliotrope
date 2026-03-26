@@ -46,14 +46,16 @@ $nav-tabs-active-link-hover-border-color: #ddd !default;
 // Give the tabs something to sit on
 .nav-tabs {
 
-  // beging heliotrope overrides
+  // beginning heliotrope overrides
   border-bottom: 1px solid $nav-tabs-border-color;
 
-  h2 {
+  // from bootstrap-sass-3.4.1/assets/stylesheets/bootstrap/_navs.scss (heliotrope changes commented)
+  // Originally we had a h2 inside of the li (for some reason we thought that was ok) but since HELIO-5003
+  // the h2 was changed to a div.
+  > li > .tab-text {
     margin: 0;
     font-size: $font-size-base;
     padding: 10px 0px;
-    margin: 0;
     font-weight: normal;
 
     a {
@@ -61,13 +63,13 @@ $nav-tabs-active-link-hover-border-color: #ddd !default;
     }
   }
 
-  // from bootstrap-sass-3.4.1/assets/stylesheets/bootstrap/_navs.scss (heliotrope changes commented)
+
   > li {
     float: left;
     // Make the list-items overlay the bottom border
     margin-bottom: -1px;
     // Actual tabs (as links)
-    > h2 > a { // heliotrope changed from `> a`
+    > .tab-text > a { // heliotrope changed from `> a`,
       margin-right: 2px;
       line-height: $line-height-base;
       border: 1px solid transparent;
@@ -79,7 +81,7 @@ $nav-tabs-active-link-hover-border-color: #ddd !default;
       }
     }
     // Active state, and its :hover to override normal :hover
-    &.active > h2 > a { // heliotrope changed from `&.active > a`
+    &.active > .tab-text > a { // heliotrope changed from `&.active > a`
       &,
       &:hover,
       &:focus {

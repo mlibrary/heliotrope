@@ -9,12 +9,16 @@
       <ul class="nav nav-tabs" role="tablist">
         <% if map_url.present? %>
           <li role="presentation">
-            <h2><a id="tab-map-press-stats" href="#map" aria-controls="map-press-stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Readership Map</a></h2>
+            <div class="tab-text">
+              <a id="tab-map-press-stats" href="#map" aria-controls="tab-map-press-stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Readership Map</a>
+            </div>
           </li>
         <% end %>
         <% if ga_url.present? %>
           <li role="presentation">
-            <h2><a id="tab-analytics-press-stats" href="#analytics" aria-controls="analytics-press-stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Google Analytics</a></h2>
+            <div class="tab-text">
+              <a id="tab-analytics-press-stats" href="#analytics" aria-controls="tab-analytics-press-stats" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Google Analytics</a>
+            </div>
           </li>
         <% end %>
       </ul>
