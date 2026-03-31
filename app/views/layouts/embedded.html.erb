@@ -9,7 +9,11 @@
     <%= javascript_include_tag 'embed' %>
 
     <!-- Cookie Consent for Google, Hotjar, etc -->
-    <%= render 'shared/cookie_consent' %>
+    <%# 
+        We need to decided what to do for embedded cookie consent 
+        and analytics. See HELIO-5039 
+    %>
+    <%# = render 'shared/cookie_consent' %>
 
     <% if content_for?(:head) %>
       <%= yield(:head) %>
