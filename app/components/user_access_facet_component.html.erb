@@ -18,7 +18,6 @@
   </h3>
   <div id="<%= @facet_field.html_id %>" aria-labelledby="<%= @facet_field.html_id %>-header" class="panel-collapse facet-content collapse <%= "show" unless @facet_field.collapsed? %>">
     <div class="card-body">
-    <ul class="facet-values list-unstyled">
       <ul class="facet-values list-unstyled">
         <li>
           <a class="facet-anchor facet-select" href="<%= url_for(params.deep_dup.except("user_access").except("page").permit!) %>">
@@ -56,7 +55,6 @@
         </li>
         <% end %>
       </ul>
-    </ul>
     </div>
   </div>
 </div>
