@@ -9,3 +9,4 @@ Mime::Type.register "application/ld+json", :jsonld
 Mime::Type.register "text/turtle", :ttl
 Mime::Type.register 'application/x-endnote-refer', :endnote
 Mime::Type.register "application/pdf", :pdf
+

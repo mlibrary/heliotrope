@@ -771,6 +771,41 @@ HELIO-4376
 }
 
 
+/* PDF.js v5 centering fix - direct approach since scroll mode classes aren't being applied */
+#viewerContainer {
+  overflow: auto !important;
+  width: 100% !important;
+  display: block !important;
+}
+
+.pdfViewer {
+  width: 100% !important;
+  text-align: center !important;
+  display: block !important;
+}
+
+/* Force all pages to center regardless of scroll mode */
+.pdfViewer .page {
+  /* Keep pages as inline-block so text-align: center on parent works */
+  display: inline-block !important;
+  /* Also add margin auto as backup */
+  margin-left: auto !important;
+  margin-right: auto !important;
+  /* Let width be set by PDF.js naturally - don't constrain it */
+}
+
+/* Also ensure these scroll-specific modes work if classes are ever added */
+.pdfViewer.scrollVertical {
+  text-align: center !important;
+  width: 100% !important;
+}
+
+.pdfViewer.scrollVertical .page {
+  display: inline-block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 .hidden {
   display: none !important;
 }
