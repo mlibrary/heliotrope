@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_11_190613) do
+ActiveRecord::Schema.define(version: 2026_04_07_190607) do
 
   create_table "api_requests", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "user_id"
@@ -123,6 +123,24 @@ ActiveRecord::Schema.define(version: 2026_02_11_190613) do
     t.integer "search"
     t.index ["access_type"], name: "index_counter_reports_on_access_type"
     t.index ["institution"], name: "index_counter_reports_on_institution"
+  end
+
+  create_table "counter_summaries", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.string "monograph_noid", null: false
+    t.integer "month", null: false
+    t.integer "year", null: false
+    t.integer "total_item_requests_month", default: 0, null: false
+    t.integer "total_item_investigations_month", default: 0, null: false
+    t.integer "unique_item_requests_month", default: 0, null: false
+    t.integer "unique_item_investigations_month", default: 0, null: false
+    t.integer "total_item_requests_life", default: 0, null: false
+    t.integer "total_item_investigations_life", default: 0, null: false
+    t.integer "unique_item_requests_life", default: 0, null: false
+    t.integer "unique_item_investigations_life", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["monograph_noid", "month", "year"], name: "index_counter_summary_on_noid_month_year", unique: true
+    t.index ["year", "month"], name: "index_counter_summary_on_year_month"
   end
 
   create_table "crossref_submission_logs", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
