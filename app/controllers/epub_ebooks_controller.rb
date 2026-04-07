@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class EpubEbooksController < CheckpointController
-  include IrusAnalytics::Controller::AnalyticsBehaviour
-
   protect_from_forgery except: :file
   before_action :setup
 
@@ -22,7 +20,6 @@ class EpubEbooksController < CheckpointController
     @map_file_presenter = map_file_doc.present? ? Hyrax::FileSetPresenter.new(map_file_doc, current_ability).embed_link : nil
 
     CounterService.from(self, @presenter).count(request: 1)
-    send_irus_analytics_request
     render layout: false
   end
 
@@ -82,10 +79,6 @@ class EpubEbooksController < CheckpointController
       Digest::MD5.hexdigest(query) +
       id +
       @presenter.date_modified.to_s
-  end
-
-  def item_identifier_for_irus_analytics
-    CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + @parent_presenter.id
   end
 
     private

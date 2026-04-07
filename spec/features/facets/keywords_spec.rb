@@ -4,9 +4,8 @@ require 'rails_helper'
 
 describe "Monograph Catalog Keyword Facets", type: :feature do
   before do
-    stub_out_redis
-    stub_out_irus
-  end
+        stub_out_redis
+      end
 
   let(:facets) { "#facets" }
   let(:selected_facets) { "#appliedParams" }

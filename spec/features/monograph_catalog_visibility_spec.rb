@@ -15,9 +15,8 @@ describe 'Monograph Catalog Visibility' do
   let(:fs2) { create(:file_set) }
 
   before do
-    stub_out_redis
-    stub_out_irus
-  end
+        stub_out_redis
+      end
 
   context 'no published Resources' do
     it 'no results on Monograph catalog page' do

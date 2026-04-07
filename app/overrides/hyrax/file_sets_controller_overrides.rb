@@ -3,7 +3,6 @@
 Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
   prepend(FileSetsControllerBehavior = Module.new do
     Hyrax::FileSetsController.form_class = ::Heliotrope::FileSetEditForm
-    include IrusAnalytics::Controller::AnalyticsBehaviour
     include Skylight::Helpers
 
     instrument_method
@@ -20,10 +19,8 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
 
       if presenter.multimedia?
         CounterService.from(self, presenter).count(request: 1)
-        send_irus_analytics_request
       else
         CounterService.from(self, presenter).count
-        send_irus_analytics_investigation
       end
 
       # See HELIO-1606 regarding the `admin_override` stuff (`false` param). Basically don't show a download button...
@@ -37,11 +34,6 @@ Hyrax::FileSetsController.class_eval do # rubocop:disable Metrics/BlockLength
         wants.json { presenter }
         additional_response_formats(wants)
       end
-    end
-
-    # HELIO-4143
-    def item_identifier_for_irus_analytics
-      CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + presenter&.parent&.id
     end
 
     def edit

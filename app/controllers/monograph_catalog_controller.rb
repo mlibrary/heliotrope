@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class MonographCatalogController < ::CatalogController
-  include IrusAnalytics::Controller::AnalyticsBehaviour
   include Skylight::Helpers
 
   before_action :load_presenter, only: %i[index facet purchase]
@@ -104,10 +103,6 @@ class MonographCatalogController < ::CatalogController
     super
   end
 
-  def item_identifier_for_irus_analytics
-    CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + params[:id]
-  end
-
   private
 
     def valid_share_link?
@@ -206,6 +201,5 @@ class MonographCatalogController < ::CatalogController
       # HELIO-2292
       return unless @monograph_presenter.epub? || @monograph_presenter.pdf_ebook? || @monograph_presenter.mobi?
       CounterService.from(self, @monograph_presenter).count
-      send_irus_analytics_investigation
     end
 end

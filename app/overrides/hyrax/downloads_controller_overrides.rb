@@ -2,8 +2,6 @@
 
 Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
   prepend(DownloadsControllerBehavior = Module.new do
-    include IrusAnalytics::Controller::AnalyticsBehaviour
-
     # for animated GIF files we use the repo asset for display. They need to be "downloadable" no matter what.
     delegate :animated_gif?, to: :presenter
 
@@ -34,7 +32,6 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
             redirect_to Rails.application.routes.url_helpers.download_ebook_url(presenter.id)
           else
             CounterService.from(self, presenter).count(request: 1)
-            send_irus_analytics_request
             self.status = 200
             send_file_headers! content_options.merge(disposition: disposition(presenter))
             response.headers['Content-Length'] ||= file.size.to_s
@@ -51,10 +48,6 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
     # Send the watermarked file for things that should be watermarked if the user is unprivileged
     def should_be_watermarked?
       presenter.pdf_ebook? && Press.where(subdomain: presenter.parent.subdomain)&.first.watermark && !can?(:edit, FileSet.find(params[:id]))
-    end
-
-    def item_identifier_for_irus_analytics
-      CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + presenter&.parent&.id
     end
 
     def disposition(presenter)

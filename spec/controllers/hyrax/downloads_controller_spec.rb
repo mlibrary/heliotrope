@@ -31,7 +31,7 @@ RSpec.describe Hyrax::DownloadsController, type: :controller do
         end
       end
 
-      context "triggers counter reporting, internally and for irus" do
+      context "triggers counter reporting" do
         let(:press) { create(:press) }
         let(:monograph) { create(:monograph, press: press.subdomain, title: ["A Test"]) }
         let(:counter_service) { double('counter_service') }
