@@ -29,8 +29,7 @@
 
     <!-- Javascript -->
     <%= javascript_include_tag 'application' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'cozy-sun-bear/cozy-sun-bear' %>
+    <%= javascript_pack_tag 'application', 'cozy-sun-bear/cozy-sun-bear', 'data-turbolinks-track': 'reload', defer: false %>
 
     <!-- Cookie Consent for Google, Hotjar, etc -->
     <%= render 'shared/cookie_consent' %>

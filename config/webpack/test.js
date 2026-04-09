@@ -1,5 +1,6 @@
+process.env.BABEL_ENV = process.env.BABEL_ENV || 'development'
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
-const environment = require('./environment')
+const webpackConfig = require('./environment')
 
-module.exports = environment.toWebpackConfig()
+module.exports = webpackConfig

@@ -19,7 +19,7 @@ Dir.chdir APP_ROOT do
   system('bundle check') || system!('bundle install')
 
   # Install JavaScript dependencies if using Yarn
-  # system('bin/yarn')
+  system!('bin/yarn')
 
   puts "\n== Copying sample files =="
   files = ['secrets', 'database', 'analytics', 'role_map', 'aptrust', 'crossref']
