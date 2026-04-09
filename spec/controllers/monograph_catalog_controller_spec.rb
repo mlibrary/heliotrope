@@ -87,14 +87,12 @@ RSpec.describe MonographCatalogController, type: :controller do
         allow(CounterService).to receive(:from).and_return(counter_service)
         allow(counter_service).to receive(:count)
         # The "controller" here is the instance of MonographCatalogController created by rspec
-        allow(controller).to receive(:send_irus_analytics_investigation)
       end
 
-      context 'triggers COUNTER, local and IRUS' do
+      context 'triggers COUNTER' do
         it 'counts' do
           get :index, params: { id: monograph.id }
           expect(counter_service).to have_received(:count)
-          expect(controller).to have_received(:send_irus_analytics_investigation)
         end
       end
 

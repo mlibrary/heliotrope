@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class EmbedController < ApplicationController
-  include IrusAnalytics::Controller::AnalyticsBehaviour
   delegate :noid, to: :class
 
   def show
@@ -17,14 +16,8 @@ class EmbedController < ApplicationController
       render 'hyrax/base/unauthorized', status: :unauthorized
     else
       CounterService.from(self, @presenter).count(request: 1)
-      send_irus_analytics_request
       render layout: false
     end
-  end
-
-  # HELIO-4143, HELIO-3778
-  def item_identifier_for_irus_analytics
-    CatalogController.blacklight_config.oai[:provider][:record_prefix] + ":" + @presenter.parent.id
   end
 
   def self.noid(handle_path_or_url)

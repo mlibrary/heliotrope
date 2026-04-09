@@ -17,17 +17,6 @@ GIT
       faraday_middleware (~> 1.0)
 
 GIT
-  remote: https://github.com/mlibrary/irus_analytics
-  revision: cbffb84ee2db696c8d8a3ca1a0aae7aae37f33fa
-  ref: cbffb84ee2db696c8d8a3ca1a0aae7aae37f33fa
-  specs:
-    irus_analytics (1.0.3)
-      config_files
-      i18n
-      openurl
-      resque
-
-GIT
   remote: https://github.com/mlibrary/riiif
   revision: 8c826c34c06c70439b1bb5cadf12800f9fa6e9d9
   ref: 8c826c34c06c70439b1bb5cadf12800f9fa6e9d9
@@ -247,8 +236,6 @@ GEM
     config (5.1.0)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
-    config_files (0.1.7)
-      activesupport (>= 2.2.1)
     connection_pool (2.4.1)
     coveralls_reborn (0.28.0)
       simplecov (~> 0.22.0)
@@ -767,9 +754,6 @@ GEM
     okcomputer (1.18.5)
     openseadragon (0.6.0)
       rails (> 3.2.0)
-    openurl (1.0.0)
-      marc
-      scrub_rb (~> 1.0)
     orm_adapter (0.5.0)
     os (1.1.4)
     ostruct (0.6.1)
@@ -1315,7 +1299,6 @@ DEPENDENCIES
   font-awesome-sass (>= 6.0)
   handle_rest!
   hyrax (= 4.0)
-  irus_analytics!
   jbuilder (~> 2.5)
   jekyll (~> 3.9.3)
   jquery-rails

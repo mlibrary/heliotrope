@@ -131,8 +131,6 @@ gem 'hyrax', '4.0'
 # Best solution for a yanked gem while we're still on Ruby 2.x, see https://github.com/dryruby/json-canonicalization/issues/2#issuecomment-1841772415
 gem 'json-canonicalization', '~>0.4', '>= 0.4'
 
-gem 'irus_analytics', git: 'https://github.com/mlibrary/irus_analytics', ref: 'cbffb84ee2db696c8d8a3ca1a0aae7aae37f33fa'
-
 # Use Jekyll for blog and informational pages
 gem 'jekyll', '~> 3.9.3'
 

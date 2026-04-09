@@ -12,7 +12,6 @@ describe 'Create a monograph' do
 
       login_as user
       stub_out_redis
-      stub_out_irus
     end
 
     it do # rubocop:disable RSpec/ExampleLength

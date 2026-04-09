@@ -4,9 +4,8 @@ require 'rails_helper'
 
 describe 'FileSet Browse' do
   before do
-    stub_out_redis
-    stub_out_irus
-  end
+        stub_out_redis
+      end
 
   context 'Navigating forward/backward' do
     context 'public/anonymous user visiting a published Monograph' do
