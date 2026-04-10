@@ -299,7 +299,7 @@ RSpec.describe "monograph_catalog/index.html.erb" do
               # Read button present and linked
               is_expected.to have_link(t('monograph_catalog.index.read_book'), href: epub_path(monograph_presenter.reader_ebook))
               # No "Registration required to download" Google Form
-              is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
+              is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAKEQLSfakeFAKEfakeFAKEfakeFAKEfakeFAKEfakeFAKE/viewform'
               # ToC entries from _index_epub_toc.html.erb are present and linked
               is_expected.to match 'Foreword | Timmy B. Wright'
               is_expected.to match 'toc-link'
@@ -321,7 +321,7 @@ RSpec.describe "monograph_catalog/index.html.erb" do
               is_expected.to match 'monograph_catalog.index.read_book'
               is_expected.to_not have_link(t('monograph_catalog.index.read_book'), href: epub_path(monograph_presenter.reader_ebook))
               # No "Registration required to download" Google Form
-              is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
+              is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAKEQLSfakeFAKEfakeFAKEfakeFAKEfakeFAKEfakeFAKE/viewform'
               # ToC entries from _index_epub_toc.html.erb are present but not linked
               is_expected.to match 'Foreword | Timmy B. Wright'
               is_expected.to_not match 'toc-link'
@@ -343,7 +343,7 @@ RSpec.describe "monograph_catalog/index.html.erb" do
               is_expected.to_not match 'monograph_catalog.index.read_book'
               is_expected.to_not have_link(t('monograph_catalog.index.read_book'), href: epub_path(monograph_presenter.reader_ebook))
               # No "Registration required to download" Google Form
-              is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
+              is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAKEQLSfakeFAKEfakeFAKEfakeFAKEfakeFAKEfakeFAKE/viewform'
               # ToC entries from _index_epub_toc.html.erb are present but not linked
               is_expected.to match 'Foreword | Timmy B. Wright'
               is_expected.to_not match 'toc-link'
@@ -353,7 +353,8 @@ RSpec.describe "monograph_catalog/index.html.erb" do
 
         describe 'Monograph that requires Google Form registration to access' do
           before do
-            allow(monograph_presenter).to receive(:subdomain).and_return('ee')
+            allow(monograph_presenter).to receive(:registration_required_to_read?).and_return(true)
+            allow(monograph_presenter).to receive(:registration_google_form_id).and_return(nil)
             allow(monograph_presenter).to receive(:isbn).and_return(["ISBN-HARDCOVER", "ISBN-PAPER", "9781607857471"])
             assign(:reader_links_display, :not_linked)
             render
@@ -364,12 +365,13 @@ RSpec.describe "monograph_catalog/index.html.erb" do
             is_expected.to_not render_template(partial: '_read_download_buy')
             is_expected.to render_template(partial: '_read_download_buy_registration_required')
             is_expected.to_not match 'monograph_catalog.index.oa_registration_required_button'
-            is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
+            is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAKEQLSfakeFAKEfakeFAKEfakeFAKEfakeFAKEfakeFAKE/viewform'
             is_expected.to_not match 'toc-link'
           end
 
           context 'When it has both a readable ebook and a downloadable ebook' do
             before do
+              allow(monograph_presenter).to receive(:registration_google_form_id).and_return('1FAKEQLSfakeFAKEfakeFAKEfakeFAKEfakeFAKEfakeFAKE')
               assign(:ebook_download_presenter, ebook_download_presenter)
               allow(ebook_download_presenter).to receive(:downloadable_ebooks?).and_return(true)
               render
@@ -380,7 +382,7 @@ RSpec.describe "monograph_catalog/index.html.erb" do
               is_expected.to_not render_template(partial: '_read_download_buy')
               is_expected.to render_template(partial: '_read_download_buy_registration_required')
               is_expected.to match 'monograph_catalog.index.oa_registration_required_button'
-              is_expected.to match 'https://docs.google.com/forms/d/e/1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g/viewform'
+              is_expected.to match 'https://docs.google.com/forms/d/e/1FAKEQLSfakeFAKEfakeFAKEfakeFAKEfakeFAKEfakeFAKE/viewform'
               is_expected.to_not match 'toc-link'
             end
           end

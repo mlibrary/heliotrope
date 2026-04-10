@@ -1,23 +1,6 @@
-<%# This mapping will move to the parent partial if this functionality proliferates... %>
-<%# outside the `ee` Press before HELIO-4503 is completed %>
-<%# Note: You can use any ISBN stored on Fulcrum here. HELIO-4503 will remove this workaround anyway. %>
-<%# NB! You must make sure the pdf_ebook is set to `allow_download == 'yes'` or none of this will work (no button will appear) %>
-<% form_link_ids = { '9781607858768' => '1FAIpQLScLWwaa-BzbDUvJ_tdWsGDX6wBialALOs1cceMCpFUkZ5qFuA', # Circuit Analysis and Design, tombstoned second edition
-                     '9781607859239' => '1FAIpQLScLWwaa-BzbDUvJ_tdWsGDX6wBialALOs1cceMCpFUkZ5qFuA', # Circuit Analysis and Design, current third edition (Google Form reused!)
-                     '9781607859208' => '1FAIpQLScqCRb02RXP3_-BX9VceUUJS6wgpCs-lJBr6FeW8Bkc_CxV_A', # Classical Light: Waves and Ultrashort Pulses
-                     '9781607858270' => '1FAIpQLSeABECySpr4LMPo_4LtaCEFih4EuIHzDOEzDGhSmc0rp542vw', # Control Systems: An Introduction
-                     '9781607859123' => '1FAIpQLSc9y8BHQfw761ZnyeJF1fPq36qBbdMXtHBClISSqwghd4a6Cg', # Electromagnetics for Engineers
-                     '9781607858249' => '1FAIpQLSdwS2OFvMreCd0zeQNcSq49jNxKXG6-WjLOxOp58ATj1ff68Q', # Foundations of Applied Electromagnetics
-                     '9781607854890' => '1FAIpQLSfa_lqrrhWPEXZ97DjMQTAt_cdEl4JIO-R-C93kNJyJneP0uA', # Image Processing for Engineers
-                     '9781607858294' => '1FAIpQLSdL_V7gW7_N0UOtZNwrOwZlGHJn99cxIIgutunrKwUJB9UXhg', # Introduction to ARM Assembler
-                     '9781607857471' => '1FAIpQLSeS5-ImSp3o9fmwl-hqL1o8EuvX6kUgzLnaETYHikSoJ5Bq_g', # Introduction to Probability for Data Science
-                     '9781607858478' => '1FAIpQLScdPlyIu78NW9IBk9TqALCDeXA7qJDtNH5-Bzg6p9YkapFAwg', # Modern Communications Systems
-                     '9781607858782' => '1FAIpQLScRSK1-A5ZNGAezmNZCbDnehA2h03JphmmJTePN9Lz0_nu7ng'  # Signals & Systems: Theory and Applications
-                   } %>
-
-<% isbns = @monograph_presenter.isbn.map { |isbn| isbn.delete("^0-9") } %>
-<% form_link_isbn = (form_link_ids.keys & isbns).first %>
-<% form_link = form_link_isbn.present? ? 'https://docs.google.com/forms/d/e/' + form_link_ids[form_link_isbn] + '/viewform' : '' %>
+<%# Google Form IDs are now stored in the Monograph identifier field with the prefix "registration_google_form_id:" %>
+<%# instead of being hard-coded here. See MonographPresenter#registration_google_form_id %>
+<% form_link = @monograph_presenter.registration_google_form_id.present? ? 'https://docs.google.com/forms/d/e/' + @monograph_presenter.registration_google_form_id + '/viewform' : '' %>
 
 <div class="btn-toolbar oa-registration-required" role="toolbar">
   <div class="btn-group-lg" role="group">
