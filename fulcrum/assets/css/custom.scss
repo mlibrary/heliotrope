@@ -50,7 +50,7 @@
 
 // fix buttons
 .button--lg {
-  line-height: normal;
+  line-height: 1.2;
 }
 
 .btn-large:hover, .btn:hover {
@@ -284,6 +284,10 @@ ol.terms {
 footer.page-footer {
   background-color: $brand-color;
   padding-top: 2rem;
+
+  .footer-copyright {
+    overflow:visible;
+  }
   .footer-copyright .container {
     color: $light-2;
     a {
@@ -711,10 +715,6 @@ h2#services {
   }
 }
 
-.footer-copyright {
-
-}
-
 .parallax-container {
   min-height: 380px;
   line-height: 0;
@@ -741,6 +741,10 @@ h2#services {
 }
 
 @media only screen and (max-width : 992px) {
+  .parallax-container {
+    min-height: 420px;
+  }
+  
   .parallax-container .section {
     position: absolute;
     top: 40%;
@@ -790,7 +794,7 @@ h2#services {
 @media only screen and (max-width : 700px ) {
 
   #index-banner {
-    height: 400px;
+    min-height: 400px;
 
     p.header {
       font-size: 2rem;
@@ -816,6 +820,10 @@ h2#services {
  .sponsor p {
     font-size: $delta;
     margin-top: 0;
+  }
+
+  #index-banner {
+    min-height: 450px;
   }
 
   #index-banner .zeta {
