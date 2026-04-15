@@ -12,6 +12,9 @@ Hyrax::Actors::OrderedMembersActor.class_eval do
     # @param [ActiveFedora::Base] work the parent work
     def attach_ordered_members_to_work(work)
       acquire_lock_for(work.id) do
+        # Ensure we have an up-to-date copy due to race conditions in concurrent jobs
+        work.reload unless work.new_record?
+
         work.ordered_members = work.ordered_members.to_a + ordered_members
         work.save
         ordered_members.each do |file_set|
