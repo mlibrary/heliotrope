@@ -116,6 +116,7 @@ function initCookieConsent() {
       if ($.fn.ihavecookies.preference('analytics') === true) {
         loadAnalytics();
       }
+      $(document).trigger('fulcrum:cookie-consented');
     },
     cookieTypes: [
       {

@@ -49,6 +49,8 @@
                    onclick="displayAberdeenModalSurvey();"
                 <% elsif @monograph_presenter.subdomain == 'westminster' %>
                    onclick="displayWestminsterModalSurvey();"
+                <% elsif @monograph_presenter.subdomain == 'newprairiepress' %>
+                   onclick="displayNewPrairiePressModalSurvey();"
                 <% else %>
                    onclick="displayModalSurvey();"
                 <% end %>
