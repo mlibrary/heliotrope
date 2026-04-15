@@ -1012,7 +1012,7 @@ button:focus {
       white-space: nowrap;
     }
 
-    .navbar-brand h1 {
+    .navbar-brand span.press-title {
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1.2px;
@@ -1022,6 +1022,7 @@ button:focus {
       vertical-align: bottom;
       font-size: 26px;
       line-height: 31.2px;
+      @include proxima-nova;
     }
 
       button.search-submit {
@@ -7785,7 +7786,7 @@ $um-white: #fff;
       white-space: nowrap;
     }
 
-    .navbar-brand h1 {
+    .navbar-brand span.press-title {
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1.2px;
@@ -14387,6 +14388,746 @@ $ncid-black-80: #342f2e;
     }
 
   }
+
+}
+///////////////////////////////////////////////
+//
+// New Prairie Press
+//
+///////////////////////////////////////////////
+// colors
+$npp-brand-color: #26183F;
+$npp-brand-color-purple: #512888;
+$npp-light-beige: #F3F4EF;
+$npp-light-purple: #A190C3;
+$npp-button-purple: #3A1C61;
+$npp-dark-grey: #333333;
+$npp-light-grey: #EFEFEF;
+$npp-black-80: #33312d;
+$npp-black-100: #000000;
+$npp-link: $npp-brand-color-purple;
+$npp-highlight: $npp-brand-color-purple;
+$npp-highlight-dark: #FFDF00;
+
+.newprairiepress {
+
+  // typography
+@mixin myriad-pro {
+  font-family: myriad-pro, sans-serif;
+}
+
+.myriad-pro {
+  @include myriad-pro;
+}
+
+@mixin caslon-pro {
+  font-family: adobe-caslon-pro, serif;
+}
+
+.caslon-pro {
+  @include caslon-pro;
+}
+
+@include myriad-pro;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  .tab-text {
+    font-weight: 600;
+    @include caslon-pro;
+    color: $npp-black-80;
+  }
+
+  h1 {
+    font-size: 40px;
+  }
+
+  h2,
+  .tab-text {
+    font-size: 32px;
+  }
+
+  .bold,
+  .strong {
+    font-weight: 600;
+  }
+
+  .text-light {
+    color: #f8f9fa !important;
+  }
+
+  // links
+  :focus,
+  a:focus,
+  button:focus,
+  .form-control:focus,
+  .btn:focus {
+    outline: 3px solid $npp-highlight;
+    outline-offset: 2px;
+    -webkit-transition: outline .05s ease-out;
+    -o-transition: outline .05s ease-out;
+    transition: outline .05s ease-out;
+  }
+
+  a, .link {
+    color: $npp-link;
+    text-decoration: underline;
+  }
+
+  a:hover,
+  a:active {
+    text-decoration: underline; 
+  }
+
+  a.btn, a.previous, a.next {
+    text-decoration: none;
+  }
+
+  // buttons
+
+  .btn {
+    @include myriad-pro;
+    font-weight: 500;
+  }
+
+  .btn-default,
+  .btn {
+    @include button-background-color($npp-button-purple);
+    @include button-font-color(#FFFFFF);
+    border-color: $npp-brand-color-purple;
+    @include myriad-pro;
+  }
+
+
+  .btn-default:hover,
+  .btn-default:active,
+  .btn:hover,
+  .btn:active {
+    @include button-hover-background-color($npp-brand-color-purple);
+    @include button-font-color(#FFFFFF);
+    border-color: $npp-brand-color-purple;
+    @include myriad-pro;
+  }
+
+  // download button
+  .dropdown-menu.monograph-catalog-rep-downloads {
+    background-color: $npp-button-purple;
+    @include myriad-pro;
+    a {
+      color: #FFFFFF;
+    }
+  }
+
+  // navigation menu
+  .navbar-default .navbar-nav > .open > a,
+  .navbar-default .navbar-nav > .open > a:hover,
+  .navbar-default .navbar-nav > .open > a:focus {
+    background-color: $npp-button-purple;
+    color: #FFF;
+  }
+
+  // .container
+  /* #main {
+    margin-top: 9em;
+  } */
+
+  .blacklight-icons svg {
+    fill: #FFF;
+  }
+
+  // navigation menu
+
+  .nav,
+  header {
+    @include myriad-pro;
+  }
+
+  header {
+    background-color: $npp-brand-color;
+    border-bottom: 4px solid $npp-light-purple;
+    hgroup {
+      height: auto;
+    }    
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end !important;
+
+      // search box and links
+      .col-md-4.pt-3 {
+        display: flex;
+        flex-direction: column;
+        padding-top: 16px;
+
+        form.navbar-form {
+          margin: 0;
+          padding: 0;
+        }
+
+        form {
+          @include myriad-pro;
+
+          .input-group {
+            display: flex;
+            position: relative;
+            width: 80%;
+            align-items: stretch;
+
+            .form-control {
+              position: relative;
+              flex: 1 1 auto;
+              width: 1%;
+              margin-bottom: 0;
+              display: block;
+              padding: 6px 12px;
+              font-size: 14px;
+              line-height: 1.5;
+              background-clip: padding-box;
+              border: 1px solid $npp-light-purple;
+              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+              color: rgb(73, 80, 87) !important;
+            }
+          }
+
+          input.search-query {
+            background-color: #FFF;
+            border-right: none !important;
+            color: $npp-black-80 !important;
+            height: 38px;
+          }
+
+          button.search-submit {
+            background-color: $npp-button-purple;
+            border-top: $npp-light-purple 1px solid;
+            border-right: $npp-light-purple 1px solid;
+            border-bottom: $npp-light-purple 1px solid;
+            border-left: none !important;
+            height: 100%;
+            padding: 0;
+            text-transform: none;
+            overflow: visible;
+            border-radius: 0;            
+            width: 53px;
+            height: 38px;
+
+            svg {
+              height: auto;
+              width: auto;
+              fill: $npp-button-purple;
+              stroke-width: 2;
+              color: #FFF;
+            }
+          }
+        }
+      }
+    }
+
+    .navbar-brand-logo {
+      display: inline-block;      
+    }
+    a.navbar-brand {
+      border-bottom: none;
+      text-decoration: none;
+    }
+
+    a.navbar-brand:hover {
+      text-decoration: none;
+      background-color: transparent;
+    }
+    .navbar-brand {
+      padding: 0;
+      img {
+        height: 120px;
+      }
+    }
+  }
+
+    // container on all pages
+    #main.container {
+      max-width: 1140px;
+      padding-top: 1.5em;
+    }
+
+
+  // press catalog
+
+  .press {
+    .results-container {
+      #documents.documents-list,
+      #documents.documents-gallery {
+        .document {
+          .caption h3.index_title {
+            font-weight: 600;
+            font-size: 18px;
+
+            img {
+              vertical-align: baseline;
+            }
+          }
+          a {
+            color: $npp-black-80;
+            text-decoration: none;
+          }
+          a:hover,
+          a:active {
+            text-decoration: underline;
+          }
+
+          .caption p.authors,
+          span.pub-date,
+          span.edition-name {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+
+    .search-widgets .btn {
+      font-size: 1rem;
+    }
+  }
+
+  // monograph pages
+  .monograph  {
+    .monograph-assets {
+      padding-top: 1em;
+    }
+
+    .monograph-metadata-additional {
+    font-size: 1rem;
+    }
+
+    .monograph-metadata #tabs .nav-tabs .tab-text {
+      padding: 13px 0;
+    }
+  }
+
+  //filters on press and monograph pages
+  .col-sm-3.facets-container,
+  #facet-panel-collapse {
+    padding-left: 0px;
+  }
+
+  #facets {
+    .card .card-header {
+      background-color: $npp-light-beige;
+    }
+  }
+
+  .panel-group {
+    padding-left: 0px;
+  }
+
+  .panel-group .panel {
+    border-radius: 0px;
+  }
+
+  .panel-heading {
+    padding-top: 15px;
+  }
+
+  .panel-group .panel + .panel {
+    margin-top: 0px;
+  }
+
+  h3.panel-title a, a.more_facets_link {
+    color: #333;
+  }
+
+  .panel-heading.collapse-toggle .panel-title::after {
+    color: #333;
+  }
+
+  .panel-body {
+    background-color: $npp-light-beige;
+  }
+
+  .search-form.panel-body {
+    background-color: #fff;
+  }
+
+  .nav-tabs > li > .tab-text > a,
+  .nav-tabs > li.active > .tab-text > a {
+    font-size: 16px;
+  }
+
+  // sorts on press and monograph pages
+  .search-widgets .dropdown-menu {
+    @include myriad-pro;  
+      a {
+        color: $npp-black-80;
+        text-decoration: none;
+      }
+
+      .dropdown-item.active,
+      .dropdown-item:active {
+        background-color: $npp-button-purple;
+        color: #FFF;
+      }
+  }
+
+  #sort-dropdown .dropdown-toggle,
+  #per_page-dropdown .dropdown-toggle {
+    color: #FFF;
+
+    .caret {
+      color: #FFF;
+    }
+  }
+
+  #per_page-dropdown.show > .btn-outline-secondary.dropdown-toggle,
+  #per-page-dropdown .btn-outline-secondary:not(:disabled):not(.disabled):active,
+  #sort-dropdown.show > .btn-outline-secondary.dropdown-toggle,
+  #sort-dropdown .btn-outline-secondary:not(:disabled):not(.disabled):active {
+    background-color: $npp-button-purple;
+    color: #FFF;
+  }
+
+  #sort-dropdown .dropdown-toggle:hover,
+  #per_page-dropdown .dropdown-toggle:hover,
+  #sort-dropdown .dropdown-toggle:active,
+  #per_page-dropdown .dropdown-toggle:active {
+    color: #FFF;
+
+    .caret {
+      color: #FFF;
+    }
+
+  }
+
+  .btn-group .blacklight-icons svg {
+    fill: #FFF;
+  }
+
+  .view-type-gallery.btn-outline-secondary.active:not(:disabled):not(.disabled),
+  .view-type-list.btn-outline-secondary.active:not(:disabled):not(.disabled) {
+    background-color: $npp-button-purple;
+    .blacklight-icons svg { 
+      fill: #FFF;
+    }
+  }
+
+  // search resources
+  button.search-submit {
+    background-color: $npp-button-purple;
+    border-color: $npp-light-purple;
+    color: #FFF;
+  }
+
+  button.search-submit:hover {
+    background-color: $npp-brand-color;
+    border-color: $npp-light-purple;
+    color: #FFF;
+  }
+
+  .constraints-container {
+    padding: 10px 20px;
+    border-radius: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+
+  // pagination
+
+  .pagination {
+     li a, li span {
+
+       background-color: $npp-button-purple;
+       border-color: $npp-button-purple;
+       color: #FFF;
+     }
+
+     li>a:hover,
+     li>a:focus,
+     li>span:hover,
+     li>span:focus {
+       background-color: $npp-brand-color;
+       border-color: $npp-button-purple;
+       color: #FFF;
+     }
+
+
+     .active>a,
+     .active>a:hover,
+     .active>a:focus,
+     .active>span,
+     .active>span:hover,
+     .active>span:focus {
+       background-color: $npp-light-beige;
+       border-color: $npp-brand-color;
+       color: $npp-black-80;
+     }
+
+     .disabled>span,
+     .disabled>span:hover,
+     .disabled>span:focus,
+     .disabled>a,
+     .disabled>a:hover,
+     .disabled>a:focus {
+      background-color: #FFF;
+      border-color: $npp-brand-color;
+      color: $npp-black-80;
+     }
+  }
+
+  // breadcrumbs
+  .breadcrumbs {
+    @include myriad-pro;
+  }
+
+  .breadcrumb {
+    padding: 8px 15px !important;
+  }
+
+  //footer
+  footer.press {
+      color: #FFF;
+      background-color: $npp-brand-color;
+      padding: 3rem 0 1rem;
+
+      .container .row:first-of-type {
+        display: flex;
+        justify-content: space-between;
+      }
+  }
+  footer {
+      @include myriad-pro;
+
+      a {
+        color: #FFF;
+        text-decoration: none;
+      }
+
+      a.logo-link {
+        text-decoration: none;
+
+       img {
+        width: auto;
+        height: 100px;
+        display: block;
+       }
+      }
+
+      a.logo-link:hover {
+        text-decoration: none;
+      }
+
+
+      a:hover,
+      a:active {
+        color: #dae0e5;
+        text-decoration: underline;
+      }
+
+      .block {
+        display: block;
+      }
+
+      .contact a {
+        margin-bottom: 1em;
+        border-bottom: none;
+      }
+
+      h5 {
+        font-size: 1.5em;
+      }
+
+      .fulcrum {
+        height: 20px;
+        width: auto;
+        vertical-align: baseline;
+      }
+
+      small {
+        font-size: 12.8px
+      }
+
+      ul.second-nav {
+        font-size: 20px;
+      }
+
+      li {
+        padding-left: 1rem;
+        text-indent: -1rem;
+      }
+
+      p.social {
+        padding-top: .4em;
+        a {
+          padding-right: 0.75em;
+          svg {
+            display: inline-block;
+            vertical-align: middle;
+          }
+        }
+      }
+
+    .press-block-a, .press-block-b, .press-block-c {
+      background-color: $npp-brand-color;
+    }
+
+    .press-block-a {
+      padding-top: 0;
+      padding-left: 15px;
+      small {
+        display: block;
+      }
+    }
+
+    .press-block-b {
+      padding-top: 0;
+      ul {
+        @include myriad-pro;
+        font-size: 1.1em;
+      }
+    }
+
+    .press-block-c {
+      padding: 0;
+      margin-top: 1.5rem
+    }
+  }
+
+  // e-book reader
+  #reader {
+
+    .button {
+      @include epub-button-background-color($npp-button-purple,$npp-brand-color,#FFF);
+    }
+
+    .button--lg {
+      @include epub-button-background-color($npp-button-purple,$npp-brand-color,#FFF);
+    }
+
+    .button--inline {
+      @include epub-button-background-color($npp-button-purple,$npp-brand-color,#FFF);
+    }
+
+    .button--sm {
+      @include epub-button-background-color($npp-button-purple,$npp-brand-color,#FFF);
+    }
+
+    .button--sm.cozy-preferences {
+      @include epub-button-background-color($npp-button-purple,$npp-brand-color,#FFF);
+      color: #FFF;
+    }
+
+    i[class^='icon-chevron-'] {
+      @include epub-prev-next-color($npp-button-purple);
+      transition: 0.2s ease-in;
+    }
+
+    i[class^='icon-chevron-']:hover {
+      @include epub-hover-prev-next-color($npp-brand-color);
+      transition: 0.2s ease-in;
+    }
+
+    .cozy-control .logo {
+      height: 47px;
+
+      img {
+        height: 47px;
+      }
+    }
+
+    .modal__header,
+    .modal__header h3,
+    .modal__header button {
+      color: #FFF;
+    }
+
+    // PDF loading progress bar
+    .helio-loading-bar .progress {
+      background-color: $npp-brand-color;
+    }
+
+  }
+
+  @media only screen and (max-width: 1220px) {
+    .navbar-default .navbar-nav {
+      padding-left: 0px;
+    }
+
+    #brand-bar form.search-form {
+      padding-left: 0;
+      width: 200px;
+    }
+
+  }
+
+  @media only screen and (max-width : 1200px) {
+    #brand-bar #brand-bar-nav {
+      form {
+        width: 175px;
+      }
+    }
+  }
+
+  @media only screen and (max-width : 992px) {
+    #main {
+      margin-top: 2em;
+    }
+
+    header .navbar-brand img {
+      width: 350px;
+      height: auto;
+    }
+
+    .navbar-header {
+      float: none;
+    }
+
+    .navbar-toggle {
+      display: block;
+    }
+
+    .navbar-collapse {
+      border-top: 1px solid transparent;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .navbar-default .navbar-nav {
+      padding-top: 0;
+      padding-right: 0;
+      margin-top: 0;
+    }
+
+    .navbar-nav>li {
+      float: none;
+    }
+
+    .navbar-nav>li>a {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      line-height: unset;
+    }
+
+    .navbar-collapse.collapse.in {
+      display: block!important;
+    }
+
+    .collapsing {
+      overflow: hidden!important;
+    }
+
+    #brand-bar #brand-bar-nav form {
+      padding: 10px 0;
+      margin: 0;
+      width: 100%;
+      border: 0;
+      float: none !important;
+    }
+
+    .navbar-form .input-group .input-group-btn {
+      width: 1%;
+    }
+
+  }
+
 
 }
 ///////////////////////////////////////////////
