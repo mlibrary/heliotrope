@@ -102,9 +102,15 @@ namespace :heliotrope do
 
       # The Collection values used within the following presses are dictated by the "Fulcrum Products" value coming from TMM
       if press == 'bigten'
-        products = row['Fulcrum Products']&.split(';')&.map(&:strip)
-        row['Collection'] = if products.any? { |product| product == 'bigten_gender_and_sexuality_studies' }
+        products = row['Fulcrum Products']&.split(';')&.map(&:strip) || []
+        row['Collection'] = if products.any? { |product| product == 'bigten_experiences' }
+                              'African-, Asian-, and Hispanic American Experiences'
+                            elsif products.any? { |product| product == 'bigten_gender_and_sexuality_studies' }
                               'Gender and Sexuality Studies'
+                            elsif products.any? { |product| product == 'bigten_health' }
+                              'Health Disparities and Disability Culture'
+                            elsif products.any? { |product| product == 'bigten_environment' }
+                              'Human Environmental Impact'
                             elsif products.any? { |product| product == 'bigten_indigenous' }
                               'Indigenous North Americans'
                             else
