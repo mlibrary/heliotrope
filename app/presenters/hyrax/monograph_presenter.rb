@@ -139,6 +139,14 @@ module Hyrax
       identifier&.find { |i| i[/^bar_number:.*/] }&.gsub('bar_number:', '')&.strip
     end
 
+    def registration_required_to_read?
+      @registration_required_to_read ||= registration_google_form_id.present?
+    end
+
+    def registration_google_form_id
+      @registration_google_form_id ||= identifier&.find { |i| i[/^registration_google_form_id:.*/] }&.gsub('registration_google_form_id:', '')&.strip
+    end
+
     def prepare_display_names(comma_separated_names, author_type, orcids)
       forward_names = []
       comma_separated_names.each_with_index { |val, index| forward_names << unreverse_name(val) + (orcids ? maybe_add_orcid(index, author_type) : '') }

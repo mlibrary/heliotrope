@@ -412,6 +412,42 @@ RSpec.describe Hyrax::MonographPresenter do
     end
   end
 
+  describe '#registration_required_to_read?' do
+    let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], identifier_tesim: identifier) }
+
+    subject { presenter.registration_required_to_read? }
+
+    context 'No `registration_google_form_id:` is present in identifier' do
+      let(:identifier) { ["http://www.example.com/doi", "999.999.9999"] }
+
+      it { is_expected.to be false }
+    end
+
+    context 'A `registration_google_form_id:` is present in identifier' do
+      let(:identifier) { ["http://www.example.com/doi", "registration_google_form_id:1FAKEQLSfakeFAKEfakeFAKEfakeFAKEfakeFAKEfakeFAKE"] }
+
+      it { is_expected.to be true }
+    end
+  end
+
+  describe '#registration_google_form_id' do
+    let(:mono_doc) { ::SolrDocument.new(id: 'mono', has_model_ssim: ['Monograph'], identifier_tesim: identifier) }
+
+    subject { presenter.registration_google_form_id }
+
+    context 'No `registration_google_form_id:` is present in identifier' do
+      let(:identifier) { ["http://www.example.com/doi", "999.999.9999"] }
+
+      it { is_expected.to be nil }
+    end
+
+    context 'A `registration_google_form_id:` is present in identifier' do
+      let(:identifier) { ["http://www.example.com/doi", "registration_google_form_id:1FAKEQLSfakeFAKEfakeFAKEfakeFAKEfakeFAKEfakeFAKE"] }
+
+      it { is_expected.to eq '1FAKEQLSfakeFAKEfakeFAKEfakeFAKEfakeFAKEfakeFAKE' }
+    end
+  end
+
   describe '#creator' do
     context 'there are values in creator and contributor' do
       subject { presenter.creator }

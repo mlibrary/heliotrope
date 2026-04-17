@@ -62,7 +62,7 @@
     <!-- READ, DOWNLOAD, BUY BUTTONS -->
     <%# ensure all of the toolbar's internal components' conditionals are present here to control the toolbar's appearance %>
     <% if @monograph_presenter.reader_ebook? || (@ebook_download_presenter.downloadable_ebooks? && !@monograph_presenter.tombstone?) || @monograph_presenter.buy_url? %>
-      <% if @monograph_presenter.subdomain == 'ee' %>
+      <% if @monograph_presenter.registration_required_to_read? %>
         <%= render 'read_download_buy_registration_required' %>
       <% else %>
         <%= render "read_download_buy", princess_de_cleves: princess_de_cleves %>
