@@ -15038,6 +15038,11 @@ $npp-highlight-dark: #FFDF00;
     .modal__header h3,
     .modal__header button {
       color: #FFF;
+
+      .modal__close::before {
+        color: #fff;
+      }
+
     }
 
     // PDF loading progress bar
