@@ -1,5 +1,5 @@
 <!-- survey -->
-<div id="surveyNonModalWestminster" class="alert survey" role="alert" aria-labelledby="surveyNonModalLabel" style="display:none;">
+<div id="surveyNonModalNewPrairiePress" class="alert survey" role="alert" aria-labelledby="surveyNonModalLabel" style="display:none;">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">        
@@ -10,7 +10,7 @@
       </div>
       <div class="modal-body">
         <%= image_tag 'oa-lock-logo-lg.png', alt: 'a graphic of a lock that is open, the universal logo for open access'  %>
-        <p>University of Westminster Press needs your feedback to better understand how readers are using openly available ebooks. You can help by taking a short, privacy-friendly survey.</p>
+        <p>New Prairie Press needs your feedback to better understand how readers are using openly available ebooks. You can help by taking a short, privacy-friendly survey.</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary btn-lg" data-dismiss="alert" onclick="survey_button_yes()">Yes, I can help</button>
@@ -21,10 +21,10 @@
 </div>
 <script type="text/javascript">
   function survey_button_yes(){
-    Cookies.set('survey_westminster', 'clicked', { expires: 365<%= ', secure: true' if Rails.env == 'production' %> });
-    window.open("https://umich.qualtrics.com/jfe/form/SV_bq37RieqgU57nkG?publisher=<%= @subdomain %>&title=<%= @parent_presenter.page_title %>", "_blank");
+    Cookies.set('survey_newprairiepress', 'clicked', { expires: 365<%= ', secure: true' if Rails.env == 'production' %> });
+    window.open("<%= j("https://umich.qualtrics.com/jfe/form/SV_0pN4FLqYb5Y2U3I?publisher=#{ERB::Util.url_encode(@subdomain.to_s)}&title=#{ERB::Util.url_encode(@parent_presenter.page_title.to_s)}") %>", "_blank");
   }
   function survey_button_no(){
-    Cookies.set('survey_westminster', 'ignore', { expires: 180<%= ', secure: true' if Rails.env == 'production' %> });
+    Cookies.set('survey_newprairiepress', 'ignore', { expires: 180<%= ', secure: true' if Rails.env == 'production' %> });
   }
 </script>
