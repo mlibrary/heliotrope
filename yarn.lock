@@ -1962,7 +1962,7 @@ core-util-is@~1.0.0:
 
 "cozy-sun-bear@git+https://github.com/mlibrary/cozy-sun-bear.git":
   version "1.0.0"
-  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#a04f6a3675401654cb9b6e9a0851a8985ec731ab"
+  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#ca29a182734eff21b70ff5df28e3c7963aa85e6a"
   dependencies:
     ajv "^6.14.0"
     core-js "^3.6.5"
@@ -1970,7 +1970,7 @@ core-util-is@~1.0.0:
     event-emitter "^0.3.5"
     intersection-observer "^0.5.1"
     jszip "^3.8.0"
-    lodash "^4.17.23"
+    lodash "^4.18.1"
     mustache "^2.3.0"
     path-webpack "0.0.3"
 
@@ -2858,7 +2858,12 @@ lodash.has@^4.5.2:
   resolved "https://registry.yarnpkg.com/lodash.has/-/lodash.has-4.5.2.tgz#d19f4dc1095058cccbe2b0cdf4ee0fe4aa37c862"
   integrity sha512-rnYUdIo6xRCJnQmbVFEwcxF144erlD+M3YcJUVesflU9paQaE8p+fJDcIQrlMYbxoANFL+AB9hZrzSBBk5PL+g==
 
-lodash@^4.17.11, lodash@^4.17.21, lodash@^4.17.23:
+lodash@^4.17.11, lodash@^4.18.1:
+  version "4.18.1"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.18.1.tgz#ff2b66c1f6326d59513de2407bf881439812771c"
+  integrity sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==
+
+lodash@^4.17.21:
   version "4.17.23"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.23.tgz#f113b0378386103be4f6893388c73d0bde7f2c5a"
   integrity sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==
