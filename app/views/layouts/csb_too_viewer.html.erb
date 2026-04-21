@@ -29,8 +29,8 @@
 
     <!-- Javascript -->
     <%= javascript_include_tag 'application' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'cozy-sun-bear-too/cozy-sun-bear-too' %>
+    <%= javascript_pack_tag 'application', 'cozy-sun-bear-too/cozy-sun-bear-too', 'data-turbolinks-track': 'reload', defer: false %>
+
 
     <!-- additional JS libraries -->
    <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js' %>
