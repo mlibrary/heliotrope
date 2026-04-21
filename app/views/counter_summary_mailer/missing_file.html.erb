@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  <title>Missing SIQ Counter Statistics File</title>
+</head>
+<body role="main">
+  <h1>Missing SIQ Counter Statistics File</h1>
+  
+  <p>The expected SIQ Counter Statistics file was not found in the AWS S3 bucket.</p>
+  
+  <table style="margin: 20px 0; border-collapse: collapse;">
+    <tr>
+      <td style="padding: 8px; font-weight: bold;">Check Date:</td>
+      <td style="padding: 8px;"><%= @check_date %></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; font-weight: bold;">Expected File:</td>
+      <td style="padding: 8px;"><code><%= @expected_filename %></code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; font-weight: bold;">Period:</td>
+      <td style="padding: 8px;"><%= @month_name %> <%= @year %></td>
+    </tr>
+  </table>
+  
+  <p>The MonthlyCounterStatsJob will continue checking daily until the file is available.</p>
+  
+  <h2>Please verify:</h2>
+  <ol>
+    <li>The file has been uploaded to the SIQ S3 bucket</li>
+    <li>The filename matches the expected format: <code>fulcrum_metric_totals-YYYY-MM.csv</code></li>
+    <li>AWS credentials in <code>config/scholarlyiq.yml</code> are correct</li>
+    <li>Bucket name and region are configured properly</li>
+  </ol>
+  
+  <p>The job will automatically process the file once it becomes available.</p>
+</body>
+</html>

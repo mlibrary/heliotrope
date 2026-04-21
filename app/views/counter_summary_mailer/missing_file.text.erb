@@ -1,0 +1,15 @@
+The expected SIQ Counter Statistics file was not found in the AWS S3 bucket.
+
+Check Date: <%= @check_date %>
+Expected File: <%= @expected_filename %>
+Period: <%= @month_name %> <%= @year %>
+
+The MonthlyCounterStatsJob will continue checking daily until the file is available.
+
+Please verify:
+1. The file has been uploaded to the SIQ S3 bucket
+2. The filename matches the expected format: fulcrum_metric_totals-YYYY-MM.csv
+3. AWS credentials in config/scholarlyiq.yml are correct
+4. Bucket name and region are configured properly
+
+The job will automatically process the file once it becomes available.
