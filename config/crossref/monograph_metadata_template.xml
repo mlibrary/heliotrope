@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<doi_batch xmlns="http://www.crossref.org/schema/4.3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.3.0" xsi:schemaLocation="http://www.crossref.org/schema/4.3.0 http://www.crossref.org/schema/deposit/crossref4.3.0.xsd">
+<doi_batch xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+           xsi:schemaLocation="http://www.crossref.org/schema/5.4.0 https://www.crossref.org/schemas/crossref5.4.0.xsd" 
+           xmlns="http://www.crossref.org/schema/5.4.0" 
+           xmlns:jats="http://www.ncbi.nlm.nih.gov/JATS1" 
+           xmlns:fr="http://www.crossref.org/fundref.xsd" 
+           xmlns:mml="http://www.w3.org/1998/Math/MathML" 
+           version="5.4.0">
+<!-- 
+
+2026-04-17
+We've never actually used this in Fulcrum. 
+I'm updating the file_set and component schemas to use 5.4.0 and Copilot updated this file to 5.4.0 too.
+Along with services/crossref/monograph_metadata.rb these have never been used in production,
+it's just something we added in the original PR.
+We do DOI Monograph assignments through TMM.
+
+-->
 <head>
   <doi_batch_id>
     <!-- DOI BATCH ID -->
@@ -8,7 +24,7 @@
     <!-- TIMESTAMP -->
   </timestamp>
   <depositor>
-    <name>scpo</name>
+    <depositor_name>scpo</depositor_name>
     <email_address>mpub.xref@gmail.com</email_address>
   </depositor>
   <registrant>MPublishing</registrant>
