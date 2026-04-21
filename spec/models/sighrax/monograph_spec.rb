@@ -227,39 +227,182 @@ RSpec.describe Sighrax::Monograph, type: :model do
         it { is_expected.to eq 'http://www.worldcat.org/isbn/4' }
       end
 
+      context 'ISBN-10 with X check digit (no type)' do
+        let(:isbns) { ['019853453X'] }
+
+        it { is_expected.to eq 'http://www.worldcat.org/isbn/019853453X' }
+      end
+
+      context 'ISBN-10 with X check digit and type' do
+        let(:isbns) { ['019853453X (hardcover)'] }
+
+        it { is_expected.to eq 'http://www.worldcat.org/isbn/019853453X' }
+      end
+
+      # This logic also exists in app/jobs/build_kbart_job.rb, which is what it is.
+      # I think we're getting settled into what we consider to be "the" ISBN of a book,
+      # and soon we might want to consolidate the code in a central place.
       context 'isbn precedence' do
         let(:none) { '00-00-00-00-00' }
         let(:unknown) { '111-111-111-1 (unknown)' }
+        let(:open_access) { '1234-5678-90 (open access)' }
         let(:ebook) { '2222-2222-22 (ebook)' }
+        let(:pdf) { '2345-6789-01 (PDF)' }
         let(:hardcover) { '3-33-333-3333 (hardcover)' }
         let(:paper) { '444-44-4-4444 (paper)' }
+        let(:paper_with_cd) { '5555-5555-55 (paper with cd)' }
 
-        let(:isbns) { [unknown, hardcover, none, ebook, paper] }
+        context 'with open access (highest priority)' do
+          let(:isbns) { [unknown, paper_with_cd, paper, hardcover, pdf, ebook, open_access, none] }
 
-        it { is_expected.to eq 'http://www.worldcat.org/isbn/2222222222' }
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/1234567890' }
+        end
 
-        context 'no ebook' do
-          let(:isbns) { [unknown, hardcover, none, paper] }
+        context 'with open-access variant' do
+          let(:open_access_variant) { '1234-5678-91 (open-access)' }
+          let(:isbns) { [unknown, paper, hardcover, ebook, open_access_variant, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/1234567891' }
+        end
+
+        context 'with OA variant' do
+          let(:oa) { '1234-5678-92 (OA)' }
+          let(:isbns) { [unknown, paper, hardcover, ebook, oa, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/1234567892' }
+        end
+
+        context 'no open access, with ebook' do
+          let(:isbns) { [unknown, paper_with_cd, paper, hardcover, pdf, ebook, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/2222222222' }
+        end
+
+        context 'with e-book variant' do
+          let(:ebook_variant) { '2222-2222-23 (e-book)' }
+          let(:isbns) { [unknown, paper, hardcover, ebook_variant, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/2222222223' }
+        end
+
+        context 'with ebook epub variant' do
+          let(:ebook_epub) { '2222-2222-24 (ebook epub)' }
+          let(:isbns) { [unknown, paper, hardcover, ebook_epub, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/2222222224' }
+        end
+
+        context 'no ebook, with PDF' do
+          let(:isbns) { [unknown, paper_with_cd, paper, hardcover, pdf, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/2345678901' }
+        end
+
+        context 'with ebook pdf variant' do
+          let(:ebook_pdf) { '2345-6789-02 (ebook pdf)' }
+          let(:isbns) { [unknown, paper, hardcover, ebook_pdf, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/2345678902' }
+        end
+
+        context 'no pdf, with hardcover' do
+          let(:isbns) { [unknown, paper_with_cd, paper, hardcover, none] }
 
           it { is_expected.to eq 'http://www.worldcat.org/isbn/3333333333' }
+        end
 
-          context 'no hardcover' do
-            let(:isbns) { [unknown, none, paper] }
+        context 'with cloth variant' do
+          let(:cloth) { '3333-3333-34 (cloth)' }
+          let(:isbns) { [unknown, paper, cloth, none] }
 
-            it { is_expected.to eq 'http://www.worldcat.org/isbn/4444444444' }
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/3333333334' }
+        end
 
-            context 'no paper' do
-              let(:isbns) { [unknown, none] }
+        context 'with Hardcover (capitalized) variant' do
+          let(:hardcover_cap) { '3333-3333-35 (Hardcover)' }
+          let(:isbns) { [unknown, paper, hardcover_cap, none] }
 
-              it { is_expected.to eq 'http://www.worldcat.org/isbn/0000000000' }
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/3333333335' }
+        end
 
-              context 'unknown' do
-                let(:isbns) { [unknown] }
+        context 'no hardcover, with print' do
+          let(:print) { '3456-7890-12 (print)' }
+          let(:isbns) { [unknown, paper_with_cd, paper, print, none] }
 
-                it { is_expected.to eq 'http://www.worldcat.org/isbn/1111111111' }
-              end
-            end
-          end
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/3456789012' }
+        end
+
+        context 'with hardcover : alk. paper variant' do
+          let(:hc_alk) { '3456-7890-13 (hardcover : alk. paper)' }
+          let(:isbns) { [unknown, paper, hc_alk, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/3456789013' }
+        end
+
+        context 'with hc. : alk. paper variant' do
+          let(:hc_alk_short) { '3456-7890-14 (hc. : alk. paper)' }
+          let(:isbns) { [unknown, paper, hc_alk_short, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/3456789014' }
+        end
+
+        context 'no print, with paper' do
+          let(:isbns) { [unknown, paper_with_cd, paper, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/4444444444' }
+        end
+
+        context 'with paperback variant' do
+          let(:paperback) { '4444-4444-45 (paperback)' }
+          let(:isbns) { [unknown, paperback, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/4444444445' }
+        end
+
+        context 'with Paper (capitalized) variant' do
+          let(:paper_cap) { '4444-4444-46 (Paper)' }
+          let(:isbns) { [unknown, paper_cap, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/4444444446' }
+        end
+
+        context 'with pb. variant' do
+          let(:pb) { '4444-4444-47 (pb.)' }
+          let(:isbns) { [unknown, pb, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/4444444447' }
+        end
+
+        context 'with pb. : alk. paper variant' do
+          let(:pb_alk) { '4444-4444-48 (pb. : alk. paper)' }
+          let(:isbns) { [unknown, pb_alk, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/4444444448' }
+        end
+
+        context 'no paper, with paper with cd' do
+          let(:isbns) { [unknown, paper_with_cd, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/5555555555' }
+        end
+
+        context 'with paper plus cd rom variant' do
+          let(:paper_cd_rom) { '5555-5555-56 (paper plus cd rom)' }
+          let(:isbns) { [unknown, paper_cd_rom, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/5555555556' }
+        end
+
+        context 'no paper with cd, with none' do
+          let(:isbns) { [unknown, none] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/0000000000' }
+        end
+
+        context 'only unknown (fallback)' do
+          let(:isbns) { [unknown] }
+
+          it { is_expected.to eq 'http://www.worldcat.org/isbn/1111111111' }
         end
       end
     end

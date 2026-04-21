@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module Opds
-  class Publication
+  class Publication # rubocop:disable Metrics/ClassLength
+    attr_reader :monograph
     private_class_method :new
 
     delegate :to_json, to: :to_h
@@ -56,8 +57,10 @@ module Opds
       rvalue[:metadata][:description] = description
       rvalue[:metadata][:duration] = duration
       rvalue[:metadata][:identifier] = identifier
+      rvalue[:metadata][:altIdentifier] = altIdentifier
       rvalue[:metadata][:imprint] = imprint
       rvalue[:metadata][:language] = language
+      rvalue[:metadata][:layout] = layout
       rvalue[:metadata][:modified] = modified
       rvalue[:metadata][:numberOfPages] = numberOfPages
       rvalue[:metadata][:published] = published
@@ -66,17 +69,51 @@ module Opds
       rvalue[:metadata][:subject] = subject
       rvalue[:metadata][:subtitle] = subtitle
 
+      # Accessibility metadata for EPUBs only
+      # https://github.com/readium/webpub-manifest/tree/master/contexts/default#accessibility-metadata
+      if @monograph.epub_ebook.valid?
+        accessibility_metadata = {
+          summary: accessibility_summary,
+          conformsTo: conforms_to,
+          feature: accessibility_features,
+          hazard: accessibility_hazards,
+          accessMode: access_modes,
+          accessModeSufficient: access_modes_sufficient
+        }
+        accessibility_metadata.delete_if { |k, v| v.blank? }
+        rvalue[:metadata][:accessibility] = accessibility_metadata unless accessibility_metadata.empty?
+      end
+
+      # Accessibility metadata for PDFs only
+      # TODO: These fields don't actually exist yet but will be populated when PDF accessibility metadata extraction is implemented.
+      # Only add PDF accessibility metadata if EPUB accessibility metadata is not already in the feed.
+      # This way, if an EPUB is present and has accessibility metadata, we use that. If the EPUB has none,
+      # or there is no EPUB at all, we fall back to PDF accessibility metadata.
+      if @monograph.pdf_ebook.valid? && rvalue[:metadata][:accessibility].blank?
+        accessibility_metadata = {
+          summary: pdf_accessibility_summary,
+          conformsTo: pdf_conforms_to,
+          feature: pdf_accessibility_features,
+          hazard: pdf_accessibility_hazards,
+          accessMode: pdf_access_modes,
+          accessModeSufficient: pdf_access_modes_sufficient
+        }
+        accessibility_metadata.delete_if { |k, v| v.blank? }
+        rvalue[:metadata][:accessibility] = accessibility_metadata unless accessibility_metadata.empty?
+      end
+
+
       rvalue[:metadata].delete_if { |k, v| v.blank? }
 
       if @monograph.epub_ebook.valid?
         rvalue[:links].append({ rel: 'self', href: download_ebook_url(@monograph.epub_ebook), type: 'application/epub+zip' })
-        rvalue[:links].append({ rel: 'http://opds-spec.org/acquisition/open-access', href: download_ebook_url(@monograph.epub_ebook), type: 'application/epub+zip' })
+        rvalue[:links].append({ rel: acquisition_rel, href: download_ebook_url(@monograph.epub_ebook), type: 'application/epub+zip' })
         if @monograph.pdf_ebook.valid?
-          rvalue[:links].append({ rel: 'http://opds-spec.org/acquisition/open-access', href: download_ebook_url(@monograph.pdf_ebook), type: 'application/pdf' })
+          rvalue[:links].append({ rel: acquisition_rel, href: download_ebook_url(@monograph.pdf_ebook), type: 'application/pdf' })
         end
       elsif @monograph.pdf_ebook.valid?
         rvalue[:links].append({ rel: 'self', href: download_ebook_url(@monograph.pdf_ebook), type: 'application/pdf' })
-        rvalue[:links].append({ rel: 'http://opds-spec.org/acquisition/open-access', href: download_ebook_url(@monograph.pdf_ebook), type: 'application/pdf' })
+        rvalue[:links].append({ rel: acquisition_rel, href: download_ebook_url(@monograph.pdf_ebook), type: 'application/pdf' })
       else
         # We have "publications" or Monographs without any actual book in umpebc like: zc77ss45g, rx913r17x or z603r054w
         # I don't know if that really makes sense in the OPDS context, but here we are.
@@ -173,7 +210,36 @@ module Opds
       end
 
       def identifier
+        # Use preferred ISBN if available, otherwise fallback to monograph identifier
+        return "urn:isbn:#{@preferred_isbn}" if @preferred_isbn.present?
         @monograph.identifier
+      end
+
+      def altIdentifier
+        identifiers = []
+
+        # Add non-preferred ISBNs
+        if @non_preferred_isbns.present?
+          identifiers.concat(@non_preferred_isbns.map { |isbn| "urn:isbn:#{isbn}" })
+        end
+
+        # Add DOI/handle in short format, but only if identifier is using an ISBN
+        # (if identifier is using the DOI/handle, don't duplicate it here)
+        if @preferred_isbn.present?
+          doi_or_handle = @monograph.identifier
+          if doi_or_handle.present?
+            if doi_or_handle.start_with?('https://doi.org/')
+              identifiers << doi_or_handle.sub('https://doi.org/', 'urn:doi:')
+            elsif doi_or_handle.start_with?('https://hdl.handle.net/')
+              # There's no official or unofficial urn namespace for handle like there is for DOI
+              # so we'll just use the full url instead.
+              identifiers << doi_or_handle
+            end
+          end
+        end
+
+        return nil if identifiers.empty?
+        identifiers
       end
 
       def imprint
@@ -221,8 +287,18 @@ module Opds
         @monograph.publishing_house
       end
 
+      def layout
+        # Return 'reflowable' for EPUBs
+        # In the past we had fixed (page image) EPUBs, but those have all been converted to PDF
+        return 'reflowable' if @monograph.epub_ebook.valid?
+        nil
+      end
+
       def readingProgression
         # 'ltr', 'rtl', 'ttb', 'btt', or 'auto' (default)
+        # Currently all Fulcrum books are read left to right
+        return 'ltr' if @monograph.epub_ebook.valid?
+        nil
       end
 
       def series
@@ -247,6 +323,101 @@ module Opds
       def title_sort_as
       end
 
+      def accessibility_summary
+        @monograph.epub_a11y_accessibility_summary
+      end
+
+      def conforms_to
+        value = @monograph.epub_a11y_conforms_to
+        return nil if value.blank?
+        # conformsTo should be an array according to the spec
+        [value]
+      end
+
+      def accessibility_features
+        values = @monograph.epub_a11y_accessibility_features
+        return nil if values.blank?
+        values
+      end
+
+      def accessibility_hazards
+        values = @monograph.epub_a11y_accessibility_hazards
+        return nil if values.blank?
+        values
+      end
+
+      def access_modes
+        values = @monograph.epub_a11y_access_modes
+        return nil if values.blank?
+        values
+      end
+
+      def access_modes_sufficient
+        values = @monograph.epub_a11y_access_modes_sufficient
+        return nil if values.blank?
+        # Split comma-separated values into nested arrays
+        # e.g., "textual,visual" becomes ["textual", "visual"]
+        # but "textual" remains "textual"
+        # This is from an example found in 2026-04-02 from
+        # https://github.com/readium/webpub-manifest/tree/master/contexts/default#accessibility-metadata
+        values.map do |value|
+          if value.include?(',')
+            value.split(',').map(&:strip)
+          else
+            value
+          end
+        end
+      end
+
+      def pdf_accessibility_summary
+        @monograph.pdf_a11y_accessibility_summary
+      end
+
+      def pdf_conforms_to
+        value = @monograph.pdf_a11y_conforms_to
+        return nil if value.blank?
+        # conformsTo should be an array according to the spec
+        [value]
+      end
+
+      def pdf_accessibility_features
+        values = @monograph.pdf_a11y_accessibility_features
+        return nil if values.blank?
+        values
+      end
+
+      def pdf_accessibility_hazards
+        values = @monograph.pdf_a11y_accessibility_hazards
+        return nil if values.blank?
+        values
+      end
+
+      def pdf_access_modes
+        values = @monograph.pdf_a11y_access_modes
+        return nil if values.blank?
+        values
+      end
+
+      def pdf_access_modes_sufficient
+        values = @monograph.pdf_a11y_access_modes_sufficient
+        return nil if values.blank?
+        # Split comma-separated values into nested arrays
+        # e.g., "textual,visual" becomes ["textual", "visual"]
+        # but "textual" remains "textual"
+        values.map do |value|
+          if value.include?(',')
+            value.split(',').map(&:strip)
+          else
+            value
+          end
+        end
+      end
+
+      def acquisition_rel
+        # Return the appropriate acquisition rel based on whether the monograph is open access
+        @monograph.open_access? ? 'http://opds-spec.org/acquisition/open-access' : 'http://opds-spec.org/acquisition'
+      end
+
       def download_ebook_url(ebook)
         return Rails.application.routes.url_helpers.download_ebook_url(ebook.noid, entityID: @entity_id) if @entity_id
         Rails.application.routes.url_helpers.download_ebook_url(ebook.noid)
@@ -260,6 +431,9 @@ module Opds
       def initialize(monograph, entity_id = nil)
         @monograph = monograph
         @entity_id = entity_id
+        # Memoize preferred and non-preferred ISBNs to avoid repeated parsing
+        @preferred_isbn = @monograph.preferred_isbn
+        @non_preferred_isbns = @monograph.non_preferred_isbns
       end
   end
 end
