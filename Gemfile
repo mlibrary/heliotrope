@@ -219,7 +219,7 @@ gem 'uglifier', '~> 4.2'
 gem 'skylight', '~> 5.3.4'
 
 # Rails Webpack Tool (Shakapacker is the community-maintained fork of webpacker)
-gem 'shakapacker', '~> 7.2'
+gem 'shakapacker', '9.5.0'
 
 # Puma monitoring, HELIO-3388
 # Rails, ActiveJob, Fedora/Solr HTTP monitoring, HELIO-4827
