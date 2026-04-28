@@ -133,6 +133,22 @@ RSpec.describe Tmm::FileService do
         end
       end
     end
+
+    context "mobi FileSet" do
+      before { allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:mobi?).and_return(true) }
+
+      context "matched with a mobi file" do
+        it "returns false" do
+          expect(described_class.mismatched_types?('blah.mobi', presenter)).to be false
+        end
+      end
+
+      context "mismatched with a non-mobi file" do
+        it "returns true" do
+          expect(described_class.mismatched_types?('blah.blah', presenter)).to be true
+        end
+      end
+    end
   end
 
   describe "#replace" do
@@ -195,6 +211,13 @@ RSpec.describe Tmm::FileService do
           expect(subject).to eq ({ representative_kind: 'pdf_ebook' })
         end
       end
+
+      context "mobi" do
+        let(:kind) { :mobi }
+        it "returns correct representative kind with no allow_download" do
+          expect(subject).to eq ({ representative_kind: 'mobi' })
+        end
+      end
     end
 
     context "eBooks are downloadable" do
@@ -218,6 +241,13 @@ RSpec.describe Tmm::FileService do
         let(:kind) { :pdf }
         it "returns correct representative kind with allow_download == 'yes'" do
           expect(subject).to eq ({ representative_kind: 'pdf_ebook', allow_download: 'yes' })
+        end
+      end
+
+      context "mobi" do
+        let(:kind) { :mobi }
+        it "returns correct representative kind with allow_download == 'yes'" do
+          expect(subject).to eq ({ representative_kind: 'mobi', allow_download: 'yes' })
         end
       end
     end
