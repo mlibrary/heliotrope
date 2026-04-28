@@ -56,7 +56,7 @@
                 hint: 'Note this button <u>cannot display</u> if the accessibility metadata is <u>not</u> displayed.'.html_safe %>
     <%= f.input :accessible_copy_request_form_url, label: 'Accessible Copy Request Form URL' %>
   </fieldset>
-  <%= f.input :show_irus_stats, label: 'Show IRUS stats on Monograph catalog pages?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: true %>
+  <%= f.input :show_irus_stats, label: 'Show usage statistics on Monograph catalog pages?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: true %>
   <%= f.input :share_links, label: 'Allow "share links" for temporary access of restricted materials?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
   <%= f.input :watermark, label: 'Apply watermark to downloaded ebooks?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
   <%= f.input :interval, label: 'Allow ebook interval (chapter) download?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>

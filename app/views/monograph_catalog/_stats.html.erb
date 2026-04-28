@@ -1,1 +1,40 @@
-<iframe id='irus_stats' title='IRUS statistics for this Monograph' src='/irus_stats?noid=<%= @presenter.id %>'></iframe>
+<div id="counter_stats_container">
+  <% if @counter_summary_presenter.any_statistics? %>
+    <div class="counter-stats-info">
+      <p>Counter statistics represent COUNTER usage on the Fulcrum platform only, not through other channels.</p>
+      <p>Note: Reporting_Period_Total shows total views (life to date) of full content for this item (Total_Item_Requests).</p>
+      <p>For an explanation of Metric_Types, please see the <a href="https://www.projectcounter.org/code-of-practice-five-sections/abstract/" target="_blank">COUNTER Code of Practice</a>.</p>
+      <p>For more information on how we and partners treat your usage data, <a href="/privacy#usage_info_irus" target="_blank">see our privacy policy</a>.</p>
+    </div>
+
+    <table class="table table-bordered counter-stats-table">
+      <thead>
+        <tr>
+          <th>Metric_Type</th>
+          <th>Reporting_Period_Total</th>
+          <% @counter_summary_presenter.month_headers.each do |month_header| %>
+            <th><%= month_header %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @counter_summary_presenter.metric_type_names.each do |metric_name| %>
+          <tr>
+            <td><%= metric_name %></td>
+            <td><%= @counter_summary_presenter.life_total_for(@counter_summary_presenter.life_column_for(metric_name)) %></td>
+            <% @counter_summary_presenter.monthly_data_for(@counter_summary_presenter.monthly_column_for(metric_name)).each do |value| %>
+              <td><%= value %></td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="counter-stats-info">
+      <p>Counter statistics represent COUNTER usage on the Fulcrum platform only, not through other channels.</p>
+      <p>This item has no recent usage data recorded.</p>
+      <p>For more information on how we and partners treat your usage data, <a href="/privacy#usage_info_irus" target="_blank">see our privacy policy</a>.</p>
+    </div>
+  <% end %>
+</div>
+
