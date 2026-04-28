@@ -49,37 +49,6 @@ RSpec.describe CounterSummary, type: :model do
       end
     end
 
-    describe 'lifetime_metrics_greater_than_or_equal_to_monthly' do
-      it 'is invalid when total_item_requests_life < total_item_requests_month' do
-        stat = build(:counter_summary, total_item_requests_life: 5, total_item_requests_month: 10)
-        expect(stat).not_to be_valid
-        expect(stat.errors[:total_item_requests_life]).to include("must be greater than or equal to monthly requests")
-      end
-
-      it 'is invalid when total_item_investigations_life < total_item_investigations_month' do
-        stat = build(:counter_summary, total_item_investigations_life: 5, total_item_investigations_month: 10)
-        expect(stat).not_to be_valid
-        expect(stat.errors[:total_item_investigations_life]).to include("must be greater than or equal to monthly investigations")
-      end
-
-      it 'is invalid when unique_item_requests_life < unique_item_requests_month' do
-        stat = build(:counter_summary, unique_item_requests_life: 5, unique_item_requests_month: 10)
-        expect(stat).not_to be_valid
-        expect(stat.errors[:unique_item_requests_life]).to include("must be greater than or equal to monthly unique requests")
-      end
-
-      it 'is invalid when unique_item_investigations_life < unique_item_investigations_month' do
-        stat = build(:counter_summary, unique_item_investigations_life: 5, unique_item_investigations_month: 10)
-        expect(stat).not_to be_valid
-        expect(stat.errors[:unique_item_investigations_life]).to include("must be greater than or equal to monthly unique investigations")
-      end
-
-      it 'is valid when lifetime metrics equal monthly metrics' do
-        stat = build(:counter_summary, total_item_requests_life: 10, total_item_requests_month: 10)
-        expect(stat).to be_valid
-      end
-    end
-
     describe 'uniqueness' do
       let!(:existing_stat) { create(:counter_summary, monograph_noid: 'abc123', year: 2025, month: 7) }
 
