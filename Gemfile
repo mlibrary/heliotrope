@@ -182,7 +182,7 @@ gem 'resque', '~> 2.6.0'
 gem 'resque-pool'
 gem 'resque-web', '~> 0.0.12', require: 'resque_web'
 
-gem 'riiif', git: 'https://github.com/mlibrary/riiif', ref: '8c826c34c06c70439b1bb5cadf12800f9fa6e9d9'
+gem 'riiif', '2.8.1'
 
 gem 'rsolr', '>= 1.1.2', '< 3'
 
