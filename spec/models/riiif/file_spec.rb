@@ -2,86 +2,43 @@
 
 require 'rails_helper'
 
-# Riiif::File is taken from the riiif gem https://github.com/curationexperts/riiif
-# We override it in order to use netpbn's tifftopnm for tiffs
-# See #400
+# Riiif::File is overridden in app/overrides/riiif/file_overrides.rb to use
+# netpbm's tifftopnm for TIFF images. See #400
 describe Riiif::File do
   subject { described_class.new(path) }
 
   let(:path) { File.join(fixture_path, 'kitty.tif') }
 
-  describe '#mime_type' do
-    context 'when file is a tiff' do
-      it 'returns mime_type "image/tiff"' do
-        expect(subject.mime_type).to eq('image/tiff')
+  describe '#transformer' do
+    context 'when tifftopnm is available and the image is a tiff' do
+      before do
+        allow(subject).to receive(:tifftopnm_available?).and_return(true)
       end
-    end
-  end
 
-  describe '#extract' do
-    before { allow_any_instance_of(described_class).to receive(:execute).and_return(true) }
-
-    context 'when netpbn is installed and the image is a tiff' do
-      it 'calls extract_tifftopnm' do
-        allow_any_instance_of(described_class).to receive(:mime_type).and_return('image/tiff')
-        allow_any_instance_of(described_class).to receive(:tifftopnm).and_return(true)
-
-        expect(subject).to receive(:extract_tifftopnm).with({})
-        subject.extract({})
+      it 'returns TifftopnmTransformer' do
+        expect(subject.transformer).to eq(Riiif::TifftopnmTransformer)
       end
     end
 
-    context 'when netpbn is not installed and the image is a tiff' do
-      it 'calls extract_imagemagick' do
-        allow_any_instance_of(described_class).to receive(:mime_type).and_return('image/tiff')
-        allow_any_instance_of(described_class).to receive(:tifftopnm).and_return(false)
+    context 'when tifftopnm is not available and the image is a tiff' do
+      before do
+        allow(subject).to receive(:tifftopnm_available?).and_return(false)
+      end
 
-        expect(subject).to receive(:extract_imagemagick).with({})
-        subject.extract({})
+      it 'falls back to ImagemagickTransformer' do
+        expect(subject.transformer).to eq(Riiif::ImagemagickTransformer)
       end
     end
 
-    context 'when netpbn is installed and the image is a jpeg' do
-      it 'calls extract_imagemagick' do
-        # only tiffs use netpbn for now
-        allow_any_instance_of(described_class).to receive(:mime_type).and_return('image/jpg')
-        allow_any_instance_of(described_class).to receive(:tifftopnm).and_return(true)
+    context 'when tifftopnm is available but the image is a jpeg' do
+      let(:path) { File.join(fixture_path, 'moby-dick.jpg') }
 
-        expect(subject).to receive(:extract_imagemagick).with({})
-        subject.extract({})
+      before do
+        allow(subject).to receive(:tifftopnm_available?).and_return(true)
       end
-    end
-  end
 
-  describe "#extract_tifftopnm" do
-    context "Default format (JPG) with size/crop options" do
-      # in reality we should never have an image-service URL without a file extension in our application
-      it "returns the command(s) to execute" do
-        opts = { crop: "1024x1024+2048+4096", size: "x200" }
-        expect(subject.extract_tifftopnm(opts)).to match(/tifftopnm -byrow #{path}/)
-        expect(subject.extract_tifftopnm(opts)).to match(/pamcut 2048 4096 1024 1024/)
-        expect(subject.extract_tifftopnm(opts)).to match(/pnmscalefixed -ysize 200/)
-        expect(subject.extract_tifftopnm(opts)).to match(/pnmtojpeg -quality 95/)
-      end
-    end
-
-    context "JPG format with size/crop options" do
-      it "returns the command(s) to execute" do
-        opts = { format: "jpg", crop: "1024x1024+2048+4096", size: "x200" }
-        expect(subject.extract_tifftopnm(opts)).to match(/tifftopnm -byrow #{path}/)
-        expect(subject.extract_tifftopnm(opts)).to match(/pamcut 2048 4096 1024 1024/)
-        expect(subject.extract_tifftopnm(opts)).to match(/pnmscalefixed -ysize 200/)
-        expect(subject.extract_tifftopnm(opts)).to match(/pnmtojpeg -quality 95/)
-      end
-    end
-
-    context "PNG format with size/crop options" do
-      it "returns the command(s) to execute" do
-        opts = { format: "png", crop: "1024x1024+2048+4096", size: "x200" }
-        expect(subject.extract_tifftopnm(opts)).to match(/tifftopnm -byrow #{path}/)
-        expect(subject.extract_tifftopnm(opts)).to match(/pamcut 2048 4096 1024 1024/)
-        expect(subject.extract_tifftopnm(opts)).to match(/pnmscalefixed -ysize 200/)
-        expect(subject.extract_tifftopnm(opts)).to match(/pnmtopng/)
+      it 'uses ImagemagickTransformer' do
+        expect(subject.transformer).to eq(Riiif::ImagemagickTransformer)
       end
     end
   end

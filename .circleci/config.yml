@@ -261,6 +261,23 @@ jobs:
       - run:
           name: install imagemagick
           command: sudo apt-get install -y imagemagick
+      - run:
+          name: install netpbm 10.86.49 from source (for tifftopnm -byrow support)
+          # See HELIO-5064 this is a bit of a mess right now but is hopefully temporary.
+          # When we update our cimg to ruby 3.4 or above we can just use apt install to get 11+ which comes with ubuntu 24.04
+          command: |
+            sudo apt-get install -y libjpeg-dev libpng-dev libtiff-dev zlib1g-dev flex libx11-dev
+            cd /tmp
+            NETPBM_ARCHIVE="netpbm-10.86.49.tgz"
+            wget -O "${NETPBM_ARCHIVE}" https://sourceforge.net/projects/netpbm/files/super_stable/10.86.49/${NETPBM_ARCHIVE}
+            tar -xzf "${NETPBM_ARCHIVE}"
+            cd netpbm-10.86.49
+            yes '' | ./configure || [ $? -eq 141 ]
+            make
+            sudo make package pkgdir=/tmp/netpbm-package
+            sudo cp -R /tmp/netpbm-package/bin/* /usr/local/bin/
+            sudo cp -R /tmp/netpbm-package/lib/* /usr/local/lib/
+            sudo ldconfig
       # TODO: as with the yarn/asset stuff, we could move rubocop/ruumba to a "lint" job
       # and cache results. But it's fast enough for now I think
       - run:
@@ -315,8 +332,8 @@ executors:
       image: ualbertalib/docker-fcrepo4:<< parameters.fcrepo_version>>
     - command: bin/solr -cloud -noprompt -f -p <<parameters.solr_port>>
       image: solr:6-alpine
-    - image: circleci/redis:<<parameters.redis_version>>
-    - image: circleci/mysql:<<parameters.mysql_version>>
+    - image: cimg/redis:<<parameters.redis_version>>
+    - image: cimg/mariadb:<<parameters.mariadb_version>>
       command: [--default-authentication-plugin=mysql_native_password]
       environment:
         MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
@@ -334,7 +351,7 @@ executors:
         default: '4.7'
         type: string
       redis_version:
-        default: '6'
+        default: '6.2.6'
         type: string
       ruby_type:
         default: ruby
@@ -345,8 +362,8 @@ executors:
       solr_port:
         default: "8985"
         type: string
-      mysql_version:
-        default: '5.7.32'
+      mariadb_version:
+        default: '10.11'
         type: string
 
 workflows:
