@@ -1,0 +1,73 @@
+{
+  "document_type": {
+    "document_type": "scanned_unreadable",
+    "render_mode_3_detected": false,
+    "tr3_ratio": 0.0,
+    "tr3_ops": 0,
+    "total_tr_ops": 8,
+    "visible_chars": 0,
+    "method": "pikepdf_content_stream"
+  },
+  "metadata": {
+    "pdf_version": "1.3",
+    "Content-Type": "application/pdf",
+    "dc:title": "Third Sample Title",
+    "dc:creator": ["Sample, Author C."],
+    "is_tagged": "false",
+    "is_encrypted": "false",
+    "can_print": "true",
+    "can_print_high_quality": "true",
+    "has_non_embedded_fonts": "false",
+    "has_damaged_fonts": "false"
+  },
+  "conformance": {
+    "PDFA_1_B": {
+      "level": null,
+      "status": "fail",
+      "passed_rules": 95,
+      "failed_rules": 10,
+      "total_rules": 105,
+      "failed_rule_details": []
+    },
+    "PDFUA_1": {
+      "level": null,
+      "status": "fail",
+      "passed_rules": 80,
+      "failed_rules": 10,
+      "total_rules": 90,
+      "failed_rule_details": []
+    },
+    "PDFUA_2": {
+      "level": null,
+      "status": "fail",
+      "passed_rules": 1600,
+      "failed_rules": 20,
+      "total_rules": 1620,
+      "failed_rule_details": []
+    },
+    "WCAG_2_1": {
+      "level": null,
+      "status": "not available",
+      "passed_rules": null,
+      "failed_rules": null,
+      "total_rules": null,
+      "failed_rule_details": null
+    },
+    "WCAG_2_2": {
+      "level": "AA",
+      "status": "fail",
+      "passed_rules": 130,
+      "failed_rules": 10,
+      "total_rules": 140,
+      "failed_rule_details": []
+    }
+  },
+  "bookmarks": {
+    "items": []
+  },
+  "page_info": {
+    "page_count": 120
+  },
+  "marked_content": []
+}
+

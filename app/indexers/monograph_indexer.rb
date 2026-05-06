@@ -184,11 +184,13 @@ class MonographIndexer < Hyrax::WorkIndexer
   def maybe_index_accessibility_metadata(solr_doc)
     epub_fr = FeaturedRepresentative.where(work_id: object.id, kind: 'epub')&.first
     if epub_fr.present?
+      solr_doc['reader_ebook_format_sim'] = 'EPUB'
       AccessibilityMetadataIndexer::Epub.new(epub_fr.file_set_id, solr_doc).index_reader_ebook_accessibility_metadata
     else
       pdf_ebook_fr = FeaturedRepresentative.where(work_id: object.id, kind: 'pdf_ebook')&.first
       if pdf_ebook_fr.present?
-        AccessibilityMetadataIndexer::Pdf.new(pdf_ebook_fr.file_set_id, solr_doc).index_reader_ebook_accessibility_metadata
+        solr_doc['reader_ebook_format_sim'] = 'PDF'
+        AccessibilityMetadataIndexer::Pdf.new(pdf_ebook_fr.file_set_id, solr_doc, object.press).index_reader_ebook_accessibility_metadata
       end
     end
   end

@@ -1,81 +1,56 @@
 <% if press_presenter.show_accessibility_metadata? %>
+  <%
+    a11y_presenter = @presenter.epub? ? EpubAccessibilityMetadataPresenter.new(@presenter.solr_document) : PdfAccessibilityMetadataPresenter.new(@presenter.solr_document)
+  %>
   <div class="a11y-metadata">
-    <% if @presenter.epub_a11y_screen_reader_friendly.present? %>
-      <p><b>Screen Reader Friendly:</b> <%= @presenter.epub_a11y_screen_reader_friendly %></p>
+    <p><b>Format:</b> <%= a11y_presenter.a11y_format %></p>
+
+    <% if a11y_presenter.a11y_screen_reader_friendly.present? %>
+      <p><b>Screen Reader Friendly:</b> <%= a11y_presenter.a11y_screen_reader_friendly %></p>
     <% end %>
 
-    <% if @presenter.epub_a11y_accessibility_summary.present? %>
-      <p><b>Accessibility Summary:</b> <%= @presenter.epub_a11y_accessibility_summary %></p>
+    <% if a11y_presenter.a11y_accessibility_summary.present? %>
+      <p><b>Accessibility Summary:</b> <%= a11y_presenter.a11y_accessibility_summary %></p>
     <% end %>
 
-    <% if @presenter.epub_a11y_conforms_to.present? %>
-      <p><b>Accessibility Conformance:</b> <%= @presenter.epub_a11y_conforms_to %></p>
+    <% if a11y_presenter.a11y_conforms_to.present? %>
+      <p><b>Accessibility Conformance:</b> <%= a11y_presenter.a11y_conforms_to %></p>
     <% end %>
 
-    <% if @presenter.epub_a11y_certified_by.present? %>
-      <p><b>Certified By:</b> <%= @presenter.epub_a11y_certified_by %></p>
+    <% if a11y_presenter.a11y_certified_by.present? %>
+      <p><b>Certified By:</b> <%= a11y_presenter.a11y_certified_by %></p>
     <% end %>
 
-    <% if @presenter.epub_a11y_accessibility_hazards.present? %>
-      <p><b>Accessibility Hazard:</b> <%= @presenter.epub_a11y_accessibility_hazards.join(', ') %></p>
+    <% if a11y_presenter.a11y_accessibility_hazards.present? %>
+      <p><b>Accessibility Hazard:</b> <%= a11y_presenter.a11y_accessibility_hazards.join(', ') %></p>
     <% end %>
 
-    <% if @presenter.hidden_a11y_data_is_present? %>
-      <div id="hidden-a11y-items" style="display: none;" aria-hidden="true">
-        <% if @presenter.epub_a11y_accessibility_hazards.present? %>
-          <p><b>Accessibility Features:</b> <%= @presenter.epub_a11y_accessibility_features.join(', ') %></p>
-        <% end %>
+    <% if a11y_presenter.a11y_accessibility_features.present? %>
+      <p><b>Accessibility Features:</b> <%= a11y_presenter.a11y_accessibility_features.join(', ') %></p>
+    <% end %>
 
-        <% if @presenter.epub_a11y_access_modes.present? %>
-          <p><b>Access Modes:</b> <%= @presenter.epub_a11y_access_modes.join(', ') %></p>
-        <% end %>
+    <% if a11y_presenter.a11y_access_modes.present? %>
+      <p><b>Access Modes:</b> <%= a11y_presenter.a11y_access_modes.join(', ') %></p>
+    <% end %>
 
-        <% if @presenter.epub_a11y_access_modes_sufficient.present? %>
-          <p><b>Sufficient Access Modes:</b> <%= @presenter.epub_a11y_access_modes_sufficient.join('; ') %></p>
-        <% end %>
-      </div>
+    <% if a11y_presenter.a11y_access_modes_sufficient.present? %>
+      <p><b>Sufficient Access Modes:</b> <%= a11y_presenter.a11y_access_modes_sufficient.join('; ') %></p>
     <% end %>
 
     <div class="a11y-buttons row">
-      <%# We only link into the reader when a user can actually read the book. Only such users should be able to see this button. %>
-      <% if press_presenter.show_request_accessible_copy_button? && @presenter.epub_a11y_screen_reader_friendly != 'yes' && @reader_links_display == :linked %>
+      <% if press_presenter.show_request_accessible_copy_button? && a11y_presenter.a11y_screen_reader_friendly != 'yes' && @reader_links_display == :linked %>
+        <%# We only link into the reader when a user can actually read the book. Only such users should be able to see this button. %>
         <% press_accessible_copy_request_form_url = press_presenter.accessible_copy_request_form_url
 
            a11y_request_button_link = if press_accessible_copy_request_form_url.present?
                                         press_accessible_copy_request_form_url
                                       else
-                                        @presenter.prepopulated_link_for_accessible_copy_request_form
+                                        a11y_presenter.prepopulated_link_for_accessible_copy_request_form
                                       end
         %>
-        <div class="a11y-copy text-center md-6">
+        <div class="a11y-copy text-center">
           <a class="btn btn-default" href="<%= a11y_request_button_link %>" target="_blank">Request Accessible Copy</a>
         </div>
-      <% end %>
-
-      <% if @presenter.hidden_a11y_data_is_present? %>
-        <div class="a11y-info text-center md-6">
-          <button class="btn btn-default" id="show-more-a11y">Display all accessibility info</button>
-        </div>
-
-
-        <script type="text/javascript">
-          var moreButtonA11y = document.getElementById('show-more-a11y');
-          var a11yHidden = true;
-
-          moreButtonA11y.addEventListener('click', function () {
-            if (a11yHidden === true) {
-              $("#hidden-a11y-items").removeAttr('style');
-              $("#hidden-a11y-items").removeAttr('aria-hidden');
-              moreButtonA11y.innerHTML = "Display partial accessibility info";
-              a11yHidden = false;
-            } else {
-              $("#hidden-a11y-items").attr('style', 'display: none');
-              $("#hidden-a11y-items").attr('aria-hidden', 'true');
-              moreButtonA11y.innerHTML = "Display all accessibility info";
-              a11yHidden = true;
-            }
-          });
-        </script>
       <% end %>
     </div>
   </div> <!-- <div class="a11y-metadata"> -->

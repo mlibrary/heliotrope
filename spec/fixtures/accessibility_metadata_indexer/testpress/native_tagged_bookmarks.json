@@ -1,0 +1,79 @@
+{
+  "document_type": {
+    "document_type": "native",
+    "render_mode_3_detected": false,
+    "tr3_ratio": 0.26,
+    "tr3_ops": 6,
+    "total_tr_ops": 23,
+    "visible_chars": 16000,
+    "method": "pikepdf_content_stream"
+  },
+  "metadata": {
+    "pdf_version": "1.6",
+    "Content-Type": "application/pdf",
+    "dc:title": "Sample Academic Title",
+    "dc:creator": ["Sample, Author A."],
+    "is_tagged": "true",
+    "is_encrypted": "false",
+    "can_print": "true",
+    "can_print_high_quality": "true",
+    "has_non_embedded_fonts": "false",
+    "has_damaged_fonts": "false"
+  },
+  "conformance": {
+    "PDFA_1_B": {
+      "level": null,
+      "status": "fail",
+      "passed_rules": 100,
+      "failed_rules": 5,
+      "total_rules": 105,
+      "failed_rule_details": []
+    },
+    "PDFUA_1": {
+      "level": null,
+      "status": "fail",
+      "passed_rules": 90,
+      "failed_rules": 3,
+      "total_rules": 93,
+      "failed_rule_details": []
+    },
+    "PDFUA_2": {
+      "level": null,
+      "status": "fail",
+      "passed_rules": 1700,
+      "failed_rules": 5,
+      "total_rules": 1705,
+      "failed_rule_details": []
+    },
+    "WCAG_2_1": {
+      "level": null,
+      "status": "not available",
+      "passed_rules": null,
+      "failed_rules": null,
+      "total_rules": null,
+      "failed_rule_details": null
+    },
+    "WCAG_2_2": {
+      "level": "AA",
+      "status": "fail",
+      "passed_rules": 140,
+      "failed_rules": 4,
+      "total_rules": 144,
+      "failed_rule_details": []
+    }
+  },
+  "bookmarks": {
+    "items": [
+      "Introduction",
+      "Chapter 1",
+      "Chapter 2",
+      "Conclusion",
+      "Bibliography"
+    ]
+  },
+  "page_info": {
+    "page_count": 200
+  },
+  "marked_content": []
+}
+

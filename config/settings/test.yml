@@ -50,3 +50,6 @@ recurring_usage_reports:
       - test@email.com
 
 world_institution_identifier: 0
+
+pdf_ebook_accessibility_metadata:
+  dir: <%= Rails.root.join('spec/fixtures/accessibility_metadata_indexer') %>
