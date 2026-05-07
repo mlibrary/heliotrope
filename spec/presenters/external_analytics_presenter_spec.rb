@@ -164,30 +164,4 @@ describe ExternalAnalyticsPresenter do
       expect(presenter.tag_manager_id).to be_nil
     end
   end
-
-  describe '#hotjar_id?' do
-    it 'returns true if preview' do
-      allow(settings).to receive(:host).and_return('heliotrope-preview.hydra.lib.umich.edu')
-      expect(presenter.hotjar_id?).to be true
-    end
-    it 'returns true if production' do
-      allow(settings).to receive(:host).and_return('www.fulcrum.org')
-      expect(presenter.hotjar_id?).to be true
-    end
-    it 'returns false otherwise' do
-      allow(settings).to receive(:host).and_return('other-host')
-      expect(presenter.hotjar_id?).to be false
-    end
-  end
-
-  describe '#hotjar_id' do
-    it 'returns correct id for preview' do
-      allow(settings).to receive(:host).and_return('heliotrope-preview.hydra.lib.umich.edu')
-      expect(presenter.hotjar_id).to eq('2858980')
-    end
-    it 'returns correct id for production' do
-      allow(settings).to receive(:host).and_return('www.fulcrum.org')
-      expect(presenter.hotjar_id).to eq('2863753')
-    end
-  end
 end

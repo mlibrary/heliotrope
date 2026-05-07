@@ -49,13 +49,4 @@ class ExternalAnalyticsPresenter < ApplicationPresenter
     return "GTM-PTZXSV7" if preview?
     return "GTM-K5L8F5XD" if production?
   end
-
-  def hotjar_id?
-    hotjar_id.present?
-  end
-
-  def hotjar_id
-    return "2858980" if preview?
-    return "2863753" if production?
-  end
 end
