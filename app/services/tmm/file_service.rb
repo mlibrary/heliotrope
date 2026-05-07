@@ -62,6 +62,7 @@ module Tmm
       return true if presenter.probable_image? && %w[.bmp .gif .jp2 .jpeg .jpg .png .tif .tiff].exclude?(File.extname(new_file_path).downcase)
       return true if presenter.epub? && '.epub' != File.extname(new_file_path).downcase
       return true if presenter.pdf? && '.pdf' != File.extname(new_file_path).downcase
+      return true if presenter.mobi? && '.mobi' != File.extname(new_file_path).downcase
       # one full-book mp3 file, or a zip which contains several mp3 files, e.g. one per chapter/section
       return true if presenter.audiobook? && %w[.mp3 .zip].exclude?(File.extname(new_file_path).downcase)
       false
@@ -75,10 +76,12 @@ module Tmm
                 { representative_kind: 'epub' }
               when :pdf
                 { representative_kind: 'pdf_ebook' }
+              when :mobi
+                { representative_kind: 'mobi' }
               when :audiobook
                 { representative_kind: 'audiobook' }
               end
-      ebooks_downloadable && [:epub, :pdf, :audiobook].include?(kind) ? attrs.merge({ allow_download: 'yes' }) : attrs
+      ebooks_downloadable && [:epub, :pdf, :mobi, :audiobook].include?(kind) ? attrs.merge({ allow_download: 'yes' }) : attrs
     end
   end
 end

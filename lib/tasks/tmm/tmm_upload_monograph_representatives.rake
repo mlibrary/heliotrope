@@ -44,7 +44,7 @@ namespace :heliotrope do
       doc = docs.first
 
       # Cover images
-      image_file_paths = Pathname.glob(mono_dir + '*.{bmp,jpg,jpeg,png,gif}')
+      image_file_paths = Pathname.glob(mono_dir + '*.{bmp,jpg,jpeg,png,gif}', File::FNM_CASEFOLD)
       if image_file_paths.count > 1
         puts "    More than one image file found in #{mono_dir.basename} ... SKIPPING COVER PROCESSING"
         next
@@ -63,7 +63,7 @@ namespace :heliotrope do
       end
 
       # EPUBs
-      epub_file_paths = Pathname.glob(mono_dir + '*.epub')
+      epub_file_paths = Pathname.glob(mono_dir + '*.epub', File::FNM_CASEFOLD)
       if epub_file_paths.count > 1
         puts "    More than one EPUB file found in #{mono_dir.basename} ... SKIPPING EPUB PROCESSING"
         next
@@ -83,7 +83,7 @@ namespace :heliotrope do
       end
 
       # PDF Ebooks
-      pdf_file_paths = Pathname.glob(mono_dir + '*.pdf')
+      pdf_file_paths = Pathname.glob(mono_dir + '*.pdf', File::FNM_CASEFOLD)
       if pdf_file_paths.count > 1
         puts "    More than one PDF file found in #{mono_dir.basename} ... SKIPPING PDF_EBOOK PROCESSING"
         next
@@ -102,8 +102,28 @@ namespace :heliotrope do
         end
       end
 
+      # Mobi Ebooks
+      mobi_file_paths = Pathname.glob(mono_dir + '*.mobi', File::FNM_CASEFOLD)
+      if mobi_file_paths.count > 1
+        puts "    More than one Mobi file found in #{mono_dir.basename} ... SKIPPING MOBI PROCESSING"
+        next
+      end
+
+      if mobi_file_paths.count == 1
+        file_set_id = FeaturedRepresentative.where(work_id: doc.id, kind: 'mobi').first&.file_set_id
+
+        if file_set_id.blank?
+          puts "    No mobi found. Adding mobi using #{mobi_file_paths.first}"
+          Tmm::FileService.add(doc: doc, file: mobi_file_paths.first, kind: :mobi, downloadable: true)
+
+        elsif Tmm::FileService.replace?(file_set_id: file_set_id, new_file_path: mobi_file_paths.first)
+          puts "    Current mobi will be replaced with #{mobi_file_paths.first}"
+          Tmm::FileService.replace(file_set_id: file_set_id, new_file_path: mobi_file_paths.first)
+        end
+      end
+
       # Audiobooks (one full-book mp3 file, or a zip which contains several mp3 files, e.g. one per chapter/section)
-      audiobook_file_paths = Pathname.glob(mono_dir + '*.{mp3,zip}')
+      audiobook_file_paths = Pathname.glob(mono_dir + '*.{mp3,zip}', File::FNM_CASEFOLD)
       if audiobook_file_paths.count > 1
         puts "    More than one potential audiobook (mp3 or zip) found in #{mono_dir.basename} ... SKIPPING AUDIOBOOK PROCESSING"
         next
