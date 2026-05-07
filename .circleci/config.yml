@@ -62,8 +62,8 @@ commands:
     - run:
         name: Install yarn dependancies
         command: |
-          yarn install --frozen-lockfile --network-concurrency 1 || \
-            (echo "Yarn install failed, cleaning cache and retrying..." && yarn cache clean && yarn install --frozen-lockfile --network-concurrency 1)
+          yarn install --frozen-lockfile --network-concurrency 1 --cache-folder ~/.cache/yarn || \
+            (echo "Yarn install failed, cleaning cache and retrying..." && yarn cache clean && yarn install --frozen-lockfile --network-concurrency 1 --cache-folder ~/.cache/yarn)
     - save_cache:
         name: Save Yarn package cache
         key: v<< parameters.cache_version >>yarn-packages-{{ checksum "yarn.lock" }}
