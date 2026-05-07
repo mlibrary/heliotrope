@@ -17,7 +17,8 @@ Riiif::File.class_eval do
     private
 
       def tiff?
-        path.end_with?('.tif', '.tiff') ||
+        return @tiff if defined?(@tiff)
+        @tiff = path.end_with?('.tif', '.tiff') ||
           `file --brief --mime-type #{path.shellescape}`.chomp.include?('tiff')
       end
 
