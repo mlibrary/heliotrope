@@ -37,7 +37,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 # gem 'rack', '> 1', '< 3'
-gem 'rack', '2.2.18'
+gem 'rack', '~> 2.2', '>= 2.2.23'
 
 # HELIO-2404 APTRUST PRESERVATION
 gem 'bagit'
@@ -219,7 +219,7 @@ gem 'uglifier', '~> 4.2'
 gem 'skylight', '~> 5.3.4'
 
 # Rails Webpack Tool (Shakapacker is the community-maintained fork of webpacker)
-gem 'shakapacker', '~> 7.2'
+gem 'shakapacker', '~> 9.5'
 
 # Puma monitoring, HELIO-3388
 # Rails, ActiveJob, Fedora/Solr HTTP monitoring, HELIO-4827
