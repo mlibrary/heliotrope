@@ -21,7 +21,7 @@ module Riiif
 
     # @return [String] a shell pipeline command producing the requested output
     def command
-      pipeline = ["tifftopnm -byrow #{path}"]
+      pipeline = ["tifftopnm -byrow #{path.shellescape}"]
       pipeline << crop_command if crop_command
       pipeline << resize_command if resize_command
       pipeline << encode_command

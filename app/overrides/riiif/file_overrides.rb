@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Riiif::File.class_eval do
-  prepend(RiiifFileOverrides = Module.new do
+  prepend(Module.new do
     # Override transformer selection to use tifftopnm for TIFF images when
     # the netpbm tifftopnm tool is available. tifftopnm is significantly faster
     # than ImageMagick for large TIFFs because it streams row-by-row (-byrow)
@@ -22,7 +22,10 @@ Riiif::File.class_eval do
       end
 
       def tifftopnm_available?
-        system('which tifftopnm > /dev/null 2>&1')
+        unless self.class.instance_variable_defined?(:@tifftopnm_available)
+          self.class.instance_variable_set(:@tifftopnm_available, system('which tifftopnm > /dev/null 2>&1'))
+        end
+        self.class.instance_variable_get(:@tifftopnm_available)
       end
   end)
 end

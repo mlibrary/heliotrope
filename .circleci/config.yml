@@ -216,7 +216,7 @@ jobs:
         type: string
         default: '2.4.22'
     executor:
-      name: 'ruby_fcrepo_solr_redis_mysql'
+      name: 'ruby_fcrepo_solr_redis_mariadb'
       ruby_version: << parameters.ruby_version >>
     resource_class: medium
     parallelism: 4
@@ -268,7 +268,8 @@ jobs:
           command: |
             sudo apt-get install -y libjpeg-dev libpng-dev libtiff-dev zlib1g-dev flex libx11-dev
             cd /tmp
-            wget https://sourceforge.net/projects/netpbm/files/super_stable/10.86.49/netpbm-10.86.49.tgz
+            wget https://sourceforge.net/projects/netpbm/files/super_stable/10.86.49/netpbm-10.86.49.tgz -O netpbm-10.86.49.tgz
+            echo "98c1abdad8e593a20e36b597c6b5b4427c80349544d466eed7761ecec69f6daf  netpbm-10.86.49.tgz" | sha256sum -c -
             tar -xzf netpbm-10.86.49.tgz
             cd netpbm-10.86.49
             yes '' | ./configure || [ $? -eq 141 ]
@@ -320,8 +321,8 @@ executors:
       ruby_version:
         default: '3.3.10'
         type: string
-  ruby_fcrepo_solr_redis_mysql:
-    description: Box running FCRepo, Solr, Ruby, Redis and MySQL.
+  ruby_fcrepo_solr_redis_mariadb:
+    description: Box running FCRepo, Solr, Ruby, Redis and MariaDB.
     docker:
     - image: cimg/<< parameters.ruby_type >>:<< parameters.ruby_version >>-browsers # Yes -browsers here
     - environment:

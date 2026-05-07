@@ -26,6 +26,16 @@ RSpec.describe Riiif::TifftopnmCommandFactory do
       end
     end
 
+    context 'path with spaces or shell metacharacters' do
+      let(:path) { '/path/to/my image & file.tif' }
+      let(:transformation) { build_transformation }
+
+      it 'shell-escapes the path in the tifftopnm command' do
+        expect(factory.command).to include("tifftopnm -byrow #{path.shellescape}")
+        expect(factory.command).not_to include('/path/to/my image & file.tif ')
+      end
+    end
+
     context 'full region, full size, png' do
       let(:transformation) { build_transformation(format: 'png') }
 
