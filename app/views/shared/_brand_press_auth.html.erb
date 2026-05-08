@@ -1,5 +1,5 @@
 <% if auth.publisher_restricted_content? %>
-  <div class="brand-auth">
+  <aside class="brand-auth">
     <% if auth.institution? %>
       <% if auth.institution.logo.present? %>
         <%= image_tag auth.institution.logo, class: 'institution-logo', alt: "Logo for #{auth.institution.display_name}" %>
@@ -18,5 +18,5 @@
           end %></strong>
       </span>
     <% end %>
-  </div>
+  </aside>
 <% end %>

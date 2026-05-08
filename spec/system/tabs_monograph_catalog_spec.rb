@@ -31,7 +31,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       visit monograph_catalog_path(monograph)
 
       # toc tab link
-      expect(page).to have_css("li.active h2 a#tab-toc")
+      expect(page).to have_css("li.active .tab-text a#tab-toc")
       expect(page).to have_css("a#tab-toc[aria-selected=true][aria-expanded=true]")
       expect(page).to_not have_css("a#tab-toc[aria-selected=false][aria-expanded=false]")
       expect(page).to_not have_css("a#tab-toc[tabindex='-1']")
@@ -79,7 +79,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       find("#resources-search-submit").click
 
       # clear last search
-      find("span.fa.fa-close").click
+      find("a.btn.btn-default.btn-sm.remove").click
 
       # test facet search
       # open the facet panel
@@ -118,7 +118,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       visit hyrax_file_set_path(file_set.id)
 
       # info tab link
-      expect(page).to have_css("li.active h2 a#tab-info")
+      expect(page).to have_css("li.active .tab-text a#tab-info")
       expect(page).to have_css("a#tab-info[aria-selected=true][aria-expanded=true]")
       expect(page).to_not have_css("a#tab-info[aria-selected=false][aria-expanded=false]")
       expect(page).to_not have_css("a#tab-info[tabindex='-1']")
@@ -127,7 +127,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       expect(page).to_not have_css("section#info[aria-hidden=true]", visible: false)
 
       # permissions tab link
-      expect(page).to_not have_css("li.active h2 a#tab-permissions")
+      expect(page).to_not have_css("li.active .tab-text a#tab-permissions")
       expect(page).to_not have_css("a#tab-permissions[aria-selected=true][aria-expanded=true]")
       expect(page).to have_css("a#tab-permissions[aria-selected='false'][aria-expanded='false']")
       expect(page).to have_css("a#tab-permissions[tabindex='-1']")
@@ -145,7 +145,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       # expect(page).to have_css("section#stats[aria-hidden=true]", visible: false)
 
       # technical-info tab link
-      expect(page).to_not have_css("li.active h2 a#tab-technical-info")
+      expect(page).to_not have_css("li.active .tab-text a#tab-technical-info")
       expect(page).to_not have_css("a#tab-technical-info[aria-selected=true][aria-expanded=true]")
       expect(page).to have_css("a#tab-technical-info[aria-selected='false'][aria-expanded='false']")
       expect(page).to have_css("a#tab-technical-info[tabindex='-1']")
@@ -157,7 +157,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       find("#tab-permissions").click
 
       # permissions tab link
-      expect(page).to have_css("li.active h2 a#tab-permissions")
+      expect(page).to have_css("li.active .tab-text a#tab-permissions")
       expect(page).to have_css("a#tab-permissions[aria-selected=true][aria-expanded=true]")
       expect(page).to_not have_css("a#tab-permissions[aria-selected='false'][aria-expanded='false']")
       expect(page).to_not have_css("a#tab-permissions[tabindex='-1']")
@@ -166,7 +166,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       expect(page).to_not have_css("section#permissions[aria-hidden=true]", visible: false)
 
       # info tab link
-      expect(page).to_not have_css("li.active h2 a#tab-info")
+      expect(page).to_not have_css("li.active .tab-text a#tab-info")
       expect(page).to_not have_css("a#tab-info[aria-selected=true][aria-expanded=true]")
       expect(page).to have_css("a#tab-info[aria-selected=false][aria-expanded=false]")
       expect(page).to have_css("a#tab-info[tabindex='-1']")
@@ -184,7 +184,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       # expect(page).to have_css("section#stats[aria-hidden=true]", visible: false)
 
       # technical-info tab link
-      expect(page).to_not have_css("li.active h2 a#tab-technical-info")
+      expect(page).to_not have_css("li.active .tab-text a#tab-technical-info")
       expect(page).to_not have_css("a#tab-technical-info[aria-selected=true][aria-expanded=true]")
       expect(page).to have_css("a#tab-technical-info[aria-selected='false'][aria-expanded='false']")
       expect(page).to have_css("a#tab-technical-info[tabindex='-1']")
@@ -235,7 +235,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       find("#tab-technical-info").click
 
       # technical-info tab link
-      expect(page).to have_css("li.active h2 a#tab-technical-info")
+      expect(page).to have_css("li.active .tab-text a#tab-technical-info")
       expect(page).to have_css("a#tab-technical-info[aria-selected=true][aria-expanded=true]")
       expect(page).to_not have_css("a#tab-technical-info[aria-selected='false'][aria-expanded='false']")
       expect(page).to_not have_css("a#tab-technical-info[tabindex='-1']")
@@ -244,7 +244,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       expect(page).to_not have_css("section#technical-info[aria-hidden=true]", visible: false)
 
       # info tab link
-      expect(page).to_not have_css("li.active h2 a#tab-info")
+      expect(page).to_not have_css("li.active .tab-text a#tab-info")
       expect(page).to_not have_css("a#tab-info[aria-selected=true][aria-expanded=true]")
       expect(page).to have_css("a#tab-info[aria-selected=false][aria-expanded=false]")
       expect(page).to have_css("a#tab-info[tabindex='-1']")
@@ -253,7 +253,7 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
       expect(page).to have_css("section#info[aria-hidden=true]", visible: false)
 
       # permissions tab link
-      expect(page).to_not have_css("li.active h2 a#tab-permissions")
+      expect(page).to_not have_css("li.active .tab-text a#tab-permissions")
       expect(page).to_not have_css("a#tab-permissions[aria-selected=true][aria-expanded=true]")
       expect(page).to have_css("a#tab-permissions[aria-selected='false'][aria-expanded='false']")
       expect(page).to have_css("a#tab-permissions[tabindex='-1']")

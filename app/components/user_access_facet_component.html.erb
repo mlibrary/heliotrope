@@ -2,8 +2,11 @@
 <%# I think using the unsafe .permit! method here is ok. There is no "update" or mass assignment in blacklight... %>
 <%# Also: reset the page to 0 if these change, otherwise it's possible to land on empty results with no navigation! %>
 <%# This is pretty much directly lifted from blacklight 7.33 app/components/blacklight/facet_field_component.html.erb (except for all the user_acess stuff of course) %>
+<div class="facets-header sr-only">
+    <h2 class="sr-only"><%= t('blacklight.search.facets.monograph_title') %></h2>
+</div>
 <div class="card facet-limit blacklight-<%= @facet_field.key %> <%= 'facet-limit-active' if @facet_field.active? %>">
-  <h3 class="card-header p-0 facet-field-heading" id="<%= @facet_field.html_id %>-header">
+  <span class="card-header p-0 facet-field-heading" id="<%= @facet_field.html_id %>-header">
     <button
       type="button"
       class="btn w-100 d-block btn-block p-2 text-start text-left collapse-toggle <%= "collapsed" if @facet_field.collapsed? %>"
@@ -15,7 +18,7 @@
     >
       Access
     </button>
-  </h3>
+  </span>
   <div id="<%= @facet_field.html_id %>" aria-labelledby="<%= @facet_field.html_id %>-header" class="panel-collapse facet-content collapse <%= "show" unless @facet_field.collapsed? %>">
     <div class="card-body">
       <ul class="facet-values list-unstyled">
