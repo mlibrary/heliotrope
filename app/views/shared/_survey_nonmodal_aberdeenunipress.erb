@@ -1,9 +1,9 @@
 <!-- survey -->
-<div id="surveyNonModalAberdeen" class="alert survey" role="alert" aria-labelledby="surveyNonModalLabel" style="display:none;">
+<aside id="surveyNonModalAberdeen" class="alert survey" role="alert" aria-labelledby="surveyNonModalLabel" style="display:none;">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">        
-        <h4 class="modal-title" id="surveyNonModalLabel">Share the story of what Open Access means to you</h4>
+        <span class="modal-title h4" id="surveyNonModalLabel">Share the story of what Open Access means to you</span>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="survey_button_no()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -18,7 +18,7 @@
       </div>
     </div>
   </div>
-</div>
+</aside>
 <script type="text/javascript">
   function survey_button_yes(){
     Cookies.set('survey_aberdeenunipress', 'clicked', { expires: 365<%= ', secure: true' if Rails.env == 'production' %> });

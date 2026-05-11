@@ -15,7 +15,7 @@ RSpec.describe "Press statistics page Bootstrap tabs", type: :system, browser: t
       visit press_statistics_path(press.subdomain)
 
       # map tab link
-      expect(page).to have_css("li.active h2 a#tab-map-press-stats")
+      expect(page).to have_css("li.active .tab-text a#tab-map-press-stats")
       expect(page).to have_css("a#tab-map-press-stats[aria-selected=true][aria-expanded=true]")
       expect(page).to_not have_css("a#tab-map-press-statsc[aria-selected=false][aria-expanded=false]")
       expect(page).to_not have_css("a#tab-map-press-stats[tabindex='-1']")
@@ -24,7 +24,7 @@ RSpec.describe "Press statistics page Bootstrap tabs", type: :system, browser: t
       expect(page).to_not have_css("section#map[aria-hidden=true]", visible: false)
 
       # analytics tab link
-      expect(page).to_not have_css("li.active h2 a#tab-analytics-press-stats")
+      expect(page).to_not have_css("li.active .tab-text a#tab-analytics-press-stats")
       expect(page).to_not have_css("a#tab-analytics-press-stats[aria-selected=true][aria-expanded=true]")
       expect(page).to have_css("a#tab-analytics-press-stats[aria-selected='false'][aria-expanded='false']")
       expect(page).to have_css("a#tab-analytics-press-stats[tabindex='-1']")
@@ -35,7 +35,7 @@ RSpec.describe "Press statistics page Bootstrap tabs", type: :system, browser: t
       # click analytics tab
       find("#tab-analytics-press-stats").click
       # analytics tab link
-      expect(page).to have_css("li.active h2 a#tab-analytics-press-stats")
+      expect(page).to have_css("li.active .tab-text a#tab-analytics-press-stats")
       expect(page).to have_css("a#tab-analytics-press-stats[aria-selected=true][aria-expanded=true]")
       expect(page).to_not have_css("a#tab-analytics-press-stats[aria-selected='false'][aria-expanded='false']")
       expect(page).to_not have_css("a#tab-analytics-press-stats[tabindex='-1']")
@@ -44,7 +44,7 @@ RSpec.describe "Press statistics page Bootstrap tabs", type: :system, browser: t
       expect(page).to_not have_css("section#analytics[aria-hidden=true]", visible: false)
 
       # map tab link
-      expect(page).to_not have_css("li.active h2 a#tab-map-press-stats")
+      expect(page).to_not have_css("li.active .tab-text a#tab-map-press-stats")
       expect(page).to_not have_css("a#tab-map-press-stats[aria-selected=true][aria-expanded=true]")
       expect(page).to have_css("a#tab-map-press-stats[aria-selected=false][aria-expanded=false]")
       expect(page).to have_css("a#tab-map-press-stats[tabindex='-1']")

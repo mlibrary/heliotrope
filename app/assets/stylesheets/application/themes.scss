@@ -127,7 +127,8 @@ $aberdeenunipress-black: #000000;
   // typography
   @include source-serif;
 
-  h1 {
+  h1,
+  .h1 {
     @include navigo;
     font-weight: 700;
     color: $aberdeenunipress-headings;
@@ -138,29 +139,38 @@ $aberdeenunipress-black: #000000;
   h3,
   h4,
   h5,
-  .tab-text {
+  .tab-text,
+  .h2,
+  .h3,
+  .h4 {
     @include navigo;
     font-weight: 700;
     color: $aberdeenunipress-headings;
   }
 
   h2,
-  .tab-text {
+  .tab-text,
+  .h2 {
     margin-top: 2em;
     font-size: 25.6px;
   }
 
-  h3 {
+  h3,
+  .h3 {
     font-size: 20px;
   }
 
-  h4 {
+  h4,
+  .h4 {
     font-size: 1.2em;
   }
 
   h3,
   h4,
-  h5 {
+  h5,
+  .h3,
+  .h4,
+  .h5 {
     margin-top: 1rem;
   }
 
@@ -1204,8 +1214,8 @@ button:focus {
      .active>span,
      .active>span:hover,
      .active>span:focus {
-      background-color: $heb-accent-color-dark;
-      border-color: $heb-accent-color-dark;
+      background-color: #D0D6DD;
+      border-color: #D0D6DD;
       color: $heb-brand-color;
      }
 
@@ -1508,6 +1518,10 @@ $aperio-white: #fff;
     font-size: 2em;
   }
 
+  h1.h2 {
+    font-weight: 500;
+  }
+
   h2,
   h3,
   h4,
@@ -1722,7 +1736,7 @@ $aperio-white: #fff;
       padding-right: 1rem;
     }
 
-    .navbar-brand h1 {
+    .navbar-brand span.press-title {
       font-weight: 400;
       letter-spacing: 1.2px;
       display: inline-block;
@@ -1730,6 +1744,7 @@ $aperio-white: #fff;
       font-size: 50px;
       @include gibson;
       color: $aperio-brand-color;
+      line-height: 1.2;
 
     }
 
@@ -3506,7 +3521,8 @@ $bigten-black: #000;
   // typography
   @include pt-sans;
 
-  h1 {
+  h1,
+  .h1 {
     font-weight: 700;
     color: $bigten-headings;
   }
@@ -3515,19 +3531,27 @@ $bigten-black: #000;
   h3,
   h4,
   h5,
-  .tab-text {
+  .tab-text,
+  .h2,
+  .h3,
+  .h4,
+  .h5 {
     font-weight: 700;
     color: $bigten-headings;
   }
 
   h2,
-  .tab-text {
+  .tab-text,
+  .h2 {
     margin-top: 2rem;
   }
 
   h3,
   h4,
-  h5 {
+  h5,
+  .h3,
+  .h4,
+  .h5 {
     margin-top: 1rem;
   }
 
@@ -3746,7 +3770,7 @@ $bigten-black: #000;
       padding-right: 5.3rem;
     }
 
-    .navbar-brand h1 {
+    .navbar-brand span.press-title {
       font-weight: 900;
       text-transform: uppercase;
       letter-spacing: 1.2px;
@@ -7539,7 +7563,8 @@ $um-white: #fff;
   // typography
   @include meta-serif;
 
-  h1 {
+  h1,
+  .h1 {
     @include meta-serif;
     font-weight: 700;
     color: $um-headings;
@@ -7549,20 +7574,28 @@ $um-white: #fff;
   h3,
   h4,
   h5,
-  .tab-text {
+  .tab-text,
+  .h2,
+  .h3,
+  .h4,
+  .h5 {
     @include muli;
     font-weight: 700;
     color: $um-headings;
   }
 
   h2,
-  .tab-text {
+  .tab-text,
+  .h2 {
     margin-top: 2rem;
   }
 
   h3,
   h4,
-  h5 {
+  h5,
+  .h3,
+  .h4,
+  .h5 {
     margin-top: 1rem;
   }
 
@@ -13720,7 +13753,7 @@ $unc-black-80: #342f2e;
       background-color: $unc-brand-color;
     }
     .platform {
-      background-color: $heb-black-80;
+      background-color: $unc-black-80;
     }
   }
 
@@ -14435,18 +14468,25 @@ $npp-highlight-dark: #FFDF00;
   h3,
   h4,
   h5,
-  .tab-text {
+  .tab-text,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5 {
     font-weight: 600;
     @include caslon-pro;
     color: $npp-black-80;
   }
 
-  h1 {
+  h1,
+  .h1 {
     font-size: 40px;
   }
 
   h2,
-  .tab-text {
+  .tab-text,
+  .h2 {
     font-size: 32px;
   }
 
@@ -15945,7 +15985,7 @@ $reki-black-80: #342f2e;
       .open > a,
       .open > a:focus,
       .open > a:hover {
-        background-color: $heb-grey-4;
+        background-color: $reki-grey-4;
         color: $reki-brand-color;
       }
     }
@@ -17813,18 +17853,29 @@ $westminster-button-hover-border-color: #0a5554;
   h3,
   h4,
   h5,
-  .tab-text {
+  .tab-text,
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5 {
     font-weight: 600;
     @include futura;
     color: $westminster-black-80;
   }
 
-  h1 {
+  h1,
+  .h1 {
     font-size: 40px;
   }
 
+  h1.h2 {
+    font-size: 32px;
+  }
+
   h2,
-  .tab-text {
+  .tab-text,
+  .h2 {
     font-size: 32px;
   }
 

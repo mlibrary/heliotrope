@@ -8,10 +8,10 @@
     <%= presenter.thumbnail_tag(145, class: "img-fluid", alt: "") %>
   </div>
   <div class="col-10 caption">
+    <% if presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? %>
+      <%= presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_sm.html_safe %>
+    <% end %>
     <h3 class="index_title">
-      <% if presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? %>
-        <%= presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_sm.html_safe %>
-      <% end %>
       <%= render_markdown(document.title.first) %>
     </h3>
     <p class="authors"><%= render_markdown presenter.authors %></p>

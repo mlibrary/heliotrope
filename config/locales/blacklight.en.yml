@@ -10,7 +10,8 @@ en:
         # use different breakpoint for sort dropdown: d-lg-inline
         label_html: 'Sort<span class="d-none d-lg-inline"> by %{field}</span>'
       facets:
-        resources_title: 'Search and Filter Resources'
+        resources_title: 'Resource search and filter options'
+        monograph_title: 'Book filter options'
       fields:
         date_published_dtsim: "Date Published"
         isbn_tesim: "ISBN (Hardcover)"
@@ -42,3 +43,7 @@ en:
         transcript_tesim: "Transcript"
         translation_tesim: "Translation(s)"
         contributor_tesim: "Contributors"
+      monographs:
+        search_results: 'Book results'
+      resources:
+        search_results: 'Resource results'

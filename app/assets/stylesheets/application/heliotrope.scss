@@ -312,7 +312,7 @@ div.skip {
     max-width: 600px;
   }
 
-  h4.modal-title {
+ .modal-title {
     font-size: 20px;
   }
 
@@ -367,7 +367,7 @@ div.skip {
     max-width: 525px;
   }
 
-  h4 {
+  .modal-title {
     font-size: 18px;
   }
 
@@ -559,9 +559,14 @@ footer.press {
       }
 
       .caption {
+        img {
+          vertical-align: center;
+        }
+
         h3.index_title {
           font-size: 16px;
           font-weight: 600;
+          display: inline;
         }
 
         .authors {
@@ -619,6 +624,11 @@ footer.press {
         h3.index_title {
           font-size: 16px;
           font-weight: 600;
+          display: inline;
+        }
+
+        img {
+          vertical-align: center;
         }
 
         .authors {
@@ -641,10 +651,6 @@ footer.press {
 .facets-container, #facets {
   padding-top: 15px;
 
-  .facets .facets-header {
-    // this comes from blacklight and we don't use it.
-    display: none;
-  }
   .card {
     margin-bottom: 0px;
     border-radius: 0;
