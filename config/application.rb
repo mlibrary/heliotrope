@@ -48,6 +48,15 @@ module Heliotrope
     config.autoload_paths << "#{config.root}/lib"
     config.autoload_paths << "#{config.root}/lib/devise"
 
+    # HELIO-4994, HELIO-4989
+    # Rack 2.2.19+ raises EOFError from the multipart parser for oversized
+    # requests. Puma silently swallows EOFError (treating it as a client
+    # disconnect) and closes the connection without sending any HTTP response,
+    # causing HAProxy/Cloudflare to return 502s. This middleware intercepts
+    # the EOFError and returns a proper 400 so the connection is closed cleanly.
+    require "middleware/multipart_eof_handler"
+    config.middleware.insert_before(0, Middleware::MultipartEofHandler)
+
     # For properly generating URLs and minting DOIs - the app may not by default
     # Outside of a request context the hostname needs to be provided.
     config.hostname = Settings.host
