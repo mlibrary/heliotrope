@@ -7,9 +7,9 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'railties', '> 3', '< 7'
+gem 'railties', '> 3', '< 8'
 # gem 'rails', '~> 6.0.5'
-gem 'rails', '~> 6.1.7'
+gem 'rails', '~> 7.2.3'
 
 gem 'rails-html-sanitizer'
 
@@ -126,7 +126,7 @@ gem 'font-awesome-sass', '>= 6.0'
 # # Use gem version of handle_rest
 gem 'handle_rest', git: 'https://github.com/mlibrary/handle_rest', tag: 'v0.0.5'
 
-gem 'hyrax', '4.0'
+gem 'hyrax', '5.2.0'
 
 # Best solution for a yanked gem while we're still on Ruby 2.x, see https://github.com/dryruby/json-canonicalization/issues/2#issuecomment-1841772415
 gem 'json-canonicalization', '~>0.4', '>= 0.4'
@@ -169,7 +169,7 @@ gem "okcomputer", "~> 1.18.4"
 gem 'pragmatic_segmenter', '~> 0.3'
 
 # Turn page image epub chapters into pdfs
-gem 'prawn', '~> 2.2'
+gem 'prawn', '~> 2.5'
 
 gem "rails_semantic_logger", '~> 4.14'
 
