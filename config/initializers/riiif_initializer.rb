@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Tell RIIIF to get files via HTTP (not from the local disk)
-Riiif::Image.file_resolver = Riiif::HTTPFileResolver.new
+Riiif::Image.file_resolver = Riiif::HttpFileResolver.new
 
 # This tells RIIIF how to resolve the identifier to a URI in Fedora
 Riiif::Image.file_resolver.id_to_uri = lambda do |id|
@@ -35,5 +35,5 @@ module Riiif
   end
 end
 
-Riiif::Engine.config.cache_duration_in_days = 30
+Riiif::Engine.config.cache_duration = 30.days
 Riiif::Image.file_resolver.cache_path = Settings.riiif_network_files_path
