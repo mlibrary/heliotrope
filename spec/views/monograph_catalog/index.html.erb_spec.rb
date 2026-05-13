@@ -24,6 +24,7 @@ RSpec.describe "monograph_catalog/index.html.erb" do
   let(:solr_doc) { SolrDocument.new(id: 'mono_id', title_tesim: ["Untitled"], has_model_ssim: ['Monograph']) }
   let(:monograph_presenter) { Hyrax::MonographPresenter.new(solr_doc, current_ability) }
   let(:ebook_download_presenter) { double("ebook_download_presenter") }
+  let(:counter_summary_presenter) { double("counter_summary_presenter") }
   # this value in the response is checked to decide whether to show the "assets" tab or not
   let(:blacklight_response) { { "response" => { "numFound" => 0 } } }
 
@@ -34,11 +35,14 @@ RSpec.describe "monograph_catalog/index.html.erb" do
     stub_template "catalog/_search_results" => "<!-- render-template-catalog/_search_results -->"
     assign(:monograph_presenter, monograph_presenter)
     assign(:ebook_download_presenter, ebook_download_presenter)
+    assign(:counter_summary_presenter, counter_summary_presenter)
     assign(:response, blacklight_response)
     allow(view).to receive(:t).with(any_args) { |value| value }
     allow(monograph_presenter).to receive(:date_uploaded).and_return(DateTime.now)
     allow(monograph_presenter).to receive(:creator).and_return([])
     allow(ebook_download_presenter).to receive(:downloadable_ebooks?).and_return(false)
+    allow(counter_summary_presenter).to receive(:any_statistics?).and_return(false)
+    allow(counter_summary_presenter).to receive(:counter_start_date).and_return('August 2018')
   end
 
   describe 'provide: page_title' do

@@ -15,9 +15,6 @@ class CounterSummary < ApplicationRecord
   validates :unique_item_requests_life, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :unique_item_investigations_life, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
-  # Logical validation: lifetime metrics should be >= monthly metrics
-  validate :lifetime_metrics_greater_than_or_equal_to_monthly
-
   scope :for_monograph, ->(noid) { where(monograph_noid: noid) }
   scope :for_year, ->(year) { where(year: year) }
   scope :for_month, ->(month) { where(month: month) }
@@ -48,28 +45,4 @@ class CounterSummary < ApplicationRecord
   def month_year_string
     Date.new(year, month, 1).strftime("%b-%Y")
   end
-
-  private
-
-    def lifetime_metrics_greater_than_or_equal_to_monthly
-      if !total_item_requests_life.nil? && !total_item_requests_month.nil? &&
-         total_item_requests_life < total_item_requests_month
-        errors.add(:total_item_requests_life, "must be greater than or equal to monthly requests")
-      end
-
-      if !total_item_investigations_life.nil? && !total_item_investigations_month.nil? &&
-         total_item_investigations_life < total_item_investigations_month
-        errors.add(:total_item_investigations_life, "must be greater than or equal to monthly investigations")
-      end
-
-      if !unique_item_requests_life.nil? && !unique_item_requests_month.nil? &&
-         unique_item_requests_life < unique_item_requests_month
-        errors.add(:unique_item_requests_life, "must be greater than or equal to monthly unique requests")
-      end
-
-      if !unique_item_investigations_life.nil? && !unique_item_investigations_month.nil? &&
-         unique_item_investigations_life < unique_item_investigations_month
-        errors.add(:unique_item_investigations_life, "must be greater than or equal to monthly unique investigations")
-      end
-    end
 end

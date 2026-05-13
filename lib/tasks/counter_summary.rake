@@ -7,8 +7,8 @@ namespace :counter_summary do
     directory = args[:directory]
 
     if directory.blank?
-      puts "Usage: bundle exec \"rake counter_summary:import[/path/to/csv/files]\""
-      puts "Example: bundle exec \"rake counter_summary:import[/tmp/siq_stats]\""
+      puts "Usage: bundle exec rails \"counter_summary:import[/path/to/csv/files]\""
+      puts "Example: bundle exec rails \"counter_summary:import[/tmp/siq_stats]\""
       exit 1
     end
 
@@ -64,11 +64,11 @@ namespace :counter_summary do
 
         if processor.errors.any?
           puts "\n   WARN: Warnings during processing:"
-          processor.errors.first(5).each do |error|
+          processor.errors.first(50).each do |error|
             puts "      - #{error}"
           end
-          if processor.errors.length > 5
-            puts "      ... and #{processor.errors.length - 5} more warnings"
+          if processor.errors.length > 50
+            puts "      ... and #{processor.errors.length - 50} more warnings"
           end
         end
 

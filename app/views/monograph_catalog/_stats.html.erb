@@ -1,1 +1,42 @@
-<iframe id='irus_stats' title='IRUS statistics for this Monograph' src='/irus_stats?noid=<%= @presenter.id %>'></iframe>
+<div id="counter_stats_container">
+  <% if @counter_summary_presenter&.any_statistics? %>
+    <div id="counter-stats-table-container">
+      <table class="table table-bordered counter-stats-table">
+        <caption>Counter statistics representing usage on the Fulcrum platform only</caption>
+        <thead>
+          <tr>
+            <th scope="col">Metric Type</th>
+            <th scope="col">Reporting Period Total</th>
+            <% @counter_summary_presenter.month_headers.each do |month_header| %>
+              <th scope="col"><%= month_header %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @counter_summary_presenter.metric_type_names.each do |metric_name| %>
+            <tr>
+              <th scope="row"><%= metric_name.tr('_', ' ') %></th>
+              <td><%= @counter_summary_presenter.life_total_for(@counter_summary_presenter.life_column_for(metric_name)) %></td>
+              <% @counter_summary_presenter.monthly_data_for(@counter_summary_presenter.monthly_column_for(metric_name)).each do |value| %>
+                <td><%= value %></td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="counter-stats-info">
+      <p>Counter statistics represent COUNTER usage on the Fulcrum platform only, not through other channels.</p>
+      <p>Note: Reporting Period Total shows the total for the given metric since this title went live on Fulcrum (<%= @counter_summary_presenter.counter_start_date %>).</p>
+      <p>For an explanation of Metric Types, please see the <a href="https://www.projectcounter.org/code-of-practice-five-sections/abstract/" rel="noopener noreferrer" target="_blank">COUNTER Code of Practice</a>.</p>
+      <p>For more information on how we and partners treat your usage data, <a href="/privacy" rel="noopener noreferrer" target="_blank">see our privacy policy</a>.</p>
+    </div>
+  <% else %>
+    <div class="counter-stats-info">
+      <p>Counter statistics represent COUNTER usage on the Fulcrum platform only, not through other channels.</p>
+      <p>This title has no usage data recorded since this title went live on Fulcrum (<%= @counter_summary_presenter.counter_start_date %>).</p>
+      <p>For more information on how we and partners treat your usage data, <a href="/privacy" rel="noopener noreferrer" target="_blank">see our privacy policy</a>.</p>
+    </div>
+  <% end %>
+</div>
+
