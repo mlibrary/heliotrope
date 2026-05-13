@@ -118,6 +118,7 @@ class PressCatalogController < ::CatalogController
         blacklight_config.add_facet_field 'press_name_sim', label: "Source", limit: false, url_method: :facet_url_helper, sort: sort
         if Sighrax.platform_admin?(current_actor)
           blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: false
+          blacklight_config.add_facet_field 'reader_ebook_format_sim', label: "Reader Ebook Format", limit: false
         end
       else
         blacklight_config.add_facet_field 'funder_sim', label: "Funder", limit: 5, url_method: :facet_url_helper, sort: sort
@@ -132,6 +133,7 @@ class PressCatalogController < ::CatalogController
 
         if Sighrax.platform_admin?(current_actor)
           blacklight_config.add_facet_field 'product_names_sim', label: "Products", limit: 5
+          blacklight_config.add_facet_field 'reader_ebook_format_sim', label: "Reader Ebook Format", limit: false
         end
       end
 

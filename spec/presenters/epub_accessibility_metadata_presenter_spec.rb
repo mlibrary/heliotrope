@@ -3,15 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe EpubAccessibilityMetadataPresenter do
-  class self::Presenter # rubocop:disable Style/ClassAndModuleChildren
-    include EpubAccessibilityMetadataPresenter
-    attr_reader :solr_document
-
-    def initialize(solr_document)
-      @solr_document = solr_document
-    end
-  end
-
   let(:solr_document) { SolrDocument.new({ 'epub_a11y_access_mode_ssim' => epub_a11y_access_mode_ssim,
                                            'epub_a11y_access_mode_sufficient_ssim' => epub_a11y_access_mode_sufficient_ssim,
                                            # Values are already mapped from their raw EPUB metadata values during indexing
@@ -66,42 +57,50 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
                                                 'Additional word segmentation to improve readability',
                                                 'No additional word segmentation',
                                                 # this is to test that unmapped values are retained in the output of...
-                                                # `epub_a11y_accessibility_features`
+                                                # `a11y_accessibility_features`
                                                 'unknownRandomValue'] }
   let(:epub_a11y_certified_by_ssi) { 'A11yCo' }
   let(:epub_a11y_certifier_credential_ssi) { 'https://a11yfoo.org/certification' }
   let(:epub_a11y_conforms_to_ssi) { 'EPUB Accessibility 1.1 - WCAG 2.1 Level AA' }
   let(:epub_a11y_screen_reader_friendly_ssi) { 'yes' }
-  let(:presenter) { self.class::Presenter.new(solr_document) }
+  let(:presenter) { described_class.new(solr_document) }
 
-  describe 'Presenter' do
-    subject { presenter }
+  describe '#a11y_format' do
+    subject { presenter.a11y_format }
 
-    let(:input_title) { double('markdown title') }
+    context 'reader_ebook_format_sim is indexed' do
+      let(:solr_document) { SolrDocument.new('reader_ebook_format_sim' => 'EPUB') }
 
-    it 'includes EpubAccessibilityMetadataPresenter' do
-      is_expected.to be_a described_class
+      it 'returns the indexed value' do
+        is_expected.to eq 'EPUB'
+      end
+    end
+
+    context 'reader_ebook_format_sim is not indexed' do
+      it 'falls back to "EPUB"' do
+        is_expected.to eq 'EPUB'
+      end
     end
   end
 
-  describe '#epub_a11y_access_modes' do
-    subject { presenter.epub_a11y_access_modes }
+  describe '#a11y_access_modes' do
+    subject { presenter.a11y_access_modes }
 
     it 'outputs the correct field value' do
       is_expected.to eq ['textual', 'visual']
     end
   end
 
-  describe '#epub_a11y_access_modes_sufficient' do
-    subject { presenter.epub_a11y_access_modes_sufficient }
+  describe '#a11y_access_modes_sufficient' do
+    subject { presenter.a11y_access_modes_sufficient }
 
     it 'outputs the correct field value' do
       is_expected.to eq ['textual', 'textual,visual', 'textual,visual']
     end
   end
 
-  describe '#epub_a11y_accessibility_features' do
-    subject { presenter.epub_a11y_accessibility_features }
+  describe '#a11y_accessibility_features' do
+    subject { presenter.a11y_accessibility_features }
 
     it 'outputs the field values (already mapped during indexing)' do
       is_expected.to eq ['Alternative text for images',
@@ -148,16 +147,16 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
     end
   end
 
-  describe '#epub_a11y_accessibility_hazards' do
-    subject { presenter.epub_a11y_accessibility_hazards }
+  describe '#a11y_accessibility_hazards' do
+    subject { presenter.a11y_accessibility_hazards }
 
     it 'outputs the correct field value' do
       is_expected.to eq ['flashing', 'motionSimulation']
     end
   end
 
-  describe '#epub_a11y_accessibility_summary' do
-    subject { presenter.epub_a11y_accessibility_summary }
+  describe '#a11y_accessibility_summary' do
+    subject { presenter.a11y_accessibility_summary }
 
     it 'outputs the correct field value' do
       is_expected.to eq 'A very complex book with 15 images, 10 tables, and complex formatting...'
@@ -165,17 +164,17 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
   end
 
   describe 'Accessibility Certification (organization and authority)' do
-    describe '#epub_a11y_certified_by' do
-      subject { presenter.epub_a11y_certified_by }
+    describe '#a11y_certified_by' do
+      subject { presenter.a11y_certified_by }
 
       context 'value is *not* "Benetech"' do
-        context 'epub_a11y_certifier_credential value is a link' do
+        context 'a11y_certifier_credential value is a link' do
           it 'outputs the field value' do
             is_expected.to eq 'A11yCo'
           end
         end
 
-        context 'epub_a11y_certifier_credential value is *not* a link' do
+        context 'a11y_certifier_credential value is *not* a link' do
           let(:epub_a11y_certifier_credential_ssi) { 'Certification' }
 
           it 'outputs the field value' do
@@ -187,13 +186,13 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
       context 'value is "Benetech"' do
         let(:epub_a11y_certified_by_ssi) { 'Benetech' }
 
-        context 'epub_a11y_certifier_credential value is a link' do
+        context 'a11y_certifier_credential value is a link' do
           it 'outputs nothing as this will be combined with the certifier credential value instead' do
             is_expected.to be_nil
           end
         end
 
-        context 'epub_a11y_certifier_credential value is *not* a link' do
+        context 'a11y_certifier_credential value is *not* a link' do
           let(:epub_a11y_certifier_credential_ssi) { 'Certification' }
 
           it 'outputs the field value' do
@@ -203,82 +202,76 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
       end
     end
 
-    describe '#epub_a11y_certifier_credential' do
-      subject { presenter.epub_a11y_certifier_credential }
+    describe '#a11y_certifier_credential' do
+      subject { presenter.a11y_certifier_credential }
 
-      context 'epub_a11y_certifier_credential value is a link' do
-        context 'epub_a11y_certified_by_ssi value is *not* "Benetech"' do
+      context 'a11y_certifier_credential value is a link' do
+        context 'a11y_certified_by value is *not* "Benetech"' do
           it 'outputs the link as-is' do
             is_expected.to eq '<a href="https://a11yfoo.org/certification" target="_blank">https://a11yfoo.org/certification</a>'
           end
         end
 
-        context 'epub_a11y_certified_by value is "Benetech"' do
+        context 'a11y_certified_by value is "Benetech"' do
           let(:epub_a11y_certified_by_ssi) { 'Benetech' }
 
-          context 'epub_a11y_certifier_credential value is a link' do
-            let(:epub_a11y_certifier_credential_ssi) { 'Certification' }
-
-            it 'outputs the link with Benetech text' do
-              '<a href="https://a11yfoo.org/certification" target="_blank">GCA Certified by Benetech</a>'
-            end
+          it 'outputs the link with Benetech text' do
+            is_expected.to eq '<a href="https://a11yfoo.org/certification" target="_blank">GCA Certified by Benetech</a>'
           end
         end
       end
 
-      context 'epub_a11y_certifier_credential value is *not"" a link' do
+      context 'a11y_certifier_credential value is *not* a link' do
         let(:epub_a11y_certifier_credential_ssi) { 'Certification' }
 
-        context 'epub_a11y_certified_by value is *not* "Benetech"' do
+        context 'a11y_certified_by value is *not* "Benetech"' do
           it 'outputs the value as-is' do
             is_expected.to eq 'Certification'
           end
         end
 
-        context 'epub_a11y_certified_by value is "Benetech"' do
+        context 'a11y_certified_by value is "Benetech"' do
           let(:epub_a11y_certified_by_ssi) { 'Benetech' }
 
-          context 'epub_a11y_certifier_credential value is a link' do
-            it 'outputs the value as-is' do
-              is_expected.to eq 'Certification'
-            end
+          it 'outputs the value as-is' do
+            is_expected.to eq 'Certification'
           end
         end
       end
     end
   end
 
-  describe '#epub_a11y_conforms_to' do
-    subject { presenter.epub_a11y_conforms_to }
+  describe '#a11y_conforms_to' do
+    subject { presenter.a11y_conforms_to }
 
-    describe "EPUB Accessibility 1.0 specification links (there are seemingly many but we'll check two)" do
-      it 'outputs the field value' do
+    context 'plain string value (no URL pattern)' do
+      it 'outputs the field value as-is' do
         is_expected.to eq 'EPUB Accessibility 1.1 - WCAG 2.1 Level AA'
       end
+    end
 
-      context 'Proposed Specification 30 November 2016 links' do
-        context 'Level A' do
-          let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20160801.html#wcag-a' }
+    context 'Proposed Specification 30 November 2016 links' do
+      context 'Level A' do
+        let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20160801.html#wcag-a' }
 
-          it 'outputs the correct named link' do
-            is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level A conformance</a>.'.html_safe
-          end
+        it 'outputs the correct named link' do
+          is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level A conformance</a>.'.html_safe
         end
+      end
 
-        context 'Level AA' do
-          let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20160801.html#wcag-aa' }
+      context 'Level AA' do
+        let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20160801.html#wcag-aa' }
 
-          it 'outputs the correct named link' do
-            is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level AA conformance</a>.'.html_safe
-          end
+        it 'outputs the correct named link' do
+          is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level AA conformance</a>.'.html_safe
         end
+      end
 
-        context 'Level AA' do
-          let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20160801.html#wcag-aaa' }
+      context 'Level AAA' do
+        let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20160801.html#wcag-aaa' }
 
-          it 'outputs the correct named link' do
-            is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level AAA conformance</a>.'.html_safe
-          end
+        it 'outputs the correct named link' do
+          is_expected.to eq 'The EPUB Publication meets all <a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#sec-conf-epub" target="_blank">accessibility requirements</a> and achieves [<a href="https://www.idpf.org/epub/a11y/accessibility-20160801.html#refWCAG20" target="_blank">WCAG 2.0</a>] <a href="https://www.w3.org/TR/WCAG20/#conformance-reqs" target="_blank">Level AAA conformance</a>.'.html_safe
         end
       end
     end
@@ -300,7 +293,7 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
         end
       end
 
-      context 'Level AA' do
+      context 'Level AAA' do
         let(:epub_a11y_conforms_to_ssi) { 'https://www.idpf.org/epub/a11y/accessibility-20170105.html#wcag-aaa' }
 
         it 'outputs the correct named link' do
@@ -310,27 +303,27 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
     end
   end
 
-  describe '#epub_a11y_screen_reader_friendly' do
-    subject { presenter.epub_a11y_screen_reader_friendly }
+  describe '#a11y_screen_reader_friendly' do
+    subject { presenter.a11y_screen_reader_friendly }
 
-    context '`epub_a11y_screen_reader_friendly_ssi` has a value other than "unknown"' do
+    context 'epub_a11y_screen_reader_friendly_ssi has a value other than "unknown"' do
       it 'outputs the correct field value' do
         is_expected.to eq 'yes'
       end
     end
 
-    context '`epub_a11y_screen_reader_friendly_ssi` has a value of "unknown"' do
+    context 'epub_a11y_screen_reader_friendly_ssi has a value of "unknown"' do
       let(:epub_a11y_screen_reader_friendly_ssi) { 'unknown' }
 
-      it 'outputs the correct field value' do
+      it 'outputs "No information is available"' do
         is_expected.to eq 'No information is available'
       end
     end
 
-    context '`epub_a11y_screen_reader_friendly_ssi` is not present' do
+    context 'epub_a11y_screen_reader_friendly_ssi is not present' do
       let(:epub_a11y_screen_reader_friendly_ssi) { nil }
 
-      it 'outputs the correct field value' do
+      it 'outputs "No information is available"' do
         is_expected.to eq 'No information is available'
       end
     end
@@ -348,8 +341,7 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
     end
 
     context 'id and press are available' do
-      let(:solr_document) { SolrDocument.new(id: '999999999',
-                                             'press_tesim' => ['blah-press']) }
+      let(:solr_document) { SolrDocument.new(id: '999999999', 'press_tesim' => ['blah-press']) }
 
       it 'pre-populates the URL with ID and press' do
         is_expected.to eq "https://umich.qualtrics.com/jfe/form/SV_8AiVezqglaUnQZo?noid=999999999&press=blah-press"
@@ -411,53 +403,6 @@ RSpec.describe EpubAccessibilityMetadataPresenter do
                           "%22QID4%22:%22First%2C+Author%22," \
                           "%22QID5%22:%22978-0-472-12665-1+%28ebook%29%22," \
                           "%22QID14%22:%22Blah+Press+Publishing+Company%22}"
-      end
-    end
-  end
-
-  describe '#hidden_a11y_data_is_present?' do
-    subject { presenter.hidden_a11y_data_is_present? }
-
-    it 'is true when all of the three hidden fields are present' do
-      is_expected.to eq true
-    end
-
-    context 'only `epub_a11y_access_mode_ssim` is present' do
-      let(:epub_a11y_access_mode_ssim) { ['textual', 'visual'] }
-      let(:epub_a11y_access_mode_sufficient_ssim) { nil }
-      let(:epub_a11y_accessibility_feature_ssim) { nil }
-
-      it 'is true' do
-        is_expected.to eq true
-      end
-    end
-
-    context 'only `epub_a11y_access_mode_sufficient_ssim` is present' do
-      let(:epub_a11y_access_mode_ssim) { nil }
-      let(:epub_a11y_access_mode_sufficient_ssim) { ['textual', 'textual,visual', 'textual,visual'] }
-      let(:epub_a11y_accessibility_feature_ssim) { nil }
-
-      it 'is true' do
-        is_expected.to eq true
-      end
-    end
-
-    context 'only `epub_a11y_access_mode_ssim` is present' do
-      let(:epub_a11y_access_mode_ssim) { nil }
-      let(:epub_a11y_access_mode_sufficient_ssim) { nil }
-      let(:epub_a11y_accessibility_feature_ssim) { ['Alternative text for images'] }
-      it 'is true' do
-        is_expected.to eq true
-      end
-    end
-
-    context 'none of the three hidden fields are present' do
-      let(:epub_a11y_access_mode_ssim) { nil }
-      let(:epub_a11y_access_mode_sufficient_ssim) { nil }
-      let(:epub_a11y_accessibility_feature_ssim) { nil }
-
-      it 'is true' do
-        is_expected.to eq false
       end
     end
   end

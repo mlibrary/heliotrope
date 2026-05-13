@@ -49,6 +49,7 @@ recurring_usage_reports:
     to:
       - sethajoh@umich.edu
 
-
-
 world_institution_identifier: 0
+
+pdf_ebook_accessibility_metadata:
+  dir: <%= Rails.root.join('pdf_a11y_metadata') %>
