@@ -14,7 +14,14 @@ module JsonSchemaSpecHelper
   # 'net/http': proc { |uri| JSON.parse(Net::HTTP.get(uri)) }
   # default: proc { |uri| raise UnknownRef, uri.to_s }
   def reference_resolver(uri)
-    JSON.parse(fetch_cached(uri))
+    # HELIO-5075 this little hack is probably temporary but right now
+    # the schemas reference the old schema which was just moved and no longer exists and
+    # returns a 404 which is breaking our specs.
+    # When they fix it everything should still work on our end.
+    # The schemas at specs.opds.io have $id pointing to the old drafts.opds.io domain
+    # (now a 404). Redirect those refs to the current location.
+    resolved_uri = uri.to_s.sub('https://drafts.opds.io/', 'https://specs.opds.io/')
+    JSON.parse(fetch_cached(resolved_uri))
   end
 
   def meta_schemer
@@ -22,11 +29,11 @@ module JsonSchemaSpecHelper
   end
 
   def opds_feed_schemer
-    NETWORK_CACHE[:opds_feed_schemer] ||= JSONSchemer.schema(fetch_cached('https://drafts.opds.io/schema/feed.schema.json'), ref_resolver: proc { |uri| reference_resolver(uri) })
+    NETWORK_CACHE[:opds_feed_schemer] ||= JSONSchemer.schema(fetch_cached('https://specs.opds.io/schema/feed.schema.json'), ref_resolver: proc { |uri| reference_resolver(uri) })
   end
 
   def opds_publication_schemer
-    NETWORK_CACHE[:opds_publication_schemer] ||= JSONSchemer.schema(fetch_cached('https://drafts.opds.io/schema/publication.schema.json'), ref_resolver: proc { |uri| reference_resolver(uri) })
+    NETWORK_CACHE[:opds_publication_schemer] ||= JSONSchemer.schema(fetch_cached('https://specs.opds.io/schema/publication.schema.json'), ref_resolver: proc { |uri| reference_resolver(uri) })
   end
 
   def schemer_validate?(schemer, json_obj)
