@@ -1,4 +1,4 @@
-version: 6.5.1
+version: 9.6.1
 port: 8985
 download_dir: tmp/solr_download
 instance_dir: tmp/solr
@@ -6,3 +6,6 @@ collection:
   persist: false
   dir: config
   name: hydra-test
+env:
+  SOLR_MODULES: analysis-extras,extraction
+  SOLR_ULIMIT_CHECKS: "false"
