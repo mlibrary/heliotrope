@@ -6,7 +6,14 @@ require 'solr_helper'
 
 RSpec.describe 'solr core' do
   let(:client) { SimpleSolrClient::Client.new(8985) }
-  let(:core) { client.core('hydra-test') }
+  # In SolrCloud mode (CI) the underlying core is named with a shard suffix
+  # (e.g. hydra-test_shard1_replica_n1). Find it dynamically so specs work
+  # in both standalone (solr_wrapper) and SolrCloud (CircleCI) environments.
+  let(:core) do
+    core_name = client.cores.find { |c| c == 'hydra-test' || c.start_with?('hydra-test_') }
+    raise "No hydra-test core found. Available cores: #{client.cores.join(', ')}" unless core_name
+    client.core(core_name)
+  end
 
   describe 'field types' do
     let(:field_types) { core.schema.field_types }

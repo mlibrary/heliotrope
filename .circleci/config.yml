@@ -96,15 +96,27 @@ commands:
         type: string
     steps:
     - run:
-        command: dockerize -wait tcp://localhost:<< parameters.solr_port >> -timeout
-          1m
+        command: |
+          SOLR_URL="http://localhost:<< parameters.solr_port >>/solr"
+          echo "Waiting for Solr..."
+          for attempt in $(seq 1 60); do
+            curl -sf "$SOLR_URL/admin/info/system?wt=json" > /dev/null && echo "Solr ready after ${attempt}s" && break
+            sleep 1
+          done
+          curl -sf "$SOLR_URL/admin/info/system?wt=json" > /dev/null || { echo "Solr not ready after 60s"; exit 1; }
         name: Wait for Solr
     - run:
         command: |
+          SOLR_URL="http://localhost:<< parameters.solr_port >>/solr"
           cd << parameters.solr_config_path >>
           zip -1 -r solr_config.zip ./*
-          curl -H "Content-type:application/octet-stream" --data-binary @solr_config.zip "http://localhost:<< parameters.solr_port >>/solr/admin/configs?action=UPLOAD&name=solrconfig"
-          curl "http://localhost:<< parameters.solr_port >>/solr/admin/cores?action=CREATE&name=<< parameters.core_name >>"
+
+          curl -sS -H "Content-type:application/octet-stream" --data-binary @solr_config.zip \
+            "$SOLR_URL/admin/configs?action=UPLOAD&name=solrconfig" | tee /tmp/solr_upload.json
+          grep -q '"status":0' /tmp/solr_upload.json || { echo "Config upload failed"; exit 1; }
+
+          curl -sS "$SOLR_URL/admin/collections?action=CREATE&name=<< parameters.core_name >>&numShards=1&replicationFactor=1&collection.configName=solrconfig" | tee /tmp/solr_create.json
+          grep -q '"status":0' /tmp/solr_create.json || { echo "Collection creation failed"; exit 1; }
         name: Load config into solr
   parallel_rspec:
     description: Run RSpec in Parallel, storing test_results for CircleCI to parse.
@@ -330,8 +342,12 @@ executors:
           -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m
           -XX:+DisableExplicitGC
       image: ualbertalib/docker-fcrepo4:<< parameters.fcrepo_version>>
-    - command: bin/solr -cloud -noprompt -f -p <<parameters.solr_port>>
-      image: solr:6-alpine
+    - command: solr-fg -cloud -p <<parameters.solr_port>>
+      environment:
+        SOLR_MODULES: analysis-extras,extraction
+        SOLR_ULIMIT_CHECKS: "false"
+        SOLR_OPTS: "-DzkRun"
+      image: solr:9
     - image: cimg/redis:<<parameters.redis_version>>
     - image: cimg/mariadb:<<parameters.mariadb_version>>
       command: [--default-authentication-plugin=mysql_native_password]
