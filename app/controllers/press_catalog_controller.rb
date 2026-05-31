@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PressCatalogController < ::CatalogController
+class PressCatalogController < ApplicationCatalogController
   include Skylight::Helpers
   before_action :load_press
   before_action :load_actor_product_ids, except: %i[facet]
@@ -16,16 +16,6 @@ class PressCatalogController < ::CatalogController
     config.search_builder_class = PressSearchBuilder
     config.index.partials = %i[index]
     config.view.gallery.partials = %i[index]
-
-    config.facet_fields.tap do
-      # solr facet fields not to be displayed in the index (search results) view
-      config.facet_fields.delete('human_readable_type_sim')
-      config.facet_fields.delete('language_sim')
-      config.facet_fields.delete('press_name_ssim')
-      config.facet_fields.delete('subject_sim')
-      config.facet_fields.delete('creator_sim')
-      config.facet_fields.delete('based_near_sim')
-    end
   end
 
   def show_site_search?
