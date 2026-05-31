@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
-class CatalogController < ApplicationController
-  include Hydra::Catalog
-  include Hydra::Controller::ControllerBehavior
+class CatalogController < ApplicationCatalogController
   include BlacklightOaiProvider::Controller
-
-  # This filter applies the hydra access controls
-  before_action :enforce_show_permissions, only: :show
-  before_action :search_ongoing
 
   configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     config.search_builder_class = ::SearchBuilder
@@ -271,28 +265,5 @@ class CatalogController < ApplicationController
     config.add_results_collection_tool(:sort_widget)
     config.add_results_collection_tool(:per_page_widget)
     config.add_results_collection_tool(:view_type_group)
-  end
-
-  def show_site_search?
-    true
-  end
-
-  # disable the bookmark control from displaying in gallery view
-  # Hyrax doesn't show any of the default controls on the list view, so
-  # this method is not called in that context.
-  def render_bookmarks_control?
-    false
-  end
-
-  def search_ongoing
-    @search_ongoing = false
-
-    params.each do |key, _value|
-      non_search_keys = ['action', 'authenticity_token', 'controller', 'id', 'locale', 'page', 'per_page', 'press', 'sort', 'utf8', 'view']
-      if non_search_keys.exclude? key
-        @search_ongoing = true
-        break
-      end
-    end
   end
 end
