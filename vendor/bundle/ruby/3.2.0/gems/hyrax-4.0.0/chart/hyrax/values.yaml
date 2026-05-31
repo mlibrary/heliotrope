@@ -1,0 +1,441 @@
+# Default values for hyrax.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: samveralabs/dassie
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# use true to skip loading Hyrax engine database seed file
+skipHyraxEngineSeed: false
+# use true to skip running the `db-setup` initContainer
+# this may be desirable for downstream chart users to customize their database setup
+skipDbMigrateSeed: false
+
+# use false to skip the configset management init container
+loadSolrConfigSet: true
+# the host and auth details for an external solr service;
+#   ignored if `solr.enabled` is true
+solrExistingSecret: ""
+externalSolrHost: ""
+externalSolrPort: ""
+externalSolrUser: ""
+externalSolrPassword: ""
+externalSolrCollection: "hyrax"
+
+# additional environment variables, evaluated as a template. e.g.
+#
+#  extraEnvVars:
+#    - name: RAILS_SERVE_STATIC_FILES
+#      value: "1"
+#    - name: GOOGLE_OAUTH_APP_NAME
+#      value: "my_hyrax_app"
+extraEnvVars: []
+
+## Extra init containers
+## Example
+##
+## extraInitContainers:
+##   - name: do-something
+##     image: busybox
+##     command: ['echo', 'Hello, Hyrax.']
+##
+extraInitContainers: []
+
+# Extra envFrom (secrets/configmaps)
+# Example
+#
+# extraEnvFrom:
+#   - configMapRef:
+#       name: existingConfigMap
+#   - secretRef:
+#       name: existingSecret
+#
+extraEnvFrom: []
+
+# Extra container spec configuration
+# Example: (enabling pry debugging for local development)
+# Note: with this enabled, one can `kubectl attach` to a running container with a binding.pry breakpoint
+#
+#extraContainerConfiguration:
+# stdin: true
+# tty: true
+extraContainerConfiguration: []
+
+## @param extraDeploy Array of extra objects to deploy with the release (evaluated as a template)
+##
+extraDeploy: []
+
+# an existing volume containing a Hyrax-based application
+# must be a ReadWriteMany volume if worker is enabled
+applicationExistingClaim: ""
+
+brandingVolume:
+  enabled: true
+  # the name of an existing volume claim; must be an ReadWriteMany volume
+  existingClaim: ""
+  size: 2Gi
+  storageClass: ""
+
+derivativesVolume:
+  enabled: true
+  # the name of an existing volume claim; must be an ReadWriteMany volume
+  existingClaim: ""
+  size: 10Gi
+  storageClass: ""
+
+uploadsVolume:
+  enabled: true
+  # the name of an existing volume claim; must be an ReadWriteMany volume
+  existingClaim: ""
+  size: 20Gi
+  storageClass: ""
+
+# additional volumes and volume mounts, evaluated as a template, e.g.
+#
+#  extraVolumeMounts
+#    - name: local-app
+#      mountPath: /app/samvera/hyrax-webapp
+#  extraVolumes:
+#    - name: local-app
+#      hostPath:
+#        path: /src
+#        type: DirectoryOrCreate
+extraVolumeMounts: []
+extraVolumes: []
+
+# configuration for an external/existing fcrepo service;
+#   ignored if `fcrepo.enabled` is true
+externalFcrepoHost: ""
+fcrepoBasePathOverride: ""
+
+# database configuration for an external postgresql;
+#   ignored if `postgresql.enabled` is true
+externalPostgresql: {}
+#  username:
+#  password:
+#  database:
+
+embargoRelease:
+  enabled: true
+  schedule: "0 0 * * *"
+leaseRelease:
+  enabled: true
+  schedule: "0 0 * * *"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: hyrax.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+livenessProbe:
+  enabled: true
+  # path: "/healthz"
+  # initialDelaySeconds: 0
+  # periodSeconds: 10
+  # timeoutSeconds: 10
+  # failureThreshold: 3
+  # successThreshold: 1
+
+readinessProbe:
+  enabled: true
+  # path: "/healthz"
+  # initialDelaySeconds: 5
+  # periodSeconds: 10
+  # timeoutSeconds: 5
+  # failureThreshold: 6
+  # successThreshold: 1
+
+resources: {}
+
+worker:
+  enabled: true
+  replicaCount: 3
+  image:
+    repository: samveralabs/dassie-worker
+    pullPolicy: IfNotPresent
+    tag: ""
+  extraInitContainers: []
+  extraVolumeMounts: []
+  extraVolumes: []
+  imagePullSecrets: []
+  podSecurityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources: {}
+
+  # see: https://github.com/mperham/sidekiq/wiki/Kubernetes#health-checks
+  readinessProbe:
+    enabled: false
+    # command:
+    #  - cat
+    #  - /app/samvera/hyrax-webapp/tmp/sidekiq_process_has_started_and_will_begin_processing_jobs
+    # initialDelaySeconds: 10
+    # periodSeconds: 2
+    # timeoutSeconds: 1
+    # failureThreshold: 10
+    # successThreshold: 2
+
+fcrepo:
+  enabled: true
+  externalDatabaseUsername: "hyrax"
+  servicePort: 8080
+  postgresql:
+    enabled: false
+    image:
+      repository: bitnami/postgresql
+      tag: 12.3.0
+
+memcached:
+  enabled: false
+
+minio:
+  enabled: false
+  auth:
+    rootUser: hyrax-access-key
+    rootPassword: hyrax-secret-key
+  persistence:
+    enabled: false
+  # defaultBuckets: bucketOne;bucketTwo
+
+postgresql:
+  enabled: true
+  image:
+    repository: bitnami/postgresql
+    tag: 12.3.0
+  auth:
+    database: hyrax
+    password: hyrax_pass
+    username: hyrax
+  primary:
+    service:
+      ports:
+        postgresql: 5432
+  readReplicas:
+    service:
+      ports:
+        postgresql: 5432
+
+## Nginx proxy is used to keep puma from having to serve static assets
+## and to act as an auth proxy for Cantelope
+nginx:
+  enabled: false
+  # The set up below does malicious bot / ip blocking and mounts
+  # vaolumes to allow nginx to server assets and other public directory items
+  # image:
+  #   registry: registry.gitlab.com
+  #   repository: notch8/scripts/bitnami-nginx
+  #   tag: 1.21.5-debian-10-r4
+  # extraVolumes:
+  #   - name: "uploads"
+  #     persistentVolumeClaim:
+  #       claimName: {{ .Values.global.hyraxHostName }}-uploads
+  # extraVolumeMounts:
+  #   - name: uploads
+  #     mountPath: /app/samvera/hyrax-webapp/public/system
+  #     subPath: public-system
+  #   - name: uploads
+  #     mountPath: /app/samvera/hyrax-webapp/public/uploads
+  #     subPath: public-uploads
+  #   - name: uploads
+  #     mountPath: /app/samvera/hyrax-webapp/public/uv
+  #     subPath: public-uv
+  #   - name: uploads
+  #     mountPath: /app/samvera/hyrax-webapp/public/assets
+  #     subPath: public-assets
+  # serverBlock: |-
+  #   upstream rails_app {
+  #     server {{ .Values.global.hyraxHostName }};
+  #   }
+
+  #   map $status $loggable {
+  #       ~^444  0;
+  #       default 1;
+  #   }
+
+  #   log_format loki 'host=$host ip=$http_x_forwarded_for remote_user=$remote_user [$time_local] '
+  #                     'request="$request" status=$status bytes=$body_bytes_sent '
+  #                     'referer="$http_referer" agent="$http_user_agent" request_time=$request_time upstream_response_time=$upstream_response_time upstream_response_length=$upstream_response_length';
+
+  #   error_log  /opt/bitnami/nginx/logs/error.log warn;
+  #   #tcp_nopush     on;
+
+  #   # Cloudflare ips see for refresh
+  #   # https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs-logging-visitor-IP-addresses
+  #   # update list https://www.cloudflare.com/ips/
+  #   set_real_ip_from 103.21.244.0/22;
+  #   set_real_ip_from 103.22.200.0/22;
+  #   set_real_ip_from 103.31.4.0/22;
+  #   set_real_ip_from 104.16.0.0/13;
+  #   set_real_ip_from 104.24.0.0/14;
+  #   set_real_ip_from 108.162.192.0/18;
+  #   set_real_ip_from 131.0.72.0/22;
+  #   set_real_ip_from 141.101.64.0/18;
+  #   set_real_ip_from 162.158.0.0/15;
+  #   set_real_ip_from 172.64.0.0/13;
+  #   set_real_ip_from 173.245.48.0/20;
+  #   set_real_ip_from 188.114.96.0/20;
+  #   set_real_ip_from 190.93.240.0/20;
+  #   set_real_ip_from 197.234.240.0/22;
+  #   set_real_ip_from 198.41.128.0/17;
+  #   set_real_ip_from 2400:cb00::/32;
+  #   set_real_ip_from 2606:4700::/32;
+  #   set_real_ip_from 2803:f800::/32;
+  #   set_real_ip_from 2405:b500::/32;
+  #   set_real_ip_from 2405:8100::/32;
+  #   set_real_ip_from 2a06:98c0::/29;
+  #   set_real_ip_from 2c0f:f248::/32;
+
+  #   real_ip_header X-Forwarded-For;
+  #   real_ip_recursive on;
+  #   include /opt/bitnami/nginx/conf/conf.d/*.conf;
+  #   server {
+  #       listen 8080;
+  #       server_name _;
+  #       root /app/samvera/hyrax-webapp/public;
+  #       index index.html;
+
+  #       client_body_in_file_only clean;
+  #       client_body_buffer_size 32K;
+  #       client_max_body_size 0;
+  #       access_log /opt/bitnami/nginx/logs/access.log loki;
+  #       # if=$loggable;
+
+  #       sendfile on;
+  #       send_timeout 300s;
+
+  #       include /opt/bitnami/nginx/conf/bots.d/ddos.conf;
+  #       include /opt/bitnami/nginx/conf/bots.d/blockbots.conf;
+
+  #       location ~ (\.php|\.aspx|\.asp) {
+  #       	return 404;
+  #       }
+
+  #       # deny requests for files that should never be accessed
+  #       location ~ /\. {
+  #         deny all;
+  #       }
+
+  #       location ~* ^.+\.(rb|log)$ {
+  #         deny all;
+  #       }
+
+  #       # serve static (compiled) assets directly if they exist (for rails production)
+  #       location ~ ^/(assets|packs|fonts|images|javascripts|stylesheets|swfs|system)/ {
+  #         try_files $uri @rails;
+
+  #         # access_log off;
+  #         gzip_static on; # to serve pre-gzipped version
+
+  #         expires max;
+  #         add_header Cache-Control public;
+
+  #         # Some browsers still send conditional-GET requests if there's a
+  #         # Last-Modified header or an ETag header even if they haven't
+  #         # reached the expiry date sent in the Expires header.
+  #         add_header Last-Modified "";
+  #         add_header ETag "";
+  #         break;
+  #       }
+
+  #       # send non-static file requests to the app server
+  #       location / {
+  #         try_files $uri @rails;
+  #       }
+
+  #       location @rails {
+  #         proxy_set_header  X-Real-IP  $remote_addr;
+  #         proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+  #         proxy_set_header Host $http_host;
+  #         proxy_redirect off;
+  #         proxy_pass http://rails_app;
+  #       }
+  #   }
+
+
+redis:
+  enabled: true
+  auth:
+    password: mysecret
+
+solr:
+  enabled: true
+  image:
+    repository: bitnami/solr
+    tag: 8.11.1
+  auth:
+    enabled: true
+    adminUsername: admin
+    adminPassword: admin
+  coreName: hyrax
+  collection: hyrax
+  cloudBootstrap: true
+  cloudEnabled: true
+  persistence:
+    enabled: true
+  zookeeper:
+    enabled: true
+    persistence:
+      enabled: true
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+global:
+  postgresql:
+    postgresqlUsername: hyrax
+    postgresqlPassword: hyrax_pass
+  # This is th name of the running rails server pod
+  hyraxHostName: hyrax
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

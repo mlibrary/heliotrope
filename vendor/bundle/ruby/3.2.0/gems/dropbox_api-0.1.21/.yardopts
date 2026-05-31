@@ -1,0 +1,11 @@
+--load ./yardoc/endpoint_handler.rb
+--plugin rspec
+lib/**/*.rb
+spec/endpoints/**/*_spec.rb
+spec/support/dropbox_scaffold_builder.rb
+--markup=markdown
+--markup-provider=redcarpet
+--output-dir docs
+-
+api_coverage.md
+rails_setup.md

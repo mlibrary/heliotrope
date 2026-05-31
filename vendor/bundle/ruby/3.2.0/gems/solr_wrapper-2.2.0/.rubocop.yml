@@ -1,0 +1,16 @@
+inherit_from:
+  - .rubocop_todo.yml
+
+AllCops:
+  Exclude:
+  - "*.gemspec"
+
+Metrics/LineLength:
+  Enabled: false
+
+# Offense count: 61
+Metrics/AbcSize:
+  Max: 59
+
+Style/RescueModifier:
+  Enabled: false

@@ -1,0 +1,16 @@
+zh:
+  blacklight:
+    search:
+      view:
+        gallery: '图片式展示'
+        slideshow: '幻灯式展示'
+        masonry: '砌体式展示'
+  blacklight_gallery:
+    catalog:
+      grid_slideshow:
+        missing_image: '图片缺失'
+      modal_slideshow:
+        counter: "%{counter} of %{count}"
+      slideshow:
+        pause: 暂停幻灯片展示
+        start: 启动幻灯片展示

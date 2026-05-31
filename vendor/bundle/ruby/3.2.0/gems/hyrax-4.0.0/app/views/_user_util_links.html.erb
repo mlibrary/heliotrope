@@ -1,0 +1,27 @@
+<ul id="user_utility_links" class="navbar-nav navbar-dark">
+  <%= render 'shared/locale_picker' if available_translations.size > 1 %>
+  <% if user_signed_in? %>
+    <li class="nav-item">
+      <%= render_notifications(user: current_user) %>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="sr-only"><%= t("hyrax.toolbar.profile.sr_action") %></span>
+        <span><%= current_user.name %></span>
+        <span class="sr-only"> <%= t("hyrax.toolbar.profile.sr_target") %></span>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <%= link_to "My Profile", hyrax.dashboard_profile_path(current_user), class: 'dropdown-item' %>
+        <%= link_to t("hyrax.toolbar.dashboard.menu"), hyrax.dashboard_path, class: "dropdown-item" %>
+        <div class="dropdown-divider"></div>
+        <%= link_to t("hyrax.toolbar.profile.logout"), main_app.destroy_user_session_path, class: "dropdown-item" %>
+      </div>
+    </li>
+  <% else %>
+    <li class="nav-item">
+      <%= link_to main_app.new_user_session_path, class: 'nav-link' do %>
+        <span class="fa fa-sign-in" aria-hidden="true"></span> <%= t("hyrax.toolbar.profile.login") %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

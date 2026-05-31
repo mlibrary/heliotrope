@@ -1,0 +1,118 @@
+h1. Blacklight Access Controls
+!https://travis-ci.org/projectblacklight/blacklight-access_controls.svg?branch=master!:https://travis-ci.org/projectblacklight/blacklight-access_controls
+
+Provides access controls for Blacklight-based applications.
+
+*Background*:  Much of this code was extracted from "hydra-access-controls":https://github.com/projecthydra/hydra-head/tree/master/hydra-access-controls
+
+
+h2. Adding Access Controls to a Blacklight App
+
+h3. Install the gem
+
+* Add blacklight-access_controls to your Gemfile
+* bundle install
+
+h3. Configure solr
+
+* Make sure your solrconfig.xml has a requestHandler for "permissions".  For an example, see solr_conf/conf/solrconfig.xml.
+
+* If you use solr field names that don't match the default field names used in Blacklight::AccessControls::Config for the "permissions" handler, you'll need to create a Rails initializer to set those values in Blacklight::AccessControls::Config.
+
+h3. Run the generator
+
+<pre>
+  rails generate blacklight:access_controls
+</pre>
+
+If you want to use a different user model than "User", you can pass an argument to the generator
+
+<pre>
+  rails generate blacklight:access_controls -m Student
+</pre>
+
+If you have more than one search builder class, or if your search builder is located someplace other than app/models/search_builder.rb, you can pass an argument to the generator
+
+<pre>
+  rails generate blacklight:access_controls -b app/search_builders/search_one.rb app/search_builders/search_two.rb
+</pre>
+
+h3. Implement user.groups
+
+* If you are using LDAP or some other way of controlling group-level access to records, implement a 'groups' method on your User model.  If you call user.groups method on a user, it should return a list of groups that the user belongs to.
+
+
+h2. Using Access Controls
+
+Some notes about using blacklight-access_controls within your Blacklight app:
+
+* Blacklight Access Controls allows 3 types of access to a record:  discover, read, or download.  Of course, you can change or redefine the meaning of these access levels in your own app, but within the context of blacklight-access_controls, the 3 levels of access mean this:
+** Discover access allows the user to see that a record does exist and view minimal metadata about the record, but the user may not be allowed to read or download the full record. (e.g. The user can see the record in a search results list, but if they visit the show page of the record, they will be denied access.)
+** Read access allows the user to view the entire record, but the user might not be able to download attached files.
+** Download access allows the user to download the full record and/or files that are attached to the record.
+
+* The access levels are hierarchical, so if you grant "download" access to a user, the user will automatically be granted "read" and "discover" access.  If you grant "read" access, the user will also have "discover" access, but not "download" access.
+
+* You can grant access to a record to specific users or groups by adding them to the correct fields in the solr document.  For example:
+
+<pre>
+  {
+    discover_access_group_ssim: "public",
+    read_access_person_ssim: "bilbo@example.com",
+    download_access_person_ssim: "frodo@example.com"
+  }
+</pre>
+
+* The gem expects user.groups to return a list of groups that the user belongs to.  By default, all users belong to a group called "public", and all logged-in users belong to a group called "registered".
+
+* If you want a record to be readable by the public, you need to add "public" to the "read_access_group_ssim" field in the solr document, or if you want discover-only access, add "public" to "discover_access_group_ssim".  (Discover-only means that the user can see that the record exists in a catalog search, but won't be able to view the record itself.)
+
+* If you grant download access to a user or group, blacklight-access_controls will grant access only to the SolrDocument.  If you want the user to be able to download a different type of object such as an attached file, you may need to add that permission into your cancan abilities.  In this example, we check the permissions of the user id for the object itself, instead of for the SolrDocument that indexes the object:
+
+<pre>
+  can :download, AttachedFile, parent: { user_id: user.id }
+</pre>
+
+* If you want to test download access against the solr document instead of against the object (for example, to decide whether or not to display a download link on an index or show page), then you can just add a normal cancan check in your controller or view.  There is no need to add anything special to the cancan ability class.
+
+<pre>
+  if can? :download, solr_document
+    # do something
+  end
+</pre>
+
+
+h2. Developer Notes
+
+This section contains information about working on the blacklight-access_controls gem itself.
+
+h3. Set up Solr
+
+<pre>
+$ bundle exec solr_wrapper clean
+$ bundle exec solr_wrapper
+</pre>
+
+h3. Generate a Rails test app
+
+<pre>
+$ bundle exec rake engine_cart:clean
+$ bundle exec rake engine_cart:generate
+</pre>
+
+h3. Run the test suite
+
+<pre>
+$ bundle exec rake engine_cart:clean
+$ bundle exec rake engine_cart:generate
+$ bundle exec rake solr:spec
+</pre>
+
+h3. Run the Rails server in development mode
+
+<pre>
+$ bundle exec solr_wrapper
+$ bundle exec rake engine_cart:generate
+$ bundle exec rake engine_cart:server
+</pre>
+

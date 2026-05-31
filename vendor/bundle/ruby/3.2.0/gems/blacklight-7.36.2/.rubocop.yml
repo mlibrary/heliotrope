@@ -1,0 +1,135 @@
+require:
+  - rubocop-rspec
+  - rubocop-rails
+
+
+inherit_from:
+  - .rubocop_todo.yml
+
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.5
+  Exclude:
+  - "lib/generators/blacklight/templates/**/*"
+  - "blacklight.gemspec"
+
+# engine_cart block includes conditional, not duplication
+Bundler/DuplicatedGem:
+  Exclude:
+  - 'Gemfile'
+
+# engine_cart block is following default Rails order
+Bundler/OrderedGems:
+  Exclude:
+  - 'Gemfile'
+
+Layout/IndentationConsistency:
+  EnforcedStyle: normal
+
+Metrics/BlockLength:
+  Exclude:
+    - "app/views/catalog/index.json.jbuilder"
+    - "app/views/catalog/_document.atom.builder"
+    - "lib/railties/blacklight.rake"
+    - "tasks/blacklight.rake"
+    - "spec/**/*"
+
+Metrics/ClassLength:
+  Exclude:
+    - "lib/blacklight/configuration.rb"
+    - "lib/blacklight/search_builder.rb"
+    - "lib/blacklight/search_state.rb"
+    - "lib/blacklight/search_state/filter_field.rb"
+
+Layout/LineLength:
+  Max: 200
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'app/controllers/concerns/blacklight/catalog.rb'
+    - 'lib/blacklight/solr/search_builder_behavior.rb'
+
+Metrics/AbcSize:
+  Exclude:
+    - "lib/blacklight/search_state/filter_field.rb"
+
+Naming/HeredocDelimiterNaming:
+  Enabled: false
+
+Naming/MethodParameterName:
+  AllowedNames:
+    - id
+    - q
+    - as
+    - of
+    - by
+
+Naming/PredicateName:
+  ForbiddenPrefixes:
+    - is_
+
+Rails:
+  Enabled: true
+
+Rails/ApplicationMailer:
+  Enabled: false
+
+# https://github.com/rubocop-hq/rubocop/issues/6439
+Style/AccessModifierDeclarations:
+  Enabled: false
+
+Style/MissingRespondToMissing:
+  Exclude:
+  - 'lib/blacklight/nested_open_struct_with_hash_access.rb'
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/MethodDefParentheses:
+  Enabled: false
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+  Exclude:
+    - 'spec/services/blacklight/search_service_spec.rb'
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
+
+Rails/ContentTag:
+  Enabled: false

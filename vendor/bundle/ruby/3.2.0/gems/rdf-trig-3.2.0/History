@@ -1,0 +1,8 @@
+### 0.1.2
+* Fixed bug causing context to be ignored when generating list statements.
+
+### 0.1.1
+* Detect application/x-trig in addition to application/trig.
+
+### 0.1.0
+* First release based on 02-Nov-2011 version of [TriG spec](http://dvcs.w3.org/hg/rdf/raw-file/default/trig/index.html)

@@ -1,0 +1,51 @@
+<% provide :page_header do %>
+  <h1><span class="fa fa-user" aria-hidden="true"></span> <%= t('hyrax.admin.users.index.title') %></h1>
+<% end %>
+
+<div class="card users-listing">
+  <div class="card-header">
+      <%= t('hyrax.admin.users.index.describe_users_html', count: @presenter.user_count) %>
+  </div>
+
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped datatable">
+        <thead>
+          <tr>
+            <th></th>
+            <th><%= t('.id_label') %></th>
+            <th><%= t('.role_label') %></th>
+            <% if @presenter.show_last_access? %>
+              <th><%= t('.access_label') %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @presenter.users.each do |user| %>
+            <tr>
+              <td><%= link_to hyrax.user_path(user) do %>
+                    <%= image_tag(user.avatar.url(:thumb), width: 30) if user.avatar.file %>
+                  <% end %>
+              </td>
+              <td><%= link_to user.email, hyrax.user_path(user) %></td>
+              <td><% roles = @presenter.user_roles(user) %>
+                  <ul><% roles.each do |role| %>
+                    <li><%= role %></li>
+                    <% end %>
+                  </ul>
+              </td>
+              <% if @presenter.show_last_access? %>
+                <td>
+                  <%# in the case that a user is created who never signs in, this is necessary %>
+                  <relative-time datetime="<%= @presenter.last_accessed(user).getutc.iso8601 %>" title="<%= @presenter.last_accessed(user).to_formatted_s(:standard) %>">
+                    <%= @presenter.last_accessed(user).to_formatted_s(:long_ordinal) %>
+                  </relative-time>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

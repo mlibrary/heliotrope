@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaInfo
+    xmlns="https://mediaarea.net/mediainfo"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://mediaarea.net/mediainfo https://mediaarea.net/mediainfo/mediainfo_2_0.xsd"
+    version="2.0">
+<creatingLibrary version="18.05" url="https://mediaarea.net/MediaInfo">MediaInfoLib</creatingLibrary>
+<media ref="spec/fixtures/ffmpeg/completed-id/low.mp4">
+<track type="General">
+<VideoCount>1</VideoCount>
+<AudioCount>1</AudioCount>
+<FileExtension>mp4</FileExtension>
+<Format>MPEG-4</Format>
+<Format_Profile>Base Media</Format_Profile>
+<CodecID>isom</CodecID>
+<FileSize>125403</FileSize>
+<Duration>6.336</Duration>
+<OverallBitRate>158337</OverallBitRate>
+<FrameRate>24.000</FrameRate>
+<FrameCount>150</FrameCount>
+<StreamSize>5648</StreamSize>
+<HeaderSize>40</HeaderSize>
+<DataSize>119763</DataSize>
+<FooterSize>5600</FooterSize>
+<IsStreamable>No</IsStreamable>
+<File_Modified_Date>UTC 2018-09-07 17:36:26</File_Modified_Date>
+<File_Modified_Date_Local>2018-09-07 13:36:26</File_Modified_Date_Local>
+<Encoded_Application>Lavf58.12.100</Encoded_Application>
+</track>
+<track type="Video">
+<StreamOrder>0</StreamOrder>
+<ID>1</ID>
+<Format>AVC</Format>
+<Format_Profile>High</Format_Profile>
+<Format_Level>1.1</Format_Level>
+<Format_Settings_CABAC>Yes</Format_Settings_CABAC>
+<Format_Settings_RefFrames>4</Format_Settings_RefFrames>
+<CodecID>avc1</CodecID>
+<Duration>6.250</Duration>
+<BitRate>79302</BitRate>
+<Width>200</Width>
+<Height>110</Height>
+<Stored_Width>208</Stored_Width>
+<Stored_Height>112</Stored_Height>
+<Sampled_Width>200</Sampled_Width>
+<Sampled_Height>110</Sampled_Height>
+<PixelAspectRatio>1.000</PixelAspectRatio>
+<DisplayAspectRatio>1.818</DisplayAspectRatio>
+<Rotation>0.000</Rotation>
+<FrameRate_Mode>CFR</FrameRate_Mode>
+<FrameRate_Mode_Original>VFR</FrameRate_Mode_Original>
+<FrameRate>24.000</FrameRate>
+<FrameCount>150</FrameCount>
+<ColorSpace>YUV</ColorSpace>
+<ChromaSubsampling>4:2:0</ChromaSubsampling>
+<BitDepth>8</BitDepth>
+<ScanType>Progressive</ScanType>
+<StreamSize>61955</StreamSize>
+<Encoded_Library>x264 - core 152 r2854 e9a5903</Encoded_Library>
+<Encoded_Library_Name>x264</Encoded_Library_Name>
+<Encoded_Library_Version>core 152 r2854 e9a5903</Encoded_Library_Version>
+<Encoded_Library_Settings>cabac=1 / ref=3 / deblock=1:0:0 / analyse=0x3:0x113 / me=hex / subme=7 / psy=1 / psy_rd=1.00:0.00 / mixed_ref=1 / me_range=16 / chroma_me=1 / trellis=1 / 8x8dct=1 / cqm=0 / deadzone=21,11 / fast_pskip=1 / chroma_qp_offset=-2 / threads=3 / lookahead_threads=1 / sliced_threads=0 / nr=0 / decimate=1 / interlaced=0 / bluray_compat=0 / constrained_intra=0 / bframes=3 / b_pyramid=2 / b_adapt=1 / b_bias=0 / direct=1 / weightb=1 / open_gop=0 / weightp=2 / keyint=250 / keyint_min=24 / scenecut=40 / intra_refresh=0 / rc_lookahead=40 / rc=crf / mbtree=1 / crf=23.0 / qcomp=0.60 / qpmin=0 / qpmax=69 / qpstep=4 / ip_ratio=1.40 / aq=1:1.00</Encoded_Library_Settings>
+</track>
+<track type="Audio">
+<StreamOrder>1</StreamOrder>
+<ID>2</ID>
+<Format>AAC</Format>
+<Format_Profile>LC</Format_Profile>
+<Format_Settings_SBR>No (Explicit)</Format_Settings_SBR>
+<CodecID>mp4a-40-2</CodecID>
+<Duration>6.336</Duration>
+<BitRate_Mode>CBR</BitRate_Mode>
+<BitRate>72000</BitRate>
+<Channels>2</Channels>
+<Channels_Original>1</Channels_Original>
+<ChannelPositions>Front: C</ChannelPositions>
+<ChannelLayout>C</ChannelLayout>
+<SamplesPerFrame>1024</SamplesPerFrame>
+<SamplingRate>48000</SamplingRate>
+<SamplingCount>304128</SamplingCount>
+<FrameRate>46.875</FrameRate>
+<FrameCount>297</FrameCount>
+<Compression_Mode>Lossy</Compression_Mode>
+<StreamSize>57800</StreamSize>
+<StreamSize_Proportion>0.46091</StreamSize_Proportion>
+<Default>Yes</Default>
+<AlternateGroup>1</AlternateGroup>
+</track>
+</media>
+</MediaInfo>

@@ -1,0 +1,37 @@
+// hydra-editor Bootstrap 3.0 compatibility
+$border-radius-base: $border-radius;
+
+// greys
+$gray-base: $black;
+$gray: $gray-600;
+$gray-darker: $gray-900;
+$gray-lighter: $gray-200;
+
+// brand colours
+$brand-primary: $primary;
+$brand-secondary: $secondary;
+$brand-success: $success;
+$brand-info: $info;
+$brand-warning: $warning;
+$brand-danger: $danger;
+$brand-light: $light;
+$brand-dark: $dark;
+
+$masthead-image-blur: 1px !default;
+
+$navbar-transparent-color: $gray !default;
+$navbar-transparent-bg: rgba(0, 0, 0, 0.6) !default;
+$navbar-transparent-border: $gray !default;
+$navbar-transparent-link-color: $gray-lighter !default;
+$navbar-transparent-link-hover-color: $gray-lighter !default;
+$navbar-transparent-link-hover-bg: rgba(255, 255, 255, 0.15) !default;
+$navbar-transparent-link-active-color: $gray-lighter !default;
+$navbar-transparent-link-active-bg: #585050 !default;
+
+$title-height: 75px !default;
+$marketing-text-color: $gray-darker !important;
+$marketing-text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1) !important;
+
+$footer-top-margin: 3 * $pagination-padding-y-sm !default;
+$footer-dashboard-top-margin: 0 !default;
+$footer-height: 118px !default;

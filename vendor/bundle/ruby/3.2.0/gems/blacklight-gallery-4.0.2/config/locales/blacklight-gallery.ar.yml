@@ -1,0 +1,19 @@
+ar:
+  blacklight:
+    icon:
+      chevron_left_previous_image: 'الصورة السابقة' 
+      chevron_right_next_image: 'الصورة التالية' 
+    search:
+      view:
+        gallery: "معرض الصور"
+        slideshow: "عرض الصور"
+        masonry: "عرض الصور كمجموعة"
+  blacklight_gallery:
+    catalog:
+      grid_slideshow:
+        missing_image: 'غير موجود'
+      modal_slideshow:
+        counter: "%{counter} من %{count}"
+      slideshow:
+        pause: وقف عرض الصور
+        start: بدء عرض الصور

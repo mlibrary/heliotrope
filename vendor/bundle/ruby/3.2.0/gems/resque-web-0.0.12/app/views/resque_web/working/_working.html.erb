@@ -1,0 +1,34 @@
+  <h1 class="wi"><%= worker_jobs.size %> of <%= workers.size %> Workers Working</h1>
+  <p class="intro">The list below contains all workers which are currently running a job.</p>
+  <table class="table table-bordered workers">
+    <tr>
+      <th>&nbsp;</th>
+      <th>Where</th>
+      <th>Queue</th>
+      <th>Processing</th>
+    </tr>
+    <% if worker_jobs.empty? %>
+    <tr>
+      <td colspan="4" class="no-data">Nothing is happening right now...</td>
+    </tr>
+    <% end %>
+
+    <% sorted_worker_jobs.each do |worker, job| %>
+      <tr>
+        <td class="icon"><%= image_tag "resque_web/#{worker.state}.png", :alt => worker.state, :title => worker.state %></td>
+        <% host, pid, _ = worker.to_s.split(':') %>
+        <td class="where"><%= link_to "#{host}:#{pid}", worker_path(host) %></td>
+        <td class="queues queue">
+          <%= link_to job['queue'], queue_path(job['queue']), :class => 'label label-info' %>
+        </td>
+        <td class="process">
+          <% if job['queue'] %>
+            <code><%= job['payload']['class'] %><br/>Args: <%= job['payload']['args'].to_s %></code>
+            <small><%= "#{time_ago_in_words job['run_at']} ago" %></small>
+          <% else %>
+            <span class="waiting">Waiting for a job...</span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>

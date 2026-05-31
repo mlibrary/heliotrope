@@ -1,0 +1,7 @@
+# config/solr_wrapper_valkyrie_test.yml
+port: 8987
+instance_dir: tmp/solr-valkyrie-test
+collection:
+    persist: false
+    dir: solr/conf
+    name: hyrax-valkyrie-test

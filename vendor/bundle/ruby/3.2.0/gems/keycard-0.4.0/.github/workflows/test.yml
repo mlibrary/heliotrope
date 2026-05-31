@@ -1,0 +1,32 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        ruby-version: [3.2, 3.3, 3.4, 4.0]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v6
+    - name: Set up Ruby ${{ matrix.ruby-version }}
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true
+    - name: Run linter for Ruby ${{ matrix.ruby-version }} on ${{ matrix.os }}
+      run: bin/standardrb
+    - name: Run tests for Ruby ${{ matrix.ruby-version }} on ${{ matrix.os }}
+      run: bin/rspec
+    - name: Report to Coveralls
+      uses: coverallsapp/github-action@v2.1.0
+      with:
+        github-token: ${{ secrets.github_token }}

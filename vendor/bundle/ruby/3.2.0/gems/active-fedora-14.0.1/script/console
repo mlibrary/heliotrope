@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+# File: script/console
+irb = RUBY_PLATFORM =~ /(:?mswin|mingw)/ ? 'irb.bat' : 'irb'
+
+requires = %w{ irb/completion samples/samples }
+includes = %w{ lib spec }
+
+def to_param(flag, items)
+  items.map{|lib| "#{flag} #{lib}"}.join(' ')
+end
+
+exec "#{irb} #{to_param('-I', includes)} #{to_param('-r', requires)} --simple-prompt"
+
+

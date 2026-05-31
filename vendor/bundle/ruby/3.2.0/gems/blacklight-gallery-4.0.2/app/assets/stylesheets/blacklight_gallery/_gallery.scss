@@ -1,0 +1,47 @@
+.documents-gallery {
+  .document {
+    border-bottom: none;
+    display: flex;
+    min-height: 250px;
+  }
+
+  .caption {
+    @extend .mt-2;
+  }
+
+  .index_title {
+    @extend .h6;
+  }
+
+  .document-counter {
+    display: none;
+  }
+
+  .index-document-functions {
+    clear: left;
+  }
+
+  .document-metadata {
+    .document-title-heading {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    dt, dd {
+      flex: 0 0 100%;
+      max-width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+      float: none;
+      width: auto;
+      clear: none;
+      text-align: left;
+      margin: 0;
+    }
+  }
+}
+
+.documents-gallery, .documents-masonry, .documents-slideshow {
+  padding-bottom: $spacer;
+  border-bottom: $pagination-border-width solid $pagination-border-color
+}

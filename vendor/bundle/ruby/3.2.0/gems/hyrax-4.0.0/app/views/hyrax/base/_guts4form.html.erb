@@ -1,0 +1,46 @@
+<% # we will yield to content_for for each tab, e.g. :files_tab %>
+<div class="row">
+  <div class="col-12 col-sm-8">
+    <div class="tabs" role="main">
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        <% (tabs - ['share']).each_with_index do | tab, i | %>
+          <li role="presentation" class="nav-item">
+            <a class="nav-link <% if i == 0 %>active<% end %>" href="#<%= tab %>" aria-controls="<%= tab %>" role="tab" data-toggle="tab">
+              <%= form_tab_label_for(form: f.object, tab: tab) %>
+            </a>
+          </li>
+        <% end %>
+
+        <li role="presentation" id="tab-share" class="nav-item">
+          <a class="nav-link" href="#share" aria-controls="share" role="tab" data-toggle="tab">
+            <%= form_tab_label_for(form: f.object, tab: 'share') %>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content card">
+        <% (tabs - ['share']).each_with_index do | tab, i | %>
+          <div role="tabpanel" class="tab-pane <% if i == 0 %>show active<% end %>" id="<%= tab %>">
+            <div class="form-tab-content">
+              <% # metadata_tab is sometimes provided %>
+              <%= yield "#{tab}_tab".to_sym if content_for? "#{tab}_tab".to_sym %>
+              <%= render "form_#{tab}", f: f %>
+            </div>
+          </div>
+        <% end %>
+
+        <div role="tabpanel" class="tab-pane" id="share" data-param-key="<%= f.object.model_name.param_key %>">
+            <div class="form-tab-content">
+              <%= render "form_share", f: f %>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="savewidget" class="col-12 col-sm-4 fixedsticky" role="complementary">
+    <%= render 'form_progress', f: f %>
+  </div>
+</div>

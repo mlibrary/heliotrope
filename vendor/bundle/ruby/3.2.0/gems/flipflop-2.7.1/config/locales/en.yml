@@ -1,0 +1,34 @@
+en:
+  flipflop:
+    title: "%{application} Features"
+    feature: "Feature"
+    description: "Description"
+
+    feature_states:
+      enabled: "on"
+      disabled: "off"
+
+    clear: "clear"
+
+    # You can optionally translate the names of the chosen features, feature
+    # groups and strategies:
+
+    groups:
+      default: "Other features"
+
+    # groups:
+    #   design_improvements: "Design improvements"
+
+    # features:
+    #   world_domination: "World domination"
+    #   world_domination_description: "Take over the world!"
+
+    # strategies:
+    #   cookie: "Cookie"
+    #   active_record: "Active record"
+    #   default: "Default"
+    #   lambda: "Lambda"
+    #   query_string: "Query string"
+    #   redis: "Redis"
+    #   session: "Session"
+    #   test: "Test"

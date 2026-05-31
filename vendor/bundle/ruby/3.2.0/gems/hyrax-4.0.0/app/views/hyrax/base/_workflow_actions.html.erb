@@ -1,0 +1,39 @@
+<div id="workflow_controls" class="card panel-workflow">
+  <button data-toggle="collapse" data-target="#workflow_controls_collapse" class="btn">
+    <div class="card-header">
+        <h2 class="card-title"><%= t('.title') %> <span class="fa fa-chevron-right float-right"></span></h2>
+    </div>
+  </button>
+  <%= form_tag main_app.hyrax_workflow_action_path(presenter), method: :put do %>
+    <div id="workflow_controls_collapse" class="card-body collapse">
+      <div class="col-sm-3 workflow-actions">
+        <h3><%= t('.actions') %></h3>
+
+        <% presenter.workflow.actions.each do |key, label| %>
+          <div class="form-check">
+            <label class="form-check-label">
+              <%= radio_button_tag 'workflow_action[name]', key, key == 'comment_only', class: 'form-check-input' %>
+              <%= label %>
+            </label>
+          </div>
+        <% end %>
+      </div>
+      <div class="col-sm-9 workflow-comments">
+        <div class="form-group">
+          <label for="workflow_action_comment"><%= t('.review_comment') %>:</label>
+          <textarea class="form-control" name="workflow_action[comment]" id="workflow_action_comment"></textarea>
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Submit" />
+
+        <h4><%= t('.previous_comments') %></h4>
+        <dl>
+          <% presenter.workflow.comments.each do |comment| %>
+            <dt><%= comment.name_of_commentor %></dt>
+            <dd><%= comment.comment %></dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  <% end %>
+</div>

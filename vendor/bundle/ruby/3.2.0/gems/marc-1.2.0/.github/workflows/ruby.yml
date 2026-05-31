@@ -1,0 +1,24 @@
+name: CI
+
+on: [push, pull_request]
+
+env:
+  # See https://github.com/jruby/jruby/issues/5509
+  JAVA_OPTS: "--add-opens java.xml/com.sun.org.apache.xerces.internal.impl=org.jruby.dist"
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: [2.5, 2.6, 2.7, 3.0, jruby]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - name: Install dependencies
+      run: bundle install --without documentation
+    - name: Run tests
+      run: bundle exec rake

@@ -1,0 +1,26 @@
+.help-icon {
+  @extend .fa !optional;
+  @extend .fa-question !optional;
+  @extend .large-icon;
+  top: 5px;
+}
+
+.batch-toggle {
+  padding: 1.5em 0 1.5em 1em;
+}
+
+.sort-toggle {
+  padding: 1.5em 0 0 1em;
+}
+
+#hide_addl_descriptions {
+  margin-bottom: $input-btn-padding-y-lg;
+}
+
+.fa-chevron-right-helper.collapsed .chevron {
+  @extend .fa-chevron-right !optional;
+}
+.fa-chevron-right-helper .chevron {
+  @extend .fa !optional;
+  @extend .fa-chevron-down !optional;
+}

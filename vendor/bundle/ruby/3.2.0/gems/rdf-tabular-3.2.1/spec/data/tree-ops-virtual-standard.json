@@ -1,0 +1,49 @@
+{
+  "tables": [{
+    "url": "http://example.org/tree-ops.csv",
+    "row": [
+      {
+        "url": "http://example.org/tree-ops.csv#row=2",
+        "rownum": 1,
+        "describes": [
+          {
+            "@id": "http://example.org/tree-ops.csv#gid-1",
+            "schema:url": "http://example.org/tree-ops.csv#gid-1",
+            "schema:name": "Celtis australis",
+            "trim_cycle": "Large Tree Routine Prune",
+            "schema:event": {
+              "@id": "http://example.org/tree-ops.csv#event-2010-10-18",
+              "schema:startDate": "2010-10-18"
+            },
+            "schema:location": {
+              "@id": "http://example.org/tree-ops.csv#location-1",
+              "schema:streetAddress": "ADDISON AV",
+              "@type": "schema:PostalAddress"
+            }
+          }
+        ]
+      },
+      {
+        "url": "http://example.org/tree-ops.csv#row=3",
+        "rownum": 2,
+        "describes": [
+          {
+            "@id": "http://example.org/tree-ops.csv#gid-2",
+            "schema:url": "http://example.org/tree-ops.csv#gid-2",
+            "schema:name": "Liquidambar styraciflua",
+            "trim_cycle": "Large Tree Routine Prune",
+            "schema:event": {
+              "@id": "http://example.org/tree-ops.csv#event-2010-06-02",
+              "schema:startDate": "2010-06-02"
+            },
+            "schema:location": {
+              "@id": "http://example.org/tree-ops.csv#location-2",
+              "schema:streetAddress": "EMERSON ST",
+              "@type": "schema:PostalAddress"
+            }
+          }
+        ]
+      }
+    ]
+  }]
+}

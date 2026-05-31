@@ -1,0 +1,9 @@
+language: ruby
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - jruby-19mode
+matrix:
+  include:
+    - rvm: jruby
+      env: JRUBY_OPTS="--2.0"

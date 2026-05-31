@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+until $(curl --output /dev/null --silent --head --fail http://localhost:8984/solr); do
+    printf '.'
+    sleep 1
+done
+until $(curl --output /dev/null --silent --head --fail http://localhost:8985/solr); do
+    printf '.'
+    sleep 1
+done
+until $(curl --output /dev/null --silent --head --fail http://localhost:8988/rest); do
+    printf '.'
+    sleep 1
+done

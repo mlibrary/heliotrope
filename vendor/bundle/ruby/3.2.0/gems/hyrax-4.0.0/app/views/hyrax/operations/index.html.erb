@@ -1,0 +1,31 @@
+<% provide :page_title, 'Operations' %>
+<% provide :page_header do %>
+  <h1><%= t('.title') %></h1>
+<% end %>
+
+<div class="row">
+  <div class="col-sm-6">
+    <%= page_entries_info @operations %>
+    <table class="table">
+      <thead>
+        <th><%= t('.operation_type') %></th>
+        <th><%= t('.status') %></th>
+        <th><%= t('.updated') %></th>
+      </thead>
+      <tbody>
+        <% @operations.each do |op| %>
+          <tr>
+            <td><%= link_to op.operation_type, hyrax.user_operation_path(params[:user_id], op) %></td>
+            <td><span class="badge <%= op.status == 'failure' ? 'badge-danger' : 'badge-success' %>"><%= op.status %></span></td>
+            <td>
+              <relative-time datetime="<%= op.updated_at.getutc.iso8601 %>" title="<%= op.updated_at.to_formatted_s(:standard) %>">
+                <%= op.updated_at.to_formatted_s(:long_ordinal) %>
+              </relative-time>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%= paginate @operations %>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+en:
+  blacklight:
+    icon:
+      chevron_left_previous_image: 'previous image' 
+      chevron_right_next_image: 'next image' 
+    search:
+      view:
+        gallery: "Gallery"
+        slideshow: "Slideshow"
+        masonry: "Masonry"
+  blacklight_gallery:
+    catalog:
+      grid_slideshow:
+        missing_image: 'Missing'
+      modal_slideshow:
+        counter: "%{counter} of %{count}"
+      slideshow:
+        pause: Pause slideshow
+        start: Start slideshow

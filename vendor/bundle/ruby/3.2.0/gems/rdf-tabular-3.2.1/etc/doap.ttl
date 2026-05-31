@@ -1,0 +1,33 @@
+@base         <https://rubygems.org/gems/rdf-tabular> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc:   <http://purl.org/dc/terms/> .
+@prefix earl: <http://www.w3.org/ns/earl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<> a doap:Project, earl:TestSubject, earl:Software ;
+  doap:name          "RDF::Tabular" ;
+  doap:homepage      <https://ruby-rdf.github.io/rdf-tabular> ;
+  doap:license       <https://unlicense.org/1.0/> ;
+  doap:shortdesc     "Tabular Data RDF Reader and JSON serializer for RDF.rb."@en ;
+  doap:description   "RDF::Tabular processes tabular data with metadata creating RDF or JSON output for the RDF.rb library suite."@en ;
+  doap:created       "2015-01-05"^^xsd:date ;
+  doap:programming-language "Ruby" ;
+  doap:implements    <http://www.w3.org/TR/tabular-data-model/>,
+                     <http://www.w3.org/TR/tabular-metadata/>,
+                     <http://www.w3.org/TR/csv2rdf/>,
+                     <http://www.w3.org/TR/csv2json/>;
+  doap:category      <http://dbpedia.org/resource/Resource_Description_Framework>,
+                     <http://dbpedia.org/resource/Ruby_(programming_language)> ;
+  doap:download-page <> ;
+  doap:mailing-list  <https://lists.w3.org/Archives/Public/public-rdf-ruby/> ;
+  doap:bug-database  <https://github.com/ruby-rdf/rdf-tabular/issues> ;
+  doap:blog          <https://greggkellogg.net/> ;
+  doap:developer     <https://greggkellogg.net/foaf#me> ;
+  doap:maintainer    <https://greggkellogg.net/foaf#me> ;
+  doap:documenter    <https://greggkellogg.net/foaf#me> ;
+  foaf:maker         <https://greggkellogg.net/foaf#me> ;
+  dc:creator         <https://greggkellogg.net/foaf#me> ;
+  dc:isPartOf        <https://rubygems.org/gems/rdf> .

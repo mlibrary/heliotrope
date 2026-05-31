@@ -1,0 +1,5 @@
+<%= render(Blacklight::Response::ViewTypeComponent.new(
+      response: @response,
+      views: document_index_view_controls,
+      search_state: search_state,
+      selected: document_index_view_type)) if show_sort_and_per_page? -%>

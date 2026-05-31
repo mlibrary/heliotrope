@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaInfo
+    xmlns="https://mediaarea.net/mediainfo"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://mediaarea.net/mediainfo https://mediaarea.net/mediainfo/mediainfo_2_0.xsd"
+    version="2.0">
+<creatingLibrary version="18.05" url="https://mediaarea.net/MediaInfo">MediaInfoLib</creatingLibrary>
+<media ref="/home/pdinh/Downloads/videoshort.mp4">
+<track type="General">
+<VideoCount>1</VideoCount>
+<AudioCount>1</AudioCount>
+<FileExtension>mp4</FileExtension>
+<Format>MPEG-4</Format>
+<Format_Profile>Base Media</Format_Profile>
+<CodecID>mp42</CodecID>
+<FileSize>199160</FileSize>
+<Duration>6.315</Duration>
+<OverallBitRate_Mode>VBR</OverallBitRate_Mode>
+<OverallBitRate>252301</OverallBitRate>
+<FrameRate>23.719</FrameRate>
+<FrameCount>149</FrameCount>
+<StreamSize>5679</StreamSize>
+<HeaderSize>160</HeaderSize>
+<DataSize>193489</DataSize>
+<FooterSize>5511</FooterSize>
+<IsStreamable>No</IsStreamable>
+<Encoded_Date>UTC 2010-09-23 00:37:25</Encoded_Date>
+<Tagged_Date>UTC 2010-09-23 00:37:27</Tagged_Date>
+<File_Modified_Date>UTC 2017-12-14 19:29:35</File_Modified_Date>
+<File_Modified_Date_Local>2017-12-14 14:29:35</File_Modified_Date_Local>
+<Encoded_Application>HandBrake 0.9.4 2009112300</Encoded_Application>
+</track>
+<track type="Video">
+<StreamOrder>0</StreamOrder>
+<ID>1</ID>
+<Format>AVC</Format>
+<Format_Profile>Main</Format_Profile>
+<Format_Level>1.1</Format_Level>
+<Format_Settings_CABAC>Yes</Format_Settings_CABAC>
+<Format_Settings_RefFrames>2</Format_Settings_RefFrames>
+<CodecID>avc1</CodecID>
+<Duration>6.282</Duration>
+<BitRate>74477</BitRate>
+<Width>200</Width>
+<Height>110</Height>
+<Stored_Width>208</Stored_Width>
+<Stored_Height>112</Stored_Height>
+<Sampled_Width>200</Sampled_Width>
+<Sampled_Height>110</Sampled_Height>
+<PixelAspectRatio>1.000</PixelAspectRatio>
+<DisplayAspectRatio>1.818</DisplayAspectRatio>
+<Rotation>0.000</Rotation>
+<FrameRate_Mode>VFR</FrameRate_Mode>
+<FrameRate>23.719</FrameRate>
+<FrameRate_Minimum>12.500</FrameRate_Minimum>
+<FrameRate_Maximum>24.390</FrameRate_Maximum>
+<FrameRate_Original>24.000</FrameRate_Original>
+<FrameCount>149</FrameCount>
+<ColorSpace>YUV</ColorSpace>
+<ChromaSubsampling>4:2:0</ChromaSubsampling>
+<BitDepth>8</BitDepth>
+<ScanType>Progressive</ScanType>
+<StreamSize>58482</StreamSize>
+<Encoded_Library>x264 - core 79 r1347 5ddd61b</Encoded_Library>
+<Encoded_Library_Name>x264</Encoded_Library_Name>
+<Encoded_Library_Version>core 79 r1347 5ddd61b</Encoded_Library_Version>
+<Encoded_Library_Settings>cabac=1 / ref=2 / deblock=1:0:0 / analyse=0x1:0x111 / me=hex / subme=6 / psy=1 / psy_rd=1.0:0.0 / mixed_ref=0 / me_range=16 / chroma_me=1 / trellis=0 / 8x8dct=0 / cqm=0 / deadzone=21,11 / chroma_qp_offset=-2 / threads=3 / nr=0 / decimate=1 / mbaff=0 / constrained_intra=0 / bframes=2 / b_pyramid=0 / b_adapt=1 / b_bias=0 / direct=1 / wpredb=0 / wpredp=2 / keyint=240 / keyint_min=24 / scenecut=40 / rc_lookahead=40 / rc=crf / mbtree=1 / crf=25.5 / qcomp=0.60 / qpmin=10 / qpmax=51 / qpstep=4 / ip_ratio=1.40 / aq=1:1.00</Encoded_Library_Settings>
+<Encoded_Date>UTC 2010-09-23 00:37:25</Encoded_Date>
+<Tagged_Date>UTC 2010-09-23 00:37:27</Tagged_Date>
+<colour_range>Limited</colour_range>
+<colour_description_present>Yes</colour_description_present>
+<colour_primaries>BT.601 NTSC</colour_primaries>
+<transfer_characteristics>BT.709</transfer_characteristics>
+<matrix_coefficients>BT.601</matrix_coefficients>
+</track>
+<track type="Audio">
+<StreamOrder>1</StreamOrder>
+<ID>2</ID>
+<Format>AAC</Format>
+<Format_Profile>LC</Format_Profile>
+<CodecID>mp4a-40-2</CodecID>
+<Duration>6.315</Duration>
+<BitRate_Mode>VBR</BitRate_Mode>
+<BitRate>171030</BitRate>
+<BitRate_Maximum>201736</BitRate_Maximum>
+<Channels>1</Channels>
+<ChannelPositions>Front: C</ChannelPositions>
+<ChannelLayout>C</ChannelLayout>
+<SamplesPerFrame>1024</SamplesPerFrame>
+<SamplingRate>48000</SamplingRate>
+<SamplingCount>303120</SamplingCount>
+<FrameRate>46.875</FrameRate>
+<FrameCount>296</FrameCount>
+<Compression_Mode>Lossy</Compression_Mode>
+<StreamSize>134999</StreamSize>
+<StreamSize_Proportion>0.67784</StreamSize_Proportion>
+<Title>Stereo</Title>
+<Encoded_Date>UTC 2010-09-23 00:37:25</Encoded_Date>
+<Tagged_Date>UTC 2010-09-23 00:37:27</Tagged_Date>
+</track>
+</media>
+</MediaInfo>

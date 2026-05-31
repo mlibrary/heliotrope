@@ -1,0 +1,13 @@
+.dl-invert {
+  dt {
+    font-weight: normal;
+    color: $field_name_color;
+    @media (max-width: breakpoint-min(md)) {
+      text-align: left;
+    }
+
+    @media (min-width: breakpoint-min(md)) {
+      text-align: right;
+    }
+  }
+}

@@ -1,0 +1,58 @@
+name: valkyrie
+app_mount: false
+services:
+  valkyrie_test_solr_7:
+    app_mount: false
+    type: solr:7
+    portforward: 8994
+    core: valkyrie-core-test
+    config:
+      dir: solr/config
+  valkyrie_database:
+    app_mount: false
+    type: postgres:10
+    portforward: 5433
+  valkyrie_fedora_4:
+    type: compose
+    app_mount: false
+    volumes:
+      fedora4:
+    services:
+      image: samvera/fcrepo4:4.7.5
+      command: /fedora-entrypoint.sh
+      volumes:
+      - fedora4:/data
+      ports:
+      - 8988:8080
+    portforward: true
+  valkyrie_fedora_5:
+    type: compose
+    app_mount: false
+    volumes:
+      fedora5:
+    services:
+      image: samvera/fcrepo4:5.1.0
+      command: /fedora-entrypoint.sh
+      volumes:
+      - fedora5:/data
+      ports:
+      - 8998:8080
+    portforward: true
+  valkyrie_fedora_6:
+    type: compose
+    app_mount: false
+    volumes:
+      fedora6:
+    services:
+      image: fcrepo/fcrepo:6.0.0
+      command:
+        - "catalina.sh"
+        - "run"
+      volumes:
+      - fedora6:/data
+      ports:
+      - 8978:8080
+      environment:
+        CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
+        JAVA_OPTS: "-Dfcrepo.dynamic.jms.port=61619 -Dfcrepo.dynamic.stomp.port=61615 -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
+    portforward: true

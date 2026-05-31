@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/fits/fits_output http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd" version="0.8.5" timestamp="9/11/15 12:40 PM">
+  <identification>
+    <identity format="MPEG 1/2 Audio Layer 3" mimetype="audio/mpeg" toolname="FITS" toolversion="0.8.5">
+      <tool toolname="Exiftool" toolversion="9.13" />
+      <tool toolname="NLNZ Metadata Extractor" toolversion="3.4GA" />
+      <tool toolname="ffident" toolversion="0.2" />
+      <tool toolname="Tika" toolversion="1.3" />
+      <version toolname="NLNZ Metadata Extractor" toolversion="3.4GA">1</version>
+    </identity>
+  </identification>
+  <fileinfo>
+    <lastmodified toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">2015:08:31 12:52:14-04:00</lastmodified>
+    <filepath toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">/home/grosscol/workspace/hydra-works/spec/fixtures/test5.mp3</filepath>
+    <filename toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">test5.mp3</filename>
+    <size toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">366464</size>
+    <md5checksum toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">d98da8d92c397294164b02a0382eb0e6</md5checksum>
+    <fslastmodified toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">1441039934000</fslastmodified>
+  </fileinfo>
+  <filestatus />
+  <metadata>
+    <audio>
+      <duration toolname="NLNZ Metadata Extractor" toolversion="3.4GA" status="SINGLE_RESULT">0:0:15:261</duration>
+      <bitRate toolname="Exiftool" toolversion="9.13" status="CONFLICT">192 kbps</bitRate>
+      <bitRate toolname="NLNZ Metadata Extractor" toolversion="3.4GA" status="CONFLICT">192000</bitRate>
+      <sampleRate toolname="Exiftool" toolversion="9.13">44100</sampleRate>
+      <channels toolname="Exiftool" toolversion="9.13">2</channels>
+      <milliseconds toolname="NLNZ Metadata Extractor" toolversion="3.4GA" status="SINGLE_RESULT">15261</milliseconds>
+      <author toolname="Tika" toolversion="1.3" status="SINGLE_RESULT">Hendrik Broekman</author>
+      <title toolname="Tika" toolversion="1.3" status="SINGLE_RESULT">BachGavotteShort</title>
+      <sampleRate toolname="Tika" toolversion="1.3" status="SINGLE_RESULT">44100</sampleRate>
+    </audio>
+  </metadata>
+  <statistics fitsExecutionTime="679">
+    <tool toolname="OIS Audio Information" toolversion="0.1" status="did not run" />
+    <tool toolname="ADL Tool" toolversion="0.1" status="did not run" />
+    <tool toolname="Jhove" toolversion="1.5" executionTime="645" />
+    <tool toolname="file utility" toolversion="5.14" executionTime="533" />
+    <tool toolname="Exiftool" toolversion="9.13" executionTime="507" />
+    <tool toolname="NLNZ Metadata Extractor" toolversion="3.4GA" executionTime="457" />
+    <tool toolname="OIS File Information" toolversion="0.2" executionTime="158" />
+    <tool toolname="OIS XML Metadata" toolversion="0.2" status="did not run" />
+    <tool toolname="ffident" toolversion="0.2" executionTime="443" />
+    <tool toolname="Tika" toolversion="1.3" executionTime="267" />
+  </statistics>
+</fits>
+

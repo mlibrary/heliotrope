@@ -1,0 +1,62 @@
+# List of files that we ought to fix based on what Rubocop is complaining about them
+
+Layout/SpaceBeforeBlockBraces:
+  Exclude:
+    - lib/hydra/derivatives/processors/jpeg2k_image.rb
+    - lib/hydra/derivatives/processors/shell_based_processor.rb
+
+Metrics/ClassLength:
+  Exclude:
+    - lib/hydra/derivatives/processors/jpeg2k_image.rb
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - spec/units/transcoding_spec.rb
+
+Metrics/MethodLength:
+  Exclude:
+    - lib/hydra/derivatives/config.rb
+    - lib/hydra/derivatives/processors/document.rb
+    - lib/hydra/derivatives/processors/jpeg2k_image.rb
+    - lib/hydra/derivatives/processors/shell_based_processor.rb
+    - lib/hydra/derivatives/processors/video/processor.rb
+    - lib/hydra/derivatives/services/tempfile_service.rb
+    - spec/**/*.rb
+
+Naming/PredicateName:
+  Exclude:
+    - spec/services/tempfile_service_spec.rb
+
+RSpec/AnyInstance:
+  Exclude:
+    - spec/processors/image_spec.rb
+    - spec/units/transcoding_spec.rb
+
+RSpec/BeforeAfterAll:
+  Exclude:
+    - spec/**/*.rb
+
+RSpec/DescribeClass:
+  Exclude:
+    - spec/units/config_spec.rb
+    - spec/units/transcoding_spec.rb
+
+RSpec/PredicateMatcher:
+  Exclude:
+    - spec/**/*.rb
+
+RSpec/ReturnFromStub:
+  Exclude:
+    - spec/processors/jpeg2k_spec.rb
+
+RSpec/SubjectStub:
+  Exclude:
+    - spec/**/*.rb
+
+RSpec/VerifiedDoubles:
+  Exclude:
+    - spec/processors/full_text_spec.rb
+
+Style/EvalWithLocation:
+  Exclude:
+    - lib/hydra/derivatives.rb

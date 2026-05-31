@@ -1,0 +1,10 @@
+Gemfile.lock
+tmp/
+jetty/
+pkg/
+.bundle/
+.ruby-version
+.ruby-gemset
+fcrepo4-data/
+fcrepo4-test-data/
+coverage/

@@ -1,0 +1,21 @@
+<%= simple_form_for [hyrax, @form],
+                    html: {
+                      data: { behavior: 'work-form',
+                              'param-key' => @form.model_name.param_key },
+                      multipart: true
+                    } do |f| %>
+  <% provide :files_tab do %>
+    <p class="instructions"><%= t("hyrax.batch_uploads.files.instructions") %></p>
+    <p class="switch-upload-type"><%= t("hyrax.batch_uploads.files.upload_type_instructions") %>
+      <%= link_to t("hyrax.batch_uploads.files.button_label"), [main_app, :new, Hyrax.primary_work_type.model_name.singular_route_key.to_sym] %>
+    </p>
+  <% end %>
+  <%= render 'hyrax/base/guts4form', f: f, tabs: form_tabs_for(form: f.object) %>
+  <%= f.hidden_field :payload_concern, value: @form.payload_concern %>
+<% end %>
+
+<script type="text/javascript">
+  Blacklight.onLoad(function() {
+    $("#fileupload").fileupload('option', 'downloadTemplateId', 'batch-template-download')
+  });
+</script>

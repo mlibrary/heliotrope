@@ -1,0 +1,63 @@
+<% provide :page_title, @presenter.page_title %>
+
+<%= render 'shared/citations' %>
+
+<div class="row work-type">
+  <div class="col-sm-12">
+    <%= render 'work_type', presenter: @presenter %>
+  </div>
+  <div itemscope itemtype="http://schema.org/CreativeWork" class="col-12">
+    <%= render 'work_title', presenter: @presenter %>
+    <%= render 'show_actions', presenter: @presenter %>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <%= render 'workflow_actions_widget', presenter: @presenter %>
+          <% if @presenter.iiif_viewer? %>
+            <div class="col-sm-12">
+              <%= render 'representative_media', presenter: @presenter, viewer: true %>
+            </div>
+          <% end %>
+          <div class="col-sm-3 text-center">
+            <%= render 'representative_media', presenter: @presenter, viewer: false unless @presenter.iiif_viewer? %>
+            <%= render 'citations', presenter: @presenter %>
+            <%= render 'social_media' %>
+          </div>
+          <div class="col-sm-9">
+            <%= render 'work_description', presenter: @presenter %>
+            <%= render 'metadata', presenter: @presenter %>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.card -->
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title"><%= t('hyrax.base.show.relationships') %></h2>
+      </div>
+      <div class="card-body">
+        <%= render 'relationships', presenter: @presenter %>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title"><%= t('.items') %></h2>
+      </div>
+      <div class="card-body">
+        <%= render 'items', presenter: @presenter %>
+      </div>
+    </div>
+
+    <%# TODO: we may consider adding these partials in the future %>
+    <%# = render 'sharing_with', presenter: @presenter %>
+    <%# = render 'user_activity', presenter: @presenter %>
+
+<span class='hide analytics-event' data-category="work" data-action="work-view" data-name="<%= @presenter.id %>" >
+<% @presenter.member_of_collection_ids.each do |collection_id| %>
+  <span class='hide analytics-event' data-category="work-in-collection" data-action="work-in-collection-view" data-name="<%= collection_id %>" >
+<% end %>
+
+  </div>
+</div>
+

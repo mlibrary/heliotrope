@@ -1,0 +1,45 @@
+<% # This is used by works and by FileSet and the layout (col-6 vs col-12) is different for both %>
+<% if embargo_enforced?(f.object) %>
+  <%= render 'form_permission_under_embargo', f: f %>
+<% elsif lease_enforced?(f.object) %>
+  <%= render 'form_permission_under_lease', f: f %>
+<% else %>
+  <fieldset class="set-access-controls">
+    <legend>
+      <%= raw(t('.visibility')) %>
+    </legend>
+
+    <div class="form-group">
+      <div class="form-check">
+        <label class="form-check-label">
+          <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC, class: 'form-check-input' %>
+          <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC) %>
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED, class: 'form-check-input' %>
+          <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_AUTHENTICATED) %>
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_EMBARGO, class: 'form-check-input' %>
+          <%= render "form_permission_embargo", f: f %>
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE, class: 'form-check-input' %>
+          <%= render "form_permission_lease", f: f %>
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <%= f.radio_button :visibility, Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE, class: 'form-check-input' %>
+          <%= visibility_badge(Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PRIVATE) %>
+        </label>
+      </div>
+    </div>
+  </fieldset>
+<% end %>

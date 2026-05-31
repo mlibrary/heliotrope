@@ -1,0 +1,17 @@
+.form-actions > form.button_to {
+  // make sure a rails button_to form renders inline when it's in a bootstrap .form-actions line.
+  display: inline-block;
+  margin-bottom:0;
+}
+
+.main-header {
+  margin-bottom: 30px;
+  h1 {
+    margin-top: 0;
+  }
+}
+
+.representative-media {
+  display: block;
+  padding: 0.5em 0;
+}

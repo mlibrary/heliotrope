@@ -1,0 +1,13 @@
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" aria-controls="language-dropdown-menu">
+        <span class="sr-only"><%= t('hyrax.toolbar.language_switch') %></span>
+        <span title="<%= t('hyrax.toolbar.language_switch') %>"><%= available_translations[I18n.locale.to_s] %></span>
+    </a>
+    <div id="language-dropdown-menu" class="dropdown-menu" role="menu">
+        <div role="presentation" class="dropdown-header"><%= t('hyrax.toolbar.language_switch') %></div>
+        <div role="presentation" class="dropdown-divider"></div>
+        <% available_translations.each do |language, label| %>
+            <%= link_to label, "?locale=#{language}", class: 'dropdown-item', role: 'menuitem', lang: language, tabindex: '-1', data: { locale: language } %>
+        <% end %>
+    </div>
+</li>

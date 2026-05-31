@@ -1,0 +1,32 @@
+@prefix dc:   <http://purl.org/dc/terms/> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix earl: <http://www.w3.org/ns/earl#> .
+@prefix ex:   <http://example.org/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<https://rubygems.org/gems/shacl> a doap:Project, earl:TestSubject, earl:Software ;
+  sh:shapesGraph     <doap-shacl.ttl>;
+  doap:name          "SHACL" ;
+  doap:homepage      <https://ruby-rdf.github.io/shacl> ;
+  doap:license       <https://unlicense.org/1.0/> ;
+  doap:shortdesc     "SHACL is a Shapes Constraint engine for Ruby."@en ;
+  doap:description   "SHACL is a Shape Constraint engine for the Ruby RDF.rb library suite."@en ;
+  doap:created       "2020-11-26"^^xsd:date ;
+  doap:programming-language "Ruby" ;
+  doap:implements    <https://www.w3.org/TR/shacl/> ;
+  doap:category      <http://dbpedia.org/resource/Resource_Description_Framework>,
+                     <http://dbpedia.org/resource/Ruby_(programming_language)> ;
+  doap:download-page <https://rubygems.org/gems/shacl> ;
+  doap:mailing-list  <https://lists.w3.org/Archives/Public/public-rdf-ruby/> ;
+  doap:bug-database  <https://github.com/ruby-rdf/shacl/issues> ;
+  doap:blog          <https://greggkellogg.net/> ;
+  doap:developer     <https://greggkellogg.net/foaf#me> ;
+  doap:maintainer    <https://greggkellogg.net/foaf#me> ;
+  doap:documenter    <https://greggkellogg.net/foaf#me> ;
+  foaf:maker         <https://greggkellogg.net/foaf#me> ;
+  dc:creator         <https://greggkellogg.net/foaf#me> ;
+  dc:isPartOf        <https://rubygems.org/gems/rdf> .

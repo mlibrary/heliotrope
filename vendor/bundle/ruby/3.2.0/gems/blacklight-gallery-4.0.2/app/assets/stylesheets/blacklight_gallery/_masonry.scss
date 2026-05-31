@@ -1,0 +1,76 @@
+.documents-masonry {
+  .document {
+    max-width: 25%;
+    padding: 0;
+    margin: 0;
+
+    &:hover, &:focus {
+      .caption-area {
+        display: block;
+      }
+    }
+
+    margin-bottom: $spacer / 2;
+    position: relative;
+    width: auto;
+
+    .thumbnail-container {
+      position: relative;
+      min-height: 100px;
+      background-color: $gray-300;
+    }
+
+    .img-thumbnail {
+      padding: 0;
+      border-radius: 0;
+    }
+
+    .caption-area {
+      // styling for documents without thumbnails
+      &:first-child {
+        display: block;
+        max-height: 100%;
+        background-color: rgba(0,0,0,0.7) !important;
+      }
+      @extend .bg-dark;
+      @extend .text-white;
+      display: none;
+      padding: 5px 7px;
+      background-color: rgba(0,0,0,0.5) !important;
+      position: absolute;
+      bottom: 0;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      max-height: 75%;
+    }
+
+    .document-counter {
+      display: none;
+    }
+
+    .index_title {
+      @extend .h6;
+      a, a:hover, a:visited, a:active {
+        @extend .stretched-link;
+        color: $gray-300
+      }
+    }
+
+    .document-metadata {
+      dt {
+        color: $gray-300;
+      }
+      dt, dd {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+        float: none;
+        width: auto;
+        clear: none;
+        text-align: left;
+        margin: 0;
+      }
+    }
+  }
+}

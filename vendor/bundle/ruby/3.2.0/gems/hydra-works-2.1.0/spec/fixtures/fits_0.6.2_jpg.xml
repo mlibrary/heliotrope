@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/fits/fits_output http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd" version="0.6.2" timestamp="10/13/15 9:37 PM">
+  <identification>
+    <identity format="JPEG File Interchange Format" mimetype="image/jpeg" toolname="FITS" toolversion="0.6.2">
+      <tool toolname="Jhove" toolversion="1.5" />
+      <tool toolname="file utility" toolversion="5.11" />
+      <tool toolname="Exiftool" toolversion="9.06" />
+      <tool toolname="Droid" toolversion="3.0" />
+      <tool toolname="NLNZ Metadata Extractor" toolversion="3.4GA" />
+      <version toolname="Jhove" toolversion="1.5">1.02</version>
+      <externalIdentifier toolname="Droid" toolversion="3.0" type="puid">fmt/44</externalIdentifier>
+    </identity>
+  </identification>
+  <fileinfo>
+    <size toolname="Jhove" toolversion="1.5">57639</size>
+    <lastmodified toolname="Exiftool" toolversion="9.06" status="SINGLE_RESULT">2015:10:13 21:22:48+00:00</lastmodified>
+    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/opt/goldenseal/releases/20151013212118/tmp/uploads/6d/56/zw/65/MS002.002.DO.04436.basic.jpg</filepath>
+    <filename toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">MS002.002.DO.04436.basic.jpg</filename>
+    <md5checksum toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">18149600bc3ec619c2b306ad08799185</md5checksum>
+    <fslastmodified toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">1444771368000</fslastmodified>
+  </fileinfo>
+  <filestatus>
+    <well-formed toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">true</well-formed>
+    <valid toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">true</valid>
+  </filestatus>
+  <metadata>
+    <image>
+      <byteOrder toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">big endian</byteOrder>
+      <compressionScheme toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">JPEG (old-style)</compressionScheme>
+      <imageWidth toolname="Jhove" toolversion="1.5">600</imageWidth>
+      <imageHeight toolname="Jhove" toolversion="1.5">381</imageHeight>
+      <colorSpace toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">YCbCr</colorSpace>
+      <YCbCrSubSampling toolname="Exiftool" toolversion="9.06" status="SINGLE_RESULT">1 1</YCbCrSubSampling>
+      <samplingFrequencyUnit toolname="Jhove" toolversion="1.5" status="CONFLICT">in.</samplingFrequencyUnit>
+      <samplingFrequencyUnit toolname="Exiftool" toolversion="9.06" status="CONFLICT">inches</samplingFrequencyUnit>
+      <xSamplingFrequency toolname="Jhove" toolversion="1.5">600</xSamplingFrequency>
+      <ySamplingFrequency toolname="Jhove" toolversion="1.5">600</ySamplingFrequency>
+      <bitsPerSample toolname="Jhove" toolversion="1.5">8 8 8</bitsPerSample>
+      <samplesPerPixel toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">3</samplesPerPixel>
+      <lightSource toolname="NLNZ Metadata Extractor" toolversion="3.4GA" status="SINGLE_RESULT">unknown</lightSource>
+    </image>
+  </metadata>
+</fits>

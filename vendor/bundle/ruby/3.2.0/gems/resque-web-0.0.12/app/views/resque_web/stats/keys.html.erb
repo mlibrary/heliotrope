@@ -1,0 +1,17 @@
+  <h1>Keys owned by <%= Resque %></h1>
+  <p class="sub">(All keys are actually prefixed with "<%= Resque.redis.namespace %>:")</p>
+
+  <table class="table table-bordered stats">
+    <tr>
+      <th>key</th>
+      <th>type</th>
+      <th>size</th>
+    </tr>
+  <% Resque.keys.sort.each do |key| %>
+    <tr>
+      <th><%= link_to key, keys_statistic_path(key) %></th>
+      <td><%= redis_key_type key %></td>
+      <td><%= redis_key_size key %></td>
+    </tr>
+  <% end %>
+  </table>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale.to_s %>">
+  <head>
+    <title><%= t('.link_not_found') %></title>
+  </head>
+  <body>
+    <div class="columns two-a">
+      <div class="column second">
+        <h1><%= t('.link_expired_not_found') %></h1>
+        <p>
+          <%= t('.help', application_name: application_name) %> 
+        </p>
+      </div>
+  </body>
+</html>

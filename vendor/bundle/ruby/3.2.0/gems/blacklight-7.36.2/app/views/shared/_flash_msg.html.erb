@@ -1,0 +1,5 @@
+<div class="flash_messages">
+  <% [:success, :notice, :error, :alert].each do |type| %>
+    <%= render(Blacklight::System::FlashMessageComponent.with_collection(Array.wrap(flash[type]), type: type)) if flash[type] %>
+  <% end %>
+</div>

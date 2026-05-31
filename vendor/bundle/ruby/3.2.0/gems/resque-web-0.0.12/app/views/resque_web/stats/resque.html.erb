@@ -1,0 +1,14 @@
+  <h1><%= Resque %></h1>
+
+  <table class="table table-bordered stats">
+  <% resque_info.each do |key, value| %>
+    <tr>
+      <th>
+        <%= key %>
+      </th>
+      <td>
+        <%= value %>
+      </td>
+    </tr>
+  <% end %>
+  </table>

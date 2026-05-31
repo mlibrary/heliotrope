@@ -1,0 +1,8 @@
+Description:
+    Generates a Flipflop features configuration file for your application.
+
+Example:
+    rails generate flipflop:features
+
+    This will create:
+        config/features.rb

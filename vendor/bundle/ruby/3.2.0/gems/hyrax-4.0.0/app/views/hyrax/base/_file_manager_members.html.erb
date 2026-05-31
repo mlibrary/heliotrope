@@ -1,0 +1,13 @@
+<%= content_tag :ul,
+                id: "sortable",
+                class: "list-unstyled grid d-flex flex-wrap clearfix",
+                data: {
+                  id: @form.id,
+                  "class-name" => @form.model_name.plural,
+                  "singular-class-name" => @form.model_name.singular,
+                  version: @form.version
+                } do %>
+  <% @form.member_presenters.each do |member| %>
+    <%= render "file_manager_member", node: member %>
+  <% end %>
+<% end %>

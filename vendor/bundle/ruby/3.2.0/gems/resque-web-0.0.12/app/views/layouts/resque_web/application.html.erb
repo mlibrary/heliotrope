@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <title>Resque.</title>
+  <%= stylesheet_link_tag "resque_web/application", :media => "all" %>
+  <%=
+      ResqueWeb::Plugins.plugins.collect do |p|
+        file_path = "#{p.name.underscore.downcase}/application.css"
+        if (Rails.application.assets && Rails.application.assets.find_asset(file_path)) ||
+           (Rails.application.assets_manifest && Rails.application.assets_manifest.assets[file_path])
+          stylesheet_link_tag "#{p.name.underscore.downcase}/application"
+        end
+      end.join("\n").html_safe
+  %>
+  <%= javascript_include_tag "resque_web/application" %>
+  <%=
+      ResqueWeb::Plugins.plugins.collect do |p|
+        file_path = "#{p.name.underscore.downcase}/application.js"
+        if (Rails.application.assets && Rails.application.assets.find_asset(file_path)) ||
+           (Rails.application.assets_manifest && Rails.application.assets_manifest.assets[file_path])
+          javascript_include_tag "#{p.name.underscore.downcase}/application"
+        end
+      end.join("\n").html_safe
+  %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <%= image_tag "resque_web/lifebuoy.png", class: 'logo' %>
+      <%= link_to "Resque", ResqueWeb::Engine.app.url_helpers.root_path, :class => "brand navbar-brand" %>
+      <div class="nav-collapse navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <% tabs.each do |tab_name,path| %>
+            <%= tab tab_name,path %>
+          <% end %>
+          <% if respond_to?(:main_app) %>
+            <li><%= link_to "Return to Application", main_app.root_path, :class => "nav navbar-nav" %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% unless subtabs.empty? %>
+<ul class="nav subnav">
+  <div class="container">
+    <% subtabs.each do |tab_name| %>
+      <%= subtab tab_name %>
+    <% end %>
+  </div>
+</ul>
+<% end %>
+
+<div class="container" id="main">
+  <%= yield %>
+</div>
+
+<footer id="footer">
+  <div class="container">
+    <p>Powered by <a href="http://github.com/resque/resque">Resque</a> v<%=Resque::Version%></p>
+    <p>Connected to Redis namespace <%= Resque.redis.namespace %> on <%=Resque.redis_id%></p>
+  </div>
+</footer>
+
+</body>
+</html>

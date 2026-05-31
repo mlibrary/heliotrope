@@ -1,0 +1,13 @@
+language: ruby
+
+rvm:
+  - 2.6.3
+  - 2.5.3
+  - jruby-9.2.7.0
+
+jdk:
+  - openjdk8
+
+env:
+  global:
+    JRUBY_OPTS=-J-Xmx2g

@@ -1,0 +1,31 @@
+// Styles for the user index and show page
+
+.views-downloads-dashboard {
+  padding-left: $input-btn-padding-x-lg;
+}
+
+.panel-user {
+  word-break: break-word;
+}
+
+#user_info {
+  dt {
+    margin-top: $input-btn-padding-y-sm;
+  }
+}
+
+.activity-display {
+  max-height: 100%;
+  overflow-y: auto;
+  padding-bottom: 0;
+  position: relative;
+
+  .activity-date {
+    padding-right: 130px;
+  }
+}
+
+.tab-content .activity-display {
+  max-height: 30em;
+  position: absolute;
+}

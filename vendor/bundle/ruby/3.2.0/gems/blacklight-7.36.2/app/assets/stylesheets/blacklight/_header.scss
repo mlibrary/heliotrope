@@ -1,0 +1,78 @@
+/*
+  Header bar at top (Bootstrap nav-bar)
+*/
+
+.topbar > .container {
+  @media (max-width: breakpoint-max(xs)) {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.navbar-logo {  /* The main logo image for the Blacklight instance */
+  @if $logo-image {
+    background: transparent $logo-image no-repeat top left;
+    background-size: $logo-width $logo-height;
+  }
+  display: inline-block;
+  height: $logo-height;
+  margin-right: 20px;
+  margin-top: -0.4rem;
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+  width: $logo-width;
+}
+
+.navbar-search {
+  z-index: 1;
+
+  .search-field {
+    // This prevents the widget from being squished so the text overflows
+    min-width: 7em;
+  }
+
+  .search-query-form {
+    @extend .col-md-12;
+    @extend .col-lg-8;
+    padding-left: 0;
+  }
+
+  .submit-search-text {
+    // hide 'search' label at very small screens
+    @media screen and (max-width: breakpoint-max(xs)) {
+      @if mixin-exists(sr-only) {
+        @include sr-only();
+      }
+      @if mixin-exists(visually-hidden) {
+        @include visually-hidden();
+      }
+    }
+  }
+}
+
+#skip-link {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  z-index: 1;
+
+  .element-invisible {
+    position: absolute !important;
+    clip: rect(1px, 1px, 1px, 1px);
+    overflow: hidden;
+    height: 1px;
+  }
+
+  .element-invisible.element-focusable:active,
+  .element-invisible.element-focusable:focus {
+    position: static !important;
+    clip: auto;
+    overflow: visible;
+    height: auto;
+  }
+
+  a:focus {
+    background-color: $white;
+  }
+}

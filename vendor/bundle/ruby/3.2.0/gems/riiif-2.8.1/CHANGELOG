@@ -1,0 +1,10 @@
+11/19/14
+added lib/riiif/akubra_system_file_resolver.rb
+modified lib/riiif.rb
+author: Eric James (yulgit1) Yale University Library
+3/10/15
+rebased
+updated akubra_system_file.resolver.rb to class instead of module
+added test akubra_system_file_resolver_spec.rb
+added spec/samples/22/7e/9/info%3Afedora%2Fdemo%3A1%2Fjp2%2Fjp2.0
+author: Eric James (yulgit1) Yale University Library

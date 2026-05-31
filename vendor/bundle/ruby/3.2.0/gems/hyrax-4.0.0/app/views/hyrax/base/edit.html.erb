@@ -1,0 +1,6 @@
+<% provide :page_title, title_presenter(curation_concern).page_title %>
+<% provide :page_header do %>
+  <h1><span class="fa fa-edit" aria-hidden="true"></span><%= t("hyrax.works.update.header") %></h1>
+<% end %>
+
+<%= render 'form' %>

@@ -1,0 +1,54 @@
+<% if assets_with_expired_leases.blank? %>
+  <table class="leases table">
+    <thead>
+      <tr>
+        <%= render partial: 'table_headers' %>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="5" class="text-center">
+          <p><%= t('.missing') %></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+<% else %>
+
+  <%= form_tag leases_path, method: :patch do %>
+    <fieldset>
+    <%= submit_tag t('.deactivate_selected'), class: 'btn btn-primary' %>
+    <table class="leases table">
+      <thead>
+        <tr>
+          <th></th>
+          <%= render partial: 'table_headers' %>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      <% assets_with_expired_leases.each_with_index do |curation_concern, i| %>
+        <tr>
+          <td><%= render 'hyrax/batch_select/add_button', document: curation_concern %></td>
+          <td class="human-readable-type"><%= curation_concern.human_readable_type %></td>
+          <td class="title"><%= link_to curation_concern, edit_lease_path(curation_concern) %></td>
+          <td class="current-visibility"><%= visibility_badge(curation_concern.visibility) %></td>
+          <td class="lease-release-date"><%= curation_concern.lease_expiration_date %></td>
+          <td class="visibility-after-lease"><%= visibility_badge(curation_concern.visibility_after_lease) %></td>
+          <td class="actions"><%= link_to t('.deactivate'), lease_path(curation_concern), method: :delete, class: 'btn btn-primary' %></td>
+        </tr>
+        <tr data-behavior="extra" data-id="<%= curation_concern.id %>" class="extra-lease-info">
+          <td></td>
+          <td colspan=5>
+            <%= check_box_tag "leases[#{i}][copy_visibility]", curation_concern.id, true %>
+            <%= t('.change_all', cc: curation_concern) %>
+            <%= visibility_badge(curation_concern.visibility_after_lease) %>?
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% end %>
+  </fieldset>
+<% end %>

@@ -1,0 +1,46 @@
+ol#featured_works {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/* don't nest .featured-item in the ol, because it's detached from the list when being dragged */
+.featured-item {
+  border-top: 1px solid #ddd;
+  font-size: 0.9em;
+  min-height: 100px;
+  padding: 8px;
+
+  &:first-of-type {
+    border-top: 0;
+  }
+
+  h3 {
+    font-size: 1.1em;
+    margin-top: 0;
+  }
+
+  img {
+    width: 90px;
+    float: left;
+    padding-right: 1em;
+  }
+
+  .main {
+    padding: $custom-select-padding-y-sm;
+  }
+
+  .featured-label {
+    color: $gray;
+    font-weight: bold;
+  }
+
+  .featured-field {
+    padding-left: 90px;
+  }
+}
+
+.featured-researcher {
+  padding: 1em 0;
+  border-bottom: 1px dotted $gray-lighter;
+}

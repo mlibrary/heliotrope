@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+$::unshift(File.expand_path("../../lib", __FILE__))
+require 'sxp'
+
+abort "Usage: #{File.basename($0)} input.sxp > output.json" if ARGV.empty?

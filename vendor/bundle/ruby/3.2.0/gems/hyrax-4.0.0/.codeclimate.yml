@@ -1,0 +1,53 @@
+---
+engines:
+  brakeman:
+    enabled: true
+    exclude_fingerprints:
+      - 23ba0830f304065acab598cd07d285a4e0df786cb64533e04d2e8efa6d7a4a5b
+      - 4e8248816e1ec892a23bec95d9436e09eea45ace7460811086c6c831a439833e
+      - 5496595e01ffb5b2e2d79b371c5af19b9d822561a99b38992537cfa03ff7e38f
+      - a625206570d0bafe8634bdaf900d5f2ee742c61e7e26089a0be4439016de79a9
+      - d34e876702fc1f6c09d3a88d5c55b2c309b0ccfe2c738942934ef90ac2db892a
+  duplication:
+    enabled: true
+    exclude_fingerprints:
+      - 3e30de88eb9d993e74c31d0309e13f7c
+      - 3fe527befeb3a1f8ac773f6393f75e0c
+      - 8173dcc032219344176991b7bafa15a6
+      - 8a7dae1e94950e59319a7cd259732bb4
+      - 941c94b2e2f00eee9dcceb7a1faeb92f
+      - 93db286dbc27996f277d7246f80afd8a
+      - 5b45a0b1e0e92099ae4725fdbfb8fd3f
+    config:
+      languages:
+      - ruby
+      - javascript
+  eslint:
+    enabled: true
+    exclude_fingerprints:
+      - 673b54674f33c17cc8d5683c1e469b15
+    config:
+      extensions:
+        - .es6
+      ignore_warnings: true
+  fixme:
+    enabled: false
+  rubocop:
+    enabled: true
+  coffeelint:
+    enabled: true
+ratings:
+  paths:
+  - Gemfile.lock
+  - "**.erb"
+  - "**.rb"
+  - "**.js"
+  - "**.es6"
+  - "**.coffee"
+  - "**.rake"
+  - "**.scss"
+exclude_paths:
+- config/
+- db/
+- spec/
+- vendor/

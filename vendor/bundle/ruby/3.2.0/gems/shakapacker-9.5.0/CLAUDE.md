@@ -1,0 +1,47 @@
+# Shakapacker Project Guidelines
+
+## Critical Requirements
+
+- **ALWAYS end all files with a trailing newline character.** This is required by the project's linting rules.
+- **ALWAYS use `bundle exec` prefix when running Ruby commands** (rubocop, rspec, rake, etc.)
+- **ALWAYS run `bundle exec rubocop` before committing Ruby changes**
+- **ALWAYS run `yarn lint` before committing JavaScript changes**
+
+## Testing
+
+- Run corresponding RSpec tests when changing source files
+- For example, when changing `lib/shakapacker/foo.rb`, run `spec/shakapacker/foo_spec.rb`
+- Run the full test suite with `bundle exec rspec` before pushing
+- **Use explicit RSpec spy assertions** - prefer `have_received`/`not_to have_received` over indirect counter patterns
+  - Good: `expect(Open3).to have_received(:capture3).with(anything, hook_command, anything)`
+  - Good: `expect(Open3).not_to have_received(:capture3).with(anything, hook_command, anything)`
+  - Avoid: `call_count += 1` followed by `expect(call_count).to eq(1)`
+
+## Code Style
+
+- Follow existing code conventions in the file you're editing
+- Use the project's existing patterns and utilities
+- No unnecessary comments unless requested
+- Keep changes focused and minimal - avoid extraneous diffs
+
+## Git Workflow
+
+- Create feature branches for all changes
+- Never push directly to main branch
+- Create small, focused PRs that are easy to review
+- Always create a PR immediately after pushing changes
+
+## Changelog
+
+- **Update CHANGELOG.md for user-visible changes only** (features, bug fixes, breaking changes, deprecations, performance improvements)
+- **Do NOT add entries for**: linting, formatting, refactoring, tests, or documentation fixes
+- **Format**: `[PR #123](https://github.com/shakacode/shakapacker/pull/123) by [username](https://github.com/username)` (Shakapacker uses `#` in PR links)
+- **Use `/update-changelog` command** for guided changelog updates with automatic formatting
+- **Version management**: Run `bundle exec rake update_changelog` after releases to update version headers
+- **Examples**: Run `grep -A 3 "^### " CHANGELOG.md | head -30` to see real formatting examples
+
+## Shakapacker-Specific
+
+- This gem supports both webpack and rspack configurations
+- Test changes with both bundlers when modifying core functionality
+- Be aware of the dual package.json/Gemfile dependency management

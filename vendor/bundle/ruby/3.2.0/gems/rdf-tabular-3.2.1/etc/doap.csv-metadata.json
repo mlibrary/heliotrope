@@ -1,0 +1,34 @@
+{
+  "@context": "http://www.w3.org/ns/csvw",
+  "url": "doap.csv",
+  "tableSchema": {
+    "aboutUrl": "https://rubygems.org/gems/rdf-tabular",
+    "propertyUrl": "http://usefulinc.com/ns/doap#{_name}",
+    "null": "",
+    "columns": [
+      {"titles": "name"},
+      {"titles": "type", "propertyUrl": "rdf:type", "valueUrl": "{+type}"},
+      {"titles": "homepage", "valueUrl": "{+homepage}"},
+      {"titles": "license", "valueUrl": "{+license}"},
+      {"titles": "shortdesc", "lang": "en"},
+      {"titles": "description", "lang": "en"},
+      {"titles": "created", "datatype": {"base": "date", "format": "M/d/yyyy"}},
+      {"titles": "programming_language", "propertyUrl": "http://usefulinc.com/ns/doap#programming-language"},
+      {"titles": "implements", "valueUrl": "{+implements}"},
+      {"titles": "category", "valueUrl": "{+category}"},
+      {"titles": "download_page", "propertyUrl": "http://usefulinc.com/ns/doap#download-page", "valueUrl": "{+download_page}"},
+      {"titles": "mailing_list", "propertyUrl": "http://usefulinc.com/ns/doap#mailing-list", "valueUrl": "{+mailing_list}"},
+      {"titles": "bug_database", "propertyUrl": "http://usefulinc.com/ns/doap#bug-database", "valueUrl": "{+bug_database}"},
+      {"titles": "blog", "valueUrl": "{+blog}"},
+      {"titles": "developer", "valueUrl": "{+developer}"},
+      {"titles": "maintainer", "valueUrl": "{+maintainer}"},
+      {"titles": "documenter", "valueUrl": "{+documenter}"},
+      {"titles": "maker", "propertyUrl": "foaf:maker", "valueUrl": "{+maker}"},
+      {"titles": "dc_title", "propertyUrl": "dc:title"},
+      {"titles": "dc_description", "propertyUrl": "dc:description", "lang": "en"},
+      {"titles": "dc_date", "propertyUrl": "dc:date", "datatype": {"base": "date", "format": "M/d/yyyy"}},
+      {"titles": "dc_creator", "propertyUrl": "dc:creator", "valueUrl": "{+dc_creator}"},
+      {"titles": "isPartOf", "propertyUrl": "dc:isPartOf", "valueUrl": "{+isPartOf}"}
+    ]
+  }
+}

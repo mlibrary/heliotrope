@@ -1,0 +1,30 @@
+nl:
+  flipflop:
+    title: "%{application} Functionaliteiten"
+    feature: "Functionaliteit"
+    description: "Beschrijving"
+
+    feature_states:
+      enabled: "aan"
+      disabled: "uit"
+
+    clear: "wissen"
+
+    groups:
+      default: "Overige functionaliteiten"
+      world: "Wereld"
+
+    features:
+      world_domination: "Wereldoverheersing"
+      world_domination_description: "Neem de wereld over!"
+      shiny_things: "Glimmende dingetjes"
+
+    strategies:
+      cookie: "Koekje"
+      active_record: "Actief archief"
+      default: "Standaard"
+      lambda: "Lambda"
+      query_string: "Vraagkoord"
+      redis: "Herverdeel"
+      session: "Sessie"
+      test: "Test"

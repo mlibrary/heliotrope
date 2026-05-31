@@ -1,0 +1,8 @@
+port: 9999
+collection:
+  dir: solr/config/
+  name: project-development
+  persist: false
+configsets:
+  - dir: solr/config/
+    name: project-development-configset

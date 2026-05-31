@@ -1,0 +1,40 @@
+### 1.0.1
+* Moved EBNF stuff to related ebnf gem, and use it to generate parser tables.
+* Parser and lexer moved to generic EBNF modules.
+
+### 1.0.0
+* 1.0 release
+
+### 0.3.1
+* Sync with rdf-spec 0.3.11 changes due to respec updates.
+
+### 0.3.0
+* Use Ruby native EBNF parser. Still requires cwm to create first/follow rules.
+* Updated to latest specification and EBNF rules.
+
+### 0.1.1
+* Improvements to allow reader & writer to be sub-classed for rdf-trig.
+* Improved error recovery when parsing.
+
+### 0.1.0
+* Updates for RDF.rb 0.3.4.
+* Format detection.
+
+### 0.0.5
+* Update turtle and writer specs to use latest version of Turtle specs.
+* Use Spira Manifest w/list to order tests.
+* Change debug to use blocks to reduce computation overhead when not doing debugging, results in a reasonable performance boost.
+
+### 0.0.4
+* Make an un-defined empty prefix an error, rather than treating it as <>.
+* Replace remaining uses of SPARQL with RDF::Turtle or RDF::LL1
+
+### 0.0.3
+ * Completed RDF 1.1 Turtle based on https://www.w3.org/TR/2011/WD-turtle-20110809/
+    * Reader
+    * Writer
+ * Issues:
+    * IRI lexical representations
+    * PNAMES not unescaped, should they be?
+    * Assume undefined empty prefix is synonym for base
+    * Can a list be used on it's own? Used in Turtle example.

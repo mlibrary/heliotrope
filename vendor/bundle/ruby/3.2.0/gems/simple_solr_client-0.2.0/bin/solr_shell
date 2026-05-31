@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+
+# If we're loading from source instead of a gem, we need to
+# set the load path directly
+self_load_path = File.expand_path("../lib", File.dirname(__FILE__))
+unless $LOAD_PATH.include? self_load_path
+  $LOAD_PATH << self_load_path
+end
+
+require 'simple_solr_client'
+
+require 'pry'
+
+solr_url = ARGV[0]
+
+client = SimpleSolrClient::Client.new(solr_url)
+
+
+
+
+pry = Pry.new
+cb = pry.current_binding
+puts "
+     Connected to #{client.url}
+
+"
+
+cb.local_variable_set(:solr, client)
+puts "       * Created variable 'solr' for the main solr client"
+
+client.cores.each do |core|
+  cb.local_variable_set :"#{core}", client.core(core)
+  puts "       * Created variable '#{core}' pointing to its core"
+end
+
+puts "\n\n"
+
+
+cb.pry

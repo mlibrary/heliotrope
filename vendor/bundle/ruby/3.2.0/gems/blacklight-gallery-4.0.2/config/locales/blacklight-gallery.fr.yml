@@ -1,0 +1,16 @@
+fr:
+  blacklight:
+    search:
+      view:
+        gallery: "Galerie"
+        slideshow: "Diaporama"
+        masonry: "Mosaïque"
+  blacklight_gallery:
+    catalog:
+      grid_slideshow:
+        missing_image: 'Image manquante'
+      modal_slideshow:
+        counter: "%{counter} de %{count}"
+      slideshow:
+        pause: Suspendre le diaporama
+        start: Lancer le diaporama

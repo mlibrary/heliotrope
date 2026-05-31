@@ -1,0 +1,17 @@
+<fieldset class="set-access-controls">
+  <legend>
+    <%= t('.legend_html') %>
+  </legend>
+
+  <section class="form-text">
+    <p>
+      <%= t('.help_html', edit_link: link_to( t('.management_page'), edit_lease_path(f.object)) ) %>
+    </p>
+  </section>
+
+  <div class="form-group">
+    <input type="hidden" name="<%= f.object_name %>[visibility]" value="<%= Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_LEASE %>" />
+    <%= render 'form_permission_lease', f: f %>
+  </div>
+
+</fieldset>

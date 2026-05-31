@@ -1,0 +1,86 @@
+{
+  "tables": [
+    {
+      "url": "http://example.org/countries_embed.html#countries",
+      "row": [
+        {
+          "url": "http://example.org/countries_embed.html#row=5",
+          "rownum": 5,
+          "describes": [
+            {
+              "@id": "http://example.org/countries_embed.html#countries_AD",
+              "http://www.geonames.org/ontology#countryCode": "AD",
+              "schema:latitude": 42.5,
+              "schema:longitude": 1.6,
+              "schema:name": "Andorra"
+            }
+          ]
+        },
+        {
+          "url": "http://example.org/countries_embed.html#row=6",
+          "rownum": 6,
+          "describes": [
+            {
+              "@id": "http://example.org/countries_embed.html#countries_AE",
+              "http://www.geonames.org/ontology#countryCode": "AE",
+              "schema:latitude": 23.4,
+              "schema:longitude": 53.8,
+              "schema:name": "United Arab Emirates"
+            }
+          ]
+        },
+        {
+          "url": "http://example.org/countries_embed.html#row=7",
+          "rownum": 7,
+          "describes": [
+            {
+              "@id": "http://example.org/countries_embed.html#countries_AF",
+              "http://www.geonames.org/ontology#countryCode": "AF",
+              "schema:latitude": 33.9,
+              "schema:longitude": 67.7,
+              "schema:name": "Afghanistan"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "http://example.org/countries_embed.html#country_slice",
+      "row": [
+        {
+          "url": "http://example.org/countries_embed.html#row=5",
+          "rownum": 5,
+          "describes": [
+            {
+              "http://example.org/countryRef": "http://example.org/countries_embed.html#countries_AF",
+              "http://example.org/year": "1960",
+              "http://example.org/population": 9616353
+            }
+          ]
+        },
+        {
+          "url": "http://example.org/countries_embed.html#row=6",
+          "rownum": 6,
+          "describes": [
+            {
+              "http://example.org/countryRef": "http://example.org/countries_embed.html#countries_AF",
+              "http://example.org/year": "1961",
+              "http://example.org/population": 9799379
+            }
+          ]
+        },
+        {
+          "url": "http://example.org/countries_embed.html#row=7",
+          "rownum": 7,
+          "describes": [
+            {
+              "http://example.org/countryRef": "http://example.org/countries_embed.html#countries_AF",
+              "http://example.org/year": "1962",
+              "http://example.org/population": 9989846
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+<li>
+  <dl>
+    <% if job.nil? %>
+    <dt>Error</dt>
+    <dd>Job <%= id %> could not be parsed; perhaps it contains invalid JSON?</dd>
+    <% else %>
+    <dt>Worker</dt>
+    <dd>
+      <%= job['worker'].split(':')[0...2].join(':') %>
+      on <b class="label label-info"><%= job['queue'] %></b >
+      at <b><span class="time"><%= Time.parse(job['failed_at']).strftime(failure_date_format) %></span></b>
+
+      <% if job['retried_at'] %>
+        <div class="retried">
+          Retried <b><span class="time"><%= Time.parse(job['retried_at']).strftime(failure_date_format) %></span></b>
+          <%= link_to "Remove", failure_path(:queue=>failure_queue,:id=>id), :method => :delete, :class => 'remove', :rel => 'remove' %>
+        </div>
+      <% else %>
+        <div class="controls">
+          <%= link_to "Retry", retry_failure_path(:queue=>failure_queue,:id=>id), :method => :put %>
+          or
+          <%= link_to "Remove", failure_path(:queue=>failure_queue,:id=>id), :method => :delete %>
+        </div>
+      <% end %>
+    </dd>
+    <dt>Class</dt>
+    <dd>
+      <% if job['payload'] && job['payload']['class'] %>
+        <%= link_to failures_path(:class=>job['payload']['class'],:queue=>params[:queue]) do %>
+          <code><%= job['payload']['class'] %></code>
+        <% end %>
+      <% else %>
+        <code>nil</code>
+      <% end %>
+    </dd>
+    <dt>Arguments</dt>
+    <dd><pre><%= job_arguments(job) %></pre></dd>
+    <dt>Exception</dt>
+    <dd><code><%= job['exception'] %></code></dd>
+    <dt>Error</dt>
+    <dd class="error">
+      <% if job['backtrace'] %>
+        <a href="#" class="backtrace"><%= job['error'] %></a>
+        <pre style='display:none'><%=h job['backtrace'].join("\n") %></pre>
+      <% else %>
+        <%=h job['error'] %>
+      <% end %>
+    </dd>
+    <% end %>
+  </dl>
+  <div class="r">
+  </div>
+</li>

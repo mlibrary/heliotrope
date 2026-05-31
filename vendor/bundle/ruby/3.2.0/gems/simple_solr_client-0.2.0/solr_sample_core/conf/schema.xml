@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<schema name="example" version="1.5">
+
+    <!-- The unique key -->
+    <!-- It's gotta gotta gotta be a string!!! -->
+    <field name="id" type="string" indexed="true" stored="true"
+           multiValued="false"/>
+    <uniqueKey>id</uniqueKey>
+
+    <!-- =========================================
+         =========================================
+         ==     FIELD TYPE DEFINITIONS          ==
+         =========================================
+         ========================================= -->
+
+    <!-- Basic solr fields -->
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true"/>
+    <fieldType name="boolean" class="solr.BoolField"
+               sortMissingLast="true"/>
+    <fieldType name="int" class="solr.TrieIntField" precisionStep="0"
+               positionIncrementGap="0"/>
+    <fieldType name="float" class="solr.TrieFloatField" precisionStep="0"
+               positionIncrementGap="0"/>
+    <fieldType name="long" class="solr.TrieLongField" precisionStep="0"
+               positionIncrementGap="0"/>
+    <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0"
+               positionIncrementGap="0"/>
+    <fieldType name="tint" class="solr.TrieIntField" precisionStep="8"
+               positionIncrementGap="0"/>
+    <fieldType name="tfloat" class="solr.TrieFloatField" precisionStep="8"
+               positionIncrementGap="0"/>
+    <fieldType name="tlong" class="solr.TrieLongField" precisionStep="8"
+               positionIncrementGap="0"/>
+    <fieldType name="tdouble" class="solr.TrieDoubleField" precisionStep="8"
+               positionIncrementGap="0"/>
+    <fieldType name="date" class="solr.TrieDateField" precisionStep="0"
+               positionIncrementGap="0"/>
+    <fieldType name="tdate" class="solr.TrieDateField" precisionStep="6"
+               positionIncrementGap="0"/>
+    <fieldType name="binary" class="solr.BinaryField"/>
+    <fieldType name="ignored" stored="false" indexed="false"
+               multiValued="true" class="solr.StrField"/>
+
+    <fieldType class="solr.TextField" name="text_general"
+               positionIncrementGap="100">
+        <analyzer>
+            <tokenizer class="solr.StandardTokenizerFactory"/>
+            <filter class="solr.StopFilterFactory" ignoreCase="true"
+                    words="stopwords.txt" enablePositionIncrements="true"/>
+            <filter class="solr.LowerCaseFilterFactory"/>
+        </analyzer>
+    </fieldType>
+
+
+    <!-- Some simple dynamic fields -->
+    <dynamicField name="*_s" type="string" stored="true" indexed="true" multiValued="true" sortMissingLast="true"/>
+    <dynamicField name="*_t" type="text_general" stored="true" indexed="true" multiValued="true"/>
+    <dynamicField name="*_i" type="int" stored="true" indexed="true" multiValued="true"/>
+
+</schema>

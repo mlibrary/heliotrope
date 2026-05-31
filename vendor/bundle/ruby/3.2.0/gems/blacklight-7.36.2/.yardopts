@@ -1,0 +1,6 @@
+--protected
+--exclude lib/generators/blacklight/templates/
+-
+README.md
+LICENSE
+

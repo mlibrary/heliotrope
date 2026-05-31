@@ -1,0 +1,208 @@
+legend small {
+  margin-left: 0.5em;
+  color: #999999;
+  font-size: 15px;
+}
+
+.label-large {
+  font-size: 110%;
+  line-height: 1.2;
+  padding: 0.3em 0.6em;
+  white-space: normal;
+  position: relative;
+
+  input[type="checkbox"] {
+    margin: -2px 0 0;
+    position: absolute;
+    left: 0.5em;
+    top: 38%;
+  }
+}
+
+#savewidget a {
+  color: #2a62bc;
+}
+
+.label-checkbox .label-text {
+  display: block;
+  padding-left: 1.2em;
+}
+
+.form-group:invalid input,
+.form-group:invalid option,
+.form-group:invalid textarea {
+  color: $gray-dark;
+}
+
+.form-actions {
+  margin-top: 1em;
+}
+
+.select2-container .select2-choice > .select2-chosen {
+  max-width: 26em;
+}
+
+form {
+  .form-group {
+    align-items: center;
+
+    > div {
+      > .row {
+        margin: 0;
+
+        > div > .select2-container {
+          width: 100%;
+
+          > .select2-choice {
+            height: 100%;
+            > .select2-chosen {
+              height: 100%;
+              padding-top: 0.5rem;
+              padding-left: 0.5rem;
+            }
+          }
+        }
+      }
+    }
+
+    > label {
+      text-align: left;
+
+      @media only screen and (min-width: 640px) {
+        text-align: right;
+      }
+    }
+  }
+
+  .form-text {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+}
+
+.set-access-controls {
+  label {
+    font-weight: normal;
+  }
+  & .form-group {
+    padding: 0 1.75em;
+
+    &.file_set_visibility_during_embargo,
+    &.file_set_visibility_during_lease {
+      padding-right: 0;
+    }
+
+    &.file_set_embargo_release_date,
+    &.file_set_lease_expiration_date,
+    &.file_set_visibility_after_embargo,
+    &.file_set_visibility_after_lease {
+      padding-left: 0;
+    }
+
+    &.file_set_visibility_after_embargo,
+    &.file_set_visibility_after_lease {
+      margin-bottom: 3px;
+      margin-top: 3px;
+    }
+  }
+
+  #collapseLease .form-group {
+    padding: 0;
+  }
+
+  #collapseEmbargo .form-group {
+    padding: 0;
+
+    &.generic_work_visibility_after_embargo {
+      margin-top: 6px;
+    }
+  }
+
+  .form-inline {
+    .col-form-label,
+    label {
+      padding-left: 0;
+      display: inline;
+      &:after {
+        content: " ";
+      }
+    }
+    .form-text {
+      display: inline;
+      &:before {
+        content: " ";
+      }
+    }
+  }
+}
+
+.collection-types-settings {
+  .form-inline {
+    display: block;
+    label {
+      font-weight: bold;
+
+      input {
+        margin-right: 0.25em;
+      }
+    }
+
+    .col-form-label,
+    label {
+      display: inline;
+      padding-left: 0;
+
+      &::after {
+        content: " ";
+      }
+    }
+
+    .form-text {
+      display: inline;
+
+      &::before {
+        content: " ";
+      }
+    }
+
+    .form-group .help-block {
+      display: inline;
+      margin: 0 0.5rem 10px;
+    }
+  }
+}
+
+.col-form-label.required {
+  abbr {
+    font-weight: bold;
+  }
+}
+
+form.button-to {
+  margin: 0 0.3em;
+}
+
+.required-tag {
+  vertical-align: super;
+}
+
+.permission-add-user,
+.permission-add-group {
+  margin-bottom: 1em;
+  margin-left: 0;
+}
+
+.permissions-add-user-label,
+.permissions-add-group-label {
+  border: 0;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 0;
+  padding: 7px 15px;
+}
+
+.search-form {
+  .form-group {
+    margin: 0;
+  }
+}

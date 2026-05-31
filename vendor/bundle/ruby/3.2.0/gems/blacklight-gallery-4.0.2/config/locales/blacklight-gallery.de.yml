@@ -1,0 +1,15 @@
+de:
+  blacklight:
+    search:
+      view:
+        gallery: "Bildergalerie"
+        slideshow: "Diashow"
+        masonry: "Masonry"
+  blacklight_gallery:
+    catalog:
+      grid_slideshow:
+        missing_image: 'fehlend'
+      document_slideshow:
+        header: "Um Bilder als Diashow anzuzeigen, klicken Sie ein Bild"
+      modal_slideshow:
+        counter: "%{counter} von %{count}"

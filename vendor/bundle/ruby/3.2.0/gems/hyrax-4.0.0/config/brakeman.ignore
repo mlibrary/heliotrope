@@ -1,0 +1,105 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "3becf9f631534695c52fd8f73b52d0106531e4c2d89dce371267efb2f2d69ad2",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/hyrax/users_controller.rb",
+      "line": 35,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "::User.where(*base_query).where(\"#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)\", (nil or ((\"%\" + query.downcase) + \"%\")), (nil or ((\"%\" + query.downcase) + \"%\")))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Hyrax::UsersController",
+        "method": "search"
+      },
+      "user_input": "Hydra.config.user_key_field",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "4e8248816e1ec892a23bec95d9436e09eea45ace7460811086c6c831a439833e",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "lib/hyrax/controlled_vocabulary/importer/language.rb",
+      "line": 41,
+      "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"gunzip #{download_path}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Hyrax::ControlledVocabulary::Importer::Language",
+        "method": "extract"
+      },
+      "user_input": "download_path",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "5496595e01ffb5b2e2d79b371c5af19b9d822561a99b38992537cfa03ff7e38f",
+      "check_name": "LinkToHref",
+      "message": "Unsafe parameter value in link_to href",
+      "file": "app/views/hyrax/my/_facet_selected.html.erb",
+      "line": 7,
+      "link": "http://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to(\"X\", hyrax.url_for(remove_facet_params(k, selected_facet, params).merge(:action => :index)), :class => \"close\", :data => ({ :dismiss => \"alert\" }))",
+      "render_path": [{"type":"template","name":"hyrax/collections/edit","line":26,"file":"app/views/hyrax/collections/edit.html.erb"}],
+      "location": {
+        "type": "template",
+        "template": "hyrax/my/_facet_selected"
+      },
+      "user_input": "params",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "9f736ca3e9b879bc7059d894fab1328a959b14574b90a991caef19fa8124b2f5",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/hyrax/users_controller.rb",
+      "line": 38,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "::User.where(*base_query).where(\"#{Hydra.config.user_key_field} like lower(?) OR display_name like lower(?)\", (nil or ((\"%\" + query.downcase) + \"%\")), (nil or ((\"%\" + query.downcase) + \"%\"))).registered.where(\"#{Hydra.config.user_key_field} not in (?)\", [::User.system_user_key, ::User.batch_user_key, ::User.audit_user_key])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Hyrax::UsersController",
+        "method": "search"
+      },
+      "user_input": "Hydra.config.user_key_field",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "fd7b410ad29f31e1a743f3b9fff7fe4bb2a2ae2fb2d5f22336c40c5b93374218",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/concerns/hyrax/user.rb",
+      "line": 27,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where(\"#{Hydra.config.user_key_field} not in (?)\", [::User.system_user_key, ::User.batch_user_key, ::User.audit_user_key])",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Hyrax::User",
+        "method": null
+      },
+      "user_input": "Hydra.config.user_key_field",
+      "confidence": "Medium",
+      "note": ""
+    }
+  ],
+  "updated": "2017-06-09 16:31:04 -0500",
+  "brakeman_version": "3.6.2"
+}

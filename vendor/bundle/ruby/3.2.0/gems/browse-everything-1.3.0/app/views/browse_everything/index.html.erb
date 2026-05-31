@@ -1,0 +1,35 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="sr-only" id="beModalLabel">Select a provider in the list to browse your files.</h4>
+      <div class="ev-providers">
+        <%= render :partial => 'providers' %>
+      </div>
+    </div>
+    <div class="modal-body ev-body" tabindex="-1">
+      <div class="loading-progress" aria-live="assertive">
+        <span class="loading-text">Loading...</span>
+      </div>
+      <div class="ev-browser row" aria-live="polite">
+        <%# col-xs-12 is bootstrap3, col-12 is bootstrap4 %>
+        <div class="col-xs-12 col-12 ev-files list">
+          <% if provider.present? %>
+            <% if provider.authorized? %>
+              <%= render :partial => 'files' %>
+            <% else %>
+              <%= render :partial => 'auth' %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span class="pull-left ev-status">0 files selected</span>
+      <%= form_tag '#', :class => "ev-submit-form form-horizontal", :data => { :resolver => browse_everything_engine.resolver_path } do %>
+        <input type="hidden" name="context" value=""/>
+        <button class="ev-cancel btn btn-danger"><%= t('browse_everything.modal_form.cancel')%></button>
+        <button class="ev-submit btn btn-primary" data-loading-text="Loading..."><%= t('browse_everything.modal_form.submit')%></button>
+      <% end %>
+    </div>
+  </div>
+</div>

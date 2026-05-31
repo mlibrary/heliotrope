@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/fits/fits_output http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd" version="0.8.5" timestamp="8/28/15 3:34 PM">
+  <identification>
+    <identity format="JPEG 2000 JP2" mimetype="image/jp2" toolname="FITS" toolversion="0.8.5">
+      <tool toolname="Jhove" toolversion="1.5" />
+      <tool toolname="Exiftool" toolversion="9.13" />
+      <tool toolname="Tika" toolversion="1.3" />
+    </identity>
+  </identification>
+  <fileinfo>
+    <size toolname="Jhove" toolversion="1.5">11043</size>
+    <lastmodified toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">2015:08:11 14:59:03-04:00</lastmodified>
+    <filepath toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">/home/grosscol/workspace/hydra-works/spec/fixtures/image.jp2</filepath>
+    <filename toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">image.jp2</filename>
+    <md5checksum toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">8ff299eda08d7c506273840d52a03bf3</md5checksum>
+    <fslastmodified toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">1439319543000</fslastmodified>
+  </fileinfo>
+  <filestatus>
+    <well-formed toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">true</well-formed>
+    <valid toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">true</valid>
+  </filestatus>
+  <metadata>
+    <image>
+      <byteOrder toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">big endian</byteOrder>
+      <compressionScheme toolname="Jhove" toolversion="1.5" status="CONFLICT">JPEG 2000 Lossless</compressionScheme>
+      <compressionScheme toolname="Exiftool" toolversion="9.13" status="CONFLICT">JPEG 2000</compressionScheme>
+      <imageWidth toolname="Jhove" toolversion="1.5">512</imageWidth>
+      <imageHeight toolname="Jhove" toolversion="1.5">465</imageHeight>
+      <colorSpace toolname="Jhove" toolversion="1.5">sRGB</colorSpace>
+      <tileWidth toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">512</tileWidth>
+      <tileHeight toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">465</tileHeight>
+      <qualityLayers toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">1</qualityLayers>
+      <resolutionLevels toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">3</resolutionLevels>
+      <bitsPerSample toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">8 8 8</bitsPerSample>
+      <samplesPerPixel toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">3</samplesPerPixel>
+    </image>
+  </metadata>
+  <statistics fitsExecutionTime="788">
+    <tool toolname="OIS Audio Information" toolversion="0.1" status="did not run" />
+    <tool toolname="ADL Tool" toolversion="0.1" status="did not run" />
+    <tool toolname="Jhove" toolversion="1.5" executionTime="722" />
+    <tool toolname="file utility" toolversion="5.14" executionTime="570" />
+    <tool toolname="Exiftool" toolversion="9.13" executionTime="662" />
+    <tool toolname="NLNZ Metadata Extractor" toolversion="3.4GA" executionTime="438" />
+    <tool toolname="OIS File Information" toolversion="0.2" executionTime="160" />
+    <tool toolname="OIS XML Metadata" toolversion="0.2" status="did not run" />
+    <tool toolname="ffident" toolversion="0.2" executionTime="437" />
+    <tool toolname="Tika" toolversion="1.3" executionTime="226" />
+  </statistics>
+</fits>
+

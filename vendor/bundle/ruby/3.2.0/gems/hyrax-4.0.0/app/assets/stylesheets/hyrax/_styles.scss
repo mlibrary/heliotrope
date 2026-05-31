@@ -1,0 +1,74 @@
+.breadcrumbs {
+  padding: 1em 0;
+}
+
+.alert {
+  margin: 20px;
+}
+
+.modal-title {
+  @extend h2
+}
+
+footer.navbar {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+label.required, span.required {
+  abbr{
+    color: red;
+    font-size: small;
+  }
+}
+
+label.disabled {
+  color: $gray-light;
+}
+
+.large-icon {
+  font-size: 1.5em;
+}
+
+.dropdown-menu .btn.collection-remove {
+  background:none;
+  border:none;
+  /*     padding:0!important;
+    padding: 6px 12px;*/
+
+  cursor:pointer;
+  clear: both;
+  color: #333333;
+  display: block;
+  width: 100%;
+  font-weight: normal;
+  line-height: 18px;
+  padding: 3px 15px;
+  white-space: nowrap;
+  border-radius:0px
+}
+.dropdown-menu .btn.collection-remove:hover {
+  text-decoration:underline;
+  background-color:#0088CC;
+}
+
+// Vertically center child elements
+.centerizer {
+  align-items: center;
+  display: flex;
+}
+
+.read-only {
+  font-size: 1.2em;
+  margin: 0 0 10px;
+}
+
+
+// Bootstrap 4 has no default row margins, so this helper
+// class will wrap rows giving some margin between
+.spaced-rows {
+  .row > .col {
+    margin-bottom: 1rem;
+  }
+}

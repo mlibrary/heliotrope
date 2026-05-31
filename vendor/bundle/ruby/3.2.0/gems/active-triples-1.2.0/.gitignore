@@ -1,0 +1,10 @@
+.bundle/
+log/*.log
+pkg/
+Gemfile.lock
+tmp/*
+.sass-cache
+.idea
+coverage
+.ruby-version
+.ruby-gemset

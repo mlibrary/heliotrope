@@ -1,0 +1,18 @@
+language: ruby
+sudo: false
+
+notifications:
+  email: false
+
+rvm:
+  - 2.5.1
+
+env:
+ - "BLACKLIGHT_VERSION='~>7.0' RAILS_VERSION=5.2.2"
+ - "BLACKLIGHT_VERSION='~>6.0' RAILS_VERSION=5.2.2"
+ - "RAILS_VERSION=5.1.6"
+
+global_env:
+  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+before_script:
+  - jdk_switcher use oraclejdk8

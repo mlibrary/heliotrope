@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaInfo
+    xmlns="https://mediaarea.net/mediainfo"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://mediaarea.net/mediainfo https://mediaarea.net/mediainfo/mediainfo_2_0.xsd"
+    version="2.0">
+<creatingLibrary version="18.05" url="https://mediaarea.net/MediaInfo">MediaInfoLib</creatingLibrary>
+<media ref="file:///Bars_512kb.mp4">
+<track type="General">
+<VideoCount>1</VideoCount>
+<AudioCount>1</AudioCount>
+<FileExtension>mp4</FileExtension>
+<Format>MPEG-4</Format>
+<Format_Profile>Base Media</Format_Profile>
+<CodecID>isom</CodecID>
+<FileSize>24876</FileSize>
+<Duration>4.928</Duration>
+<OverallBitRate_Mode>VBR</OverallBitRate_Mode>
+<OverallBitRate>40383</OverallBitRate>
+<FrameRate>1.000</FrameRate>
+<FrameCount>1</FrameCount>
+<StreamSize>3216</StreamSize>
+<HeaderSize>3208</HeaderSize>
+<DataSize>21668</DataSize>
+<FooterSize>0</FooterSize>
+<IsStreamable>Yes</IsStreamable>
+<Title>Bars - http://www.archive.org/details/ColorBarsWTone</Title>
+<Movie>Bars - http://www.archive.org/details/ColorBarsWTone</Movie>
+<Recorded_Date>2008</Recorded_Date>
+<Encoded_Date>UTC 1970-01-01 00:00:00</Encoded_Date>
+<Tagged_Date>UTC 2008-11-23 18:44:25</Tagged_Date>
+<Encoded_Application>Lavf51.10.0</Encoded_Application>
+<Comment>license:  http://creativecommons.org/licenses/publicdomain/</Comment>
+</track>
+<track type="Video">
+<StreamOrder>0</StreamOrder>
+<ID>1</ID>
+<Format>AVC</Format>
+<Format_Profile>Baseline</Format_Profile>
+<Format_Level>1.3</Format_Level>
+<Format_Settings_CABAC>No</Format_Settings_CABAC>
+<Format_Settings_RefFrames>1</Format_Settings_RefFrames>
+<CodecID>avc1</CodecID>
+<Duration>1.000</Duration>
+<BitRate>18504</BitRate>
+<Width>360</Width>
+<Height>240</Height>
+<Stored_Width>368</Stored_Width>
+<Sampled_Width>360</Sampled_Width>
+<Sampled_Height>240</Sampled_Height>
+<PixelAspectRatio>1.000</PixelAspectRatio>
+<DisplayAspectRatio>1.500</DisplayAspectRatio>
+<Rotation>0.000</Rotation>
+<FrameRate_Mode>CFR</FrameRate_Mode>
+<FrameRate>1.000</FrameRate>
+<FrameRate_Original>0.200</FrameRate_Original>
+<FrameCount>1</FrameCount>
+<ColorSpace>YUV</ColorSpace>
+<ChromaSubsampling>4:2:0</ChromaSubsampling>
+<BitDepth>8</BitDepth>
+<ScanType>Progressive</ScanType>
+<StreamSize>2313</StreamSize>
+<Encoded_Date>UTC 1970-01-01 00:00:00</Encoded_Date>
+<Tagged_Date>UTC 1970-01-01 00:00:00</Tagged_Date>
+</track>
+<track type="Audio">
+<StreamOrder>1</StreamOrder>
+<ID>2</ID>
+<Format>AAC</Format>
+<Format_Profile>LC</Format_Profile>
+<CodecID>mp4a-40-2</CodecID>
+<Duration>4.928</Duration>
+<BitRate_Mode>VBR</BitRate_Mode>
+<BitRate>31407</BitRate>
+<Channels>2</Channels>
+<ChannelPositions>Front: L R</ChannelPositions>
+<ChannelLayout>L R</ChannelLayout>
+<SamplesPerFrame>1024</SamplesPerFrame>
+<SamplingRate>48000</SamplingRate>
+<SamplingCount>236544</SamplingCount>
+<FrameRate>46.875</FrameRate>
+<FrameCount>231</FrameCount>
+<Compression_Mode>Lossy</Compression_Mode>
+<StreamSize>19347</StreamSize>
+<StreamSize_Proportion>0.77774</StreamSize_Proportion>
+<Encoded_Date>UTC 1970-01-01 00:00:00</Encoded_Date>
+<Tagged_Date>UTC 1970-01-01 00:00:00</Tagged_Date>
+</track>
+</media>
+</MediaInfo>

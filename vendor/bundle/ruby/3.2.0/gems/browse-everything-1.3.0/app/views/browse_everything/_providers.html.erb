@@ -1,0 +1,11 @@
+<form class="form-inline">
+  <label target="provider-select">Source:</label>
+  <%# form-control class for bootstrap3, custom-select class for bootstrap4 %>
+  <select class="form-control custom-select" id="provider-select">
+    <% browser.providers.each_pair do |key, provider| %>
+      <option value="<%=browse_everything_engine.contents_path(key)%>">
+        <%= provider.name %>
+      </option>
+    <% end %>
+  </select>
+</form>

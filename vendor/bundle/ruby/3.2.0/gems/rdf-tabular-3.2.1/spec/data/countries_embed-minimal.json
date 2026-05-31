@@ -1,0 +1,38 @@
+[
+  {
+    "@id": "http://example.org/countries_embed.html#countries_AD",
+    "http://www.geonames.org/ontology#countryCode": "AD",
+    "schema:latitude": 42.5,
+    "schema:longitude": 1.6,
+    "schema:name": "Andorra"
+  },
+  {
+    "@id": "http://example.org/countries_embed.html#countries_AE",
+    "http://www.geonames.org/ontology#countryCode": "AE",
+    "schema:latitude": 23.4,
+    "schema:longitude": 53.8,
+    "schema:name": "United Arab Emirates"
+  },
+  {
+    "@id": "http://example.org/countries_embed.html#countries_AF",
+    "http://www.geonames.org/ontology#countryCode": "AF",
+    "schema:latitude": 33.9,
+    "schema:longitude": 67.7,
+    "schema:name": "Afghanistan"
+  },
+  {
+    "http://example.org/countryRef": "http://example.org/countries_embed.html#countries_AF",
+    "http://example.org/year": "1960",
+    "http://example.org/population": 9616353
+  },
+  {
+    "http://example.org/countryRef": "http://example.org/countries_embed.html#countries_AF",
+    "http://example.org/year": "1961",
+    "http://example.org/population": 9799379
+  },
+  {
+    "http://example.org/countryRef": "http://example.org/countries_embed.html#countries_AF",
+    "http://example.org/year": "1962",
+    "http://example.org/population": 9989846
+  }
+]

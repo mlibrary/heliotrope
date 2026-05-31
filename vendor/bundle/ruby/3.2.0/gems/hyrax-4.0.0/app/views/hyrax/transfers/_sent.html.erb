@@ -1,0 +1,39 @@
+<table class="table table-striped" id="outgoing-transfers">
+  <thead>
+    <tr>
+      <th><%= t(".title") %></th>
+      <th><%= t(".date") %></th>
+      <th><%= t(".from") %></th>
+      <th><%= t(".status") %></th>
+      <th><%= t(".comments") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% outgoing_proxy_deposits.each do |req| %>
+      <% unless req.receiving_user.blank? %>
+        <tr>
+          <td> <%= show_transfer_request_title(req) %> </td>
+          <td data-sort="<%= req.created_at.getutc.iso8601(5) %>">
+            <relative-time datetime="<%= req.created_at.getutc.iso8601 %>" title="<%= req.created_at.to_formatted_s(:standard) %>">
+              <%= req.created_at.to_formatted_s(:long_ordinal) %>
+            </relative-time>
+          </td>
+
+          <td><%= link_to req.receiving_user.name, hyrax.user_path(req.receiving_user) %></td>
+
+          <td>
+            <% if req.pending? %>
+              <%= button_to t(".cancel"), hyrax.transfer_path(req), method: :delete, class:'btn btn-sm btn-danger', data: {confirm: t(".are_you_sure_you_want_to_cancel_this_request")} %>
+            <% else %>
+              <%= req.status.capitalize %>
+            <% end %>
+          </td>
+
+          <td><%= req.sender_comment %></td>
+        </tr>
+      <% else %>
+          <% Hyrax.logger.error "A proxy request has no receiver: #{req.inspect}" %>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>

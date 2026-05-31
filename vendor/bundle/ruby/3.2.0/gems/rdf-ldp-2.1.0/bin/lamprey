@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+$LOAD_PATH
+  .unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'app')))
+require 'lamprey'
+require 'optparse'
+
+options = {}
+
+OptionParser.new do |opts|
+  opts.banner = 'Usage: lamprey [options]'
+
+  opts.on('-rREPO', '--repository=REPO', 'Set the repository') do |repo|
+    options[:repository] = repo.to_sym
+  end
+end.parse!
+
+RDF::Lamprey::Config.configure!(**options)
+
+RDF::Lamprey.run!

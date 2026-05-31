@@ -1,0 +1,29 @@
+.form-tab-content {
+  margin: 15px 10px;
+}
+
+// For the admin page //
+td.status {
+  width: 2rem;
+  font-size: 1.1rem;
+
+  span {
+    @extend .badge;
+    &.on { @extend .badge-success; }
+    &.off { @extend .badge-secondary; }
+  }
+}
+
+td.toggle {
+  input[type=submit] {
+    @extend .btn;
+    @extend .btn-sm;
+    &.active { @extend .btn-primary; }
+    &:not(.active) { @extend .btn-secondary; }
+  }
+}
+
+// for profile page highlighted works //
+tr.highlighted-works td {
+  padding: 5px;
+}

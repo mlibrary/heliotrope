@@ -1,0 +1,36 @@
+<% provide :page_header do %>
+  <h1><span class="fa fa-sitemap" aria-hidden="true"></span> <%= t('.header') %></h1>
+<% end %>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <%= render 'show_actions', presenter: @presenter %>
+
+      <div class="card-body admin-set row">
+        <div class="col-md-2">
+          <% if has_thumbnail? @presenter.solr_document %>
+            <div class="document-thumbnail">
+              <%= render_thumbnail_tag(@presenter.solr_document, {}, { suppress_link: true }) %>
+            </div>
+          <% else %>
+            <span class="fa fa-sitemap collection-icon-search" aria-hidden="true"></span>
+          <% end %>
+        </div>
+        <div class="col-md-10">
+          <%= render 'collection_description', presenter: @presenter %>
+          <%= render 'show_descriptions' %>
+        </div>
+      </div>
+
+      <div class="card-body admin-set-members">
+        <h3><%= t '.item_list_header' %></h3>
+        <%= render 'sort_and_per_page', collection: @presenter %>
+
+        <%= render_document_index @member_docs %>
+
+        <%= render 'paginate' %>
+      </div>
+    </div>
+  </div>
+</div>

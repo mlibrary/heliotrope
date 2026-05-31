@@ -1,0 +1,33 @@
+<% provide :page_title, t("hyrax.admin.sidebar.works") %>
+
+<% provide :head do %>
+  <%= rss_feed_link_tag route_set: hyrax %>
+  <%= atom_feed_link_tag route_set: hyrax %>
+<% end %>
+
+<script>
+//<![CDATA[
+
+  <%= render partial: 'scripts', formats: [:js] %>
+
+//]]>
+</script>
+
+<% provide :page_header do %>
+  <h1><span class="fa fa-file" aria-hidden="true"></span> <%= t("hyrax.admin.sidebar.works") %></h1>
+<% end %>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card<%= ' tabs' if can?(:read, :admin_dashboard) %>">
+      <%= render 'tabs' if can?(:read, :admin_dashboard) %>
+      <div class="card-body">
+        <%= render 'search_header' %>
+        <h2 class="sr-only"><%= t('hyrax.admin.sidebar.works_listing') %></h2>
+        <%= render 'document_list' %>
+
+        <%= render 'results_pagination' %>
+      </div>
+    </div>
+  </div>
+</div>

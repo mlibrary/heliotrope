@@ -1,0 +1,48 @@
+    <%= render 'shared/nav_safety_modal' %>
+    <div class="tabs mt-4" id="admin-set-controls">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+          <a href="#description" role="tab" data-toggle="tab" class="nav-link active nav-safety-confirm"><%= t('.tabs.description') %></a>
+        </li>
+        <% if @form.persisted? %>
+          <li class="nav-item">
+            <a href="#participants" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.participants') %></a>
+          </li>
+          <li class="nav-item">
+            <a href="#visibility" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.visibility') %></a>
+          </li>
+          <li class="nav-item">
+            <a href="#workflow" role="tab" data-toggle="tab" class="nav-link nav-safety-confirm"><%= t('.tabs.workflow') %></a>
+          </li>
+        <% end %>
+      </ul>
+      <div class="tab-content card">
+        <div id="description" class="tab-pane show active">
+          <div class="labels">
+            <%= simple_form_for @form, url: [hyrax, :admin, @form], html: { class: 'nav-safety' } do |f| %>
+              <div class="card-body">
+                <%= render 'form_metadata', f: f %>
+
+                <% if f.object.persisted? && f.object.member_ids.present? %>
+                  <%# we're loading these values dynamically to speed page load %>
+                  <%= f.input :thumbnail_id,
+                              input_html: { data: { text: thumbnail_label_for(object: f.object) } } %>
+                <% end %>
+
+              </div>
+
+              <div class="card-footer d-flex justify-content-end">
+                <% cancel_path = f.object.persisted? ? hyrax.admin_admin_set_path(f.object) : hyrax.dashboard_collections_path %>
+                <%= f.button :submit, class: 'btn btn-primary text-white mr-2' %>
+                <%= link_to t('.cancel'), cancel_path, class: 'btn btn-light' %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <% if @form.persisted? %>
+          <%= render 'form_participants' %>
+          <%= render 'form_visibility' %>
+          <%= render 'form_workflow' %>
+        <% end %>
+      </div>
+    </div>

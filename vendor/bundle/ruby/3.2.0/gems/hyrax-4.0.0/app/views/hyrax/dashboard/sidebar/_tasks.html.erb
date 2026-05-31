@@ -1,0 +1,32 @@
+  <% if can? :review, :submissions %>
+    <li class="h5 nav-item"><%= t('hyrax.admin.sidebar.tasks') %></li>
+    <%= menu.nav_link(hyrax.admin_workflows_path,
+                      class: "nav-link",
+                      onclick: "dontChangeAccordion(event);") do %>
+      <span class="fa fa-flag" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.workflow_review') %></span>
+    <% end %>
+  <% end %>
+
+  <% if can? :manage, User %>
+    <%= menu.nav_link(hyrax.admin_users_path,
+                      class: "nav-link",
+                      onclick: "dontChangeAccordion(event);") do %>
+      <span class="fa fa-user" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.admin.sidebar.users') %></span>
+    <% end %>
+  <% end %>
+
+  <% if can? :read, :admin_dashboard %>
+    <%= menu.nav_link(hyrax.embargoes_path,
+                      class: "nav-link",
+                      onclick: "dontChangeAccordion(event);") do %>
+      <span class="fa fa-flag" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.embargoes.index.manage_embargoes') %></span>
+    <% end %>
+
+    <%= menu.nav_link(hyrax.leases_path,
+                      class: "nav-link",
+                      onclick: "dontChangeAccordion(event);") do %>
+      <span class="fa fa-flag" aria-hidden="true"></span> <span class="sidebar-action-text"><%= t('hyrax.leases.index.manage_leases') %></span>
+    <% end %>
+  <% end %>
+
+  <%= render 'hyrax/dashboard/sidebar/menu_partials', menu: menu, section: :tasks %>

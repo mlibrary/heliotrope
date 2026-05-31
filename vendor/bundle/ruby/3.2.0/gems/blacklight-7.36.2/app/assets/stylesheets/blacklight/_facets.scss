@@ -1,0 +1,222 @@
+.sidenav {
+  .navbar-toggler {
+    border-color: $navbar-light-toggler-border-color;
+    color: $navbar-light-active-color;
+
+    &:hover,
+    &:focus {
+      color: $navbar-light-active-color;
+    }
+  }
+
+  .navbar-toggler-icon {
+    background-image: $navbar-light-toggler-icon-bg;
+  }
+}
+
+.facets-toggleable {
+  @each $breakpoint in map-keys($grid-breakpoints) {
+    $next: breakpoint-next($breakpoint, $grid-breakpoints);
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    &#{$infix} {
+      @include media-breakpoint-up($next) {
+
+        // scss-lint:disable ImportantRule
+        .facets-collapse {
+          display: block !important;
+          width: 100%;
+        }
+        // scss-lint:enable ImportantRule
+
+        .navbar-toggler {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+.no-js {
+  @include media-breakpoint-down(lg) {
+    #sidebar {
+      order: 6 !important;
+    }
+  }
+
+  .facet-content.collapse {
+    display: block;
+  }
+
+  .facet-toggle-handle {
+    display: none;
+  }
+
+  .pivot-facet.collapse {
+    display: block;
+  }
+
+  .facets-collapse.collapse {
+    display: block;
+  }
+}
+
+.facets-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.facets-heading {
+  @extend .h4;
+  line-height: inherit;
+}
+
+.facet-limit {
+  margin-bottom: $spacer;
+
+  .card-body {
+    padding: $spacer;
+  }
+}
+
+.facet-limit-active {
+  @extend .border-success;
+
+  .card-header {
+    @extend .bg-success;
+
+    .btn {
+      @if function-exists(color-contrast) {
+        color: color-contrast($success);
+      }
+    }
+  }
+}
+
+.facet-values {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  margin-bottom: 0;
+
+  li {
+
+    display: table-row;
+    .selected {
+      @extend .text-success;
+    }
+
+  }
+
+  .remove {
+    color: $text-muted;
+    font-weight: bold;
+    padding-left: $spacer * .5;
+    text-decoration: none;
+
+    &:hover {
+      color: theme-color("danger");
+      text-decoration: none;
+    }
+  }
+
+  @mixin hyphens-auto {
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    -o-hyphens: auto;
+    hyphens: auto;
+  }
+
+  .facet-label {
+    display: table-cell;
+    padding-right: 1em;
+    text-indent: -15px;
+    padding-left: 15px;
+    padding-bottom: $spacer * .5;
+    @include hyphens-auto;
+  }
+
+  .facet-count {
+    display: table-cell;
+    vertical-align: top;
+    text-align: right;
+    width: 5em;
+  }
+
+  .facet-checkbox {
+    display: table-cell;
+    width: 1.25rem;
+    vertical-align: top;
+  }
+
+  .label-and-count {
+    display: table;
+    width: 100%;
+  }
+
+  .label-and-count label {
+    display: table-row;
+  }
+}
+
+.facet-extended-list {
+  .sort-options {
+    text-align:right;
+  }
+
+  .prev-next-links {
+    float:left;
+  }
+}
+
+.facet-field-heading {
+  @extend .h6;
+
+  a {
+    color: inherit;
+  }
+
+  /* This prevents the contained stretch link from covering the panel body */
+  position: relative
+}
+
+/* Sidenav
+-------------------------------------------------- */
+
+.facet-pagination {
+  &.top {
+    padding: $modal-inner-padding;
+  }
+}
+
+
+
+/* style for pivot facet's nested list */
+
+.pivot-facet {
+  @extend .list-unstyled;
+  @extend .py-1;
+  @extend .px-4;
+}
+
+.facet-leaf-node {
+  margin-left: 1rem;
+  padding-right: 1rem;
+  margin-top: -1.5rem;
+}
+
+.facet-toggle-handle {
+  margin: 0;
+  margin-left: -5px;
+  padding: 0;
+
+  &.collapsed {
+    .show { display: block; }
+    .hide { display: none; }
+  }
+
+  .show { display: none; }
+  .hide { display: block; }
+}

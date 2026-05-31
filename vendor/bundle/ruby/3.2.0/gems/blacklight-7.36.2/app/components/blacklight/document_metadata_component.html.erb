@@ -1,0 +1,7 @@
+<% content = capture do %>
+  <% fields.each do |field| -%>
+    <%= field %>
+  <% end -%>
+<% end %>
+
+<%= @tag.nil? ? content : tag.public_send(@tag, content, class: @classes, **@component_args) %>

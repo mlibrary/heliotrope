@@ -1,0 +1,36 @@
+@prefix geonames: <http://www.geonames.org/ontology#> .
+@prefix schema: <http://schema.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/countries_embed.html#countries_AD> schema:latitude "42.5"^^xsd:double;
+   schema:longitude "1.6"^^xsd:double;
+   schema:name "Andorra";
+   geonames:countryCode "AD" .
+
+<http://example.org/countries_embed.html#countries_AE> schema:latitude "23.4"^^xsd:double;
+   schema:longitude "53.8"^^xsd:double;
+   schema:name "United Arab Emirates";
+   geonames:countryCode "AE" .
+
+<http://example.org/countries_embed.html#countries_AF> schema:latitude "33.9"^^xsd:double;
+   schema:longitude "67.7"^^xsd:double;
+   schema:name "Afghanistan";
+   geonames:countryCode "AF" .
+
+ [
+     <http://example.org/countryRef> <http://example.org/countries_embed.html#countries_AF>;
+     <http://example.org/population> "9989846"^^xsd:integer;
+     <http://example.org/year> "1962"^^xsd:gYear
+ ] .
+
+ [
+     <http://example.org/countryRef> <http://example.org/countries_embed.html#countries_AF>;
+     <http://example.org/population> "9799379"^^xsd:integer;
+     <http://example.org/year> "1961"^^xsd:gYear
+ ] .
+
+ [
+     <http://example.org/countryRef> <http://example.org/countries_embed.html#countries_AF>;
+     <http://example.org/population> "9616353"^^xsd:integer;
+     <http://example.org/year> "1960"^^xsd:gYear
+ ] .

@@ -1,0 +1,56 @@
+.worktypes {
+  .modal-body {
+    padding: 0;
+  }
+
+  .modal-title {
+    font-size: $h3-font-size;
+  }
+}
+
+.select-worktype:first-child {
+  border-top: none;
+}
+
+.select-worktype {
+  border-top: 1px solid $table-border-color;
+  padding: 15px 15px 0;
+
+  label {
+    margin: 0;
+    width: 100%;
+  }
+
+  input[type="radio"] {
+    float: left;
+    position: relative;
+    width: 30px;
+  }
+
+  .select-work-icon {
+    color: $gray;
+    float: left;
+    font-size: 200%;
+    line-height: 1;
+    margin-right: 10px;
+    position: relative;
+    text-align: center;
+    width: 40px;
+
+    .fa {
+      vertical-align: top
+    }
+  }
+
+  .select-work-description {
+    float: left;
+    font-weight: normal;
+    position: relative;
+    width: 80%;
+
+    .work-type-title {
+      font-size: $h4-font-size;
+      margin-top: 0;
+    }
+  }
+}

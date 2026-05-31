@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/fits/fits_output http://hul
+.harvard.edu/ois/xml/xsd/fits/fits_output.xsd" version="0.8.5" timestamp="6/20/17 11:20 AM">
+  <identification>
+    <identity format="Tagged Image File Format" mimetype="image/tiff" toolname="FITS" toolversion="0.8.5">
+      <tool toolname="Jhove" toolversion="1.5" />
+      <tool toolname="file utility" toolversion="5.14" />
+      <tool toolname="Exiftool" toolversion="9.13" />
+      <tool toolname="ffident" toolversion="0.2" />
+      <tool toolname="Tika" toolversion="1.3" />
+      <version toolname="Jhove" toolversion="1.5">6.0</version>
+    </identity>
+  </identification>
+  <fileinfo>
+    <size toolname="Jhove" toolversion="1.5">11082294</size>
+    <creatingApplicationName toolname="Jhove" toolversion="1.5">Capture One 8 Macintosh</creatingApplicationName>
+    <lastmodified toolname="Exiftool" toolversion="9.13" status="CONFLICT">2017:06:19 14:26:24-04:00</lastmodified>
+    <lastmodified toolname="Tika" toolversion="1.3" status="CONFLICT">2016-08-22T11:40:49</lastmodified>
+    <created toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">2016:08:22 11:40:49</created>
+    <filepath toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">/home/ubuntu/2012-002_928.tif</filepath>
+    <filename toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">2012-002_928.tif</filename>
+    <md5checksum toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">b8344bf2f88bd421986d9ac988578e28</md5checksum>
+    <fslastmodified toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">1497896784000</fslastmodified>
+  </fileinfo>
+  <filestatus>
+    <well-formed toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">true</well-formed>
+    <valid toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">true</valid>
+  </filestatus>
+  <metadata>
+    <image>
+      <byteOrder toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">little endian</byteOrder>
+      <byteOrder toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">little endian</byteOrder>
+      <compressionScheme toolname="Jhove" toolversion="1.5">Uncompressed</compressionScheme>
+      <imageWidth toolname="Tika" toolversion="1.3" status="CONFLICT">160</imageWidth>
+      <imageWidth toolname="Jhove" toolversion="1.5" status="CONFLICT">2226</imageWidth>
+      <imageHeight toolname="Jhove" toolversion="1.5" status="CONFLICT">1650</imageHeight>
+      <imageHeight toolname="Tika" toolversion="1.3" status="CONFLICT">119</imageHeight>
+      <colorSpace toolname="Jhove" toolversion="1.5">RGB</colorSpace>
+      <referenceBlackWhite toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">0.0 255.0 0.0 255.0 0.0 255.0 0.0 255.0 0.0 255.0 0.0 255.0</referenceBlackWhite>
+      <iccProfileName toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">Adobe RGB (1998)</iccProfileName>
+      <orientation toolname="Jhove" toolversion="1.5">normal*</orientation>
+      <samplingFrequencyUnit toolname="Jhove" toolversion="1.5">in.</samplingFrequencyUnit>
+      <xSamplingFrequency toolname="Jhove" toolversion="1.5">300</xSamplingFrequency>
+      <ySamplingFrequency toolname="Jhove" toolversion="1.5">300</ySamplingFrequency>
+      <bitsPerSample toolname="Jhove" toolversion="1.5">8 8 8</bitsPerSample>
+      <bitsPerSample toolname="Jhove" toolversion="1.5" status="SINGLE_RESULT">8 8 8</bitsPerSample>
+      <samplesPerPixel toolname="Jhove" toolversion="1.5" status="CONFLICT">3 3</samplesPerPixel>
+      <samplesPerPixel toolname="Exiftool" toolversion="9.13" status="CONFLICT">3</samplesPerPixel>
+      <scanningSoftwareName toolname="Jhove" toolversion="1.5">Capture One 8 Macintosh</scanningSoftwareName>
+      <digitalCameraModelName toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">IQ3 80MP</digitalCameraModelName>
+      <exposureTime toolname="Jhove" toolversion="1.5" status="CONFLICT">0.017</exposureTime>
+      <exposureTime toolname="Exiftool" toolversion="9.13" status="CONFLICT">1/60</exposureTime>
+      <isoSpeedRating toolname="Jhove" toolversion="1.5">50</isoSpeedRating>
+      <lightSource toolname="Jhove" toolversion="1.5" status="CONFLICT">other</lightSource>
+      <lightSource toolname="Exiftool" toolversion="9.13" status="CONFLICT">other light source</lightSource>
+      <iccProfileVersion toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">2.1.0</iccProfileVersion>
+      <captureDevice toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">digital still camera</captureDevice>
+      <digitalCameraManufacturer toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">Phase One</digitalCameraManufacturer>
+      <exposureProgram toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">Manual</exposureProgram>
+      <exifVersion toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">0220</exifVersion>
+      <shutterSpeedValue toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">1/60</shutterSpeedValue>
+      <sensingMethod toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">One-chip color area sensor</sensingMethod>
+    </image>
+  </metadata>
+  <statistics fitsExecutionTime="1523">
+    <tool toolname="OIS Audio Information" toolversion="0.1" status="did not run" />
+    <tool toolname="ADL Tool" toolversion="0.1" status="did not run" />
+    <tool toolname="Jhove" toolversion="1.5" executionTime="1220" />
+    <tool toolname="file utility" toolversion="5.14" executionTime="964" />
+    <tool toolname="Exiftool" toolversion="9.13" executionTime="1110" />
+    <tool toolname="NLNZ Metadata Extractor" toolversion="3.4GA" status="did not run" />
+    <tool toolname="OIS File Information" toolversion="0.2" executionTime="225" />
+    <tool toolname="OIS XML Metadata" toolversion="0.2" status="did not run" />
+    <tool toolname="ffident" toolversion="0.2" executionTime="695" />
+    <tool toolname="Tika" toolversion="1.3" executionTime="1371" />
+  </statistics>
+</fits>
+

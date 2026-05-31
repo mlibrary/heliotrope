@@ -1,0 +1,66 @@
+<aside id="form-progress" class="form-progress card">
+  <div class="card-header">
+    <h3 class="card-title"><%= t("hyrax.works.progress.header") %></h3>
+  </div>
+  <div class="list-group">
+    <div class="list-group-item">
+      <fieldset>
+        <legend class="legend-save-work"><%= t('.requirements') %></legend>
+        <ul class="requirements">
+          <li class="incomplete" id="required-metadata"><%= t('.required_descriptions') %></li>
+          <% if Hyrax.config.work_requires_files? %>
+            <li class="incomplete" id="required-files"><%= t('.required_files') %></li>
+          <% end %>
+          <% if Flipflop.show_deposit_agreement? && Flipflop.active_deposit_agreement_acceptance? %>
+            <li class="incomplete" id="required-agreement"><%= t('.required_agreement') %></li>
+          <% end %>
+        </ul>
+      </fieldset>
+    </div>
+
+    <div class="set-access-controls list-group-item">
+      <%= render 'form_visibility_component', f: f, save_work: true %>
+    </div>
+    <% if Flipflop.proxy_deposit? && current_user.can_make_deposits_for.any? %>
+        <div class="list-group-item">
+          <%= f.input :on_behalf_of, label: t(".proxy_depositors"), collection: current_user.can_make_deposits_for, prompt: t(".yourself"), value_method: :user_key %>
+        </div>
+    <% end %>
+
+    <% form_progress_sections_for(form: f.object).each do |section| %>
+      <%= render "form_progress_#{section}", f: f %>
+    <% end %>
+  </div>
+  <div class="card-footer text-center">
+    <% if ::Flipflop.show_deposit_agreement? %>
+      <% if ::Flipflop.active_deposit_agreement_acceptance? %>
+        <label>
+          <%= check_box_tag 'agreement', 1, f.object.agreement_accepted, required: true %>
+          <%= t('hyrax.active_consent_to_agreement') %><br />
+          <%= link_to t('hyrax.pages.tabs.agreement_page'),
+                      hyrax.agreement_path,
+                      target: '_blank' %>
+        </label>
+      <% else %>
+        <%= t('hyrax.passive_consent_to_agreement') %><br />
+        <%= link_to t('hyrax.pages.tabs.agreement_page'),
+                    hyrax.agreement_path,
+                    target: '_blank' %>
+      <% end %>
+    <% end %>
+    <br />
+    <%# TODO: If we start using ActionCable, we could listen for object updates and
+              alert the user that the object has changed by someone else %>
+    <%= f.input Hyrax::Actors::OptimisticLockValidator.version_field, as: :hidden if f.object.persisted? %>
+    <%= f.submit class: 'btn btn-primary', onclick: "confirmation_needed = false;", id: "with_files_submit", name: "save_with_files" %>
+  </div>
+
+  <%# Provide immediate feedback after the form is submitted while the subsequent page is loading %>
+  <div class="card-footer save-progress" hidden>
+    <div class="progress">
+      <div class="progress-bar progress-bar-striped progress-bar-complete progress-bar-animated">
+        <span id="form-feedback" aria-live="assertive"><%= t(".saving_your_work") %></span>
+      </div>
+    </div>
+  </div>
+</aside>

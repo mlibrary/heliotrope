@@ -1,0 +1,125 @@
+#!/usr/bin/env ruby
+
+require 'solr_wrapper'
+require 'optparse'
+
+options = {}
+collection_options = {}
+subtext = <<HELP
+Commonly used command are:
+   clean :     cleans all data from solr and configures a clean instance based on configuration options
+   dir   :     prints the solr instance dir
+See 'solr_wrapper COMMAND --help' for more information on a specific command.
+HELP
+
+args = OptionParser.new do |opts|
+  opts.banner = "Usage: solr_wrapper [options] subcommand"
+
+  opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+    options[:verbose] = v
+  end
+
+  opts.on("--config FILE", "Load configuration from a file") do |v|
+    options[:config] = v
+  end
+
+  opts.on("--version VERSION", "Specify a Solr version to download (default: #{SolrWrapper.default_solr_version})") do |v|
+    options[:version] = v
+  end
+
+  opts.on("-pPORT", "--port PORT", "Specify the port Solr should run at (default: #{SolrWrapper.default_solr_port})") do |p|
+    if p == 'random'
+      options[:port] = nil
+    else
+      options[:port] = p
+    end
+  end
+
+  opts.on("-c", "--cloud", "Run solr in cloud mode") do |c|
+    options[:cloud] = c
+  end
+
+  opts.on("--solr_zip_path PATH", "Download/use solr at the given path") do |d|
+    options[:solr_zip_path] = d
+  end
+
+  opts.on("-iDIR", "--instance_directory DIR", "Install/use solr at the given directory") do |d|
+    options[:instance_dir] = d
+  end
+
+  opts.on("-lDIR", "--lib_directory DIR", "Grab extra libs from this directory") do |d|
+    options[:extra_lib_dir] = d
+  end
+
+  opts.on("-nNAME", "--collection_name NAME", "Create a default solr collection with the given name") do |c|
+    collection_options[:name] = c
+  end
+
+  opts.on("-dDIR", "--collection_config DIR", "Create a default solr collection with the files from the given directory") do |d|
+    collection_options[:dir] = d
+  end
+
+  opts.on("--[no-]persist", "Persist the solr connection data") do |d|
+    collection_options[:persist] = d
+  end
+
+  opts.on("--no-checksum", "Skip running checksum validation on the downloaded file") do |d|
+    options[:ignore_checksum] = true
+  end
+
+  opts.separator ""
+  opts.separator subtext
+end
+
+
+subcommands = {
+    'clean' => OptionParser.new do |opts|
+      opts.banner = "Usage: clean"
+    end,
+    'dir' => OptionParser.new do |opts|
+      opts.banner = "Usage: dir"
+    end,
+}
+
+
+begin
+  args.order!
+  command = ARGV.shift
+  if command
+    raise "Bad subcommand: #{command}" unless subcommands[command]
+    subcommands[command].order!
+  end
+  args.parse!
+rescue => error
+  $stderr.puts "ERROR: #{error}\n"
+  $stderr.puts args.help
+  exit 1
+end
+
+instance = SolrWrapper.instance(options)
+
+case command
+when 'clean'
+  if instance.started?
+    $stderr.puts "Please stop solr before cleaning"
+    exit 1
+  end
+  $stderr.puts "cleaning #{instance.instance_dir}..."
+  instance.remove_instance_dir!
+when 'dir'
+  puts instance.instance_dir
+else
+  $stderr.print "Starting Solr #{instance.version} on port #{instance.port} ... "
+  instance.wrap do |conn|
+    conn.with_collection(collection_options) do
+      $stderr.puts "http://#{instance.host}:#{instance.port}/solr/"
+      begin
+        conn.wait
+      rescue Interrupt
+        Signal.trap("SIGTERM") {"IGNORE"}
+        Signal.trap("SIGINT") {"IGNORE"}
+        $stderr.puts "Solr is shutting down."
+      end
+    end
+  end
+end

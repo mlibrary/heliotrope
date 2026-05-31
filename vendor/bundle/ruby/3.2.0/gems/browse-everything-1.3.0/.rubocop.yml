@@ -1,0 +1,93 @@
+inherit_from: .rubocop_todo.yml
+inherit_gem:
+  bixby: bixby_default.yml
+
+AllCops:
+  TargetRubyVersion: 2.6
+  DisplayCopNames: true
+  Exclude:
+    - 'vendor/**/*'
+    - 'spec/dummy_test_app/**/*'
+    - 'bin/rails'
+
+Style/GuardClause:
+  Enabled: false
+
+StyleI/IfUnlessModifier:
+  Enabled: false
+
+Bundler/DuplicatedGem:
+  Exclude:
+    - 'Gemfile'
+
+Layout/LineLength:
+  Max: 400
+  Exclude:
+    - 'spec/lib/browse_everything/driver/box_spec.rb'
+    - 'spec/lib/browse_everything/driver/dropbox_spec.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - '*.gemspec'
+    - 'spec/**/*'
+
+Metrics/ClassLength:
+  Max: 130
+  Exclude:
+    - 'lib/browse_everything/driver/google_drive.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'spec/test_app_templates/lib/generators/test_app_generator.rb'
+
+Naming/FileName:
+  Exclude:
+    - 'browse-everything.gemspec'
+    - 'Gemfile'
+    - 'lib/browse-everything.rb'
+
+Rails:
+  Enabled: true
+
+Rails/FilePath:
+  Exclude:
+    - 'lib/generators/browse_everything/config_generator.rb'
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/javascripts/**/*'
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/LeadingSubject:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+Style/MixinUsage:
+  Exclude:
+    - 'spec/helper/browse_everything_controller_helper_spec.rb'
+    - 'spec/lib/browse_everything/browser_spec.rb'
+    - 'spec/lib/browse_everything/driver/base_spec.rb'
+    - 'spec/lib/browse_everything/driver/box_spec.rb'
+    - 'spec/lib/browse_everything/driver/dropbox_spec.rb'
+    - 'spec/lib/browse_everything/driver/file_system_spec.rb'
+    - 'spec/lib/browse_everything/driver/google_drive_spec.rb'
+    - 'spec/lib/browse_everything/driver/s3_spec.rb'
+    - 'spec/services/browser_factory_spec.rb'
+
+Style/NumericLiterals:
+  MinDigits: 7
+
+Style/RedundantBegin:
+  Exclude:
+    - 'lib/browse_everything/browser.rb'
+
+Style/IfUnlessModifier:
+  Exclude:
+    - 'Gemfile'

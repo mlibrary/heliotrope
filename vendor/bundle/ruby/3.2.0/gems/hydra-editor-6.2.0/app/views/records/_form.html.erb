@@ -1,0 +1,19 @@
+<%= simple_form_for form, url: record_form_action_url(form), html: { class: 'editor' } do |f| %>
+  <div id="descriptions_display">
+	<%= render 'records/form_header' %>
+    <div class="well">
+      <% f.object.terms.each do |term| %>
+        <%= render_edit_field_partial(term, f: f) %>
+      <% end %>
+    </div> <!-- /well -->
+  </div>
+  <%= hidden_field_tag :type, params[:type] %>
+
+  <div class="form-actions">
+    <div class="primary-actions">
+      <%= f.submit 'Save', class: 'btn btn-primary' %>
+      <%= link_to t(:'helpers.action.cancel'), main_app.root_path, class: 'btn btn-link' %>
+    </div>
+  </div>
+<% end %>
+

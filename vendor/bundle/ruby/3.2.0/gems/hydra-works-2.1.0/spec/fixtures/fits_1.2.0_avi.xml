@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/fits/fits_output http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd" version="1.2.0" timestamp="4/4/18 4:12 PM">
+  <identification status="CONFLICT">
+    <identity format="AVI" mimetype="video/avi" toolname="FITS" toolversion="1.2.0">
+      <tool toolname="MediaInfo" toolversion="0.7.75" />
+    </identity>
+    <identity format="Audio/Video Interleaved Format" mimetype="video/x-msvideo" toolname="FITS" toolversion="1.2.0">
+      <tool toolname="Droid" toolversion="6.3" />
+      <tool toolname="file utility" toolversion="5.31" />
+      <tool toolname="ffident" toolversion="0.2" />
+      <externalIdentifier toolname="Droid" toolversion="6.3" type="puid">fmt/5</externalIdentifier>
+    </identity>
+  </identification>
+  <fileinfo>
+    <filepath toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">/Users/cjcolvar/Documents/Code/samvera/hydra-works/spec/fixtures/countdown.avi</filepath>
+    <filename toolname="MediaInfo" toolversion="0.7.75">countdown.avi</filename>
+    <size toolname="MediaInfo" toolversion="0.7.75">723678</size>
+    <md5checksum toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">d43ffafa098925dae10feeca46dc9a87</md5checksum>
+    <fslastmodified toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">1522855873000</fslastmodified>
+  </fileinfo>
+  <filestatus />
+  <metadata>
+    <video>
+      <location toolname="MediaInfo" toolversion="0.7.75" status="SINGLE_RESULT">/Users/cjcolvar/Documents/Code/samvera/hydra-works/spec/fixtures/countdown.avi</location>
+      <mimeType toolname="MediaInfo" toolversion="0.7.75" status="SINGLE_RESULT">video/avi</mimeType>
+      <format toolname="MediaInfo" toolversion="0.7.75" status="SINGLE_RESULT">AVI</format>
+      <duration toolname="MediaInfo" toolversion="0.7.75" status="SINGLE_RESULT">14148</duration>
+      <bitRate toolname="MediaInfo" toolversion="0.7.75" status="SINGLE_RESULT">409204</bitRate>
+      <dateModified toolname="MediaInfo" toolversion="0.7.75" status="SINGLE_RESULT">UTC 2018-04-04 15:31:13</dateModified>
+      <track type="video" id="0" toolname="MediaInfo" toolversion="0.7.75" status="SINGLE_RESULT">
+        <videoDataEncoding>CRAM</videoDataEncoding>
+        <codecId>CRAM</codecId>
+        <codecCC>CRAM</codecCC>
+        <codecName>CRAM</codecName>
+        <codecInfo>Microsoft Video 1</codecInfo>
+        <compression>Unknown</compression>
+        <byteOrder>Unknown</byteOrder>
+        <bitDepth>8 bits</bitDepth>
+        <bitRate>313826</bitRate>
+        <duration>14100</duration>
+        <delay>0</delay>
+        <trackSize>553118</trackSize>
+        <width>356 pixels</width>
+        <height>264 pixels</height>
+        <frameRate>10.000</frameRate>
+        <frameCount>141</frameCount>
+        <aspectRatio>4:3</aspectRatio>
+      </track>
+      <track type="audio" id="1" toolname="MediaInfo" toolversion="0.7.75" status="SINGLE_RESULT">
+        <audioDataEncoding>PCM</audioDataEncoding>
+        <codecId>1</codecId>
+        <codecFamily>PCM</codecFamily>
+        <compression>none</compression>
+        <bitRate>88200</bitRate>
+        <bitRateMode>Constant</bitRateMode>
+        <bitDepth>8 bits</bitDepth>
+        <duration>14148</duration>
+        <delay>0</delay>
+        <trackSize>155980</trackSize>
+        <samplingRate>11025</samplingRate>
+        <numSamples>155982</numSamples>
+        <channels>1</channels>
+        <byteOrder>Little</byteOrder>
+      </track>
+    </video>
+  </metadata>
+  <statistics fitsExecutionTime="692">
+    <tool toolname="MediaInfo" toolversion="0.7.75" executionTime="662" />
+    <tool toolname="OIS Audio Information" toolversion="0.1" status="did not run" />
+    <tool toolname="ADL Tool" toolversion="0.1" status="did not run" />
+    <tool toolname="VTT Tool" toolversion="0.1" status="did not run" />
+    <tool toolname="Droid" toolversion="6.3" executionTime="273" />
+    <tool toolname="Jhove" toolversion="1.16" status="did not run" />
+    <tool toolname="file utility" toolversion="5.31" executionTime="644" />
+    <tool toolname="Exiftool" toolversion="10.00" status="did not run" />
+    <tool toolname="NLNZ Metadata Extractor" toolversion="3.6GA" status="did not run" />
+    <tool toolname="OIS File Information" toolversion="0.2" executionTime="80" />
+    <tool toolname="OIS XML Metadata" toolversion="0.2" status="did not run" />
+    <tool toolname="ffident" toolversion="0.2" executionTime="555" />
+    <tool toolname="Tika" toolversion="1.10" status="did not run" />
+  </statistics>
+</fits>
+

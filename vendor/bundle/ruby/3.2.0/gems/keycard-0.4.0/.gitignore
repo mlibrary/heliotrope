@@ -1,0 +1,22 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/docs/_build/
+/docs/_yard/
+/pkg/
+/spec/reports/
+/tmp/
+
+Gemfile.lock
+
+# rspec failure tracking
+.rspec_status
+
+# Keycard database files
+/db/*.sqlite
+/db/keycard.log
+/db/keycard.yml
+
+keycard*.gem

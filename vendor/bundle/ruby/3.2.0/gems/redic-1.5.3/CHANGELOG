@@ -1,0 +1,43 @@
+1.5.3
+
+- Fix compatibility with older Ruby versions.
+
+1.5.2
+
+- Prevent concurrent when connecting.
+
+1.5.1
+
+- Allow timeout to be changed.
+
+1.5.0
+
+- Raise runtime errors when using `call!`.
+
+1.4.1
+
+- Reconnect only if URLs differ.
+
+1.4.0
+
+- Close connections with Redic#quit.
+
+1.3.0
+
+- Improve support for multithreaded environments.
+
+1.2.0
+
+- Add Redic#configure.
+
+1.1.1
+
+- Redic can now connect to sentinels.
+
+1.1.0
+
+- Redic is now compatible with all rubies.
+
+1.0.0
+
+- Add a configurable timeout.

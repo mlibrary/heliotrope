@@ -1,0 +1,21 @@
+.modal-content {
+  @extend .clearfix;
+
+  .facet-pagination.top {
+  	display: none;
+  }
+
+  .page-sidebar {
+    display: none;
+  }
+
+  .blacklight-modal-close {
+    display: block;
+  }
+}
+
+// app/views/catalog/facet.html.erb may be rendered as a modal or a whole page.
+// When it's a whole page, don't show the close button.
+.blacklight-modal-close {
+	display: none;
+}

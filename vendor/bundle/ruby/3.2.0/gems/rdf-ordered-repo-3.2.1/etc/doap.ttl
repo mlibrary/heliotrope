@@ -1,0 +1,29 @@
+@base         <https://rubygems.org/gems/rdf-ordered-repo> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc:   <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix ex:   <http://example.org/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<> a doap:Project ;
+  doap:name          "RDF::OrderedRepo" ;
+  doap:homepage      <https://github.com/ruby-rdf/rdf-ordered-repo> ;
+  doap:license       <https://unlicense.org/1.0/> ;
+  doap:shortdesc     "An order-preserving repository for RDF.rb."@en ;
+  doap:description   "An in-memory implementation of RDF::Repository using native Ruby Hashes having insert-order preserving properties for the Ruby RDF.rb library suite."@en ;
+  doap:created       "2020-09-22"^^xsd:date;
+  doap:programming-language "Ruby" ;
+  doap:implements    <http://www.w3.org/TR/rdf11-concepts/> ;
+  doap:category      <http://dbpedia.org/resource/Resource_Description_Framework>,
+                     <http://dbpedia.org/resource/Ruby_(programming_language)> ;
+  doap:download-page <> ;
+  doap:mailing-list  <https://lists.w3.org/Archives/Public/public-rdf-ruby/> ;
+  doap:bug-database  <https://github.com/ruby-rdf/rdf-ordered-repo/issues> ;
+  doap:blog          <https://greggkellogg.net/> ;
+  doap:developer     <https://greggkellogg.net/foaf#me> ;
+  doap:maintainer    <https://greggkellogg.net/foaf#me> ;
+  doap:documenter    <https://greggkellogg.net/foaf#me> ;
+  foaf:maker         <https://greggkellogg.net/foaf#me> ;
+  dc:creator         <https://greggkellogg.net/foaf#me> .

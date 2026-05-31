@@ -1,0 +1,14 @@
+inherit_gem:
+  bixby: bixby_default.yml
+
+inherit_from: .rubocop_todo.yml
+
+
+AllCops:
+  TargetRubyVersion: 2.4
+  DisplayCopNames: true
+  Exclude:
+    - 'active_encode.gemspec'
+    - 'vendor/**/*'
+  Include:
+    - '**/Rakefile'

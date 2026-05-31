@@ -1,0 +1,80 @@
+version: 2.1
+orbs:
+  samvera: samvera/circleci-orb@0.3.2
+jobs:
+  bundle_and_test:
+    parameters:
+      ruby_version:
+        type: string
+        default: 2.6.3
+      rails_version:
+        type: string
+        default: 5.2.3
+      bundler_version:
+        type: string
+        default: 2.0.2
+      ffmpeg_version:
+        type: string
+        default: 4.1.4
+    executor:
+      name: 'samvera/ruby'
+      ruby_version: << parameters.ruby_version >>
+    environment:
+      ENGINE_CART_RAILS_OPTIONS: --skip-git --skip-bundle --skip-listen --skip-spring --skip-yarn --skip-keeps --skip-coffee --skip-puma --skip-test
+      RAILS_VERSION: << parameters.rails_version >>
+      FFMPEG_PATH: /tmp/ffmpeg
+    working_directory: ~/project
+    steps:
+      - run: 
+          command: |
+            sudo apt-get install libmms0
+            sudo wget -P /tmp/ https://mediaarea.net/download/binary/libzen0/0.4.37/libzen0v5_0.4.37-1_amd64.Debian_9.0.deb
+            sudo wget -P /tmp/ https://mediaarea.net/download/binary/libmediainfo0/19.04/libmediainfo0v5_19.04-1_amd64.Debian_9.0.deb
+            sudo wget -P /tmp/ https://mediaarea.net/download/binary/mediainfo/19.04/mediainfo_19.04-1_amd64.Debian_9.0.deb
+            sudo dpkg -i /tmp/libzen0v5_0.4.37-1_amd64.Debian_9.0.deb /tmp/libmediainfo0v5_19.04-1_amd64.Debian_9.0.deb /tmp/mediainfo_19.04-1_amd64.Debian_9.0.deb
+
+      - restore_cache:
+          keys:
+            - v1-ffmpeg-<< parameters.ffmpeg_version >>
+
+      - run: curl https://www.johnvansickle.com/ffmpeg/old-releases/ffmpeg-<< parameters.ffmpeg_version >>-amd64-static.tar.xz | tar xJ -C /tmp/ --strip-components=1
+
+      - save_cache:
+          key: v1-ffmpeg-<< parameters.ffmpeg_version >>`
+          paths:
+            - /tmp/ffmpeg
+
+      - samvera/cached_checkout
+
+      - samvera/bundle:
+          ruby_version: << parameters.ruby_version >>
+          bundler_version: << parameters.bundler_version >>
+
+      - samvera/engine_cart_generate:
+          cache_key: v2-internal-test-app-{{ checksum "active_encode.gemspec" }}-{{ checksum "spec/test_app_templates/lib/generators/test_app_generator.rb" }}-<< parameters.rails_version >>-<< parameters.ruby_version >>
+
+      - samvera/bundle:
+          ruby_version: << parameters.ruby_version >>
+          bundler_version: << parameters.bundler_version >>
+
+      - samvera/rubocop
+
+      - samvera/parallel_rspec
+
+workflows:
+  ci:
+    jobs:
+      - bundle_and_test:
+          name: "ruby2-6_rails5-2"
+          ruby_version: "2.6.3"
+      - bundle_and_test:
+          name: "ruby2-5_rails5-2"
+          ruby_version: "2.5.5"
+      - bundle_and_test:
+          name: "ruby2-6_rails5-1"
+          ruby_version: "2.6.3"
+          rails_version: "5.1.7"
+      - bundle_and_test:
+          name: "ruby2-5_rails5-1"
+          ruby_version: "2.5.5"
+          rails_version: "5.1.7"

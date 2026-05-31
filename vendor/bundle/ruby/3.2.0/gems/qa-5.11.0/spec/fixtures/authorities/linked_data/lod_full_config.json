@@ -1,0 +1,185 @@
+{
+  "QA_CONFIG_VERSION": "2.2",
+  "service_uri": "http://ld4l.org/ld4l_services/cache",
+  "prefixes": {
+    "schema": "http://www.w3.org/2000/01/rdf-schema#",
+    "skos": "http://www.w3.org/2004/02/skos/core#"
+  },
+  "term": {
+    "url": {
+      "@context": "http://www.w3.org/ns/hydra/context.jsonld",
+      "@type":    "IriTemplate",
+      "template": "http://localhost/test_default/term/{subauth}/{term_id}?{?param1}&{?param2}&{?lang}",
+      "variableRepresentation": "BasicRepresentation",
+      "mapping": [
+        {
+          "@type":    "IriTemplateMapping",
+          "variable": "term_id",
+          "property": "hydra:freetextQuery",
+          "required": true
+        },
+        {
+          "@type":    "IriTemplateMapping",
+          "variable": "subauth",
+          "property": "hydra:freetextQuery",
+          "required": false,
+          "default": "term_sub2_name"
+        },
+        {
+          "@type": "IriTemplateMapping",
+          "variable": "param1",
+          "property": "hydra:freetextQuery",
+          "required": false,
+          "default": "alpha"
+        },
+        {
+          "@type": "IriTemplateMapping",
+          "variable": "param2",
+          "property": "hydra:freetextQuery",
+          "required": false,
+          "default": "beta"
+        },
+        {
+          "@type": "IriTemplateMapping",
+          "variable": "lang",
+          "property": "hydra:freetextQuery",
+          "required": false,
+          "default": "de"
+        }
+      ]
+    },
+    "qa_replacement_patterns": {
+      "term_id": "term_id",
+      "subauth": "subauth",
+      "lang": "lang"
+    },
+    "term_id": "ID",
+    "language": [ "es" ],
+    "results": {
+      "id_predicate":       "http://purl.org/dc/terms/identifier",
+      "label_predicate":    "http://www.w3.org/2004/02/skos/core#prefLabel",
+      "altlabel_predicate": "http://www.w3.org/2004/02/skos/core#altLabel",
+      "broader_predicate":  "http://www.w3.org/2004/02/skos/core#broader",
+      "narrower_predicate": "http://www.w3.org/2004/02/skos/core#narrower",
+      "sameas_predicate":   "http://www.w3.org/2004/02/skos/core#exactMatch"
+    },
+    "subauthorities": {
+      "term_sub1_key": "term_sub1_name",
+      "term_sub2_key": "term_sub2_name",
+      "term_sub3_key": "term_sub3_name"
+    }
+  },
+  "search": {
+    "url": {
+      "@context": "http://www.w3.org/ns/hydra/context.jsonld",
+      "@type": "IriTemplate",
+      "template": "http://localhost/test_default/search?{?subauth}&{?query}&{?param1}&{?param2}&{?lang}",
+      "variableRepresentation": "BasicRepresentation",
+      "mapping": [
+        {
+          "@type": "IriTemplateMapping",
+          "variable": "query",
+          "property": "hydra:freetextQuery",
+          "required": true
+        },
+        {
+          "@type": "IriTemplateMapping",
+          "variable": "subauth",
+          "property": "hydra:freetextQuery",
+          "required": false,
+          "default": "search_sub1_name"
+        },
+        {
+          "@type": "IriTemplateMapping",
+          "variable": "param1",
+          "property": "hydra:freetextQuery",
+          "required": false,
+          "default": "delta"
+        },
+        {
+          "@type": "IriTemplateMapping",
+          "variable": "param2",
+          "property": "hydra:freetextQuery",
+          "required": false,
+          "default": "echo"
+        },
+        {
+          "@type": "IriTemplateMapping",
+          "variable": "lang",
+          "property": "hydra:freetextQuery",
+          "required": false,
+          "default": "fr"
+        }
+      ]
+    },
+    "qa_replacement_patterns": {
+      "query": "query",
+      "subauth": "subauth",
+      "lang": "lang",
+      "start_record": "startRecord",
+      "requested_records": "maxRecords"
+    },
+    "language": [ "en", "fr", "de" ],
+    "total_count_ldpath": "vivo:count",
+    "results": {
+      "id_predicate":       "http://purl.org/dc/terms/identifier",
+      "label_predicate":    "http://www.w3.org/2004/02/skos/core#prefLabel",
+      "altlabel_predicate": "http://www.w3.org/2004/02/skos/core#altLabel",
+      "sort_predicate":     "http://www.w3.org/2004/02/skos/core#prefLabel"
+    },
+    "context": {
+      "groups": {
+        "dates": {
+          "group_label_i18n": "qa.linked_data.authority.locnames_ld4l_cache.dates",
+          "group_label_default": "Dates"
+        },
+        "hierarchy": {
+          "group_label_i18n": "qa.linked_data.authority.locgenres_ld4l_cache.hierarchy",
+          "group_label_default": "Hierarchy"
+        }
+      },
+      "properties": [
+        {
+          "property_label_i18n": "qa.linked_data.authority.locgenres_ld4l_cache.authoritative_label",
+          "property_label_default": "Authoritative Label",
+          "ldpath": "madsrdf:authoritativeLabel",
+          "selectable": true,
+          "drillable": false
+        },
+        {
+          "group_id": "dates",
+          "property_label_i18n": "qa.linked_data.authority.locnames_ld4l_cache.birth_date",
+          "property_label_default": "Birth",
+          "ldpath": "madsrdf:identifiesRWO/madsrdf:birthDate/schema:label",
+          "selectable": false,
+          "drillable": false
+        },
+        {
+          "group_id": "hierarchy",
+          "property_label_i18n": "qa.linked_data.authority.locgenres_ld4l_cache.narrower",
+          "property_label_default": "Narrower",
+          "ldpath": "skos:narrower :: xsd:string",
+          "selectable": true,
+          "drillable": true,
+          "expansion_label_ldpath": "skos:prefLabel ::xsd:string",
+          "expansion_id_ldpath": "loc:lccn ::xsd:string"
+        },
+        {
+          "group_id": "hierarchy",
+          "property_label_i18n": "qa.linked_data.authority.locgenres_ld4l_cache.broader",
+          "property_label_default": "Broader",
+          "ldpath": "skos:broader :: xsd:string",
+          "selectable": true,
+          "drillable": true,
+          "expansion_label_ldpath": "skos:prefLabel ::xsd:string",
+          "expansion_id_ldpath": "loc:lccn ::xsd:string"
+        }
+      ]
+    },
+    "subauthorities": {
+      "search_sub1_key": "search_sub1_name",
+      "search_sub2_key": "search_sub2_name",
+      "search_sub3_key": "search_sub3_name"
+    }
+  }
+}

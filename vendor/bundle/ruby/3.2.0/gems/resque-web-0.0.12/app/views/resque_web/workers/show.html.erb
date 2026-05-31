@@ -1,0 +1,38 @@
+  <h1 class="wi"><%= @workers.size %> Workers</h1>
+  <p class="intro">The workers listed below are all registered as active on your system.</p>
+
+  <table class="table table-bordered workers">
+    <tr>
+      <th>&nbsp;</th>
+      <th>Where</th>
+      <th>Queues</th>
+      <th>Processing</th>
+    </tr>
+    <% @workers.each do |worker| %>
+    <tr class="<% worker.state %>">
+      <td class="icon"><%= image_tag "resque_web/#{worker.state}.png", :alt => worker.state, :title => worker.state %></td>
+
+      <% host, pid, queues = worker.to_s.split(':') %>
+      <td class="where"><%= host %>:<%= pid %></td>
+      <td class="queues">
+        <% queues.split(',').each do |queue_name| %>
+        <%= link_to queue_name, queue_path(queue_name), :class => 'label label-info' %>
+        <% end %>
+      </td>
+      <td class="process">
+        <% data = worker.processing || {} %>
+        <% if data['queue'] %>
+          <code><%= data['payload']['class'] %></code>
+          <small><%= data['run_at'] %></small>
+        <% else %>
+          <span class="waiting">Waiting for a job...</span>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+    <% if @workers.empty? %>
+    <tr>
+      <td colspan="4" class="no-data">There are no registered workers</td>
+    </tr>
+    <% end %>
+  </table>

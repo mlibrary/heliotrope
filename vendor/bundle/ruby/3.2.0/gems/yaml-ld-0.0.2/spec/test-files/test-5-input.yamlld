@@ -1,0 +1,10 @@
+---
+"@context":
+  foo: http://manu.sporny.org/
+  foaf: http://xmlns.com/foaf/0.1/
+"@id": foo:#me
+"@type": foaf:Person
+foaf:name: Manu Sporny
+foaf:knows:
+  "@type": foaf:Person
+  foaf:name: Gregg Kellogg

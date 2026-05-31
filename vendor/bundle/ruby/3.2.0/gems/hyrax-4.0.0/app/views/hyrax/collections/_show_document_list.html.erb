@@ -1,0 +1,14 @@
+<table class="table table-striped">
+  <caption class="sr-only"><%= t('hyrax.dashboard.my.heading.caption') %></caption>
+  <thead>
+  <tr>
+    <th>&nbsp;</th>
+    <th><%= t("hyrax.dashboard.my.heading.title") %></th>
+    <th><%= t("hyrax.dashboard.my.heading.date_uploaded") %></th>
+    <th><%= t("hyrax.dashboard.my.heading.visibility") %></th>
+  </tr>
+  </thead>
+  <tbody>
+    <%= render partial: 'show_document_list_row', collection: documents, as: :document %>
+  </tbody>
+</table>

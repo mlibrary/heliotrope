@@ -1,0 +1,10 @@
+inherit_from: .rubocop_todo.yml
+
+inherit_gem:
+  bixby: bixby_default.yml
+
+AllCops:
+  TargetRubyVersion: 2.6
+  Exclude:
+    - spec/lib/hydra/file_characterization_spec.rb
+    - vendor/bundle/**/*

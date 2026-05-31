@@ -1,0 +1,9 @@
+Metrics/ClassLength:
+  Exclude:
+    - 'lib/valkyrie/persistence/fedora/persister.rb'
+    - 'lib/valkyrie/persistence/fedora/query_service.rb'
+    - 'lib/valkyrie/persistence/postgres/query_service.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'lib/valkyrie/persistence/fedora/persister.rb'

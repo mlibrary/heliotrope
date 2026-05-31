@@ -1,0 +1,36 @@
+.dropzone {
+  border: 1px dashed $gray-light;
+  font-weight: bold;
+  height: $input-btn-padding-y * 5;
+  line-height: $input-btn-padding-y * 5;
+  text-align: center;
+  transition: all 0.3s ease-out;
+
+  &.in {
+    background-color: lighten($gray-base, 98%);
+    font-size: larger;
+    height: $input-btn-padding-y * 20;
+    line-height: $input-btn-padding-y * 20;
+  }
+
+  &.hover {
+    background-color: $gray-lighter;
+    transition: background-color 0.1s ease-out;
+  }
+}
+
+.files .name span { word-break: break-all; }
+
+.add-batch-work-file-wrapper {
+  .add-batch-work-file-row {
+    padding-bottom: 10px;
+  }
+
+  .resource_type_dropdown {
+    margin-bottom: 10px;
+  }
+
+  .padding-bottom {
+    padding-bottom: 10px;
+  }
+}

@@ -1,0 +1,13 @@
+  <div class="row">
+    <div class="col-md-12">
+      <fieldset id="representative-media">
+        <legend>
+          <%= t("hyrax.base.form_representative.legend_html") %>
+        </legend>
+        <div class="form-group">
+          <span class="form-text"><%= t("hyrax.base.form_representative.help_html") %></span>
+          <%= f.select :representative_id, form_file_set_select_for(parent: @form), {}, { class: 'form-control' } %>
+        </div>
+      </fieldset>
+    </div>
+  </div>

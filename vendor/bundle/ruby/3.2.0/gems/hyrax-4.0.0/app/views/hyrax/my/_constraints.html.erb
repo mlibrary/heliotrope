@@ -1,0 +1,13 @@
+<% if query_has_constraints? %>
+  <div id="appliedParams" class="clearfix constraints-container">
+    <div class="float-right">
+      <%= link_to start_over_path,
+          class: "catalog_startOverLink btn btn-sm btn-text", id: "startOverLink" do %>
+          <span class="btn btn-sm btn-danger start-over"><span class="fa fa-times"></span></span>
+          <%= t('blacklight.search.start_over') %>
+      <% end %>
+    </div>
+    <span class="constraints-label"><%= t('blacklight.search.filters.title') %></span>
+    <%= render_constraints(params.merge(route_set: hyrax)) %>
+  </div>
+<% end %>

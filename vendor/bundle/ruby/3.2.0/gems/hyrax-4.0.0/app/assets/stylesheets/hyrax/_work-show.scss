@@ -1,0 +1,135 @@
+.related-files {
+  .thumbnail {
+    width: $related-files-thumbnail-width;
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin-right: auto;
+      margin-left: auto;
+    }
+  }
+}
+
+.no-preview,
+.social-media {
+  padding: $card-img-overlay-padding;
+}
+
+header > h1 .badge {
+  font-size: $font-size-base;
+  vertical-align: middle;
+}
+
+.citations {
+  padding: $card-img-overlay-padding;
+}
+
+.ensure-wrapped {
+  word-break: break-all;
+}
+
+.relationships,
+.attributes {
+  tbody th {
+    width: 20%;
+  }
+  ul.tabular {
+    padding-left: 0px;
+  }
+}
+
+ul.tabular {
+  list-style: none;
+}
+
+.work-show {
+  dt,
+  dd {
+    padding: 2px;
+  }
+  dd {
+    margin-left: 6px;
+  }
+}
+
+.work-type-tag {
+  color: #808080;
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: $input-btn-padding-y;
+  margin-top: $input-btn-padding-y * 2;
+}
+
+.work-type {
+  margin-bottom: 18px;
+  margin-top: -8px;
+
+  .card-body {
+    .work_description,
+    li.attribute {
+      word-break: break-word;
+    }
+  }
+
+  // Button row which sits below the title, and above panel content for a page
+  .button-row-top-two-column {
+    margin-bottom: $btn-block-spacing-y;
+    margin-top: $btn-block-spacing-y;
+
+    @media screen and (max-width: 767px) {
+      > div {
+        text-align: center;
+
+        &:first-child {
+          padding-bottom: $btn-padding-y-sm;
+        }
+      }
+    }
+  }
+}
+
+.work-title-wrapper {
+  margin-bottom: $input-btn-padding-y * 2;
+
+  .title-with-badges {
+    align-items: center;
+    display: flex;
+
+    h1,
+    h2 {
+      margin: 0;
+    }
+
+    .badge {
+      margin-left: 5px;
+
+      &:first-of-type {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+.panel-workflow {
+  background: #fff;
+  border-color: #e0e0e0;
+
+  .card-header {
+    background-color: #e6ab5f;
+    color: #ffffff;
+
+    a {
+      color: #ffffff;
+    }
+  }
+
+  .card-body {
+    background-color: #f2f1eb;
+  }
+}
+
+.workflow-actions {
+  background-color: #f8f8f8;
+}

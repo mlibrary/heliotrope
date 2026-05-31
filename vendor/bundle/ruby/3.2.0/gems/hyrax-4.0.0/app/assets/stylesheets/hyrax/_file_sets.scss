@@ -1,0 +1,77 @@
+@import '../fileupload/jquery.fileupload-ui';
+
+button.close {
+    display: block;
+}
+
+.related-files {
+height: 100px;
+overflow-x: auto;
+}
+
+label.error { float: left; color: red; padding-left: .5em; vertical-align: top; }
+
+.fileHeight {
+  max-height: 8em;
+}
+
+.scrollx {
+  overflow-x: auto;
+}
+
+.scrolly {
+  overflow-y: visible;
+}
+
+h2 small {
+   color: red;
+}
+
+.status {
+   color: green;
+   padding:5px 5px 5px;
+}
+
+.loading {
+   background: white image_url('loading.gif') center bottom no-repeat;
+}
+
+h1.visibility span.badge {
+  font-size: 30%;
+  vertical-align: middle;
+}
+
+table.files td.preview img {
+    height: 50px;
+}
+
+.edit_file_set_previous_version {
+  margin-top: 3em;
+}
+
+input.versioning-files-input {
+  width: 250px;
+}
+
+div.versioning-files-input {
+  text-align: right;
+}
+
+div.versioning-files-row {
+  border-top: solid 1px #dddddd;
+  padding-top: 10px;
+}
+
+div.versioning-files-progress {
+  margin-top: -25px;
+}
+
+button.versioning-files-remove,
+button.versioning-files-remove:hover {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: $brand-danger;
+  font-weight: normal;
+  text-decoration: underline;
+}
+

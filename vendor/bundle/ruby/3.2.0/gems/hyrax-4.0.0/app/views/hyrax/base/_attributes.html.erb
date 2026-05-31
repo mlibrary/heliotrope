@@ -1,0 +1,16 @@
+<table class="table table-striped <%= dom_class(presenter) %> attributes" <%= presenter.microdata_type_to_html %>>
+  <caption class="table-heading"><h2>t("hyrax.base.attributes.table_heading_attributes")</h2></caption>
+  <thead>
+    <tr><th>t("hyrax.base.attributes.table_attribute_name")</th><th>t("hyrax.base.attributes.table_values")</th></tr>
+  </thead>
+  <tbody>
+    <%= render 'attribute_rows', presenter: presenter %>
+    <%= presenter.attribute_to_html(:permission_badge, label: t('hyrax.base.attributes.visibility')) %>
+    <%= presenter.attribute_to_html(:embargo_release_date, render_as: :date) %>
+    <%= presenter.attribute_to_html(:lease_expiration_date, render_as: :date) %>
+    <%= presenter.attribute_to_html(:license, render_as: :license) %>
+    <% if defined?(presenter.member_of_collection_presenters) && presenter.member_of_collection_presenters.size > 0 %>
+      <%= render 'member_of_collections', presenter: presenter %>
+    <% end %>
+  </tbody>
+</table>

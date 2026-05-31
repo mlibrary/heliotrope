@@ -1,0 +1,32 @@
+<% if multiple_failure_queues? && !params[:queue] %>
+  <h1>All Failure Queues</h1>
+<% else %>
+  <h1>Failed Jobs <%= "on '#{params[:queue]}'" if params[:queue] %> <%= "with class '#{params[:class]}'" if params[:class] %></h1>
+<% end %>
+
+<% unless failure_size.zero? %>
+  <%= form_tag(destroy_all_failures_path(queue: params[:queue]), method: :delete) do %>
+    <%= submit_tag "Clear #{failure_queue_name} Jobs", class: 'btn btn-danger', data: { confirm: "Are you sure you want to clear ALL #{failure_queue_name.downcase} jobs?" } %>
+    <% if failure_size > failure_per_page %>
+      <%= link_to "Last page &raquo;".html_safe, { start: (failure_size - failure_per_page) }, class: 'btn' %>
+    <% end %>
+  <% end %>
+  <%= form_tag(retry_all_failures_path(queue: params[:queue]), method: :put) do %>
+    <%= submit_tag "Retry #{failure_queue_name} Jobs", class: 'btn', data: { confirm: "Are you sure you want to retry ALL #{failure_queue_name.downcase} jobs?" } %>
+  <% end %>
+<% end %>
+
+<% if multiple_failure_queues? && !params[:queue] %>
+  <p class="sub"><b><%= Resque::Failure.queues.size %></b> failure queues total</sub>
+  <%= render partial: 'overview' %>
+<% else %>
+  <p class="sub">Showing <%= failure_start_at %> to <%= failure_end_at %> of <b><%= failure_size %></b> jobs</p>
+
+  <ul class="failed">
+    <% each_failure do |id, job| %>
+      <%= render partial: 'failed_job', locals: { id: id, job: job } %>
+    <% end %>
+  </ul>
+
+  <%= pagination(start: failure_start_at, total: failure_size) unless params[:class] %>
+<% end %>

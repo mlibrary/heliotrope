@@ -1,0 +1,296 @@
+aa:
+ab:
+ae:
+af:
+ak:
+am:
+an:
+ar:
+  direction: rtl
+  plural_rule_names:
+    - zero
+    - one
+    - two
+    - few
+    - many
+    - other
+as:
+av:
+ay:
+az:
+  plural_rule_names:
+    - other
+ba:
+be:
+bg:
+bh:
+bi:
+bm:
+bn:
+bo:
+br:
+bs:
+  plural_rule_names:
+    - one
+    - few
+    - many
+    - other
+ca:
+ce:
+ch:
+co:
+cr:
+cs:
+  plural_rule_names:
+    - one
+    - few
+    - other
+cu:
+cv:
+cy:
+  plural_rule_names:
+    - one
+    - two
+    - many
+    - other
+da:
+de:
+dv:
+dz:
+ee:
+el:
+en:
+eo:
+es:
+et:
+eu:
+fa:
+  direction: rtl
+  plural_rule_names:
+    - other
+ff:
+fi:
+fj:
+fo:
+fr:
+fy:
+ga:
+gd:
+gl:
+gn:
+gu:
+gv:
+ha:
+he:
+  direction: rtl
+hi:
+ho:
+hr:
+  plural_rule_names:
+    - one
+    - few
+    - many
+    - other
+ht:
+hu:
+  plural_rule_names:
+    - other
+hy:
+hz:
+ia:
+id:
+  plural_rule_names:
+    - other
+ie:
+ig:
+ii:
+ik:
+io:
+is:
+it:
+iu:
+ja:
+  plural_rule_names:
+    - other
+jv:
+ka:
+kg:
+ki:
+kj:
+kk:
+kl:
+km:
+kn:
+  plural_rule_names:
+    - other
+ko:
+  plural_rule_names:
+    - other
+kr:
+ks:
+ku:
+kv:
+kw:
+ky:
+la:
+lb:
+lg:
+li:
+ln:
+lo:
+  plural_rule_names:
+    - zero
+    - one
+    - two
+    - few
+    - many
+    - other
+lt:
+  plural_rule_names:
+    - one
+    - few
+    - other
+lu:
+lv:
+  plural_rule_names:
+    - zero
+    - one
+    - other
+mg:
+mh:
+mi:
+mk:
+ml:
+mn:
+mr:
+ms:
+ms:
+mt:
+my:
+  plural_rule_names:
+    - one
+    - few
+    - other
+    - other
+na:
+nb:
+nd:
+ne:
+ng:
+nl:
+nn:
+no:
+nr:
+nv:
+ny:
+oc:
+oj:
+om:
+or:
+os:
+pa:
+pi:
+pl:
+  plural_rule_names:
+    - one
+    - few
+    - other
+ps:
+pt:
+qu:
+rm:
+  plural_rule_names:
+    - zero
+    - one
+    - two
+    - few
+    - many
+    - other
+rn:
+ro:
+  plural_rule_names:
+    - one
+    - few
+    - other
+ru:
+  plural_rule_names:
+    - one
+    - few
+    - many
+    - other
+rw:
+sa:
+sc:
+sd:
+se:
+sg:
+si:
+sk:
+  plural_rule_names:
+    - one
+    - few
+    - other
+sl:
+  plural_rule_names:
+    - one
+    - two
+    - few
+    - other
+sm:
+sn:
+so:
+sq:
+sr:
+  plural_rule_names:
+    - one
+    - few
+    - many
+    - other
+ss:
+st:
+su:
+sv:
+sw:
+ta:
+te:
+tg:
+th:
+  plural_rule_names:
+    - other
+ti:
+tk:
+tl:
+tn:
+to:
+tr:
+  plural_rule_names:
+    - other
+ts:
+tt:
+tw:
+ty:
+ug:
+uk:
+  plural_rule_names:
+    - one
+    - few
+    - many
+    - other
+ur:
+  direction: rtl
+uz:
+ve:
+vo:
+vi:
+  plural_rule_names:
+    - other
+wa:
+wo:
+xh:
+yi:
+yo:
+za:
+zh:
+  plural_rule_names:
+    - other
+zu:

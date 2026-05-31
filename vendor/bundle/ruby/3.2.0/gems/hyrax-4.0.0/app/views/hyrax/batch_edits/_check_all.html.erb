@@ -1,0 +1,16 @@
+<div class="dropdown batch_document_selector_all">
+  <label class="centerizer">
+    <%= check_box_tag 'check_all', 'yes', @all_checked, disabled: @disable_select_all %>
+    <span class="batch-checkbox-label-text">
+      <%= t("hyrax.dashboard.my.action.select") %>
+    </span>
+    <% if !@disable_select_all %>
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <span class="sr-only"><%= t('.select_to_access_selection_options') %></span>
+      </a>
+      <ul class="dropdown-menu">
+        <%= render "batch_edits_actions" %>
+      </ul>
+    <% end %>
+  </label>
+</div>

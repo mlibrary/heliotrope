@@ -1,0 +1,6 @@
+<%= render Blacklight::System::ModalComponent.new do |component| %>
+  <% component.title { t('blacklight.sms.form.title') } %>
+
+  <%= render partial: '/shared/flash_msg' %>
+  <span data-blacklight-modal="close"></span>
+<% end %>

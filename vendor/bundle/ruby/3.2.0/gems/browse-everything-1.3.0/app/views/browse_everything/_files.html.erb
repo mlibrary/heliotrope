@@ -1,0 +1,76 @@
+  <table id="file-list" role="grid" tabindex="-1" title="Choose files to upload from the table below" aria-live="polite">
+    <thead>
+      <tr role="row" tabindex="-1">
+        <th role="columnheader">Name</th>
+        <th role="columnheader">Select All?</th>
+        <th role="columnheader">Size</th>
+        <th role="columnheader">Kind</th>
+        <th role="columnheader">Modified</th>
+      </tr>
+    </thead>
+    <% provider_contents.each_with_index do |file, index| %>
+      <% next if file.nil? %>
+      <% path = browse_everything_engine.contents_path(provider_name, file.id) %>
+      <% parent = params[:parent] %>
+      <% if file.container? || provider.config[:max_upload_file_size].blank? %>
+         <% disabled = false %>
+      <% else %>
+         <% max_size = provider.config[:max_upload_file_size].to_i %>
+         <% max_human_size = file_size_to_human_size(max_size) %>
+         <% disabled = file.size > max_size %>
+      <% end %>
+
+      <tr role="row"
+          tabindex="-1"
+          data-ev-location="<%= file.location %>"
+          data-tt-id="<%= path %>"
+          data-tt-parent-id="<%= parent %>"
+          data-tt-branch="<%= file.container? ? 'true' : 'false' %>">
+
+        <td role="gridcell" title="<%= file.name %>" class="<%=file.container? ? 'ev-container' : 'ev-file'%> ev-file-name">
+          <% if disabled %>
+            <span title="<%= t('browse_everything.size_disabled', max_size: max_human_size) %>"
+                  class="<%=file.container? ? 'folder' : 'file'%>" aria-hidden="true">
+              <%= file.name %>
+            </span>
+            <span class="sr-only"><%= file.container? ? ', folder' : ', file' %> </span>
+          <% else %>
+            <%= link_to browse_everything_engine.contents_path(provider_name, file.id), class: 'ev-link' do %>
+              <span class="<%=file.container? ? 'folder' : 'file'%>" aria-hidden="true"/>
+              <%= file.name %>
+              <span class="sr-only"><%= file.container? ? ', folder' : ', file' %> </span>
+            <% end %>
+          <% end %>
+        </td>
+        <% if file.container? %>
+          <td role="gridcell" class="ev-directory-select">
+            <%= check_box_tag(:select_all, "0", false, class: "ev-select-all") %>
+          </td>
+        <% else %>
+          <td role="gridcell" class="ev-file-select">
+            <%= check_box_tag(file.id.to_s.parameterize, "0", false, class: "ev-select-file") %>
+          </td>
+        <% end %>
+
+        <% if file.size %>
+          <td role="gridcell" class="ev-file-size">
+            <%= file_size_to_human_size(file.size) %>
+          </td>
+        <% else %>
+          <td role="gridcell" class="ev-file-size">Unknown</td>
+        <% end %>
+
+        <td role="gridcell" class="ev-file-kind">
+          <%= file.type %>
+        </td>
+
+        <% if file.mtime %>
+          <td role="gridcell" class="ev-file-date">
+            <%= file.mtime.strftime('%F %R') %>
+          </td>
+        <% else %>
+          <td role="gridcell" class="ev-file-date">Unknown</td>
+        <% end %>
+    </tr>
+  <% end %>
+</table>

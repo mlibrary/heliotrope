@@ -1,0 +1,412 @@
+{
+  "job": {
+    "acceleration_settings": {
+      "mode": "DISABLED"
+    },
+    "acceleration_status": "NOT_APPLICABLE",
+    "arn": "arn:aws:mediaconvert:us-east-1:123456789012:jobs/1625859001514-vvqfwj",
+    "created_at": "2021-07-09T14:30:01.000-05:00",
+    "id": "1625859001514-vvqfwj",
+    "messages": {
+      "info": [
+
+      ],
+      "warning": [
+
+      ]
+    },
+    "priority": 0,
+    "queue": "arn:aws:mediaconvert:us-east-1:123456789012:queues/Default",
+    "role": "arn:aws:iam::123456789012:role/service-role/MediaConvert_Default_Role",
+    "settings": {
+      "inputs": [
+        {
+          "audio_selectors": {
+            "Audio Selector 1": {
+              "default_selection": "DEFAULT"
+            }
+          },
+          "file_input": "s3://input-bucket/test_files/source_file.mp4",
+          "timecode_source": "ZEROBASED",
+          "video_selector": {
+          }
+        }
+      ],
+      "output_groups": [
+        {
+          "output_group_settings": {
+            "hls_group_settings": {
+              "destination": "s3://output-bucket/active-encode-test/output",
+              "min_segment_length": 0,
+              "segment_control": "SEGMENTED_FILES",
+              "segment_length": 10
+            },
+            "type": "HLS_GROUP_SETTINGS"
+          },
+          "outputs": [
+            {
+              "audio_descriptions": [
+                {
+                  "audio_type": 0,
+                  "audio_type_control": "FOLLOW_INPUT",
+                  "codec_settings": {
+                    "aac_settings": {
+                      "audio_description_broadcaster_mix": "NORMAL",
+                      "bitrate": 128000,
+                      "codec_profile": "LC",
+                      "coding_mode": "CODING_MODE_2_0",
+                      "rate_control_mode": "CBR",
+                      "raw_format": "NONE",
+                      "sample_rate": 48000,
+                      "specification": "MPEG4"
+                    },
+                    "codec": "AAC"
+                  },
+                  "language_code_control": "FOLLOW_INPUT"
+                }
+              ],
+              "container_settings": {
+                "container": "M3U8",
+                "m3u_8_settings": {
+                  "audio_frames_per_pes": 4,
+                  "audio_pids": [
+                    482,
+                    483,
+                    484,
+                    485,
+                    486,
+                    487,
+                    488,
+                    489,
+                    490,
+                    491,
+                    492,
+                    493,
+                    494,
+                    495,
+                    496,
+                    497,
+                    498
+                  ],
+                  "pat_interval": 0,
+                  "pcr_control": "PCR_EVERY_PES_PACKET",
+                  "pmt_interval": 0,
+                  "pmt_pid": 480,
+                  "private_metadata_pid": 503,
+                  "program_number": 1,
+                  "scte_35_pid": 500,
+                  "timed_metadata_pid": 502,
+                  "video_pid": 481
+                }
+              },
+              "name_modifier": "-1080",
+              "preset": "System-Avc_16x9_1080p_29_97fps_8500kbps",
+              "video_description": {
+                "afd_signaling": "NONE",
+                "anti_alias": "ENABLED",
+                "codec_settings": {
+                  "codec": "H_264",
+                  "h264_settings": {
+                    "adaptive_quantization": "HIGH",
+                    "bitrate": 8500000,
+                    "codec_level": "LEVEL_4",
+                    "codec_profile": "HIGH",
+                    "entropy_encoding": "CABAC",
+                    "field_encoding": "PAFF",
+                    "flicker_adaptive_quantization": "DISABLED",
+                    "framerate_control": "SPECIFIED",
+                    "framerate_conversion_algorithm": "DUPLICATE_DROP",
+                    "framerate_denominator": 1001,
+                    "framerate_numerator": 30000,
+                    "gop_b_reference": "DISABLED",
+                    "gop_closed_cadence": 1,
+                    "gop_size": 90.0,
+                    "gop_size_units": "FRAMES",
+                    "hrd_buffer_initial_fill_percentage": 90,
+                    "hrd_buffer_size": 12750000,
+                    "interlace_mode": "PROGRESSIVE",
+                    "min_i_interval": 0,
+                    "number_b_frames_between_reference_frames": 1,
+                    "number_reference_frames": 3,
+                    "par_control": "SPECIFIED",
+                    "par_denominator": 1,
+                    "par_numerator": 1,
+                    "quality_tuning_level": "MULTI_PASS_HQ",
+                    "rate_control_mode": "CBR",
+                    "repeat_pps": "DISABLED",
+                    "scene_change_detect": "ENABLED",
+                    "slices": 1,
+                    "slow_pal": "DISABLED",
+                    "spatial_adaptive_quantization": "ENABLED",
+                    "syntax": "DEFAULT",
+                    "telecine": "NONE",
+                    "temporal_adaptive_quantization": "ENABLED",
+                    "unregistered_sei_timecode": "DISABLED"
+                  }
+                },
+                "color_metadata": "INSERT",
+                "drop_frame_timecode": "ENABLED",
+                "height": 1080,
+                "respond_to_afd": "NONE",
+                "scaling_behavior": "DEFAULT",
+                "sharpness": 50,
+                "timecode_insertion": "DISABLED",
+                "video_preprocessors": {
+                  "deinterlacer": {
+                    "algorithm": "INTERPOLATE",
+                    "control": "NORMAL",
+                    "mode": "DEINTERLACE"
+                  }
+                },
+                "width": 1920
+              }
+            },
+            {
+              "audio_descriptions": [
+                {
+                  "audio_type": 0,
+                  "audio_type_control": "FOLLOW_INPUT",
+                  "codec_settings": {
+                    "aac_settings": {
+                      "audio_description_broadcaster_mix": "NORMAL",
+                      "bitrate": 96000,
+                      "codec_profile": "HEV1",
+                      "coding_mode": "CODING_MODE_2_0",
+                      "rate_control_mode": "CBR",
+                      "raw_format": "NONE",
+                      "sample_rate": 48000,
+                      "specification": "MPEG4"
+                    },
+                    "codec": "AAC"
+                  },
+                  "language_code_control": "FOLLOW_INPUT"
+                }
+              ],
+              "container_settings": {
+                "container": "M3U8",
+                "m3u_8_settings": {
+                  "audio_frames_per_pes": 4,
+                  "audio_pids": [
+                    482,
+                    483,
+                    484,
+                    485,
+                    486,
+                    487,
+                    488,
+                    489,
+                    490,
+                    491,
+                    492,
+                    493,
+                    494,
+                    495,
+                    496,
+                    497,
+                    498
+                  ],
+                  "pat_interval": 0,
+                  "pcr_control": "PCR_EVERY_PES_PACKET",
+                  "pmt_interval": 0,
+                  "pmt_pid": 480,
+                  "private_metadata_pid": 503,
+                  "program_number": 1,
+                  "scte_35_pid": 500,
+                  "timed_metadata_pid": 502,
+                  "video_pid": 481
+                }
+              },
+              "name_modifier": "-720",
+              "preset": "System-Avc_16x9_720p_29_97fps_5000kbps",
+              "video_description": {
+                "afd_signaling": "NONE",
+                "anti_alias": "ENABLED",
+                "codec_settings": {
+                  "codec": "H_264",
+                  "h264_settings": {
+                    "adaptive_quantization": "HIGH",
+                    "bitrate": 5000000,
+                    "codec_level": "LEVEL_3_1",
+                    "codec_profile": "MAIN",
+                    "entropy_encoding": "CABAC",
+                    "field_encoding": "PAFF",
+                    "flicker_adaptive_quantization": "DISABLED",
+                    "framerate_control": "SPECIFIED",
+                    "framerate_conversion_algorithm": "DUPLICATE_DROP",
+                    "framerate_denominator": 1001,
+                    "framerate_numerator": 30000,
+                    "gop_b_reference": "DISABLED",
+                    "gop_closed_cadence": 1,
+                    "gop_size": 90.0,
+                    "gop_size_units": "FRAMES",
+                    "hrd_buffer_initial_fill_percentage": 90,
+                    "hrd_buffer_size": 7500000,
+                    "interlace_mode": "PROGRESSIVE",
+                    "min_i_interval": 0,
+                    "number_b_frames_between_reference_frames": 1,
+                    "number_reference_frames": 3,
+                    "par_control": "SPECIFIED",
+                    "par_denominator": 1,
+                    "par_numerator": 1,
+                    "quality_tuning_level": "MULTI_PASS_HQ",
+                    "rate_control_mode": "CBR",
+                    "repeat_pps": "DISABLED",
+                    "scene_change_detect": "ENABLED",
+                    "slices": 1,
+                    "slow_pal": "DISABLED",
+                    "spatial_adaptive_quantization": "ENABLED",
+                    "syntax": "DEFAULT",
+                    "telecine": "NONE",
+                    "temporal_adaptive_quantization": "ENABLED",
+                    "unregistered_sei_timecode": "DISABLED"
+                  }
+                },
+                "color_metadata": "INSERT",
+                "drop_frame_timecode": "ENABLED",
+                "height": 720,
+                "respond_to_afd": "NONE",
+                "scaling_behavior": "DEFAULT",
+                "sharpness": 50,
+                "timecode_insertion": "DISABLED",
+                "video_preprocessors": {
+                  "deinterlacer": {
+                    "algorithm": "INTERPOLATE",
+                    "control": "NORMAL",
+                    "mode": "DEINTERLACE"
+                  }
+                },
+                "width": 1280
+              }
+            },
+            {
+              "audio_descriptions": [
+                {
+                  "audio_type": 0,
+                  "audio_type_control": "FOLLOW_INPUT",
+                  "codec_settings": {
+                    "aac_settings": {
+                      "audio_description_broadcaster_mix": "NORMAL",
+                      "bitrate": 96000,
+                      "codec_profile": "HEV1",
+                      "coding_mode": "CODING_MODE_2_0",
+                      "rate_control_mode": "CBR",
+                      "raw_format": "NONE",
+                      "sample_rate": 48000,
+                      "specification": "MPEG4"
+                    },
+                    "codec": "AAC"
+                  },
+                  "language_code_control": "FOLLOW_INPUT"
+                }
+              ],
+              "container_settings": {
+                "container": "M3U8",
+                "m3u_8_settings": {
+                  "audio_frames_per_pes": 4,
+                  "audio_pids": [
+                    482,
+                    483,
+                    484,
+                    485,
+                    486,
+                    487,
+                    488,
+                    489,
+                    490,
+                    491,
+                    492,
+                    493,
+                    494,
+                    495,
+                    496,
+                    497,
+                    498
+                  ],
+                  "pat_interval": 0,
+                  "pcr_control": "PCR_EVERY_PES_PACKET",
+                  "pmt_interval": 0,
+                  "pmt_pid": 480,
+                  "private_metadata_pid": 503,
+                  "program_number": 1,
+                  "scte_35_pid": 500,
+                  "timed_metadata_pid": 502,
+                  "video_pid": 481
+                }
+              },
+              "name_modifier": "-540",
+              "preset": "System-Avc_16x9_540p_29_97fps_3500kbps",
+              "video_description": {
+                "afd_signaling": "NONE",
+                "anti_alias": "ENABLED",
+                "codec_settings": {
+                  "codec": "H_264",
+                  "h264_settings": {
+                    "adaptive_quantization": "HIGH",
+                    "bitrate": 3500000,
+                    "codec_level": "LEVEL_3_1",
+                    "codec_profile": "MAIN",
+                    "entropy_encoding": "CABAC",
+                    "field_encoding": "PAFF",
+                    "flicker_adaptive_quantization": "DISABLED",
+                    "framerate_control": "SPECIFIED",
+                    "framerate_conversion_algorithm": "DUPLICATE_DROP",
+                    "framerate_denominator": 1001,
+                    "framerate_numerator": 30000,
+                    "gop_b_reference": "DISABLED",
+                    "gop_closed_cadence": 1,
+                    "gop_size": 90.0,
+                    "gop_size_units": "FRAMES",
+                    "hrd_buffer_initial_fill_percentage": 90,
+                    "hrd_buffer_size": 5250000,
+                    "interlace_mode": "PROGRESSIVE",
+                    "min_i_interval": 0,
+                    "number_b_frames_between_reference_frames": 3,
+                    "number_reference_frames": 3,
+                    "par_control": "SPECIFIED",
+                    "par_denominator": 1,
+                    "par_numerator": 1,
+                    "quality_tuning_level": "MULTI_PASS_HQ",
+                    "rate_control_mode": "CBR",
+                    "repeat_pps": "DISABLED",
+                    "scene_change_detect": "ENABLED",
+                    "slices": 1,
+                    "slow_pal": "DISABLED",
+                    "spatial_adaptive_quantization": "ENABLED",
+                    "syntax": "DEFAULT",
+                    "telecine": "NONE",
+                    "temporal_adaptive_quantization": "ENABLED",
+                    "unregistered_sei_timecode": "DISABLED"
+                  }
+                },
+                "color_metadata": "INSERT",
+                "drop_frame_timecode": "ENABLED",
+                "height": 540,
+                "respond_to_afd": "NONE",
+                "scaling_behavior": "DEFAULT",
+                "sharpness": 50,
+                "timecode_insertion": "DISABLED",
+                "video_preprocessors": {
+                  "deinterlacer": {
+                    "algorithm": "INTERPOLATE",
+                    "control": "NORMAL",
+                    "mode": "DEINTERLACE"
+                  }
+                },
+                "width": 960
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "status": "CANCELED",
+    "status_update_interval": "SECONDS_60",
+    "timing": {
+      "finish_time": "2021-07-09T14:30:22.000-05:00",
+      "start_time": "2021-07-09T14:30:04.000-05:00",
+      "submit_time": "2021-07-09T14:30:01.000-05:00"
+    },
+    "user_metadata": {
+    }
+  }
+}

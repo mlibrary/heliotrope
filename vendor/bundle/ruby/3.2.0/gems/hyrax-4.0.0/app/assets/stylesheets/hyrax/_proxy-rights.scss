@@ -1,0 +1,16 @@
+table#authorizedProxies {
+  a.remove-proxy-button {
+    i {
+      color: darken(red, 30%);
+    }
+    &:hover i {
+      color: red;
+    }
+  }
+}
+
+.proxy-rights {
+  label {
+    display: block;
+  }
+}

@@ -1,0 +1,8 @@
+<%# To render this view pass `lease_history` (e.g. `object: curation_concern.lease_history`) %>
+<ul>
+  <% lease_history.each do |entry| %>
+    <% unless entry.empty? %>
+      <li><%= entry %></li>
+    <% end %>
+  <% end %>
+</ul>

@@ -1,0 +1,6 @@
+require 'rdf/ldp/spec/resource'
+require 'rdf/ldp/spec/rdf_source'
+require 'rdf/ldp/spec/non_rdf_source'
+require 'rdf/ldp/spec/container'
+require 'rdf/ldp/spec/direct_container'
+require 'rdf/ldp/spec/indirect_container'

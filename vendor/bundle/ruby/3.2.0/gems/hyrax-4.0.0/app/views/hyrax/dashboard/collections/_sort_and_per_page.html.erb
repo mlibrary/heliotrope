@@ -1,0 +1,32 @@
+<div class="batch-info">
+  <%= render 'form_for_select_collection', user_collections: @user_collections %>
+
+  <% if params[:action] == "edit" && show_sort_and_per_page? %>
+    <div class="batch-toggle">
+      <% session[:batch_edit_state] = "on" %>
+      <%= button_for_remove_selected_from_collection collection %>
+    </div>
+  <% end %>
+
+  <% if show_sort_and_per_page? && collection_member_sort_fields.many? %>
+    <div class="sort-toggle">
+      <%= form_tag dashboard_collection_path(collection), method: :get, class: 'per_page' do %>
+         <div class="form-group row form-control-lg">
+           <fieldset class="col-sm-9">
+             <legend class="sr-only"><%= t('hyrax.sort_label') %></legend>
+             <%= label_tag(:sort, t(".sort_by")) %>
+             <%= select_tag(:sort, options_from_collection_for_select(collection_member_sort_fields, 'first', lambda {|field| field.last.label}, h(params[:sort]))) %>
+             <%= label_tag(:per_page) do %>
+               <%= t(".show_par_page_html", select: select_tag(:per_page, options_for_select(Hyrax.config.range_for_number_of_results_to_display_per_page, params[:per_page]), title: t('hyrax.dashboard.my.sr.results_per_page'))) %>
+             <% end %>
+             <%= render Blacklight::HiddenSearchStateComponent.new(params: search_state.params_for_search.except(:per_page, :sort)) %>
+             <button class="btn btn-info"><span class="fa fa-refresh"></span> <%= t('helpers.action.refresh') %></button>
+           </fieldset>
+           <div class="col-sm-3">
+             <%= render 'hyrax/collections/view_type_group' %>
+           </div>
+         </div>
+       <% end %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,29 @@
+<table class="table table-striped collection-highlights">
+  <tbody>
+    <% collections.each do |collection| %>
+      <tr>
+        <td>
+          <div class="media">
+            <div class="media-body">
+              <div class="media-heading">
+                <%= link_to [hyrax, collection] do %>
+                  <%= document_presenter(collection)&.thumbnail&.thumbnail_tag(
+                    { class: 'd-none d-md-block file_listing_thumbnail', alt: "#{collection.title_or_label} #{ t('hyrax.homepage.admin_sets.thumbnail')}" },
+                    { suppress_link: true }
+                  ) + collection.title_or_label %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<ul class="list-inline collection-highlights-list">
+  <li class="list-inline-item">
+    <%= link_to t('hyrax.homepage.admin_sets.link'),
+                main_app.search_catalog_path(f: { human_readable_type_sim: ["Collection"]}),
+                class: 'btn btn-secondary' %>
+  </li>
+</ul>

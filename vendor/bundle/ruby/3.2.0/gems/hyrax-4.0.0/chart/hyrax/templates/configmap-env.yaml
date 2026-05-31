@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hyrax.fullname" . }}-env
+  labels:
+    app.kubernetes.io/name: {{ include "hyrax.name" . }}
+    helm.sh/chart: {{ include "hyrax.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  DB_HOST: {{ template "hyrax.postgresql.host" . }}
+  DB_PORT: "5432"
+  DB_USERNAME: {{ template "hyrax.postgresql.database" . }}
+  {{- if .Values.memcached.enabled }}
+  MEMCACHED_HOST: {{ template "hyrax.memcached.fullname" . }}
+  {{- end }}
+  {{- if .Values.derivativesVolume.enabled }}
+  HYRAX_BRANDING_PATH: "/app/samvera/branding"
+  HYRAX_DERIVATIVES_PATH: "/app/samvera/derivatives"
+  HYRAX_CACHE_PATH: "/app/samvera/file_cache"
+  HYRAX_UPLOAD_PATH: "/app/samvera/uploads"
+  {{- end }}
+  RACK_ENV: production
+  RAILS_ENV: production
+  {{- if .Values.redis.enabled }}
+  REDIS_HOST: {{ template "hyrax.redis.host" . }}
+  {{- end }}
+  FCREPO_HOST: {{ template "hyrax.fcrepo.host" . }}
+  FCREPO_BASE_PATH: {{ .Values.fcrepoBasePathOverride | default (printf "/%s" (include "hyrax.fullname" .)) | quote }}
+  FCREPO_PORT: {{ .Values.fcrepo.servicePort | default 8080 | quote }}
+  FCREPO_REST_PATH: {{ .Values.fcrepo.restPath | default "rest" }}
+  REDIS_PROVIDER: SIDEKIQ_REDIS_URL
+  {{- if .Values.minio.enabled }}
+  MINIO_ENDPOINT: {{ template "hyrax.minio.fullname" . }}
+  {{- end }}
+  SKIP_HYRAX_ENGINE_SEED: {{  .Values.skipHyraxEngineSeed | default 0 | quote }}
+  SOLR_ADMIN_USER: {{ template "hyrax.solr.username" . }}
+  SOLR_COLLECTION_NAME: {{ template "hyrax.solr.collectionName" . }}
+  SOLR_CONFIGSET_NAME: {{ template "hyrax.fullname" . }}
+  SOLR_HOST: {{ template "hyrax.solr.host" . }}
+  SOLR_PORT: {{ (include "hyrax.solr.port" .) | quote }}
+  SOLR_URL: {{ template "hyrax.solr.url" . }}

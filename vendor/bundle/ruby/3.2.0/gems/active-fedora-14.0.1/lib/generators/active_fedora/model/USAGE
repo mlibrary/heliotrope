@@ -1,0 +1,11 @@
+Description:
+  Generate a class that inherits from ActiveFedora::Base
+
+Example:
+  rails generate active_fedora:model Journal
+
+  This will create:
+    app/models/journal.rb
+    app/models/datastreams/journal_metadata.rb
+    spec/models/journal_spec.rb
+    spec/models/datastreams/journal_metadata_spec.rb

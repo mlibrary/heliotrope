@@ -1,0 +1,34 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/tree-ops-ext#gid-1> <http://example.org/tree-ops-ext.csv#dbh> "11"^^xsd:integer;
+   <http://example.org/tree-ops-ext.csv#inventory_date> "2010-10-18"^^xsd:date;
+   <http://example.org/tree-ops-ext.csv#kml> "<Point><coordinates>-122.156485,37.440963</coordinates></Point>"^^rdf:XMLLiteral;
+   <http://example.org/tree-ops-ext.csv#on_street> "ADDISON AV";
+   <http://example.org/tree-ops-ext.csv#protected> "false"^^xsd:boolean;
+   <http://example.org/tree-ops-ext.csv#species> "Celtis australis";
+   <http://example.org/tree-ops-ext.csv#trim_cycle> "Large Tree Routine Prune"@en .
+
+<http://example.org/tree-ops-ext#gid-2> <http://example.org/tree-ops-ext.csv#dbh> "11"^^xsd:integer;
+   <http://example.org/tree-ops-ext.csv#inventory_date> "2010-06-02"^^xsd:date;
+   <http://example.org/tree-ops-ext.csv#kml> "<Point><coordinates>-122.156749,37.440958</coordinates></Point>"^^rdf:XMLLiteral;
+   <http://example.org/tree-ops-ext.csv#on_street> "EMERSON ST";
+   <http://example.org/tree-ops-ext.csv#protected> "false"^^xsd:boolean;
+   <http://example.org/tree-ops-ext.csv#species> "Liquidambar styraciflua";
+   <http://example.org/tree-ops-ext.csv#trim_cycle> "Large Tree Routine Prune"@en .
+
+<http://example.org/tree-ops-ext#gid-6> <http://example.org/tree-ops-ext.csv#comments> "cavity or decay",
+     " trunk decay",
+     " codominant leaders",
+     " included bark",
+     " large leader or limb decay",
+     " previous failure root damage",
+     " root decay",
+     "  beware of BEES";
+   <http://example.org/tree-ops-ext.csv#dbh> "29"^^xsd:integer;
+   <http://example.org/tree-ops-ext.csv#inventory_date> "2010-06-01"^^xsd:date;
+   <http://example.org/tree-ops-ext.csv#kml> "<Point><coordinates>-122.156299,37.441151</coordinates></Point>"^^rdf:XMLLiteral;
+   <http://example.org/tree-ops-ext.csv#on_street> "ADDISON AV";
+   <http://example.org/tree-ops-ext.csv#protected> "true"^^xsd:boolean;
+   <http://example.org/tree-ops-ext.csv#species> "Robinia pseudoacacia";
+   <http://example.org/tree-ops-ext.csv#trim_cycle> "Large Tree Routine Prune"@en .

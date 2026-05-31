@@ -1,0 +1,9 @@
+.*.sw[pon]
+.bundle
+.byebug_history
+.rvmrc
+Gemfile.lock
+coverage
+errors.lst
+pkg
+tags

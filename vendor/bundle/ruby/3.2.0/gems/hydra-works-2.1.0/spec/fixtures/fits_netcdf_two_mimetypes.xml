@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The netCDF file analzyed to produce this output was madis-raob.nc from https://www.unidata.ucar.edu/software/netcdf/examples/files.html -->
+<fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/fits/fits_output http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd" version="1.2.0" timestamp="2/7/18 10:03 PM">
+  <identification status="SINGLE_RESULT">
+    <identity format="netCDF-3 Classic" mimetype="application/netcdf, application/x-netcdf" toolname="FITS" toolversion="1.2.0">
+      <tool toolname="Droid" toolversion="6.3" />
+      <externalIdentifier toolname="Droid" toolversion="6.3" type="puid">fmt/282</externalIdentifier>
+    </identity>
+  </identification>
+  <fileinfo>
+    <filepath toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">/madis-raob.nc</filepath>
+    <filename toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">madis-raob.nc</filename>
+    <size toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">150612</size>
+    <md5checksum toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">47b926e988723c65f0cdaf4117f4ef4d</md5checksum>
+    <fslastmodified toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">1347484346000</fslastmodified>
+  </fileinfo>
+  <filestatus />
+  <metadata />
+  <statistics fitsExecutionTime="1000">
+    <tool toolname="MediaInfo" toolversion="0.7.75" status="did not run" />
+    <tool toolname="OIS Audio Information" toolversion="0.1" status="did not run" />
+    <tool toolname="ADL Tool" toolversion="0.1" status="did not run" />
+    <tool toolname="VTT Tool" toolversion="0.1" status="did not run" />
+    <tool toolname="Droid" toolversion="6.3" executionTime="192" />
+    <tool toolname="Jhove" toolversion="1.16" executionTime="993" />
+    <tool toolname="file utility" toolversion="5.25" executionTime="532" />
+    <tool toolname="Exiftool" toolversion="10.00" executionTime="532" />
+    <tool toolname="NLNZ Metadata Extractor" toolversion="3.6GA" status="did not run" />
+    <tool toolname="OIS File Information" toolversion="0.2" executionTime="188" />
+    <tool toolname="OIS XML Metadata" toolversion="0.2" status="did not run" />
+    <tool toolname="ffident" toolversion="0.2" executionTime="506" />
+    <tool toolname="Tika" toolversion="1.10" executionTime="284" />
+  </statistics>
+</fits>
+

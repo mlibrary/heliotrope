@@ -1,0 +1,74 @@
+<h2 id="permissions_display"><% if params[:controller] == 'batch' %><%= t('.bulk') %> <% end %><%= t('.header') %> <% if params[:controller] == 'batch' %>
+      <small><%= t('.applied_to') %></small><% end %>
+</h2>
+
+<div class="alert alert-info" id="save_perm_note"><%= t('.save_note_html') %></div>
+
+<div class="alert alert-warning" role="alert" id="permissions_error">
+  <span id="permissions_error_text"></span>
+</div>
+
+<%= render 'hyrax/base/form_visibility_component', f: f %>
+
+<!-- Share With -->
+<div class="row">
+  <h3 class="col-sm-12"><%= t('.share_with') %> <small><%= t('.optional') %></small>
+    <span id="share_with_tooltip" class="h5">
+      <%= help_text('hyrax/base/share_with') %>
+    </span>
+  </h3>
+</div>
+
+<div class="form-group row">
+  <div id="new-user">
+    <p class="col-sm-12"><%= t('.enter', account_label: t('hyrax.account_label')) %></p>
+    <p class="sr-only"><%= t('.new_user_help_text', account_label: t('hyrax.account_label')) %></p>
+    <div class="row">
+      <div class="col-sm-5">
+        <label for="new_user_name_skel" class="sr-only"><%= t('.new_user_name_skel', account_label: t('hyrax.account_label'), suffix: t('hyrax.directory.suffix')) %></label>
+        <%= text_field_tag 'new_user_name_skel', nil %>
+      </div>
+      <div class="col-sm-4">
+        <label for="new_user_permission_skel" class="sr-only"><%= t('.new_user_permission_skel') %></label>
+        <%= select_tag 'new_user_permission_skel', options_for_select(configured_permission_options), class: 'form-control' %>
+      </div>
+      <div class="col-sm-3">
+        <button class="btn btn-secondary" id="add_new_user_skel">
+          <span class="sr-only"><%= t('.add_new_user_skel', account_label: t('hyrax.account_label')) %></span>
+          <span aria-hidden="true"><i class="fa fa-plus"></i></span>
+        </button>
+        <br /> <span id="directory_user_result"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="form-group row">
+  <div id="new-group">
+    <p class="sr-only"><%= t('.new_group_help_text') %></p>
+    <div class="row">
+      <div class="col-sm-5">
+        <label for="new_group_name_skel" class="sr-only"><%= t('.new_group_name_skel') %></label>
+        <%= select_tag 'new_group_name_skel', options_for_select([t('.select_group')] + current_user.groups), class: 'form-control' %>
+      </div>
+      <div class="col-sm-4">
+        <label for="new_group_permission_skel" class="sr-only"><%= t('.new_group_permission_skel') %></label>
+        <%= select_tag 'new_group_permission_skel', options_for_select(configured_permission_options), class: 'form-control' %>
+      </div>
+      <div class="col-sm-3">
+        <span class="sr-only"><%= t('.add_new_group_skel') %></span>
+        <button class="btn btn-secondary" id="add_new_group_skel"><i class="fa fa-plus"></i></button>
+        <br /><span id="directory_group_result"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render 'currently_shared', f: f %>
+
+<script type="text/x-tmpl" id="tmpl-file-set-grant">
+<tr>
+  <td><label class="col-form-label">{%= o.name %}</label></td>
+  <td>{%= o.accessLabel %} <button class="btn close">&times;</button></td>
+</tr>
+</script>

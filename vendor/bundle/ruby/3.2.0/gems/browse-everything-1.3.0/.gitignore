@@ -1,0 +1,22 @@
+*.gem
+*.rbc
+.bundle
+.config
+.yardoc
+.DS_Store
+Gemfile.lock
+InstalledFiles
+_yardoc
+coverage
+doc/
+lib/bundler/man
+pkg
+rdoc
+spec/reports
+spec/fixtures/Getting Started.pdf
+test/tmp
+test/version_tmp
+spec/dummy_test_app/tmp
+spec/dummy_test_app/db
+spec/dummy_test_app/log
+!spec/dummy_test_app/tmp/.gitkeep

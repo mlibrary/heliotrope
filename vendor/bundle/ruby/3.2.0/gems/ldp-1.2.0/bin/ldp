@@ -1,0 +1,126 @@
+#!/usr/bin/env ruby
+
+lib = File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
+require 'ldp'
+require 'slop'
+require 'http_logger'
+
+HttpLogger.logger = Logger.new(STDERR)
+HttpLogger.log_headers = true
+
+def with_error_handling
+  yield
+rescue Ldp::NotFound
+  exit 1
+end
+
+do_help = lambda do |x|
+  x.command 'help' do
+    run do |opts, args|
+      puts opts.help
+    end
+  end
+end
+
+Slop.parse do
+  banner "Usage: ldp [command] --host [HOST] [options]"
+
+  on '-v', 'Print the version' do
+    puts "ldp #{Ldp::VERSION}"
+  end
+
+  on :host=, "Host"
+
+  do_help.call(self)
+
+  command 'get' do
+    banner "Usage: ldp get --host [HOST] [PATH]"
+
+    on :host=, "Host"
+
+    do_help.call(self)
+
+    run do |opts, (path)|
+      with_error_handling do
+        host = opts[:host] || ENV['LDP_HOST']
+        puts Ldp::Client.new(url: host).find_or_initialize(path).get.body
+      end
+    end
+  end
+
+  command 'delete' do
+    banner "Usage: ldp delete --host [HOST] [PATH]"
+
+    on :host=, "Host"
+    do_help.call(self)
+
+    run do |opts, (path)|
+      with_error_handling do
+        host = opts[:host] || ENV['LDP_HOST']
+        Ldp::Client.new(url: host).delete path
+      end
+    end
+  end
+
+  command 'create' do
+    banner "Usage: ldp create --host [HOST] [PATH] [SOURCE]"
+
+    on :host=, "Host"
+    do_help.call(self)
+
+    run do |opts, (path, file)|
+      with_error_handling do
+        host = opts[:host] || ENV['LDP_HOST']
+        if file.nil?
+          Ldp::Client.new(url: host).post path
+        elsif file == "-"
+          Ldp::Client.new(url: host).post path, $stdin
+        else
+          Ldp::Client.new(url: host).post path, File.read(file)
+        end
+      end
+    end
+  end
+
+  command 'replace' do
+    banner "Usage: ldp replace --host [HOST] [PATH] [SOURCE]"
+
+    on :host=, "Host"
+    do_help.call(self)
+
+    run do |opts, (path, file)|
+      with_error_handling do
+        host = opts[:host] || ENV['LDP_HOST']
+        if file.nil?
+          Ldp::Client.new(url: host).put path
+        elsif file == "-"
+          Ldp::Client.new(url: host).put path, $stdin
+        else
+          Ldp::Client.new(url: host).put path, File.read(file)
+        end
+      end
+    end
+  end
+
+  command 'patch' do
+    banner "Usage: ldp patch --host [HOST] [PATH] [SOURCE]"
+
+    on :host=, "Host"
+    do_help.call(self)
+
+    run do |opts, (path, file)|
+      with_error_handling do
+        host = opts[:host] || ENV['LDP_HOST']
+        if file.nil?
+          Ldp::Client.new(url: host).patch path
+        elsif file == "-"
+          Ldp::Client.new(url: host).patch path, $stdin.read
+        else
+          Ldp::Client.new(url: host).patch path, File.read(file)
+        end
+      end
+    end
+  end
+end

@@ -1,0 +1,4 @@
+*.gem
+coverage/
+.bundle/
+dump.rdb

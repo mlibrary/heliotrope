@@ -1,0 +1,19 @@
+current directory: /tmp/workspace/mlibrary/heliotrope/vendor/bundle/ruby/3.2.0/gems/eventmachine-1.2.7/ext/fastfilereader
+/usr/bin/ruby3.2 -I/usr/lib/ruby/vendor_ruby extconf.rb
+creating Makefile
+
+current directory: /tmp/workspace/mlibrary/heliotrope/vendor/bundle/ruby/3.2.0/gems/eventmachine-1.2.7/ext/fastfilereader
+make DESTDIR\= sitearchdir\=./.gem.20260531-4168-im7t12 sitelibdir\=./.gem.20260531-4168-im7t12 clean
+
+current directory: /tmp/workspace/mlibrary/heliotrope/vendor/bundle/ruby/3.2.0/gems/eventmachine-1.2.7/ext/fastfilereader
+make DESTDIR\= sitearchdir\=./.gem.20260531-4168-im7t12 sitelibdir\=./.gem.20260531-4168-im7t12
+compiling mapper.cpp
+compiling rubymain.cpp
+linking shared-object fastfilereaderext.so
+
+current directory: /tmp/workspace/mlibrary/heliotrope/vendor/bundle/ruby/3.2.0/gems/eventmachine-1.2.7/ext/fastfilereader
+make DESTDIR\= sitearchdir\=./.gem.20260531-4168-im7t12 sitelibdir\=./.gem.20260531-4168-im7t12 install
+/usr/bin/install -c -m 0755 fastfilereaderext.so ./.gem.20260531-4168-im7t12
+
+current directory: /tmp/workspace/mlibrary/heliotrope/vendor/bundle/ruby/3.2.0/gems/eventmachine-1.2.7/ext/fastfilereader
+make DESTDIR\= sitearchdir\=./.gem.20260531-4168-im7t12 sitelibdir\=./.gem.20260531-4168-im7t12 clean

@@ -1,0 +1,223 @@
+require:
+  - rubocop-performance
+  - rubocop-rspec
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.3
+  Exclude:
+    - '.bundle/**/*'
+    - 'vendor/bundle/**/*'
+    - '*.gemspec'
+    - 'spec/fixtures/**/*'
+
+Naming/FileName:
+  ExpectMatchingDefinition: true
+  Exclude:
+    - 'bin/**/*'
+    - 'lib/core_extensions/**/*'
+    - 'spec/**/*'
+    - 'lib/*/version.rb'
+
+RSpec/FilePath:
+  Exclude:
+    - 'spec/**/*.rb' # rubocop error
+
+Style/Documentation:
+  Exclude:
+    - 'spec/**/*'
+
+# Enabling this cop can break rescue statements in ruby <= 2.4
+Style/RedundantBegin:
+  Enabled: false
+
+# We disable this cop because we want to use Pathname#/
+# and this cop is not configurable at all.
+Layout/SpaceAroundOperators:
+  Enabled: false
+
+Security/YAMLLoad:
+  Exclude:
+    - 'spec/**/*'
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Metrics/LineLength:
+  Max: 90
+  AllowHeredoc: true
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/support/**/*.rb'
+    - 'spec/**/*_spec.rb'
+
+Layout/ElseAlignment:
+  Enabled: false
+
+Layout/IndentFirstArgument:
+  EnforcedStyle: consistent
+
+Layout/AlignArguments:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
+Layout/ClosingParenthesisIndentation:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: nested
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+Style/CommentAnnotation:
+  Enabled: false
+
+# Does not work for multi-line copyright notices.
+Style/Copyright:
+  Enabled: false
+
+Layout/EmptyLineBetweenDefs:
+  AllowAdjacentOneLineDefs: true
+
+# These two cops do not differentiate between the scope the file is describing
+# and any namespaces it is nested under.  If this is not acceptable,
+# no_empty_lines produces the least offensive results.
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+# Produces poor results.
+Style/GuardClause:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Layout/IndentFirstArrayElement:
+  EnforcedStyle: consistent
+
+Layout/IndentFirstHashElement:
+  EnforcedStyle: consistent
+
+Layout/AlignHash:
+  EnforcedColonStyle: table
+  EnforcedHashRocketStyle: table
+  EnforcedLastArgumentHashStyle: always_ignore
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+# Produces poor results.
+Style/Next:
+  Enabled: false
+
+Style/RedundantReturn:
+  AllowMultipleReturnValues: true
+
+Style/RegexpLiteral:
+  AllowInnerSlashes: true
+
+Style/Semicolon:
+  AllowAsExpressionSeparator: true
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Layout/SpaceInsideBlockBraces:
+  SpaceBeforeBlockParameters: false
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Layout/BlockAlignment:
+  EnforcedStyleAlignWith: start_of_block
+
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: start_of_line
+
+Layout/DefEndAlignment:
+  EnforcedStyleAlignWith: def
+
+Performance/RedundantMerge:
+  Enabled: false
+
+Style/WordArray:
+  EnforcedStyle: brackets
+
+Style/RescueModifier:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+# This cop just adds extra work when you want to write an integration test,
+# or test something like a jbuilder view.
+RSpec/DescribeClass:
+  Enabled: false
+
+# Using let! is fine, and can be easier to manage than a before block.
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/BeEql:
+  Enabled: false
+
+RSpec/ExampleWithoutDescription:
+  EnforcedStyle: single_line_only
+
+RSpec/HookArgument:
+  EnforcedStyle: each
+
+RSpec/ImplicitSubject:
+  EnforcedStyle: disallow
+
+RSpec/LeadingSubject:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: true
+  Max: 3
+
+# Change this as needed.
+RSpec/NestedGroups:
+  Max: 3
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+
+RSpec/EmptyExampleGroup:
+  CustomIncludeMethods:
+    - it_allows
+    - it_disallows
+
+RSpec/ContextWording:
+  Prefixes:
+    - as
+    - when
+    - with
+    - without
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*.rb'

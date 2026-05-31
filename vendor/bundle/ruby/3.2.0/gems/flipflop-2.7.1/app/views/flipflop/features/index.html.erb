@@ -1,0 +1,83 @@
+<% provide(:title) { t(:title, scope: :flipflop, application: @feature_set.application_name) } -%>
+<section class="flipflop">
+  <h1><%= t(:title, scope: :flipflop, application: @feature_set.application_name) -%></h1>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th class="name"><%= t(:feature, scope: :flipflop) -%></th>
+        <th class="description"><%= t(:description, scope: :flipflop) -%></th>
+        <% @feature_set.strategies.each do |strategy| -%>
+          <th data-tooltip="<%= strategy.description -%>">
+            <%= t(strategy.name, scope: [:flipflop, :strategies], default: strategy.title) -%>
+          </th>
+        <% end -%>
+      </tr>
+    </thead>
+    <tbody>
+    <% @feature_set.grouped_features.each do |group, features| -%>
+      <% if @feature_set.grouped? -%>
+        <tr class="group">
+          <td></td>
+          <td class="name" colspan="<%= 2 + @feature_set.strategies.size -%>">
+            <h2>
+              <%= t(group ? group.name : :default, scope: [:flipflop, :groups], default: group ? group.title : nil) -%>
+            </h2>
+          </td>
+        </tr>
+      <% end -%>
+      <% features.each do |feature| -%>
+        <tr data-feature="<%= feature.name.dasherize.parameterize -%>">
+          <td class="status">
+            <span class="<%= @feature_set.status(feature) -%>">
+              <span><%= t(@feature_set.status(feature), scope: [:flipflop, :feature_states]) -%></span>
+            </span>
+          </td>
+          <td class="name">
+            <%= title = t(feature.name, scope: [:flipflop, :features], default: feature.title) -%>
+          </td>
+          <td class="description">
+            <%= t(:"#{feature.name}_description", scope: [:flipflop, :features], default: feature.description || title + ".") -%>
+          </td>
+
+          <% @feature_set.strategies.each do |strategy| -%>
+            <td class="toggle" data-strategy="<%= strategy.name.dasherize.parameterize %>" id="<%= "#{feature.key}-#{strategy.key}".parameterize %>">
+              <div class="toolbar">
+                <%= form_tag(@feature_set.switch_url(strategy, feature), method: :put) do -%>
+                  <div class="group">
+                    <%= button_tag t(:enabled, scope: [:flipflop, :feature_states]),
+                      type: "submit",
+                      name: "commit",
+                      value: "1",
+                      class: @feature_set.strategy_status(strategy, feature) == :enabled ? "active" : nil,
+                      disabled: !strategy.switchable?
+                    -%>
+
+                    <%= button_tag t(:disabled, scope: [:flipflop, :feature_states]),
+                      type: "submit",
+                      name: "commit",
+                      value: "0",
+                      class: @feature_set.strategy_status(strategy, feature) == :disabled ? "active" : nil,
+                      disabled: !strategy.switchable?
+                    -%>
+                  </div>
+                <% end -%>
+
+                <% if strategy.switchable? -%>
+                  <div class="group">
+                    <% unless @feature_set.strategy_status(strategy, feature).blank? -%>
+                      <%= form_tag(@feature_set.switch_url(strategy, feature), method: :delete) do -%>
+                        <%= button_tag t(:clear, scope: :flipflop), type: "submit" -%>
+                      <% end -%>
+                    <% end -%>
+                  </div>
+                <% end -%>
+              </div>
+            </td>
+          <% end -%>
+        </tr>
+      <% end -%>
+    <% end -%>
+    </tbody>
+  </table>
+</section>

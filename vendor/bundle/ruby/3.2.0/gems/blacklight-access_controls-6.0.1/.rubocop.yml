@@ -1,0 +1,36 @@
+inherit_from: .rubocop_todo.yml
+require: rubocop-rspec
+
+AllCops:
+  DisplayCopNames: true
+  Include:
+    - '**/Rakefile'
+  Exclude:
+    - '.internal_test_app/**/*'
+
+
+Bundler/DuplicatedGem:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
+Metrics/LineLength:
+  Max: 185
+
+Naming/FileName:
+  Exclude:
+    - 'Gemfile'
+    - 'blacklight-access_controls.gemspec'
+    - 'lib/blacklight-access_controls.rb'
+
+Rails:
+  Enabled: true
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Exclude:
+   - 'spec/**/*_spec.rb'

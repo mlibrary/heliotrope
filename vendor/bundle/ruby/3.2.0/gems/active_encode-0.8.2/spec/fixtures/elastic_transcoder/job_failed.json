@@ -1,0 +1,1 @@
+{"id":"failed-id","arn":"arn:aws:elastictranscoder:us-west-2:039358184980:job/1471963629141-kmcocm","pipeline_id":"1470797373927-1ukxrn","output_key_prefix":"elastic-transcoder-samples/output/hls/","playlists":[],"status":"Error","timing":{"submit_time_millis":1471963629189,"start_time_millis":1471975169865,"finish_time_millis":1471975185271}}

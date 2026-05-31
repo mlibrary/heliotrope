@@ -1,0 +1,181 @@
+version: 2.1
+orbs:
+  samvera: samvera/circleci-orb@1.0
+jobs:
+  bundle_and_test:
+    parameters:
+      ruby_version:
+        type: string
+      rails_version:
+        type: string
+      bundler_version:
+        type: string
+        default: 2.4.5
+      ruby_type:
+        type: string
+        default: ruby
+    executor:
+      name: 'samvera/ruby'
+      ruby_version: << parameters.ruby_version >>
+      ruby_type: << parameters.ruby_type >>
+    environment:
+      RAILS_VERSION: << parameters.rails_version >>
+    working_directory: ~/project
+    steps:
+      - run: sudo apt-get update
+      - run: sudo apt-get install libgmp-dev
+
+      - samvera/cached_checkout
+
+      - run:
+          name: Check for a branch named 'master'
+          command: |
+            git fetch --all --quiet --prune --prune-tags
+            if [[ -n "$(git branch --all --list master */master)" ]]; then
+              echo "A branch named 'master' was found. Please remove it."
+              echo "$(git branch --all --list master */master)"
+            fi
+            [[ -z "$(git branch --all --list master */master)" ]]
+
+      - samvera/bundle:
+          ruby_version: << parameters.ruby_version >>
+          bundler_version: << parameters.bundler_version >>
+
+      - samvera/rubocop
+
+      - samvera/parallel_rspec
+
+workflows:
+  ci:
+    jobs:
+      # Rails 7.0
+      - bundle_and_test:
+          name: ruby3-2_rails7-0
+          ruby_version: 3.2.0
+          rails_version: 7.0.4.1
+      - bundle_and_test:
+          name: ruby3-1_rails7-0
+          ruby_version: 3.1.3
+          rails_version: 7.0.4.1
+      - bundle_and_test:
+          name: ruby3-0_rails7-0
+          ruby_version: 3.0.5
+          rails_version: 7.0.4.1
+      - bundle_and_test:
+          name: ruby2-7_rails7-0
+          ruby_version: 2.7.7
+          rails_version: 7.0.4.1
+      # Rails 6.1
+      - bundle_and_test:
+          name: ruby3-2_rails6-1
+          ruby_version: 3.2.0
+          rails_version: 6.1.7.1
+      - bundle_and_test:
+          name: ruby3-1_rails6-1
+          ruby_version: 3.1.3
+          rails_version: 6.1.7.1
+      - bundle_and_test:
+          name: ruby3-0_rails6-1
+          ruby_version: 3.0.5
+          rails_version: 6.1.7.1
+      - bundle_and_test:
+          name: ruby2-7_rails6-1
+          ruby_version: 2.7.7
+          rails_version: 6.1.7.1
+      # Rails 6.0
+      - bundle_and_test:
+          name: ruby3-2_rails6-0
+          ruby_version: 3.2.0
+          rails_version: 6.0.6.1
+      - bundle_and_test:
+          name: ruby3-1_rails6-0
+          ruby_version: 3.1.3
+          rails_version: 6.0.6.1
+      - bundle_and_test:
+          name: ruby3-0_rails6-0
+          ruby_version: 3.0.5
+          rails_version: 6.0.6.1
+      - bundle_and_test:
+          name: ruby2-7_rails6-0
+          ruby_version: 2.7.7
+          rails_version: 6.0.6.1
+      # Rails 5.2
+      - bundle_and_test:
+          name: ruby3-0_rails5-2
+          ruby_version: 3.0.5
+          rails_version: 5.2.8.1
+      - bundle_and_test:
+          name: ruby2-7_rails5-2
+          ruby_version: 2.7.7
+          rails_version: 5.2.8.1
+
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - main
+
+    jobs:
+      # Rails 7.0
+      - bundle_and_test:
+          name: ruby3-2_rails7-0
+          ruby_version: 3.2.0
+          rails_version: 7.0.4.1
+      - bundle_and_test:
+          name: ruby3-1_rails7-0
+          ruby_version: 3.1.3
+          rails_version: 7.0.4.1
+      - bundle_and_test:
+          name: ruby3-0_rails7-0
+          ruby_version: 3.0.5
+          rails_version: 7.0.4.1
+      - bundle_and_test:
+          name: ruby2-7_rails7-0
+          ruby_version: 2.7.7
+          rails_version: 7.0.4.1
+      # Rails 6.1
+      - bundle_and_test:
+          name: ruby3-2_rails6-1
+          ruby_version: 3.2.0
+          rails_version: 6.1.7.1
+      - bundle_and_test:
+          name: ruby3-1_rails6-1
+          ruby_version: 3.1.3
+          rails_version: 6.1.7.1
+      - bundle_and_test:
+          name: ruby3-0_rails6-1
+          ruby_version: 3.0.5
+          rails_version: 6.1.7.1
+      - bundle_and_test:
+          name: ruby2-7_rails6-1
+          ruby_version: 2.7.7
+          rails_version: 6.1.7.1
+      # Rails 6.0
+      - bundle_and_test:
+          name: ruby3-2_rails6-0
+          ruby_version: 3.2.0
+          rails_version: 6.0.6.1
+      - bundle_and_test:
+          name: ruby3-1_rails6-0
+          ruby_version: 3.1.3
+          rails_version: 6.0.6.1
+      - bundle_and_test:
+          name: ruby3-0_rails6-0
+          ruby_version: 3.0.5
+          rails_version: 6.0.6.1
+      - bundle_and_test:
+          name: ruby2-7_rails6-0
+          ruby_version: 2.7.7
+          rails_version: 6.0.6.1
+      # Rails 5.2
+      - bundle_and_test:
+          name: ruby3-0_rails5-2
+          ruby_version: 3.0.5
+          rails_version: 5.2.8.1
+      - bundle_and_test:
+          name: ruby2-7_rails5-2
+          ruby_version: 2.7.7
+          rails_version: 5.2.8.1

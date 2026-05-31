@@ -1,0 +1,9 @@
+<h3>Deposits By Users (<%= @presenter.date_filter_string %>)</h3>
+<ul>
+  <% @presenter.depositors.each do |usr| %>
+    <li>
+      <%= link_to usr[:user].name, hyrax.user_path(usr[:user]), title: "View user's profile" %>
+      deposited <%= pluralize(usr[:deposits], "file") %>
+    </li>
+  <% end %>
+</ul>

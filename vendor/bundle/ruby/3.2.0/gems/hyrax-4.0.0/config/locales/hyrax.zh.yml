@@ -1,0 +1,1842 @@
+---
+zh:
+  activefedora:
+    models:
+      batch_upload_item: 批量上传的作品
+      file_set: 文件
+  activemodel:
+    errors:
+      messages:
+        cannot_have_child_nested: 不能让孩子嵌套在其中
+        cannot_nest_in_parent: 不能嵌套在父代中
+        cannot_remove_relationship: 许可不适合取消嵌套关系
+        conflict: 您的更改无法保存，因为另一用户(或后台作业）在您开始编辑后更新了%{model}。 请确保所有文件附件已成功完成之后再试一次。这已经是最新刷新后保存的副本%{model}
+        exceeds_maximum_nesting_depth: 嵌套超过了允许的最大嵌套深度。
+        is_not_nestable: 不可嵌套
+  blacklight:
+    search:
+      fields:
+        facet:
+          admin_set_sim: 集
+          collection_type_gid_ssim: 集合类型
+          member_of_collections_ssim: 采集
+          resource_type_sim: 资源类型
+          suppressed_bsi: 状况
+          visibility_ssi: 公开度
+        show:
+          admin_set: '管理集内:'
+          based_near_label: 地点
+          contributor: 贡献者
+          keyword: 关键词
+      filters:
+        title: '筛选:'
+      start_over: 清除筛选
+  download:
+    one: 和 1 个下载
+    other: 和 %{count} 下载
+  errors:
+    messages:
+      carrierwave_download_error: 图片不能下载。
+      carrierwave_integrity_error: 不是图片。
+      carrierwave_processing_error: 图片大小不能调整。
+      extension_blacklist_error: "%{extension} 的文件不能上传, 限制上传的扩展类型: %{prohibited_types}"
+      extension_whitelist_error: "%{extension} 的文件不能上传, 可上传的扩展类型: %{allowed_types}"
+  helpers:
+    action:
+      accept: 接受
+      add: 加
+      admin_set:
+        new: 创建新管理集
+      batch:
+        new: 创建批量作品
+      cancel: 取消
+      close: 关
+      collection:
+        new: 添加新集合
+      delete: 删除
+      edit: 编辑
+      less: 减
+      more: 更多
+      refresh: 刷新
+      remove: 去掉
+      work:
+        new: 添加新作品
+    submit:
+      admin_set:
+        create: 保存
+        update: 保存
+      create: 保存
+      hyrax_permission_template:
+        create: 保存
+        update: 保存
+      hyrax_permission_template_access:
+        create: 添加
+      proxy_deposit_request:
+        create: 转让
+      update: 保存
+  hyrax:
+    account_label: 用户
+    active_consent_to_agreement: 我已经阅读并同意
+    admin:
+      admin_sets:
+        delete:
+          error_default_set: 管理集是默认集，不能被删除
+          error_not_empty: 管理集不是空集，不能被删除
+          notification: 管理集删除成功
+        document_list:
+          edit: 编辑
+          no_works: 管理集不包含任何作品
+          title: 管理集清单
+        edit:
+          header: 编辑管理集
+        form:
+          cancel: 取消
+          note: 授予新角色的用户只能在授予该角色后存储的作品获得角色。
+          permission_destroy_errors:
+            admin_group: 无法删除存储库管理员组
+          permission_update_errors:
+            error: 权限模板的更新选项无效。
+            no_date: 所选发布项需要一个日期。
+            no_embargo: 所选项需要一个时滞期限。
+            nothing: 保存之前请选择发布选项。
+          permission_update_notices:
+            new_admin_set: 管理集 '%{name}' 已建立。 请用附加标签定义管理集中的其他方面。
+            participants: 管理集的参与者权限已更新
+            updated_admin_set: 管理集 '%{name}' 已更新。
+            visibility: 管理集的发布与公开度的设置已更新。
+            workflow: 管理集的工作流程已更新。
+          tabs:
+            description: 描述
+            participants: 参与者
+            visibility: 发布与公开度
+            workflow: 工作流程
+        form_participant_table:
+          admin_users: 存储库管理员
+          allow_all_registered: 允许所有注册用户存款
+          depositors:
+            action: 行动
+            agent_name: 管理集的存储者
+            empty: 存储者尚未加入此管理集。
+            help: 存储者可以向此管理集添加新作品。
+            remove: 移除
+            title: 存储者
+            type: 类型
+          managers:
+            action: 行动
+            agent_name: 管理集的管理者
+            empty: 此管理集尚未加入管理者。
+            help: 管理者可以编辑管理集的原数据、参与者、及发布与公开度的设置。 管理者还可以编辑作品的元数据, 从一件作品中添加或移除文件，以及向管理集添加新作品。
+            remove: 移除
+            title: 管理者
+            type: 类型
+          registered_users: 注册用户
+          viewers:
+            action: 行动
+            agent_name: 管理集的观众
+            empty: 此管理集尚未加入观众。
+            help: 此管理集的观众可以看见集中的作品，无论该作品公开度的设置如何。 例如观众可以看见管理集中目前有时滞限或限制的作品。
+            remove: 移除
+            title: 观众
+            type: 类型
+        form_participants:
+          add_group: '添加小组:'
+          add_participants: 添加参与者
+          add_user: '添加用户:'
+          current_participants: 目前参与者
+        form_visibility:
+          cancel: 取消
+          page_description: 当作品加入收藏集，发布和公开度设置可以控制谁和何时可以观看和下载这些作品。
+          release:
+            description: 你可以在管理集内作品发布之前设置延迟被发现和下载的时期。
+            fixed: 既定的 -- 延迟发布所有作品
+            no_delay: 没有延迟 -- 所有作品一旦存储即可发布
+            title: 发布
+            varies:
+              any: 存储者可以选择任何延迟发布时间
+              between: 存储者可以选择最近时间
+              description: '允许存储者设置发布日期:'
+              embargo:
+                1yr: 存储一年之后
+                2yrs: 存储两年之后
+                3yrs: 存储三年之后
+                6mos: 存储六个月之后
+                select: 选择延迟发布期限..
+              period: 存储者可以选择延迟发布期限：
+          visibility:
+            description: '发布日期之后, 管理集内的作品可以被发现和下载:'
+            everyone: 公开 -- 管理集内的所有作品会公开
+            institution: 机构 -- 所有作品只对机构内的认证用户公开
+            restricted: 私有 -- 所有作品只会对存储库的管理员和此管理集的管理员与评审员公开
+            title: 公开度
+            varies: 可变的 -- 默认值是公开, 但是存储者可以限制个别作品的公开度
+        form_workflow:
+          cancel: 取消
+          no_workflows: 没有工作流程可选。
+          page_description: 每个管理集都有一个与之相关的工作流程。 此工作流程可以应用于添加入管理集的所有作品。 选择用于以下管理集的工作流程。
+        new:
+          header: 创建新的管理集
+        show:
+          breadcrumb: 观看集
+          header: 管理集
+          item_list_header: 集内作品
+        show_actions:
+          confirm_delete: 您确定要删除此管理集？此操作无法撤消。
+      analytics:
+        collection_reports:
+          custom_range:
+            collection_home_page_views: 馆藏主页浏览量
+            date_range_heading: 自定义日期范围
+            summary_heading: 用户活动摘要
+            work_downloads: 作品下载
+            work_views: 作品观
+          index:
+            activity: 活动
+            and: 和
+            custom_range: 自定义范围
+            date_range_heading: 自定义报告
+            downloads: 下载
+            enable_analytics: 启用分析以查看报告
+            export: 出口
+            monthly: 每月
+            repo_summary: 存储库包含
+            repo_summary_2: 共同拥有
+            report_generated_on: 此报告生成于
+            report_header: 自定义集合报告
+            summary: 概括
+            title: 收藏报告
+            views: 页面浏览量
+          monthly_summary:
+            collection_views: 馆藏主页浏览量
+            monthly_subtitle: 过去 12 个月的逐月状态
+            work_downloads: 作品下载
+            work_views: 作品观
+          show:
+            collection_type: 收藏类型
+            created_by: 由...制作
+            custom_range: 自定义范围
+            last_updated: 最后更新于
+            monthly: 每月
+            return_to_btn: 返回收藏报告
+            summary: 概括
+            title: 收款报告
+            view_collection_btn: 查看收藏
+            visibility: 能见度
+          summary:
+            all_time: 整天
+            collection_home_page_views: 馆藏主页浏览量
+            date_range: 日期范围
+            subtitle: 用户活动摘要
+            this_month: 这个月
+            this_week: 本星期
+            this_year: 今年
+            today: 今天
+            work_downloads: 作品下载
+            work_views: 作品观
+          top_collections:
+            collection_page_views: 收藏页面浏览量
+            collection_title: 馆藏名称
+            deleted: 集合已删除
+            export: 出口
+            file_downloads_in_collection: 此集合中的文件集下载
+            top_collections: 热门收藏
+            works_in_collection_views: 在此集合视图中的作品
+        date_range_form:
+          date_range_heading: 自定义日期范围
+          end_date: 结束日期
+          reset_date_range: 重置日期范围
+          set_date_range: 设置报告日期范围
+          start_date: 开始日期
+        work_reports:
+          custom_range:
+            date_range_heading: 自定义日期范围
+            file_downloads: 文件下载
+            page_views: 页面浏览量
+            summary_heading: 用户活动摘要
+            unique_visitors: 独立访客
+          index:
+            access_to: 您可以访问
+            activity: 活动
+            and: 和
+            custom_range: 自定义范围
+            date_range_heading: 自定义报告
+            downloads: 下载
+            enable_analytics: 启用分析以查看报告
+            export: 出口
+            monthly: 每月
+            repo_summary: 在这个存储库中，它们共同拥有
+            report_generated_on: 此报告生成于
+            report_header: 定制作品报告
+            subtitle: 用户活动摘要
+            summary: 概括
+            title: 作品报告
+            views: 意见
+            works: 作品
+          monthly_summary:
+            file_downloads: 文件下载
+            monthly_subtitle: 过去 12 个月的逐月状态
+            page_views: 页面浏览量
+          show:
+            custom_range: 自定义范围
+            deposited_by: 存款人
+            monthly: 每月
+            resource_type: 资源类型
+            return_to_btn: 复工报告
+            status: 地位
+            summary: 概括
+            title: 工作报告
+            view_work_btn: 查看工作
+            visibility: 能见度
+            work_type: 工作类型
+          summary:
+            all_time: 整天
+            date_range: 日期范围
+            file_downloads: 文件下载
+            page_views: 页面浏览量
+            subtitle: 用户活动摘要
+            this_month: 这个月
+            this_week: 本星期
+            this_year: 今年
+            today: 今天
+            unique_visitors: 独立访客
+          top_file_set_downloads:
+            file: 文件
+            file_downloads: 文件下载
+            file_name: 文档名称
+            top_downloads: 热门文件下载
+          top_works:
+            export: 出口
+            file_downloads: 文件下载
+            top_works: 热门作品
+            work_title: 作品名称
+            work_views: 工作页面浏览量
+          work_counts:
+            child_works: 儿童作品
+            files: 档案
+            total_size: 总尺寸
+          work_files:
+            title: 文件
+            total_downloads: 总下载量
+      appearances:
+        show:
+          header: 表面
+        update:
+          flash:
+            success: 表面已更新
+      collection_types:
+        create:
+          notification: 收集类型%{name}已创建。
+        delete:
+          notification: 集合类型%{name}已被删除。
+        edit:
+          header: 编辑集合类型
+          submit: 保存更改
+        errors:
+          no_settings_change_for_admin_sets: 对于“管理集”类型，集合类型设置无法更改
+          no_settings_change_for_user_collections: 用户集合类型无法更改集合类型设置
+          no_settings_change_if_not_empty: 集合类型设置不能为具有集合的类型更改
+          not_empty: 集合类型不能更改，因为它具有集合
+        form:
+          tab:
+            appearance: 徽章颜色
+            metadata: 描述
+            participants: 参与者
+            settings: 设置
+        form_participant_table:
+          creators:
+            action: 行动
+            agent_name: 收集创作者
+            empty: 没有创作者被添加到这个集合类型。
+            help: 这种类型的集合的创建者可以创建和管理他们自己的集合。
+            title: 创作者
+            type: 类型
+          managers:
+            action: 行动
+            agent_name: 收藏经理
+            empty: 此集合类型中未添加管理员。
+            help: 此类集合的管理员可以编辑其他用户创建的集合，包括向集合中添加和删除作品，修改集合元数据以及删除集合。
+            title: 经理
+            type: 类型
+        form_participants:
+          add_group: 添加组
+          add_participants: 添加参与者
+          add_user: 添加用户
+          current_participants: 当前参与者
+          header: 收藏参与者
+          instructions: 您可以将这两个组和用户指定为此类集合的创建者和管理者
+          remove_success: 参与者已移除
+          submit: 加
+          update_notice: 参与者已更新
+        form_settings:
+          instructions: 这些设置决定了如何管理和发现此类型的集合。
+          warning: 警告：创建此类型的集合后，这些设置无法更改。
+        index:
+          breadcrumb: 集合类型
+          create_new_button: 创建新的集合类型
+          description: 集合类型使您能够定义管理存储库中用于不同目的的集合的设置。您可以根据需要定义任意数量的集合类型。
+          header: 集合类型
+          modal:
+            can_delete_body_html: "<p>删除此集合类型将永久地从存储库中删除类型及其设置。您确定要删除此集合类型吗？ </p>"
+            cannot_delete_body_html: "<p>您无法删除此集合类型，因为此类型的一个或多个集合已经创建。 </p><p>要删除此集合类型，请首先确保已删除此类型的所有集合。 </p>"
+            header_can_delete: 删除集合类型？
+            header_cannot_delete: 无法删除集合类型
+            view_collections: 查看这种类型的集合
+          more_toggle_content_html: "<p>收集类型的典型场景包括： </p><ul><li> <strong>用户集合</strong> ，任何注册用户可以创建它们来组织他们存放的物品。 </li><li>工作人员为展示公开<strong>展出的展品</strong> ，其中的物品可以包含在任何展品中。 </li><li>由员工创建和管理的<strong>受控集合</strong> ，并非用于公开展示，例如与组织单位或部门相关的集合。 </li><li>用于公开展示的<strong>社区集合</strong> ，类似于有时使用DSpace社区和集合的方式。 </li></ul>"
+          more_toggle_header_html: "<span>更多</span>关于收集类型"
+          table:
+            actions: 操作
+            name: 名称
+        multiple_membership_checker:
+          error_preamble: 错误：您指定了多个相同的单一成员资格集合类型
+          error_type_and_collections: "（类型：%{type}，集合：%{collections}）"
+        new:
+          header: 创建新的集合类型
+          submit: 保存
+        update:
+          notification: 集合类型%{name}已更新。
+      features:
+        index:
+          action: 行动
+          description: 描述
+          feature: 特征
+          header: 特征
+      sidebar:
+        activity: 活动
+        analytics: 分析
+        appearance: 表面
+        collection_types: 集合类型
+        collections: 收藏
+        collections_report: 收藏报告
+        configuration: 配置
+        content_blocks: 内容块
+        dashboard: 仪表盘
+        delete_all: 删除所有
+        notifications: 通知
+        pages: 网页
+        profile: 个人资料
+        repository_objects: 储存库内容
+        settings: 设置
+        statistics: 统计
+        tasks: 任务
+        technical: 特征
+        transfers: 转让
+        user_activity: 你的操作
+        users: 管理用户
+        workflow_review: 评审提交
+        workflow_roles: 工作流程角色
+        works: 作品
+        works_listing: 作品清单
+        works_report: 作品报告
+      stats:
+        deposited_form:
+          end_label: 结束 [默认到此刻]
+          heading: '展示存储的文件:'
+          start_label: 开始
+        repository_objects:
+          series:
+            published: 出版品
+            unknown: 状况不明
+            unpublished: 非出版品
+        user_deposits:
+          end_label: 结束 [默认到此刻]
+          headers:
+            main: 工作统计
+            total: 总作品：
+            visibility: 可见性总计
+          heading: 展示用户存储的文件
+          start_label: 开始
+        works:
+          headers:
+            main: 工作统计
+            total: 总作品：
+            visibility: 总计公开度
+      users:
+        index:
+          access_label: 上次访问
+          describe_users_html:
+            one: 存储库内有<b>%{count} 用户</b>。
+            other: 存储库内有<b>%{count} 用户</b>。
+          id_label: 用户名
+          role_label: 角色
+          title: 管理用户
+      workflow_roles:
+        header: 工作流程角色
+        index:
+          current_roles: 当前角色
+          delete:
+            confirm: 您肯定要删除?
+          header:
+            name: 名称
+            roles: 角色
+            user: 用户
+          new_role: '授予角色:'
+          no_roles: 没有角色
+      workflows:
+        index:
+          header: 审查提交
+          tabs:
+            published: 已出版
+            under_review: 在审查中
+    api:
+      accepted:
+        default: 您的请求已被接受，还在处理中，详细信息请见后台作业。
+      bad_request:
+        default: 不能处理您的请求，参见错误信息。
+      deleted:
+        default: 已被删除
+      forbidden:
+        default: 您无权访问此内容。
+      internal_error:
+        default: 服务器遇到问题。
+      not_found:
+        default: 找不到您要求的文件
+      success:
+        default: 您的请求已被成功处理。
+      unauthorized:
+        default: 您必须要先登录才可以做!
+      unprocessable_entity:
+        default: 您试着要修改的资源按照您的请求无法被修改。
+    background_attribution_html: ''
+    base:
+      attributes:
+        table_attribute_name: 属性名称
+        table_heading_attributes: 属性
+        table_values: 值
+        visibility: 能见度
+      citations:
+        citations: 引文
+        endnote: 的EndNote
+        header: '引文:'
+        mendeley: Mendeley
+        zotero: Zotero只
+      currently_shared:
+        currently_sharing: 目前与之共享
+        table_title_access: 访问权限
+        table_title_user: 人/组
+      file_manager:
+        back_to: 回到
+        toolbar: 工具条
+      file_manager_actions:
+        save: 保存
+        sort_alphabetically: 按字母顺序排序
+      file_manager_member_resource_options:
+        representative_media: 媒体代表
+        thumbnail: 缩略
+      form:
+        batch_link: 批量上传
+        batch_upload_hint: 要为每个文件创建单独的工作，请转到
+      form_child_work_relationships:
+        actions:
+          remove: 从这个工作中删除
+        add: 加
+        attach_new_work: 作为这项工作的孩子存入新的工作
+        caption: 这项工作目前包含这些儿童作品
+        confirm:
+          cancel: 取消
+          remove: 去掉
+          text: 删除这个孩子的工作将不会将其从存储库中删除，只能从这个父母的工作。你确定要从这项家务中删除这项工作吗？
+        header:
+          actions: 行动
+          title: 职称
+      form_files:
+        add_files: 添加文件
+        add_folder: 添加文件夹
+        cancel_upload: 取消上传
+        dropzone: 请将文件拖放此处。
+        local_upload_browse_everything_html: |
+          <p>您可以添加一个或多个文件与该工作相关联。</p>
+          <p>请注意如果您在短时间内上传了大量文件, 云提供商可能不能满足您的请求。
+           如果您上传中遇到问题，请用%{contact_href}报告。</p>
+          <p>上传限制为 %{upload_file_limit} 个文件，每个文件 %{upload_size_limit} MB。</p>
+        local_upload_html: |
+          <p>您可以添加一个或多个文件与该工作相关联。</p>
+          <p>上传限制为 %{upload_file_limit} 个文件，每个文件 %{upload_size_limit} MB。</p>
+      form_member_of_collections:
+        actions:
+          remove: 从收藏中删除
+        add: 加
+        caption: 这项工作目前在这些收藏
+        confirm:
+          cancel: 取消
+          remove: 去掉
+          text: 删除这项工作不会将其从存储库中删除，只能从这个集合中删除。你确定你想从集合中删除这项工作吗？
+        header:
+          actions: 行动
+          title: 集合标题
+      form_permission:
+        visibility: 可见性<small>谁应该能够查看或下载此内容？</ small>
+      form_permission_under_embargo:
+        help_html: "<strong>这件作品限制公开。</strong>您可以在此更改设置，也可以访问%{edit_link}以取消限制。"
+        legend_html: 公开度<small>谁可以查看或下载此内容？</small>
+        management_page: 限制管理页面
+      form_permission_under_lease:
+        help_html: "<strong>这件作品被租借。</strong>您可以在此处更改租借的设置，也可以访问%{edit_link}以停用该租约。"
+        legend_html: 公开度<small>谁可以查看或下载此内容？</small>
+        management_page: 租约管理页面
+      form_progress:
+        proxy_depositors: 代理存款人-选择您代表其存款的用户
+        required_agreement: 核对存储协议
+        required_descriptions: 描述您的作品
+        required_files: 添加文件
+        requirements: 必要条件
+        saving_your_work: 保存你的工作。这可能需要一些时间
+        yourself: 自己
+      form_rendering:
+        help_html: 在Universal Viewer中选择要作为每个图像下载的文件，例如整个作品的PDF。
+        legend_html: 渲染
+      form_representative:
+        help_html: 选择代表这项工作的媒体文件。
+        legend_html: 代表媒体
+      form_share:
+        access_type_to_grant: 要授予的访问类型
+        account_label_without_suffix: "%{account_label}（没有%{suffix}部分）"
+        add_sharing: 添加共享
+        add_this_group_html: 添加<span class =“sr-only”>此组</ span>
+        currently_sharing: 目前与...共享
+        depositor: 储户
+        directions: 无论此工作的可见性设置如何，您也可以与其他用户和组共享。
+        group: 组
+        permissions_save_note_html: 权限<strong> </strong>保存，直到“保存”为止。按钮在页面底部按下。
+        use_add_button: 使用添加按钮一次可以访问一个%{account_label}（它将被添加到下面的列表中）。按名称或%{account_label} \选择用户。然后选择您要授予的访问级别，并单击“添加此%{account_label}”以完成添加权限。
+      form_thumbnail:
+        help_html: 选择要用作此作品缩略图的文件。
+        legend_html: 缩略图
+      form_visibility_component:
+        visibility: 可见性
+        subtitle_html: <small>谁应该能够查看或下载此内容？</ small>
+      inspect_work:
+        back_to: 回到
+        entity_id: 实体ID
+        id: ID
+        name: 名称
+        object_name: 对象名称
+        persistence: 坚持
+        processing_entity_id: 处理实体ID
+        proxy_for: 代理
+        roles: 角色
+        state: 州
+        state_name: 州名
+        users: 用户
+        workflow: 工作流程
+        workflow_comments: 工作流程评论
+      items:
+        actions: 行动
+        date_uploaded: 上传日期
+        empty: 该 %{type} 没有相关文件。 请点击'编辑'添加更多文件。
+        header: 单件
+        thumbnail: 缩略图
+        title: 标题
+        unauthorized: 这个%{type}中没有公开可用的项目。
+        visibility: 公开度
+      relationships:
+        empty: 该 %{type} 目前未纳入任何收藏集内。
+        header: 关联
+      relationships_parent_row:
+        label: '属于 %{type}:'
+      share_with:
+        definition_heading: 许可定义
+        definitions_html: "<strong>查看/下载：</strong>可以从%{application_name}中访问此文件（内容和元数据）。 <br /> <strong>编辑：</strong>可以<strong>编辑</strong>此文件（包括内容和元数据）。您只能将此权限授予%{institution_name}用户和/或组。"
+        share_with_html: 您可以为特定用户和/或组授予对文件的“查看/下载”或“编辑”访问权限。输入有效的%{account_name}，一次选择一个，选择该用户的访问级别，然后单击+添加。
+      show:
+        items: 项目
+        last_modified: 最新修改
+        relationships: 关系
+      show_actions:
+        analytics: 分析
+        attach_child: 附上的孩子
+        confirm_delete: 删除这一%{work_type}
+        delete: 删除
+        edit: 编辑
+        feature: 功能
+        unfeature: Unfeature
+      social_media:
+        facebook: Facebook
+        facebook_share: 在脸书上分享
+        google: Google+
+        google_share: 在Google+上分享
+        tumblr: Tumblr
+        tumblr_share: 分享到Tumblr
+        twitter: Twitter
+        twitter_share: 分享到Twitter
+      unauthorized:
+        id: ID：%{id}
+        is_private: 您尝试访问的%{type}是私有的
+        page_is_private: 您尝试访问的页面是私有的
+        unauthorized: 擅自
+      work_button_row:
+        analytics: Analytics（分析）
+        attach: 附上%{type}
+        delete: 删除
+        delete_type: 删除这个%{type}？
+        edit: 编辑
+        feature: 特征
+        unfeature: Unfeature
+      workflow_actions:
+        actions: 操作
+        previous_comments: 以前的评论
+        review_comment: 评论评论
+        title: 审核和批准
+    base/unauthorized:
+      is_private: 您尝试访问的%{type}是私有的
+      unauthorized: 擅自
+    batch:
+      help:
+        resource_type: 您可以选择适用于所有文件的多种类型
+        title: 文件名将作为默认标题。请提供更有意义的标题，文件名将会在系统内保留。
+    batch_edits:
+      check_all:
+        select_to_access_selection_options: 选择以访问选择选项
+      currently_shared:
+        share_batch_with: 与共享批次
+        table_title_access: 访问权限
+        table_title_user: 人/组
+      delete_selected:
+        button_label: 删除选择
+        deleting_file_from: 从%{application_name}删除文件是永久性的。单击“确定”从%{application_name}中删除此文件，或单击“取消”以取消此操作
+      edit:
+        apply_changes_to: 更改将应用于：（%{x_number_of}有效）
+        batch_edit_descriptions: 批量修改说明＆nbsp;＆nbsp;＆nbsp; <small>点击下面的标签编辑工作说明。</ small>
+        clear_batch: 清除批次
+        descriptions: 说明
+        descriptions_title: 说明：
+        permissions: 权限
+        sharing: 分享
+        visibility: 能见度
+    batch_uploads:
+      disabled: 功能被管理员禁用
+      files:
+        button_label: 添加新作品
+        instructions: 上传的每份文件都会分别按新作品生成。
+        upload_type_instructions: 创建一件包括所有文件的作品，请去
+      new:
+        breadcrumb: 创建批量作品
+        header: 批量建立新作品
+        in_collections: 这些作品包括在收藏集中
+        in_other_works: 这件作品包括在其它作品中
+        in_this_work: 其它作品包括在这件作品中
+      progress:
+        header: 保存作品
+    bread_crumb:
+      search_results: 回到检索结果
+    citations:
+      work:
+        citation_formats: 引文格式
+    collection:
+      actions:
+        add_existing_works:
+          desc: 将现有作品添加到此收藏集
+          label: 将现有作品添加到此集合中
+        add_new_nested_collection:
+          desc: 将新集合添加到此集合
+          label: 创建新的集合作为子集合
+        add_new_work:
+          desc: 通过这个集合存放新作品
+          label: 通过这个集合存放新作品
+        delete:
+          confirmation: 删除此收藏集？
+          desc: 删除此收藏集？
+          label: 删除
+        edit:
+          desc: 编辑收藏集
+          label: 编辑
+        header: 行动
+        nest_collections:
+          button_label: 添加一个子集合
+          desc: 在此集合中嵌套其他集合
+          label: 将现有集合添加到此集合
+          modal_title: 向集合添加一个子集合
+          select_label: 选择子集合
+        nested_subcollection:
+          button_label: 添加到收藏
+          desc: 将现有集合添加到此集合
+          modal_title: 将此集合添加到另一个集合中
+          select_label: 选择收藏
+      also_belongs_to: 这项工作也属于
+      browse_view: 浏览页面
+      document_list:
+        edit: 编辑
+        no_visible_works: 您访问的收藏集是空集
+      edit:
+        manage_items: 管理收藏集的单件
+      edit_view: 编辑视图
+      form:
+        additional_fields: 额外字段
+        description: 描述
+      is_part_of: 是一部分
+      select_form:
+        close: 关闭
+        create: 创建收藏集
+        create_new: 添加到新收藏集
+        no_collections: 您没有访问现有收藏集的权限。您可以建立新收藏集。
+        select_heading: 选择要添加文件的收藏集：
+        title: 添加到新收藏集
+        update: 更新收藏集
+    collection_type:
+      admin_set_title: 管理员设置
+      default_title: 用户集合
+    collection_types:
+      create_service:
+        admin_set_description: 旨在帮助行政控制的作品集合。管理员集合提供了定义一组作品周围的行为和策略的方法。
+        default_description: 用户集合可由任何用户创建以组织他们的作品。
+    collections:
+      search_form:
+        button_label: 去
+        label: 搜索收藏集 %{title}
+        placeholder: 搜索收藏集
+      show:
+        buttons:
+          remove_from_collection: 去掉
+          remove_this_sub_collection: 去掉
+        item_count: 物品
+        no_visible_parent_collections: 没有可见的父集合。
+        no_visible_subcollections: 没有可见的子集合。
+        parent_collection_header: 家长集合
+        show_less_parent_collections: "...显示较少"
+        show_more_parent_collections: 展示更多...
+        subcollection_count: 子集合
+        works_in_collection: 作品在此收藏集
+      sort_and_per_page:
+        number_of_results_to_display_per_page: 数量的结果显示，每页
+        results_per_page: 每页结果
+        sort_by_html: "<跨>排序：</跨>"
+    contact_form:
+      button_label: 发送
+      email_label: 您的邮件
+      header: 联系表格
+      issue_types:
+        browsing: 浏览和搜索
+        changing: 修改内容
+        depositing: 存储内容
+        general: 一般查询或请求
+        reporting: 报告问题
+      message_label: 通知
+      name_label: 您的名字
+      notice: 请用联系表格提交查询, 报告问题, 请求帮助, 或提供反馈。有关使用此系统的更多信息，请参见帮助页面。
+      select_type: 选择问题类型
+      subject_label: 主题
+      title: 联系我们
+      type_label: 问题类型
+    content_blocks:
+      cancel: 取消
+      tabs:
+        announcement_text: 公告文字
+        featured_researcher: 特色研究员
+        marketing_text: 营销文字
+      updated: 内容块已更新。
+    controls:
+      about: 关于
+      contact: 联系
+      help: 帮助
+      home: 首页
+    dashboard:
+      additional_notifications: 见所有通知
+      admin_sets:
+        admin_set: 管理集
+        files: 文件
+        subtitle: 近期活动
+        title: 管理集
+        works: 作品
+      all:
+        collections: 所有收藏集
+        works: 所有作品
+      authorize_proxies: 授权代理
+      breadcrumbs:
+        admin: 管理
+        collections_report: 收藏报告
+        works_report: 作品报告
+      collection_type_actions:
+        close: 关
+        create_collection: 创建集合
+        select_type_of_collection: 选择收集类型
+      collections:
+        collection_title: 藏品名称
+        edit:
+          header: 编辑收藏集：%{title}
+        files: 文件
+        form:
+          permission_update_errors:
+            error: 无效的权限模板更新选项。
+          permission_update_notices:
+            participants: 收藏的分享选项已更新。
+            sharing: 收藏的分享选项已更新。
+          tabs:
+            branding: 品牌
+            description: 描述
+            discovery: 发现
+            relationships: 关系
+            sharing: 分享
+        form_branding:
+          alt_text: Alt案文：
+          banner:
+            description: 要显示在收集页面顶部的图像。为获得最佳效果，请上传至少120像素高，1200像素宽的图像（JPG，GIF或PNG）。
+            label: 旗帜
+          branding:
+            description: 或者，您可以上传横幅图像和/或徽标图像以与此集合关联。如果上传，这些图像将显示在收集页面的顶部，为收藏提供独特的品牌。
+            label: 品牌
+          choose_file: 选择文件
+          link_url: 链接网址：
+          logo:
+            description: 一个或多个图像显示在收集页面的顶部。为获得最佳效果，请上传高度为40像素的图像（JPG，GIF或PNG）。较大的图像将被调整到40像素的高度。
+            label: 商标
+          previous: 以前的
+          remove: 删除
+          remove_current_banner: 删除目前的旗帜
+          remove_logo: 删除标志
+        form_discovery:
+          para1: 这些设置决定了哪些人能够发现并查看此收藏集的着陆页;它们不会影响集合中项目的可见性。
+          para2: 如果您选择不让该集合成为开放访问权限，您仍然可以使用共享选项卡将该集合与特定用户和组共享。
+        form_relationships:
+          add_other_collections_as_sub_collections_description: 您可以管理此集合的子集合。
+          buttons:
+            remove_from_collection: 去掉
+            remove_this_sub_collection: 去掉
+          collection_is_subcollection_description: 此集合目前是这些集合的子集合
+          headlines:
+            other_collections_in_this_collection: 其他收藏集
+            this_collection_in_other_collections: 此集合在其他集合中
+          modals:
+            remove_from_collection_description: 删除此集合不会将其从存储库中删除，只能作为此集合的父项。你确定要删除这个集合吗？
+            remove_parent_collection_deny: 您没有足够的权限让父级集合能够将其删除。
+            remove_this_sub_collection_description: 删除此子集合不会将其从存储库中删除，只能从此父集合中删除。你确定要删除这个子集合吗？
+          sub_collections_of_collection_description: 这些集合目前是该集合的子集合
+          table:
+            action: 行动
+            collection_title: 收藏标题
+          this_collection_in_other_collections_description: 您可以将此集合作为子集合添加到其他集合。
+        form_share:
+          add_group: 添加组
+          add_sharing: 添加共享
+          add_user: 添加用户
+          current_shared: 目前与...共享
+          depositor: 存款
+          manager: 经理
+          note: 无论此集合的可见性设置如何，您都可以将此集合与特定的组和用户共享。
+          search_for_a_group: 搜索一组...
+          search_for_a_user: 搜索一个用户...
+          select_a_role: 选择一个角色...
+          viewer: 观众
+        form_share_table:
+          allow_all_registered: 允许所有注册
+          depositors:
+            action: 行动
+            agent_name: 用户/组
+            empty: 此集合中没有添加存储器。
+            help: 此集合的存储者可以查看集合并向其添加作品，即使collecton的可见性权限不允许他们查看它也是如此。
+            remove: 去掉
+            title: 储户
+            type: 类型
+          managers:
+            action: 行动
+            agent_name: 用户/组
+            empty: 没有管理员被添加到这个集合。
+            help: 此集合的管理员可以添加和删除集合中的作品，修改集合元数据并删除集合。
+            help_with_works: 对于%{type_title}类型的集合，当直接在此集合中创建作品时，管理员可以对新作品进行编辑访问。
+            remove: 去掉
+            title: 经理
+            type: 类型
+          viewers:
+            action: 行动
+            agent_name: 用户/组
+            empty: 此收藏中没有添加观看者。
+            help: 即使集合的可见性权限不允许他们查看，该集合的查看者也可以查看它。
+            help_with_works: 对于%{type_title}类型的集合，当直接在此集合中创建作品时，查看者被授予对新作品的读取权限。
+            remove: 去掉
+            title: 观众
+            type: 类型
+        last_updated: 最近更新时间
+        new:
+          header: 创建新收藏集
+        recent_activity: 近期活动
+        show:
+          header: 采集
+          item_count: 作品
+          metadata_header: 收集细节
+          parent_collection_header: 家长集合
+          public_view_label: 公众对收藏的看法
+          search_results: 搜索此集合中的结果
+          show_less_parent_collections: "...显示较少"
+          show_more_parent_collections: 展示更多...
+          subcollection_count: 子集合
+        show_descriptions:
+          descriptions: 说明
+        show_document_list:
+          action: 行动
+          date_added: 添加日期
+          list_items_in_collection: 此集合中的项目列表
+          owner: 所有者
+          title: 标题
+          visibility: 能见度
+        show_document_list_menu:
+          select: 选择
+        show_document_list_row:
+          creator: 创建者：
+          depositor: 储户：
+          edit_access: 编辑权限：
+        sort_and_per_page:
+          show_par_page_html: 显示%{select}每页
+          sort_by: 排序：
+        title: 收藏
+        work_action_menu:
+          delete_work: 删除工作
+          deleting_from_work: 从%{application_name}删除作品是永久性的。单击“确定”从%{application_name}中删除此工作，或单击“取消”取消此操作
+          edit_work: 编辑工作
+          press_to: 按到
+          remove_from_collection: 从收藏中删除
+          select_an_action: 选择一个动作
+          transfer_ownership_of_work: 转移工作所有权
+        works: 作品
+      create_work: 创建作品
+      current_proxies: 目前代理
+      delete_notification: 删除通知
+      heading_actions:
+        close: 关闭
+        create_work: 创建作品
+        select_type_of_work: 选择作品类型
+      manage_proxies: 管理代理
+      managed:
+        collections: 管理集合
+        works: 托管作品
+      my:
+        action:
+          add_to_collection: 添加到收藏
+          add_to_collection_only: 允许的操作仅限于添加成员
+          admin_set_confirmation: 从%{application_name}删除管理员集合是永久性的。单击确定从%{application_name}删除此管理集，或单击取消取消此操作
+          collection_create_success: 收集已成功创建。
+          collection_delete_fail: 收藏无法删除
+          collection_delete_success: 收藏夹已成功删除
+          collection_deny_add_members: 您没有足够的权限将成员添加到集合中
+          collection_update_success: 收集已成功更新。
+          collections_confirmation_html: 删除<span class='pluralized'>这个集合</span>将永久地从存储库中删除<span class='pluralized'>这个集合</span> 。 <span class='pluralized'>此集合中的</span>项目将保留在存储库中。你确定要删除<span class='pluralized'>这个集合</span>吗？
+          collections_confirmation_no_items_html: 你确定要删除这个集合吗？此操作无法撤消。
+          collections_confirmation_plural: 这些集合
+          collections_confirmation_singular: 此集合
+          delete_admin_set: 删除集合
+          delete_admin_set_deny: 这个集合被定义为Admin Set并且不是空的。要删除此管理员设置，您必须先删除（删除或移动到另一个管理员设置集合）管理员设置中的所有项目。
+          delete_collection: 删除收藏集
+          delete_collection_deny: 您没有足够的权限来删除此文档。
+          delete_collections: 删除集合
+          delete_collections_deny: 您必须选择一个或多个要删除的集合。
+          delete_work: 删除作品
+          edit_admin_set: 编辑集合
+          edit_collection: 编辑收藏集
+          edit_collection_deny: 您没有足够的权限来编辑此集合。
+          edit_selected: 编辑选定
+          edit_work: 编辑作品
+          highlight: 在个人资料栏加重点作品
+          members_no_access: 您没有足够的权限给任何选定的成员
+          nesting_not_allowed: 这种类型的集合不支持嵌套。
+          nesting_permission_denied: 您没有足够的权限将此集合添加到其他集合。
+          select: 选择
+          select_all: 选择当前页面
+          select_none: 选择没有
+          transfer: 转让作品所有权
+          unhighlight: 删除重点作品
+          view_admin_set: 查看集合
+          view_collection: 查看集合
+          work_confirmation: 删除作品，从%{application_name}删除作品是永久性的。从%{application_name}点击'OK'删除此收藏集，或点击'取消'取消操作。
+        collection_list:
+          description: 描述：
+          edit_access: 编辑访问：
+          groups: '群:'
+          managed_access:
+            deposit: 存款
+            manage: 管理
+            view: 视图
+          users: '用户:'
+        collections: 你的收藏集
+        collections_report: 收藏报告
+        facet_label:
+          collections: '筛选您的收藏集:'
+          highlighted: '筛选您的收藏精品:'
+          shared: '筛选您的分享:'
+          works: '筛选作品:'
+        heading:
+          access: 访问
+          action: 行动
+          caption: 此集合中的项目列表
+          collection:
+            visibility: 收集的可见性
+          collection_type: 集合类型
+          date_modified: 上一次更改
+          date_uploaded: 上传日期
+          highlighted: 重点
+          items: 项目
+          last_modified: 上一次更改
+          title: 标题
+          type: 类型
+          visibility: 公开度
+          work:
+            visibility: 工作的可视性
+        highlighted: 我的重点
+        shared: 与我分享的作品
+        sr:
+          batch_checkbox: 点击向收藏集添加或者编辑清单
+          check_all_label: 选择添加或编辑所有文件
+          detail_label: 展示概括细节
+          listing: 您存储细项列单
+          number_of_results_to_display_per_page: 每页显示的结果数
+          press_to: 按击
+          results_per_page: 每页显示的结果数量
+          show_label: 展示所有细节
+          thumbnail: 缩图
+        works: 您的作品
+        works_report: 作品报告
+        your_collections: 你的收藏
+        your_works: 你的作品
+      nest_collections_form:
+        create_under: "'%{child_title}'已被添加到'%{parent_title}'"
+        create_within: "'%{child_title}'已被添加到'%{parent_title}'"
+        removed_relationship: "'%{child_title}'已从'%{parent_title}'中删除"
+      no_activity: 用户最近没有活动
+      no_notifications: 用户没有收到通知
+      no_proxies: 没有代理分配
+      no_transfer_requests: 您没有收到任何在作品转让请求
+      no_transfers: 您没有转让任何作品
+      profiles:
+        edit_primary:
+          change_picture: "<i class =“fa fa-camera”> </ i>更改图片"
+          delete_picture: 删除图片
+          delete_picture_data_content: 如果您想完全删除图片，请选中相应复选框并保存您的个人资料。
+          delete_picture_data_original_title: 删除图片
+          facebook_handle: "<i class =“fa fa-facebook”aria-hidden =“true”> </ i> Facebook句柄"
+          google_handle: "<i class =“fa fa-google-plus”> </ i> Google+处理"
+          help_change_picture_type: JPG，GIF或PNG（小于2MB）
+          save_profile: "<i class =“fa fa-floppy-o”> </ i>保存个人资料"
+          twitter_handle: "<i class =“fa fa-twitter”aria-hidden =“true”> </ i> Twitter句柄"
+      proxy_activity: 代理活动
+      proxy_add_deny: 你不能让自己成为代理人
+      proxy_delete: 删除代理
+      proxy_help: 选择一个可以代表您存放作品的用户。您将成为该用户为您存储的作品的所有者。您可以通过单击删除代理按钮来撤销代理。
+      proxy_user: 代理用户
+      repository_growth:
+        collections: 集合
+        date: 日期
+        objects: 对象
+        subtitle: 过去90天
+        title: 存储库增长
+        works: 作品
+      repository_objects:
+        status: 当前状态
+        subtitle: 当前状态
+        title: 存储库对象
+      resource_type_graph:
+        count: 数数
+        resource_type: 资源类型
+        title: 资源类型
+      show_admin:
+        current_registered_users: 电流
+        graph_reports: 自定义图表报告
+        new_visitors: 新访问者
+        past_30_days: 过去30天
+        registered_users: 注册用户
+        returning_visitors: 老访问者
+        total_visitors: 所有访问者
+      stats:
+        collections: 已建立的收藏集
+        file_downloads: 下载
+        file_views: 阅览
+        files: 文件已存储
+        heading: 您的【下载？】统计
+        joined_on: 加入上
+        works: 已建立的作品
+      tabs:
+        admin_sets: 管理集
+      title: 我的控件板
+      transfer_of_ownership: 转让所有权
+      transfer_works_link: 选择作品转让
+      transfers_received: 收到转让
+      transfers_sent: 转让已发出
+      user_activity:
+        date: 日期
+        new_users: 新用户
+        new_visitors: 新访客
+        registered_users: 注册用户
+        returning_visitors: 回访者
+        subtitle: 新用户注册
+        title: 用户活动
+        total_visitors: 访客总数
+        user_summary: 用户摘要
+      user_activity_graph:
+        date: 日期
+        new_users: 新用户
+        new_visits: 新访问
+        return_visits: 回访
+        total_visits: 总访问量
+      user_notifications: 用户通知
+      view_files: 阅览文件
+      visibility_graph:
+        visibility: 能见度
+      work_type_graph:
+        count: 数数
+        title: 工作类型
+        work_type: 工作类型
+    document_language: zh
+    edit_profile: 编辑个人资料
+    embargoes:
+      edit:
+        embargo_apply: 申请限制
+        embargo_cancel: 取消并管理所有限制
+        embargo_deactivate: 停用限制
+        embargo_false_html: "<strong>这个%{cc}目前没有受到限制。</strong>如果您想申请限制，请在此处提供信息。"
+        embargo_return: 返回编辑这个%{cc}
+        embargo_true_html: "<strong>这个%{cc}受到限制。</strong>"
+        embargo_update: 更新限制
+        header:
+          current: 当前限制
+          past: 过去的限制
+        history_empty: 这个%{cc}没有先前的限制。
+        manage_embargoes_html: 管理%{cc} <span class='human_readable_type'>（%{cc_type}）的</span>限制
+      index:
+        active: 所有主动限制
+        deactivated: 停用的限制
+        expired: 过期主动限制
+        manage_embargoes: 管理限制
+      list_expired_active_embargoes:
+        change_all: 将%{cc}中的所有文件更改为
+        deactivate: 停用限制
+        deactivate_selected: 停用选定的限制
+        missing: 目前没有有效的限制。
+        select_all: 全选
+      table_headers:
+        release_date: 限制发布日期
+        title: 标题
+        type: 什么样的工作
+        viz_after: 公开度将更改为
+        viz_current: 当前公开度
+      update:
+        embargo_deactivated: 停用限制成功!
+    featured_researchers: 特色研究者
+    file_manager:
+      link_text: 文件管理员
+    file_set:
+      browse_view: 浏览
+      show:
+        download: 下载文件
+        downloadable_content:
+          audio_link: 下载音频
+          audio_tag_not_supported: 您的浏览器不支持音频标签。
+          default_link: 下载文件
+          heading: 可下载的内容
+          image_link: 下载图片
+          office_link: 下载文件
+          pdf_link: 下载PDF文件
+          video_link: 下载视频
+          video_tag_not_supported: 您的浏览器不支持视频标记。
+    file_sets:
+      actions:
+        delete: 删除
+        delete_confirm: 从%{application_name}删除%{file_set}是永久性的。单击确定从%{application_name}中删除此项，或单击取消取消此操作
+        delete_title: 删除%{file_set}
+        download: 下载
+        download_title: 下载%{file_set}
+        edit: 编辑
+        edit_title: 编辑%{file_set}
+        header: 选择一个动作
+        press_to: 按到
+        versions: 版本
+        versions_title: 显示以前的版本
+      asset_deleted_flash:
+        message: 该文件已经被删除。
+      asset_saved_flash:
+        message:
+          one: 该文件%{saved_files}已经保存。
+          other: 该文件%{saved_files}已经保存。
+      asset_updated_flash:
+        message: 该文件%{link_to_file}已经更新。
+      descriptions:
+        save: 保存说明
+        title: 说明
+      edit:
+        descriptions: 说明
+        header: 编辑%{file_set}
+        permissions: 权限
+        versions: 版本
+      extra_fields_modal:
+        additional: 额外
+        label: 附加%{label}（s）
+      form:
+        attach_to: 附加到%{parent}
+        cancel: 取消
+        save: 保存
+        title: 标题
+      groups_description:
+        description_html: 标有"选择一个群"的下拉框内是您所属的一组用户管理群的清单。您可以选择一个特定的群，指定对%{application_name}中文件的访问级别，类似于添加用户访问级别。
+      permission:
+        save: 保存
+      permission_form:
+        add_new_group_skel: 添加此组
+        add_new_user_skel: 添加此%{account_label}
+        applied_to: "（适用于刚刚上传的所有文件）"
+        bulk: 块
+        depositor: 储户
+        enter: 输入%{account_label}（一次一个）
+        header: 权限
+        new_group_help_text: 使用添加按钮一次可以访问一个组（它将添加到下面的列表中）。
+        new_group_name_skel: 组
+        new_group_permission_skel: 要授予的访问类型
+        new_user_help_text: 使用添加按钮一次可以访问一个%{account_label}（它将被添加到下面的列表中）。按名称或%{account_label}选择用户。然后选择您希望授予的访问级别，并单击Add this %{account_label}以完成添加权限。
+        new_user_name_skel: "%{account_label}（没有%{suffix}部分）"
+        new_user_permission_skel: 要授予的访问类型
+        optional: "（可选的）"
+        save_note_html: 在页面底部按“保存”按钮之前， <strong>不会</strong>保存权限。
+        select_group: 选择一个组
+        share_with: 与某人分享
+        user_search: 搜索用户
+      proxy:
+        message: "%{sending_user}代表您存放了%{title}文件。"
+      show_actions:
+        analytics: 分析
+        confirm_delete_this: 删除这一%{type}吗？
+        delete_this: 删除这一%{type}
+        edit_this: 编辑本%{type}
+      show_details:
+        characterization: 表征
+        date_modified: 修改日期
+        date_uploaded: 日上传
+        depositor: 存款
+        file_details: 文件的详细信息
+        fixity_check: 固定性检查
+        not_yet_characterized: 没有特征
+      versioning:
+        choose_file: 选择新版本文件
+        current: 当前版本
+        header: 版本
+        previous: 以前的
+        remove: 消除
+        remove_current_files: 删除当前文件
+        remove_new_version: 删除新版本文件
+        restore: 恢复以前的版本
+        restore_from: 还原自
+        save: 保存修订
+        save_your_note: 您必须点击“保存修订版”还原此文件的先前版本
+        upload: 上传新版本
+    help:
+      header: 用户支持
+      override_text: 用 app/views/static/help.html.erb 取代此文件。
+    homepage:
+      admin_sets:
+        link: 查看所有收藏
+        tab_label: 探索收藏集
+        thumbnail: 缩图
+        title: 探索收藏集
+      featured_researcher:
+        missing: 没有特色研究员。
+        tab_label: 特色研究员
+        title: 特色研究员
+      featured_works:
+        document:
+          depositor_label: 储户
+          depositor_missing: 没有储户的价值
+          keyword_label: 关键词
+          keyword_missing: 没有指定关键字
+          title_label: 标题
+        drag: 拖
+        no_works: 没有特色作品
+        tab_label: 特色作品
+        title: 特色作品
+      recently_uploaded:
+        depositor: 储户
+        details: 细节
+        document:
+          depositor_label: 储户
+          depositor_missing: 没有储户的价值
+          keyword_label: 关键词
+          keyword_missing: 没有指定关键字
+          title_label: 标题
+        no_public: 没有贡献公开的作品。
+        tab_label: 最近上传的
+        title: 最近上传的
+    icons:
+      collection: fa fa-cubes
+      default: fa fa-cube
+    leases:
+      edit:
+        header:
+          current: 目前租借
+          past: 过去租借
+        history_empty: 这个%{cc}没有应用之前的租约。
+        lease_apply: 申请租借
+        lease_cancel: 取消并管理所有租借
+        lease_deactivate: 停用租借
+        lease_false_html: "<strong>这个%{cc}目前不在租借中。</strong>如果您想申请租借，请在此处提供信息。"
+        lease_return: 返回编辑这个%{cc}
+        lease_true_html: "<strong>这个%{cc}是租借的。</strong>"
+        lease_update: 更新租借
+        manage_leases_html: 管理%{cc} <span class='human_readable_type'>（%{cc_type}）的</span>租借
+      index:
+        active: 所有在使用的租借
+        deactivated: 停用租借
+        expired: 过期使用的租借
+        manage_leases: 管理租借
+      list_expired_active_leases:
+        change_all: 将%{cc}中的所有文件更改为
+        deactivate: 停用租借
+        deactivate_selected: 停用选定的租借
+        missing: 目前没有到期的租借期限。
+      table_headers:
+        release_date: 租借发布日期
+        title: 标题
+        type: 什么样的工作
+        viz_after: 公开度将更改为
+        viz_current: 当前公开度
+    mailbox:
+      date: 日期
+      delete: 删除讯息
+      empty: 找不到通知
+      message: 讯息
+      notifications_deleted: 通知已被删除
+      subject: 主题
+    manifest:
+      download_text: 下载整个资源
+      unknown_mime_text: 未知的mime类型
+    messages:
+      failure:
+        multiple:
+          keyword: 不能被更新。 您没有足够的权限进行编辑。
+          link: 这些文件
+        single: 不能被更新。 您没有足够的权限进行编辑。
+        subject: 批量上传许可被拒
+        title: 文件上传失败
+      success:
+        multiple:
+          keyword: 已保存。
+          link: 这些文件
+        single: 已保存。
+        subject: 批量上传完成
+        title: 文件上传成功
+    models:
+      file_set: 文件集
+      hyrax/pcdm_collection: 收藏
+      hyrax/work: 工作
+    my:
+      count:
+        collections:
+          collections_listing: 收藏清单
+          in_repo: 存储库中的<strong> %{total_count}集合</strong>
+          you_manage: 您可以在存储库中管理<strong> %{total_count}集合</strong>
+          you_own: 您在存储库中拥有<strong> %{total_count}集合</strong>
+        works:
+          in_repo: 存储库中的<strong> %{total_count}有效</strong>
+          works_listing: 作品清单
+          you_manage: 您可以在存储库中管理<strong> %{total_count}作品</strong>
+          you_own: 您在存储库中拥有<strong> %{total_count}作品</strong>
+      sort_and_per_page:
+        number_of_results_to_display_per_page: 每页显示的结果数
+    nav_safety:
+      change_tab_message: 你确定要离开这个标签吗？任何未保存的数据都将丢失。
+    notifications:
+      batch_create_failure:
+        message: 为%{user}创建的批处理失败：%{messages}
+        subject: 失败的批次创建
+      batch_create_success:
+        message: 传递的%{user}批量创建。
+        subject: 传递批量创建
+      fixity_check_failure:
+        message: "%{log_date}（%{uri}）的%{log_date}运行的固定性检查失败。"
+        subject: 失败的固定检查
+      import_url_failure:
+        subject: 文件导入错误
+      proxy_deposit_request:
+        transfer_on_create:
+          message: "%{user_link}想要将作品转移给你。查看所有%{transfer_link}"
+          subject: 所有权变更请求
+          transfer_link_label: 转移请求
+        transfer_on_update:
+          comments: 评论：%{receiver_comment}
+          message: 您的转移请求是%{status}。
+          subject: 所有权变更%{status}
+        validation:
+          open_transfer: 必须先关闭工作的公开转储，然后再创建新的转储
+          sender_is_not_receiver: 指定其他用户接收作品
+          valid_username: 必须是现有用户
+      proxy_depositor_added:
+        grantee_message: "%{grantor}已指定您为代理存款人"
+        grantor_message: 您已将%{grantee}指定为代理存款人
+        subject: 代理存款人已添加
+      workflow:
+        changes_required:
+          message: |-
+            %{title}（%{link}）在批准之前需要进行其他更改。
+             '%{comment}'
+          subject: 您的存款需要更改
+        deposited:
+          message: zxzxzxx（%{link}）被%{user}批准。 %{comment}
+          subject: 存款已获批准
+        pending_review:
+          message: "%{title}（%{link}）由%{user}存放，正在等待批准%{comment}"
+          subject: 存款需要审核
+    operations:
+      index:
+        operations_type: 运营类型
+        status: 状态
+        title: 操作
+        updated: 更新
+    pages:
+      cancel: 取消
+      tabs:
+        about_page: 关于页面
+        agreement_page: 存储协议
+        help_page: 帮助页面
+        terms_page: 使用条款
+      updated: 页面更新。
+    passive_consent_to_agreement: 保存这件作品表明我同意
+    permission_levels:
+      edit: 编辑权限
+      options:
+        edit: 编辑
+        none: 选择访问
+        read: 查看/下载
+      owner:
+        edit: 编辑权限
+      read: 查看/下载
+    search:
+      button:
+        html: <span class="fa fa-search"></span> 转到
+        text: 搜索
+      form:
+        option:
+          all:
+            label_long: "%{application_name}的全部"
+            label_short: 全部
+          my_collections:
+            label_long: 我的收藏集
+            label_short: 我的收藏集
+          my_shares:
+            label_long: 我的共享
+            label_short: 我的共享
+          my_works:
+            label_long: 我的作品
+            label_short: 我的作品
+        q:
+          label: 搜索 %{application_name}
+          placeholder: 输入搜索词
+    select_type:
+      description: 普通目的作品类型
+      name: 作品
+    share_button: 分享您的作品
+    single_use_links:
+      button: 文件的单次使用链接
+      copy:
+        button: 复制
+        tooltip: 已复制!
+      delete: 删除
+      download:
+        type: 下载
+      expiration:
+        lesser_time: 在不到一小时之内
+        time: 在%{value}小时
+      expiration_message: 链接%{link}到期%{time}
+      show:
+        type: 显示
+      table:
+        actions: 行动
+        expires: 到期
+        key: 关键字
+        link: 链接
+        no_links: 链接未生成
+      title: 单次使用链接
+    single_use_links_viewer:
+      single_use_error:
+        help: '%{application_name}无法找到单次使用链接。此链接已过期或之前已使用过。我们对不便表示抱歉。您可能有兴趣使用<a href="/help/">帮助页面</a>查找解决方案。'
+        link_expired_not_found: 单次使用链接已过期或未找到
+        link_not_found: 单用链接未找到
+    sort_label: 对清单中单件排序
+    static:
+      mendeley:
+        contact_form: 联系表
+        export_to_mendeley: 出口到门德利
+        export_to_mendeley_details: 通过嵌入式元数据支持导出到Mendeley。如果Mendeley没有自动获取存放文件的元数据，请通过以下方式报告问题
+      zotero:
+        contact_form: 联系表
+        export_to_zotero: 导出到Zotero
+        export_to_zotero_details: 通过嵌入式元数据支持导出到Zotero。如果Zotero没有自动获取存放文件的元数据，请通过以下方式报告问题
+    stats:
+      downloads:
+        downloads: 下载
+      pageviews:
+        pageviews: 页面浏览量
+      work:
+        and: 和
+        downloads: 下载
+        header: 工作分析
+        pageviews: 浏览量
+    toolbar:
+      dashboard:
+        menu: 控件板
+      language_switch: 转换语言
+      notifications:
+        many: 您有%{count}未读通知
+        one: 您有一个未读通知
+        zero: 您没有未读通知
+      profile:
+        login: 登录
+        logout: 退出登录
+        sr_action: 阅览
+        sr_target: 个人资料
+    transfers:
+      new:
+        confirm: 您确定要将此作品的所有权转让给其他使用者吗？单击确定转移或取消返回到转让页面
+        header: 所有权转让
+        placeholder: 搜索用户
+        sr_only_description: 选择要转让 “％{work_title}” 的用户，添加可选注释，然后按转让。
+        title: 转让所有权 "%{work_title}"
+      received:
+        accept: 接受
+        accept_the_file_and_allow_the_original_depositor_to_retain_access_and_authorize: 接受该文件并允许原始存款人保留访问权并授权原始存款人代表您存放文件。
+        accept_the_file_and_allow_the_original_depositor_to_retain_access_to_edit_the_file_and_metadata: 接受该文件并允许原始存款人保留访问权以编辑文件和元数据。
+        accept_the_file_remove_access_from_the_original_depositor: 接受文件删除原始存款人的访问权限。
+        allow_depositor_to_retain_edit_access: 允许存款人保留编辑权限
+        are_you_sure_you_want_to_reject_this_request: 您确定要拒绝此请求吗？
+        authorize_depositor_as_proxy: 授权存款人作为代理人
+        comments: 评论
+        date: 日期
+        from: 从
+        reject: 拒绝
+        remove_depositor_access: 删除存款人访问权限
+        status: 状态
+        title: 标题
+      sent:
+        are_you_sure_you_want_to_cancel_this_request: 您确定要取消此请求吗？
+        cancel: 取消
+        comments: 评论
+        date: 日期
+        from: 从
+        status: 状态
+        title: 标题
+    upload:
+      alert:
+        contact_href_text: 联系表格
+        fail_html: 上传时遇到问题, 没有文件上传正确。 请%{reload_href}。 如果问题继续出现，请用%{contact_href}报告。
+        fail_restart_href_text: 重新开始
+        partial_fail_html: 一件或多件文件上传不成功。 请继续用%{metadata_href}上传文件。 如果问题继续出现，请用%{contact_href}报告。
+        partial_fail_metadata_href_text: 编辑元数据
+      browse_everything:
+        browse_files_button: 浏览云文件
+        files_selected: 已选文件
+        sr_tab_label: 从此处访问文件
+        tab_label: 云提供商
+      change_access_flash_message: 更新文件访问级别。 稍等片刻。 您可能需要刷新浏览器或稍后回访查询该文件访问级别是否更新。
+      change_access_message_html: "<p>您改变了其他用户或群组对作品阅览或编辑的访问级别 <i>%{curation_concern}</i> </p><p>您需要对作品内所有文件的用户或群组的访问级别和公开度做同样的改变吗</p>"
+      change_access_no_message: 不用。 我会手动更新。
+      change_access_title_html: 申请更改的内容吗？
+      change_access_yes_message: 是的, 请做同样的更新。
+      change_permissions_message_html: "<p>您改变了对%{curation_concern_human_readable_type}, <i>%{curation_concern}</i>的权限，使它对<b>%{visibility_badge}</b>公开。</p><p> 您需要对%{curation_concern_human_readable_type}中所有文件对<b>%{visibility_badge}</b>的权限做同样的改变吗？</p>"
+      local_ingest:
+        tab_label: 网络/服务器地点
+      my_computer:
+        sr_instructions: 同意存储协议，选择文件。 文件选好之后点击开始上传键
+        sr_tab_label: 访问文件
+        tab_label: 我的电脑
+      permissions_message: 文件许可正在更新中。稍等片刻。您可能需要刷新浏览器或稍后回访查询该文件访问许可是否更新
+      processing: 文件正在处理。 等处理完毕，您可以开始编辑。
+    uploads:
+      js_templates:
+        display_label: 显示标签
+        error: 错误
+        set_all_to_this_resource_type: 将all设置为此资源类型
+        start: 开始
+      js_templates_branding:
+        alt_text: 替代文字：
+        error: 错误
+        link_url: 链接网址：
+        previous: 以前
+        remove: 去掉
+        remove_new_banner: 删除新横幅
+        remove_new_logo: 删除新徽标
+      js_templates_versioning:
+        display_label: 显示标签
+        error: 错误
+        options:
+          messages:
+            accept_file_types: 不允许的文件类型
+            max_file_size: 档案太大
+            max_number_of_files: 超出最大文件数
+            min_file_size: 文件太小
+        previous: 以前的
+        remove: 消除
+        remove_new_version: 删除新版本文件
+        set_all_to_this_resource_type: 全部设置为此资源类型
+        start: 开始
+    user_profile:
+      orcid:
+        alt: ORCID 图标
+        label: ORCID 资料
+      tab_activity: 活动
+      tab_highlighted: 重点
+      tab_profile: 个人资料
+      zotero:
+        alt: Zotero 图标
+        connected: 已连接!
+        label: Zotero 个人资料
+        unlinked: 与Zotero链接
+    users:
+      activity_log:
+        date: 日期
+        user_activity: 用户活动
+      index:
+        avatar: 阿凡达
+        department: 部门
+        user_id: 用户身份
+        user_name: 用户名
+        users: 用户
+        works_created: 作品创作
+      left_sidebar:
+        view_users: 查看用户
+      proxies:
+        proxies: 代理
+      search_form:
+        go: 走
+        search_users: 搜索用户
+    visibility:
+      authenticated:
+        note_html: 访问仅限于%{institution}
+        text: "%{institution}"
+      embargo:
+        note_html: 设定日后发布。
+        text: 限制运用
+      lease:
+        note_html: 设置日期以减少访问。
+        text: 租约
+      open:
+        note_html: 向所有人公开
+        text: 公开
+        warning_html: <p><strong>请注意</strong>, 在此公开(例如，加上%{label}标记)会被视作已出版，从而影响:</p><ul><li>为您的作品申请专利</li><li>在期刊上发表您的作品</li></ul><p>请在<a href="http://www.sherpa.ac.uk/romeo/">SHERPA/RoMEO</a>查看相关出版社的版权政策。</p>
+      open_title_attr: 修改此资源的公开度
+      restricted:
+        note_html: 非公开保留分享权限。
+        text: 非公开
+      restricted_title_attr: 更改此资源的公开度
+    work_button_row:
+      attach_child: 附上孩子
+    workflow:
+      default:
+        deposit: 存储
+      load:
+        state_error: '工作流程：%{workflow_name}尚未更新。 您在移除%{entity_count}条目的状况: %{state_name}。 在包含有效条目时，状况不能被移除!'
+      unauthorized: 该作品目前还在审批中，目前不可用
+      unauthorized_parent: 该文件当前不可用，因为其父级工作尚未完成批准过程
+    works:
+      create:
+        after_create_html: 您的文件正在后台被%{application_name}处理。 您所指定的元数据和访问权限已添加。请刷新后查看更新。
+        breadcrumb: 添加新作品
+        header: 添加新 %{type}
+      edit:
+        breadcrumb: 编辑
+      form:
+        additional_fields: 附加字段
+        in_collections: 集合
+        in_other_works: 在其它作品中包括的这件作品
+        in_this_work: 这件作品包括的其它作品
+        tab:
+          files: 文件
+          metadata: 描述
+          relationships: 关联
+          share: 分享
+        visibility_until: 一直到
+      missing_title: 无题
+      progress:
+        header: 保存作品
+      show:
+        no_preview: 不可预览
+      update:
+        header: 编辑作品
+  simple_form:
+    hints:
+      admin_set:
+        description: 涵盖管理集内所有作品的简短综述。 例如 "地球科学系研究生创建的论文以及论文辅助文件。"
+        title: 用于帮助识别管理集的名称并有别于储存库内其它的管理集。
+      collection:
+        based_near: 与收藏集相关的地名，例如出版品的地点，或者是收藏集内涉及的城市，州、或国家。 参见<a href='http://www.geonames.org'>GeoNames web service</a>。
+        contributor: 个人与团体，虽未担任主要职责，却对收藏集的创建做出贡献
+        creator: 对收藏集负责的个人与团体。通常指收藏集内容的作者。 个人姓名应该先输入姓氏，例如 &quot;Smith, John.&quot;。
+        date_created: 收藏集创建的日期。
+        description: 关于收藏集的自由体文字注释。例如一篇文章的概要或一篇文章的引文信息。
+        identifier: 一个独特的句柄用于标识收藏集。 例如用于标识期刊文章的DOI，或者标识一本书的ISBN或者OCLC系统编号。
+        keyword: 用于描述和检索收藏集内容的的词或词组。
+        language: 收藏集内容使用的语言。
+        license: 用于管理收藏集访问权限的许可与发布信息。 可从下拉清单中选择。
+        publisher: 出版收藏集的个人或团体。 一般来说是机构单位。
+        related_url: 相关链接，用于链接与收藏集相关的网页或其它具体内容(音频、视频、PDF文件)。例如一个研究项目的网址，收藏集是此研究项目的成果
+        resource_type: 预定类型用于描述上传内容类型，例如&quot;文章&quot; or &quot;数据集。&quot; 可以选择多项类型。
+        subject: 用于描述收藏集的主题词或索引词,需要选自现存的词汇表。
+        title: 用于帮助识别收藏集的名称。
+      collection_type:
+        allow_multiple_membership: 允许作品属于此类型的多个集合
+        assigns_visibility: 允许此类型的集合将初始可见性设置分配给新作品
+        assigns_workflow: 允许此类型的集合将工作流分配到新作品
+        brandable: 允许将此类型的集合打上烙印
+        description: 关于这种集合类型的一般用途的简要说明。如果用户创建新集合时有多个集合类型可供选择，用户将会看到这一点。
+        discoverable: 允许这种类型的集合被发现
+        nestable: 允许嵌套此类型的集合（集合可以包含其他集合）
+        require_membership: 作品必须至少属于这种类型的一个集合
+        sharable: 允许用户为他们管理的收藏分配收藏管理员，存储者和查看者
+        share_applies_to_new_works: 当直接在集合中创建新作品时，根据其集合角色为新作品授予共享用户和组的权限。
+        title: ''
+      defaults:
+        abstract: 研究文章，论文，评论，会议程序或对特定主题的任何深入分析的简要概述。
+        access_right: 包含有关谁可以访问资源或其安全状态指示的信息。
+        based_near: 与作品相关的地名，例如出版品的地点，或者是作品中涉及的城市，州、或国家。 参见<a href='http://www.geonames.org'>GeoNames web service</a>。
+        contributor: 个人与团体，虽未担任主要职责，却对作品创建做出贡献。
+        creator: 对作品负责的个人与团体。通常指作品内容的作者。 个人姓名应该先输入姓氏，例如 &quot;Smith, John.&quot;。
+        date_created: 作品创建的日期。
+        description: 关于作品的自由体文字注释。例如一篇文章的概要或一篇文章的引文信息。
+        identifier: 一个独特的句柄用于标识作品。 例如用于标识期刊文章的DOI，或者标识一本书的ISBN或者OCLC系统编号。
+        keyword: 用于描述和搜索作品内容的的词或词组。
+        language: 作品内容使用的语言。
+        license: 用于管理作品访问权限的许可与发布信息。 可从下拉清单中选择。
+        publisher: 出版作品的个人或团体，一般来说是机构单位。
+        related_url: 相关链接，用于链接与作品相关的网页或其它具体内容(音频、视频、PDF文件)。例如一个研究项目的网址，作品是此研究项目的成果。
+        resource_type: 预定类型用于描述上传内容类型，例如&quot;文章&quot; or &quot;数据集。&quot; 可以选择多项类型。
+        rights_notes: 包含有关资源内和资源上的权限的信息。
+        subject: 用于描述作品的主题词或索引词,需要选自现存的词汇表。
+        title: 用于帮助识别作品的名称。
+    labels:
+      collection:
+        size: 大小
+        total_items: 总件数
+      collection_type:
+        allow_multiple_membership: 多会员
+        assigns_visibility: 能见度
+        assigns_workflow: 工作流程
+        badge_color: 徽章颜色
+        brandable: 品牌
+        description: 类型描述
+        discoverable: 发现
+        nestable: 嵌套
+        require_membership: 需要会员资格
+        sharable: 共享
+        share_applies_to_new_works: 适用于新作品
+        title: 类型名称
+      defaults:
+        abstract: 抽象
+        access_right: 访问权限
+        admin_set_id: 在行政
+        based_near: 地点
+        creator: 创建者
+        date_created: 创建日期
+        description: 摘要
+        embargo_release_date: until
+        files: 上传文件
+        keyword: 关键词
+        lease_expiration_date: until
+        license: 许可
+        member_of_collection_ids: 添加到收藏
+        related_url: 相关链接
+        rights_notes: 权利说明
+        rights_statement: 权利声明
+        title: 标题
+        visibility_after_embargo: 开放
+        visibility_after_lease: 仅限
+        visibility_during_embargo: 仅限
+        visibility_during_lease: 可使用
+      proxy_deposit_request:
+        sender_comment: 注释
+        transfer_to: 用户
+    placeholders:
+      defaults:
+        find_child_work: 搜索工作...
+        member_of_collection_ids: 选择一个集合...
+    required:
+      html: <span class="badge badge-info required-tag">需要的</span>
+  total_view:
+    one: 该作品共有 1 次浏览
+    other: 此作品总浏览量为 %{count}

@@ -1,0 +1,24 @@
+<table class="table table-bordered" id="failed">
+<tbody>
+  <tr class="total">
+    <td class="queue">Total Failed</td>
+    <td class="center"><%= Resque::Failure.count %></td>
+  </tr>
+
+  <% Resque::Failure.queues.sort.each do |queue| %>
+    <tr>
+      <th><%= link_to queue, failure_path(queue), :class => 'label label-info' %></th>
+      <th style="width:75px;" class="center"><%= Resque::Failure.count(queue) %></th>
+    </tr>
+
+    <% failure_class_counts(queue).each do |klass, count| %>
+    <tr id="<%= klass %>">
+      <td>
+        <%= link_to klass, failure_path(queue, :class => klass), :class => "failed failed_class" %>
+      </td>
+      <td style="text-align: center;" class="failed<%= (count.to_i > 1000) ? '_many' : '' %>"><%= count %></td>
+    </tr>
+    <% end %>
+  <% end %>
+</tbody>
+</table>

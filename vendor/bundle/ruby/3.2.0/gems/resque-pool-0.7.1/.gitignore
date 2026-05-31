@@ -1,0 +1,9 @@
+pkg/*
+*.gem
+.bundle
+*.log
+*.pid
+examples/tmp/*
+tmp/*
+vendor
+tags

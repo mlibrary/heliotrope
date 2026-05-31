@@ -1,0 +1,8 @@
+language: ruby
+rvm:
+  - 2.4.5
+  - 2.5.3
+before_install:
+  # cause ruby 2.5 doesn't come with bundler 2.x, which our
+  # gemspec now asks for.
+  - gem install bundler

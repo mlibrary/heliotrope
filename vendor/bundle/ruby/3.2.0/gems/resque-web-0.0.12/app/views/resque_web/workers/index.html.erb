@@ -1,0 +1,19 @@
+  <h1 class="wi">Workers</h1>
+  <p class="intro">The hostnames below all have registered workers. Select a hostname to view its workers, or "all" to see all workers.</p>
+
+  <table class="table table-bordered queues">
+    <tr>
+      <th>Hostname</th>
+      <th>Workers</th>
+    </tr>
+    <% worker_hosts.each do |hostname, workers| %>
+    <tr>
+      <td class="queue"><%= link_to hostname, worker_path(hostname), :class => 'queue' %></td>
+      <td class="size"><%= workers.size %></td>
+    </tr>
+    <% end %>
+    <tr class="failed">
+      <td class="queue failed"><%= link_to "all workers", worker_path('all'), :class => 'queue' %></td>
+      <td class="size"><%= Resque.workers.size %></td>
+    </tr>
+  </table>

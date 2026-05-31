@@ -1,0 +1,8 @@
+<%# To render this view pass `embargo_history` (e.g. `object: curation_concern.embargo_history`) %>
+<ul>
+  <% embargo_history.each do |entry| %>
+    <% unless entry.empty? %>
+      <li><%= entry %></li>
+    <% end %>
+  <% end %>
+</ul>

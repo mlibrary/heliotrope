@@ -1,0 +1,20 @@
+inherit_gem:
+  bixby: bixby_default.yml
+
+inherit_from: .rubocop_todo.yml
+
+Naming/FileName:
+  Exclude:
+    - '**/Gemfile'
+    - '**/*.rake'
+    - 'hydra-pcdm.gemspec'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Rails/RakeEnvironment:
+  Enabled: false

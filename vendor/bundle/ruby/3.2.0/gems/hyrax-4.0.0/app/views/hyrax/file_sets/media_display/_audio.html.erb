@@ -1,0 +1,23 @@
+<% if display_media_download_link?(file_set: file_set) %>
+  <div>
+      <h2 class="sr-only"><%= t('hyrax.file_set.show.downloadable_content.heading') %></h2>
+      <audio controls="controls" class="audiojs" style="width:100%" controlsList="nodownload" preload="auto">
+        <source src="<%= hyrax.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />
+        <source src="<%= hyrax.download_path(file_set, file: 'mp3') %>" type="audio/mpeg" />
+        <%= t('hyrax.file_set.show.downloadable_content.audio_tag_not_supported') %>
+      </audio>
+      <%= link_to t('hyrax.file_set.show.downloadable_content.audio_link'),
+                  hyrax.download_path(file_set),
+                  data: { label: file_set.id, work_id: @presenter.id, collection_ids: @presenter.member_of_collection_ids },
+                  target: :_blank,
+                  id: "file_download" %>
+    </div>
+<% else %>
+    <div>
+      <audio controls="controls" class="audiojs" style="width:100%" controlsList="nodownload" preload="auto">
+        <source src="<%= hyrax.download_path(file_set, file: 'ogg') %>" type="audio/ogg" />
+        <source src="<%= hyrax.download_path(file_set, file: 'mp3') %>" type="audio/mpeg" />
+        <%= t('hyrax.file_set.show.downloadable_content.audio_tag_not_supported') %>
+      </audio>
+    </div>
+<% end %>

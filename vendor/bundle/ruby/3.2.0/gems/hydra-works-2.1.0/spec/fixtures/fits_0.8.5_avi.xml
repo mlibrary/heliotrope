@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/fits/fits_output http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd" version="0.8.5" timestamp="8/28/15 3:36 PM">
+  <identification>
+    <identity format="Audio/Video Interleaved Format" mimetype="video/x-msvideo" toolname="FITS" toolversion="0.8.5">
+      <tool toolname="file utility" toolversion="5.14" />
+      <tool toolname="Exiftool" toolversion="9.13" />
+      <tool toolname="ffident" toolversion="0.2" />
+      <tool toolname="Tika" toolversion="1.3" />
+    </identity>
+  </identification>
+  <fileinfo>
+    <lastmodified toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">2015:08:11 14:59:03-04:00</lastmodified>
+    <filepath toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">/home/grosscol/workspace/hydra-works/spec/fixtures/countdown.avi</filepath>
+    <filename toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">countdown.avi</filename>
+    <size toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">723678</size>
+    <md5checksum toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">d43ffafa098925dae10feeca46dc9a87</md5checksum>
+    <fslastmodified toolname="OIS File Information" toolversion="0.2" status="SINGLE_RESULT">1439319543000</fslastmodified>
+  </fileinfo>
+  <filestatus />
+  <metadata>
+    <video>
+      <duration toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">14.10 s</duration>
+      <pixelAspectRatio toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">0/0</pixelAspectRatio>
+      <maxBitRate toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">0 kB/s</maxBitRate>
+      <videoCompressor toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">MSVC</videoCompressor>
+      <frameRate toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">10</frameRate>
+      <bitDepth toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">16</bitDepth>
+      <sampleRate toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">11025</sampleRate>
+      <audioSampleRate toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">11025</audioSampleRate>
+      <channels toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">1</channels>
+      <imageWidth toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">356</imageWidth>
+      <imageHeight toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">264</imageHeight>
+      <encoding toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">Microsoft PCM</encoding>
+      <compressionScheme toolname="Exiftool" toolversion="9.13" status="SINGLE_RESULT">CRAM</compressionScheme>
+    </video>
+  </metadata>
+  <statistics fitsExecutionTime="850">
+    <tool toolname="OIS Audio Information" toolversion="0.1" status="did not run" />
+    <tool toolname="ADL Tool" toolversion="0.1" status="did not run" />
+    <tool toolname="Jhove" toolversion="1.5" executionTime="794" />
+    <tool toolname="file utility" toolversion="5.14" executionTime="571" />
+    <tool toolname="Exiftool" toolversion="9.13" executionTime="612" />
+    <tool toolname="NLNZ Metadata Extractor" toolversion="3.4GA" executionTime="423" />
+    <tool toolname="OIS File Information" toolversion="0.2" executionTime="110" />
+    <tool toolname="OIS XML Metadata" toolversion="0.2" status="did not run" />
+    <tool toolname="ffident" toolversion="0.2" executionTime="446" />
+    <tool toolname="Tika" toolversion="1.3" executionTime="195" />
+  </statistics>
+</fits>
+

@@ -1,0 +1,17 @@
+language: ruby
+bundler_args: --without debug
+script: "bundle exec rspec spec"
+sudo: false
+cache: bundler
+rvm:
+ - 2.2
+ - 2.3
+ - 2.4
+ - ruby-head
+ - jruby-9.1.9.0
+ - jruby-head
+matrix:
+  allow_failures:
+      - rvm: jruby-9.1.9.0
+      - rvm: jruby-head
+      - rvm: ruby-head

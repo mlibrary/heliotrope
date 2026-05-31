@@ -1,0 +1,26 @@
+@base         <https://rubygems.org/gems/rdf-microdata> .
+@prefix dc:   <http://purl.org/dc/terms/> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<> a doap:Project;
+   doap:name "RDF::Microdata";
+   doap:shortdesc "Microdata reader for Ruby RDF.rb."@en;
+   doap:description "RDF::Microdata is an Microdata reader for Ruby using the RDF.rb library suite."@en;
+   dc:creator <https://greggkellogg.net/foaf#me>;
+   doap:blog <https://greggkellogg.net/>;
+   doap:bug-database <https://github.com/ruby-rdf/rdf-microdata/issues>;
+   doap:category <http://dbpedia.org/resource/Resource_Description_Framework>;
+   doap:created "2011-08-29"^^xsd:date;
+   doap:developer <https://greggkellogg.net/foaf#me>;
+   doap:documenter <https://greggkellogg.net/foaf#me>;
+   doap:download-page <>;
+   doap:homepage <https://github.com/ruby-rdf/rdf-microdata>;
+   doap:implements <http://www.w3.org/TR/microdata-rdf/>;
+   doap:license <https://unlicense.org/1.0/>;
+   doap:mailing-list <https://lists.w3.org/Archives/Public/public-rdf-ruby/>;
+   doap:maintainer <https://greggkellogg.net/foaf#me>;
+   doap:programming-language "Ruby";
+   foaf:creator <https://greggkellogg.net/foaf#me> .

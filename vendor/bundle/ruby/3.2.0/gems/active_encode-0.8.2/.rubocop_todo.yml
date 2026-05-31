@@ -1,0 +1,68 @@
+Bundler/DuplicatedGem:
+  Enabled: false
+
+Metrics/AbcSize:
+  Exclude:
+    - 'lib/active_encode/engine_adapters/*'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'lib/active_encode/spec/shared_specs/*'
+    - 'spec/**/*'
+
+Metrics/BlockNesting:
+  Exclude:
+    - 'lib/file_locator.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'lib/active_encode/engine_adapters/*'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'lib/active_encode/engine_adapters/ffmpeg_adapter.rb'
+    - 'lib/active_encode/engine_adapters/zencoder_adapter.rb'
+
+Metrics/LineLength:
+  Exclude:
+    - 'lib/active_encode/engine_adapters/matterhorn_adapter.rb'
+    - 'spec/**/*'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'lib/active_encode/engine_adapters/*'
+    - 'lib/file_locator.rb'
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - 'lib/active_encode/engine_adapters/ffmpeg_adapter.rb'
+    - 'lib/file_locator.rb'
+
+RSpec/AnyInstance:
+  Exclude:
+    - 'spec/integration/ffmpeg_adapter_spec.rb'
+    - 'spec/integration/pass_through_adapter_spec.rb'
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  Exclude:
+    - 'spec/integration/ffmpeg_adapter_spec.rb'
+    - 'spec/integration/pass_through_adapter_spec.rb'
+
+RSpec/MessageSpies:
+  Exclude:
+    - 'spec/integration/matterhorn_adapter_spec.rb'
+    - 'spec/integration/ffmpeg_adapter_spec.rb'
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+Style/GuardClause:
+  Exclude:
+    - 'lib/active_encode/engine_adapters/pass_through_adapter.rb'
+    - 'lib/file_locator.rb'

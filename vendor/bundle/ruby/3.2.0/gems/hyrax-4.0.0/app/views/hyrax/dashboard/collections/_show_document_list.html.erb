@@ -1,0 +1,18 @@
+<table class="table table-striped collections-list-table collection-works-table">
+  <caption class="sr-only"><%= t('hyrax.dashboard.collections.show_document_list.list_items_in_collection') %></caption>
+  <thead>
+  <tr>
+    <th>&nbsp;</th>
+    <th class="title-column"><%= t('hyrax.dashboard.collections.show_document_list.title') %></th>
+    <th><%= t('hyrax.dashboard.collections.show_document_list.date_added') %></th>
+    <th><%= t('hyrax.dashboard.collections.show_document_list.owner') %></th>
+    <th><%= t('hyrax.dashboard.collections.show_document_list.visibility') %></th>
+    <% if current_user %>
+      <th><%= t('hyrax.dashboard.collections.show_document_list.action') %></th>
+    <% end %>
+  </tr>
+  </thead>
+  <tbody>
+    <%= render partial: 'show_document_list_row', collection: documents, as: :document %>
+  </tbody>
+</table>

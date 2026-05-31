@@ -1,0 +1,47 @@
+<%
+  image = document.to_openseadragon(blacklight_config.view_config(:show))
+  id_prefix = osd_html_id_prefix
+%>
+<%
+  osd_config = {
+    crossOriginPolicy: false,
+    zoomInButton:     "#{id_prefix}-zoom-in",
+    zoomOutButton:    "#{id_prefix}-zoom-out",
+    homeButton:       "#{id_prefix}-home",
+    fullPageButton:   "#{id_prefix}-full-page",
+    nextButton:       "#{id_prefix}-next",
+    previousButton:   "#{id_prefix}-previous"
+  }
+
+  osd_config_referencestrip = {
+    showReferenceStrip:             true,
+    referenceStripPosition:         'OUTSIDE',
+    referenceStripScroll:           'vertical',
+    referenceStripWidth:            100,
+    referenceStripBackgroundColor:  'transparent'
+  }
+%>
+
+<% unless image.nil? %>
+  <% count = Array(image).length %>
+  <div class="openseadragon-container <%= osd_container_class %>">
+    <div class="osd-toolbar row">
+      <div class="col-md-6 pagination">
+        <% if count > 1 %>
+          <% osd_config = osd_config_referencestrip.merge(osd_config) %>
+            <a id="<%= id_prefix %>-previous"><%= blacklight_icon('chevron_left') %></a>
+            <span id="<%= id_prefix %>-page">1</span>  of <%= count %>
+            <a id="<%= id_prefix %>-next"><%= blacklight_icon('chevron_right') %></a>
+        <% end %>
+      </div>
+      <div class="col-md-6 controls">
+        <a id="<%= id_prefix %>-zoom-in"><%= blacklight_icon('add_circle') %></a>
+        <a id="<%= id_prefix %>-zoom-out"><%= blacklight_icon('remove_circle') %></a>
+        <a id="<%= id_prefix %>-home"><%= blacklight_icon('resize_small') %></a>
+        <a id="<%= id_prefix %>-full-page"><%= blacklight_icon('custom_fullscreen') %></a>
+      </div>
+    </div>
+    <%= openseadragon_picture_tag image, class: 'osd-image row', data: { openseadragon: osd_config } %>
+  </div>
+
+<% end %>

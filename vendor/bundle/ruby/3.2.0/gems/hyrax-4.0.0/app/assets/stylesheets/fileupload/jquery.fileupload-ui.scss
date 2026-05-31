@@ -1,0 +1,71 @@
+@charset 'UTF-8';
+
+/*
+ * jQuery File Upload UI Plugin CSS 6.3
+ * https://github.com/blueimp/jQuery-File-Upload
+ *
+ * Copyright 2010, Sebastian Tschan
+ * https://blueimp.net
+ *
+ * Licensed under the MIT license:
+ * http://www.opensource.org/licenses/MIT
+ */
+
+.fileupload-buttonbar {
+  padding: 1.5em 0;
+}
+
+.fileinput-button {
+  float: left;
+  margin-right: 0.5em;
+  overflow: hidden;
+  position: relative;
+}
+
+// Global progress bar
+.fileupload-progress {
+  margin-top: 10px;
+}
+
+// Individual file progress bar
+.files .progress {
+  width: 200px;
+}
+
+.progress-animated .bar {
+  background: image-url('progressbar.gif') !important;
+  filter: none;
+}
+
+.fileupload-loading {
+  background: image-url('loading.gif') center no-repeat;
+  display: none;
+  height: 128px;
+  left: 50%;
+  position: absolute;
+  width: 128px;
+}
+
+.fileupload-processing .fileupload-loading {
+  display: block;
+}
+
+@media (max-width: 480px) {
+  .files .btn span {
+    display: none;
+  }
+  .files .preview * {
+    width: 40px;
+  }
+  .files .name * {
+    display: inline-block;
+    width: 80px;
+    word-wrap: break-word;
+  }
+  .files .progress {
+    width: 20px;
+  }
+  .files .delete {
+    width: 60px;
+  }
+}

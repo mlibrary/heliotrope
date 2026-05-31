@@ -1,0 +1,20 @@
+<h1>Failed Jobs <%= "on '#{params[:id]}'" if params[:id] %> <%= "with class '#{params[:class]}'" if params[:class] %></h1>
+
+<% if @jobs.any? %>
+  <%= form_tag("/failures/#{params[:id] if params[:id]}", :method => :delete) do %>
+    <%= submit_tag "Clear #{params[:id] ? "'#{params[:id]}'" : 'Failed'} Jobs", :confirm => "Are you sure?", :class => 'btn btn-danger' %>
+  <% end %>
+  <%= form_tag("/failures/#{params[:id] ? params[:id] : "all"}/retry") do %>
+    <%= submit_tag "Retry #{params[:id] ? "'#{params[:id]}'" : 'Failed'} Jobs", :class => 'btn' %>
+  <% end %>
+<% end %>
+
+<p class="sub">Showing <%= failure_start_at %> to <%= failure_end_at %> of <b><%= failure_size %></b> jobs</p>
+
+<ul class="failed">
+  <% @jobs.each do |id, job| %>
+    <%= render :partial => 'failed_job', :locals => {:id => job['id'] || id, :job => job} %>
+  <% end %>
+</ul>
+
+<%= pagination :start => failure_start_at, :total => failure_size unless params[:class] %>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.9.26
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "README";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><div id='filecontents'><h1 id="dropboxapi">DropboxApi</h1>
+
+<p>Library for communicating with Dropbox API v2.</p>
+
+<h2 id="installation">Installation</h2>
+
+<p>Add this line to your application&#39;s Gemfile:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_gem'>gem</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>dropbox_api</span><span class='tstring_end'>&#39;</span></span>
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre class="code ruby"><code class="ruby">$ bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre class="code ruby"><code class="ruby">$ gem install dropbox_api
+</code></pre>
+
+<h2 id="documentation">Documentation</h2>
+
+<p>Please, refer to this gem&#39;s custom <a href="http://jesus.github.io/dropbox_api">Dropbox API
+documentation</a>.
+Most of the time you&#39;ll be checking the <a href="http://jesus.github.io/dropbox_api/DropboxApi/Client.html">available
+endpoints</a>.</p>
+
+<p>Unfortunately, the documentation at <a href="http://www.rubydoc.info">RubyDoc.info</a> is
+disrecommended because it lacks some nice features that have been added with
+YARD plugins:</p>
+
+<ul>
+<li>Each endpoint includes its tests right below the description, this works as
+an example of its usage.</li>
+<li>All endpoints are shown as methods of the <code>Client</code> class, just as you will
+use them.</li>
+</ul>
+
+<h2 id="basic-set-up">Basic set up</h2>
+
+<h3 id="authorize-your-application">Authorize your application</h3>
+
+<p>Dropbox uses OAuth, in order to use this library from your application you&#39;ll
+have to get an authorization code.</p>
+
+<p>Once you have it, just pass it on client initialization:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Client.html" title="DropboxApi::Client (class)">Client</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Client.html#initialize-instance_method" title="DropboxApi::Client#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>VofXAX8D...</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='comment'>#=&gt; #&lt;DropboxApi::Client ...&gt;
+</span></code></pre>
+
+<p>Or set it as an ENV variable called <code>DROPBOX_OAUTH_BEARER</code>, for example:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>DROPBOX_OAUTH_BEARER</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>VofXAX8D...</span><span class='tstring_end'>&quot;</span></span>
+<span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Client.html" title="DropboxApi::Client (class)">Client</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Client.html#initialize-instance_method" title="DropboxApi::Client#initialize (method)">new</a></span></span>
+<span class='comment'>#=&gt; #&lt;DropboxApi::Client ...&gt;
+</span></code></pre>
+
+<p>The official documentation on the process to get an authorization code is
+<a href="https://developers.dropbox.com/es-es/oauth-guide#implementing-oauth">here</a>,
+it describes the two options listed below.</p>
+
+<h4 id="option-a-get-your-access-token-from-the-website">Option A: Get your access token from the website</h4>
+
+<p>For a quick test, you can obtain an access token from the App Console in
+<a href="https://www.dropbox.com/developers/">Dropbox&#39;s website</a>. Select from
+<em>My apps</em> your application, you may need to create one if you
+haven&#39;t done so yet. Under your application settings, find section
+<em>OAuth 2</em>, there is a button to generate an access token.</p>
+
+<h4 id="option-b-oauth2-code-flow">Option B: OAuth2 Code Flow</h4>
+
+<p>This is typically what you will use in production, you can obtain an
+authorization code with a 3-step process:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='comment'># 1. Get an authorization URL.
+</span><span class='id identifier rubyid_authenticator'>authenticator</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Authenticator.html" title="DropboxApi::Authenticator (class)">Authenticator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Authenticator.html#initialize-instance_method" title="DropboxApi::Authenticator#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='const'>CLIENT_ID</span><span class='comma'>,</span> <span class='const'>CLIENT_SECRET</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_authenticator'>authenticator</span><span class='period'>.</span><span class='id identifier rubyid_auth_code'>auth_code</span><span class='period'>.</span><span class='id identifier rubyid_authorize_url'>authorize_url</span> <span class='comment'>#=&gt; &quot;https://www.dropbox.com/...&quot;
+</span>
+<span class='comment'># 2. Log into Dropbox and authorize your app. You need to open the
+</span><span class='comment'># authorization URL in your browser.
+</span>
+<span class='comment'># 3. Exchange the authorization code for a reusable access token (not visible
+</span><span class='comment'>#    to the user).
+</span><span class='id identifier rubyid_access_token'>access_token</span> <span class='op'>=</span> <span class='id identifier rubyid_authenticator'>authenticator</span><span class='period'>.</span><span class='id identifier rubyid_auth_code'>auth_code</span><span class='period'>.</span><span class='id identifier rubyid_get_token'>get_token</span><span class='lparen'>(</span><span class='const'>CODE</span><span class='rparen'>)</span> <span class='comment'>#=&gt; #&lt;OAuth2::AccessToken ...&gt;`
+</span><span class='id identifier rubyid_access_token'>access_token</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span> <span class='comment'>#=&gt; &quot;VofXAX8D...&quot;
+</span>
+<span class='comment'># Keep this token, you&#39;ll need it to initialize a `DropboxApi::Client` object:
+</span><span class='id identifier rubyid_client'>client</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Client.html" title="DropboxApi::Client (class)">Client</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Client.html#initialize-instance_method" title="DropboxApi::Client#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='label'>access_token:</span> <span class='id identifier rubyid_access_token'>access_token</span><span class='rparen'>)</span>
+
+<span class='comment'># For backwards compatibility, the following also works:
+</span><span class='id identifier rubyid_client'>client</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Client.html" title="DropboxApi::Client (class)">Client</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Client.html#initialize-instance_method" title="DropboxApi::Client#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_access_token'>access_token</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span><span class='rparen'>)</span>
+</code></pre>
+
+<h5 id="integration-with-rails">Integration with Rails</h5>
+
+<p>If you have a Rails application, you might be interested in this <a href="http://jesus.github.io/dropbox_api/file.rails_setup.html">setup
+guide</a>.</p>
+
+<h5 id="using-refresh-tokens">Using refresh tokens</h5>
+
+<p>Access tokens are short-lived by default (as of September 30th, 2021),
+applications that require long-lived access to the API without additional
+interaction with the user should use refresh tokens.</p>
+
+<p>The process is similar but a token refresh might seamlessly occur as you
+perform API calls. When this happens you&#39;ll need to store the
+new token hash if you want to continue using this session, you can use the
+<code>on_token_refreshed</code> callback to do this.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='comment'># 1. Get an authorization URL, requesting offline access type.
+</span><span class='id identifier rubyid_authenticator'>authenticator</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Authenticator.html" title="DropboxApi::Authenticator (class)">Authenticator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Authenticator.html#initialize-instance_method" title="DropboxApi::Authenticator#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='const'>CLIENT_ID</span><span class='comma'>,</span> <span class='const'>CLIENT_SECRET</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_authenticator'>authenticator</span><span class='period'>.</span><span class='id identifier rubyid_auth_code'>auth_code</span><span class='period'>.</span><span class='id identifier rubyid_authorize_url'>authorize_url</span><span class='lparen'>(</span><span class='label'>token_access_type:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>offline</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+
+<span class='comment'># 2. Log into Dropbox and authorize your app. You need to open the
+</span><span class='comment'>#    authorization URL in your browser.
+</span>
+<span class='comment'># 3. Exchange the authorization code for a reusable access token
+</span><span class='id identifier rubyid_access_token'>access_token</span> <span class='op'>=</span> <span class='id identifier rubyid_authenticator'>authenticator</span><span class='period'>.</span><span class='id identifier rubyid_auth_code'>auth_code</span><span class='period'>.</span><span class='id identifier rubyid_get_token'>get_token</span><span class='lparen'>(</span><span class='const'>CODE</span><span class='rparen'>)</span> <span class='comment'>#=&gt; #&lt;OAuth2::AccessToken ...&gt;`
+</span>
+<span class='comment'># You can now use the access token to initialize a DropboxApi::Client, you
+</span><span class='comment'># should also provide a callback function to store the updated access token
+</span><span class='comment'># whenever it&#39;s refreshed.
+</span><span class='id identifier rubyid_client'>client</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Client.html" title="DropboxApi::Client (class)">Client</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Client.html#initialize-instance_method" title="DropboxApi::Client#initialize (method)">new</a></span></span><span class='lparen'>(</span>
+  <span class='label'>access_token:</span> <span class='id identifier rubyid_access_token'>access_token</span><span class='comma'>,</span>
+  <span class='label'>on_token_refreshed:</span> <span class='id identifier rubyid_lambda'>lambda</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_new_token_hash'>new_token_hash</span><span class='op'>|</span>
+    <span class='comment'># token_hash is a serializable Hash, something like this:
+</span>    <span class='comment'># {
+</span>    <span class='comment'>#   &quot;uid&quot;=&gt;&quot;440&quot;,
+</span>    <span class='comment'>#   &quot;token_type&quot;=&gt;&quot;bearer&quot;,
+</span>    <span class='comment'>#   &quot;scope&quot;=&gt;&quot;account_info.read account_info.write...&quot;,
+</span>    <span class='comment'>#   &quot;account_id&quot;=&gt;&quot;dbid:AABOLtA1rT6rRK4vajKZ...&quot;,
+</span>    <span class='comment'>#   :access_token=&gt;&quot;sl.A5Ez_CBsqJILhDawHlmXSoZEhLZ4nuLFVRs6AJ...&quot;,
+</span>    <span class='comment'>#   :refresh_token=&gt;&quot;iMg4Me_oKYUAAAAAAAAAAapQixCgwfXOxuubCuK_...&quot;,
+</span>    <span class='comment'>#   :expires_at=&gt;1632948328
+</span>    <span class='comment'># }
+</span>    <span class='const'>SomewhereSafe</span><span class='period'>.</span><span class='id identifier rubyid_save'>save</span><span class='lparen'>(</span><span class='id identifier rubyid_new_token_hash'>new_token_hash</span><span class='rparen'>)</span>
+  <span class='rbrace'>}</span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<p>Once you&#39;ve gone through the process above, you can skip the steps that require
+user interaction in subsequent initializations of <code>DropboxApi::Client</code>. For
+example:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='comment'># 1. Initialize an authenticator
+</span><span class='id identifier rubyid_authenticator'>authenticator</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Authenticator.html" title="DropboxApi::Authenticator (class)">Authenticator</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Authenticator.html#initialize-instance_method" title="DropboxApi::Authenticator#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='const'>CLIENT_ID</span><span class='comma'>,</span> <span class='const'>CLIENT_SECRET</span><span class='rparen'>)</span>
+
+<span class='comment'># 2. Retrieve the token hash you previously stored somewhere safe, you can use
+</span><span class='comment'>#    it to build a new access token.
+</span><span class='id identifier rubyid_access_token'>access_token</span> <span class='op'>=</span> <span class='const'>OAuth2</span><span class='op'>::</span><span class='const'>AccessToken</span><span class='period'>.</span><span class='id identifier rubyid_from_hash'>from_hash</span><span class='lparen'>(</span><span class='id identifier rubyid_authenticator'>authenticator</span><span class='comma'>,</span> <span class='id identifier rubyid_token_hash'>token_hash</span><span class='rparen'>)</span>
+
+<span class='comment'># 3. You now have an access token, so you can initialize a client like you
+</span><span class='comment'>#    would normally:
+</span><span class='id identifier rubyid_client'>client</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Client.html" title="DropboxApi::Client (class)">Client</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Client.html#initialize-instance_method" title="DropboxApi::Client#initialize (method)">new</a></span></span><span class='lparen'>(</span>
+  <span class='label'>access_token:</span> <span class='id identifier rubyid_access_token'>access_token</span><span class='comma'>,</span>
+  <span class='label'>on_token_refreshed:</span> <span class='id identifier rubyid_lambda'>lambda</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_new_token_hash'>new_token_hash</span><span class='op'>|</span>
+    <span class='const'>SomewhereSafe</span><span class='period'>.</span><span class='id identifier rubyid_save'>save</span><span class='lparen'>(</span><span class='id identifier rubyid_new_token_hash'>new_token_hash</span><span class='rparen'>)</span>
+  <span class='rbrace'>}</span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<h3 id="performing-api-calls">Performing API calls</h3>
+
+<p>Once you&#39;ve initialized a client, for example:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_client'>client</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Client.html" title="DropboxApi::Client (class)">Client</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Client.html#initialize-instance_method" title="DropboxApi::Client#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>VofXAX8D...</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='comment'>#=&gt; #&lt;DropboxApi::Client ...&gt;
+</span></code></pre>
+
+<p>You can perform an API call like this:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_list_folder'>list_folder</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/sample_folder</span><span class='tstring_end'>&quot;</span></span>
+<span class='comment'>#=&gt; #&lt;DropboxApi::Results::ListFolderResult&gt;
+</span><span class='id identifier rubyid_result'>result</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span>
+<span class='comment'>#=&gt; [#&lt;DropboxApi::Metadata::Folder&gt;, #&lt;DropboxApi::Metadata::File&gt;]
+</span><span class='id identifier rubyid_result'>result</span><span class='period'>.</span><span class='id identifier rubyid_has_more?'>has_more?</span>
+<span class='comment'>#=&gt; false
+</span></code></pre>
+
+<p>The instance of <code>Client</code> we&#39;ve initialized is the one you&#39;ll be using to
+perform API calls. You can check the class&#39; documentation to find
+<a href="http://jesus.github.io/dropbox_api/DropboxApi/Client.html">all available endpoints</a>.</p>
+
+<h3 id="large-file-uploads">Large file uploads</h3>
+
+<p>If you need to upload files larger than 150MB the default <code>#upload</code> endpoint
+won&#39;t work. Instead, you need to start a upload session and upload
+the file in small chunks.</p>
+
+<p>To make this easier, the method <code>upload_by_chunks</code> will handle this for you,
+example:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_client'>client</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Client.html" title="DropboxApi::Client (class)">Client</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Client.html#initialize-instance_method" title="DropboxApi::Client#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>VofXAX8D...</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='comment'>#=&gt; #&lt;DropboxApi::Client ...&gt;
+</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_open'>open</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>large_file.avi</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_f'>f</span><span class='op'>|</span>
+  <span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_upload_by_chunks'>upload_by_chunks</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/remote_path.txt</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_f'>f</span>
+<span class='kw'>end</span>
+</code></pre>
+
+<p>Check out the
+<a href="http://www.xuuso.com/dropbox_api/DropboxApi/Client.html#upload_by_chunks-instance_method">method documentation</a>
+to find out all available options.</p>
+
+<h3 id="accessing-team-folders">Accessing Team Folders</h3>
+
+<p>In order to access your team scope you need to add the namespace_id to you request headers.
+This can be done using the middlewere layer as per the below:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_client'>client</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DropboxApi.html" title="DropboxApi (module)">DropboxApi</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="DropboxApi/Client.html" title="DropboxApi::Client (class)">Client</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DropboxApi/Client.html#initialize-instance_method" title="DropboxApi::Client#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>VofXAX8D...</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='comment'>#=&gt; #&lt;DropboxApi::Client ...&gt;
+</span><span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_namespace_id'>namespace_id</span> <span class='op'>=</span> <span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_get_current_account'>get_current_account</span><span class='period'>.</span><span class='id identifier rubyid_root_info'>root_info</span><span class='period'>.</span><span class='id identifier rubyid_root_namespace_id'>root_namespace_id</span>
+
+<span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_list_folder'>list_folder</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
+<span class='comment'>#=&gt; Now returns the team folders
+</span></code></pre>
+
+<p>You could unset the namespace ID at any point afterwards with just:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_client'>client</span><span class='period'>.</span><span class='id identifier rubyid_namespace_id'>namespace_id</span> <span class='op'>=</span> <span class='kw'>nil</span>
+</code></pre>
+
+<h2 id="dependencies">Dependencies</h2>
+
+<p>This gem depends on
+<a href="https://github.com/oauth-xx/oauth2">oauth2</a>
+and
+<a href="https://github.com/lostisland/faraday">faraday</a>.</p>
+
+<p>It has official support for Ruby versions <code>2.x</code>.</p>
+
+<h2 id="development">Development</h2>
+
+<p>After checking out the repo, run <code>bin/setup</code> to install dependencies. Then, run
+<code>bin/console</code> for an interactive prompt that will allow you to experiment.</p>
+
+<h3 id="testing">Testing</h3>
+
+<p>I recommend you to use a test account other than your main one.</p>
+
+<p>We use VCR to record the HTTP calls to Dropbox, however we sometimes need to
+regenerate the cassettes. Let&#39;s take <code>list_folder</code> as an example to show what
+would be the procedure to do so:</p>
+
+<ol>
+<li><p>Manually delete the existing cassettes in
+<code>spec/fixtures/vcr_cassettes/list_folder/*.yml</code>.</p></li>
+<li><p>Run the task to build the scaffolding in your Dropbox account so the tests
+will pass. If it doesn&#39;t exist you may need to write it yourself, check
+the <code>DropboxScaffoldBuilder</code> class to find all existing scaffold builders.</p>
+
+<pre class="code text"><code class="text">DROPBOX_OAUTH_BEARER=YOUR_AUTH_BEARER rake test:build_scaffold[list_folder]
+</code></pre>
+
+<p>Note that you&#39;ll have to type <code>rake test:build_scaffold\[list_folder\]</code>
+if you use <code>zsh</code>.</p>
+
+<p>You can build all available scaffolds with just <code>rake test:build_scaffold</code>.</p></li>
+<li><p>Run the tests and the cassettes will be written:</p>
+
+<pre class="code text"><code class="text">DROPBOX_OAUTH_BEARER=YOUR_AUTH_BEARER rspec spec/endpoints/files/list_folder_spec.rb
+</code></pre></li>
+</ol>
+
+<p>The OAuth bearer shouldn&#39;t have been recorded in the cassette and it should&#39;ve
+been filtered. However, you may want to double check before pushing your
+updates to Github.</p>
+
+<p>Tip: you can simply run <code>export DROPBOX_OAUTH_BEARER=YOUR_AUTH_BEARER</code> at
+the beginning of your work session so you don&#39;t need to prefix it in every
+command line.</p>
+
+<h2 id="contributing">Contributing</h2>
+
+<p>Any help will be much appreciated. The easiest way to help is to implement one
+or more of the <a href="http://jesus.github.io/dropbox_api/file.api_coverage.html">endpoints that are still pending</a>. To see how the
+endpoints are implemented, check out the <code>lib/dropbox_api/endpoints</code> folder.</p>
+</div></div>
+
+      <div id="footer">
+  Generated on Wed Sep 29 23:44:24 2021 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.26 (ruby-2.6.5).
+</div>
+
+    </div>
+  </body>
+</html>

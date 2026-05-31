@@ -1,0 +1,16 @@
+it:
+  blacklight:
+    search:
+      view:
+        gallery: "Galleria"
+        slideshow: "Slideshow"
+        masonry: "Lavoro in corso"
+  blacklight_gallery:
+    catalog:
+      grid_slideshow:
+        missing_image: 'Mancante'
+      modal_slideshow:
+        counter: "%{counter} di %{count}"
+      slideshow:
+        pause: Pausa del slideshow
+        start: Avvia del slideshow

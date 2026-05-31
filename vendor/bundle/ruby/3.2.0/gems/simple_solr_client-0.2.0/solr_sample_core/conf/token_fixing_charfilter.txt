@@ -1,0 +1,110 @@
+# NOTE THAT EVERYTHING IS LOWERCASE!
+# You'll want to put this after a case folder, e.g.,
+# <charFilter class="solr.ICUNormalizer2CharFilterFactory"/>
+
+
+
+# Programming
+"+" => "plus"
+
+".net" => "dotnet"
+
+# Common punctuation
+
+" & " => " and "
+
+
+# Science and Math
+"±" => "plusorminus"
+#   prime, double-prime, triple-prime
+"′" => "'"
+"″"  => "''"
+"‴" => "'''"
+
+
+# Numeric Subscripts
+# Commented out, because they're handled by the normalizer
+#"₀" => "0"
+#"₁" => "1"
+#"₂" => "2"
+#"₃" => "3"
+#"₄" => "4"
+#"₅" => "5"
+#"₆" => "6"
+#"₇" => "7"
+#"₈" => "8"
+#"₉" => "9"
+
+
+# Music
+
+"a♯" => "asharp"
+"b♯" => "bsharp"
+"c♯" => "csharp"
+"d♯" => "dsharp"
+"e♯" => "esharp"
+"f♯" => "fsharp"
+"g♯" => "gsharp"
+
+"a#" => "asharp"
+"b#" => "bsharp"
+"c#" => "csharp"
+"d#" => "dsharp"
+"e#" => "esharp"
+"f#" => "fsharp"
+"g#" => "gsharp"
+
+"a sharp" => "asharp"
+"b sharp" => "bsharp"
+"c sharp" => "csharp"
+"d sharp" => "dsharp"
+"e sharp" => "esharp"
+"f sharp" => "fsharp"
+"g sharp" => "gsharp"
+
+"a-sharp" => "asharp"
+"b-sharp" => "bsharp"
+"c-sharp" => "csharp"
+"d-sharp" => "dsharp"
+"e-sharp" => "esharp"
+"f-sharp" => "fsharp"
+"g-sharp" => "gsharp"
+
+"a♭" => "aflat"
+"b♭" => "bflat"
+"c♭" => "cflat"
+"d♭" => "dflat"
+"e♭" => "eflat"
+"f♭" => "fflat"
+"g♭" => "gflat"
+
+"a-flat" => "aflat"
+"b-flat" => "bflat"
+"c-flat" => "cflat"
+"d-flat" => "dflat"
+"e-flat" => "eflat"
+"f-flat" => "fflat"
+"g-flat" => "gflat"
+
+
+"a♮" => "anatural"
+"b♮" => "bnatural"
+"c♮" => "cnatural"
+"d♮" => "dnatural"
+"e♮" => "enatural"
+"f♮" => "fnatural"
+"g♮" => "gnatural"
+
+"a-natural" => "anatural"
+"b-natural" => "bnatural"
+"c-natural" => "cnatural"
+"d-natural" => "dnatural"
+"e-natural" => "enatural"
+"f-natural" => "fnatural"
+"g-natural" => "gnatural"
+
+
+
+
+
+

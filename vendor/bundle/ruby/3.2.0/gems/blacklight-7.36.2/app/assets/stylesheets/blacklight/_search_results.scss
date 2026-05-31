@@ -1,0 +1,29 @@
+// the search results on the index view of the catalog
+.documents-list {
+  .document {
+    @extend .clearfix;
+    border-bottom: 1px dotted $table-border-color;
+    margin-top: $spacer;
+    padding-top: $spacer;
+
+    .document-title-heading {
+      @extend h5;
+    }
+
+    // bookmarks checkbox on index, give it some
+    // lower margin when it collapses
+    .index-document-functions {
+      margin-bottom: ($spacer * 1.5);
+
+      @media (min-width: breakpoint-min(sm)) {
+        margin-bottom: 0;
+      }
+    }
+
+    .document-thumbnail {
+      float: right;
+      margin-bottom: ($spacer * 3);
+      padding-left: ($spacer * 3);
+    }
+  }
+}

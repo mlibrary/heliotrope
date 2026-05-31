@@ -1,0 +1,10 @@
+<div class="no-preview">
+  <%= t('hyrax.works.show.no_preview') %>
+  <% if display_media_download_link?(file_set: file_set) %>
+    <p /><%= link_to t('hyrax.file_set.show.download'),
+      hyrax.download_path(file_set),
+      id: "file_download",
+      data: { label: file_set.id, work_id: @presenter.id, collection_ids: @presenter.member_of_collection_ids },
+      target: "_new" %>
+  <% end %>
+</div>

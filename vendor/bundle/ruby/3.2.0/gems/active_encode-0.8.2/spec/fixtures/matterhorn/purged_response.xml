@@ -1,0 +1,342 @@
+<workflow state="STOPPED" id="purged-id">
+  <template>avalon</template>
+  <title>Encode, Analyze, and Distribute (Avalon)</title>
+  <description>
+    A simple workflow that transcodes the media into distribution formats, then sends the resulting distribution files,
+    along with their associated metadata, to the distribution channels.
+  </description>
+  <parent nil="true"/>
+  <creator>
+    <userName>matterhorn_system_account</userName>
+    <roles>MATTERHORN_ADMINISTRATOR</roles>
+    <roles>ROLE_ADMIN</roles>
+    <roles>ROLE_ANONYMOUS</roles>
+    <roles>ROLE_OAUTH_USER</roles>
+    <roles>ROLE_USER</roles>
+    <organization>mh_default_org</organization>
+  </creator>
+  <organization id="mh_default_org">
+    <name>Opencast Project</name>
+    <servers>
+      <server port="8080" name="localhost"/>
+    </servers>
+    <adminRole>ROLE_ADMIN</adminRole>
+    <anonymousRole>ROLE_ANONYMOUS</anonymousRole>
+    <properties>
+      <property key="engageui.link_mobile_redirect.description">For more information have a look at the official site.</property>
+      <property key="engageui.link_mobile_redirect.url">http://opencast.org/matterhorn/</property>
+      <property key="engageui.annotations.enable">true</property>
+      <property key="adminui.series_prepopulate.enable">false</property>
+      <property key="adminui.i18n_tab_episode.enable">true</property>
+      <property key="avalon.stream_base">file:///var/avalon/rtmp_streams</property>
+      <property key="engageui.link_download.enable">false</property>
+      <property key="adminui.chunksize">2024</property>
+      <property key="logo_large">/engage/ui/img/mh_logos/MatterhornLogo_large.png</property>
+      <property key="adminui.i18n_tab_users.enable">false</property>
+      <property key="engageui.link_mobile_redirect.enable">false</property>
+      <property key="engageui.links_media_module.enable">true</property>
+      <property key="logo_small">/engage/ui/img/mh_logos/OpencastLogo.png</property>
+    </properties>
+  </organization>
+  <mediapackage start="2015-03-26T19:01:00Z" id="7bbfd5f2-cde0-4320-bd52-8f2d9eb290c0" duration="6338">
+    <title>avalon:2114</title>
+    <media>
+      <track ref="track:428c9c8f-7618-416e-a32d-569582e908c2" type="presenter/delivery" id="track-7">
+        <mimetype>video/mp4</mimetype>
+        <tags>
+          <tag>engage</tag>
+          <tag>publish</tag>
+          <tag>quality-medium</tag>
+          <tag>streaming</tag>
+        </tags>
+        <url>rtmp://lancelot.dlib.indiana.edu/vod/mp4:7bbfd5f2-cde0-4320-bd52-8f2d9eb290c0/428c9c8f-7618-416e-a32d-569582e908c2/videoshort</url>
+        <checksum type="md5">e940317f396734748c2ad15296dd093d</checksum>
+        <duration>6338</duration>
+        <audio id="audio-1">
+          <device/>
+          <encoder type="AAC"/>
+          <channels>1</channels>
+          <bitrate>76477.0</bitrate>
+        </audio>
+        <video id="video-1">
+          <device/>
+          <encoder type="AVC"/>
+          <bitrate>1000000.0</bitrate>
+          <framerate>30.0</framerate>
+          <resolution>872x480</resolution>
+          <scantype type="Progressive"/>
+        </video>
+      </track>
+      <track ref="track:d76d5d86-af09-4fe3-bfa5-23561be9745e" type="presenter/delivery" id="track-8">
+        <mimetype>video/mp4</mimetype>
+        <tags>
+          <tag>engage</tag>
+          <tag>publish</tag>
+          <tag>quality-low</tag>
+          <tag>streaming</tag>
+        </tags>
+        <url>rtmp://lancelot.dlib.indiana.edu/vod/mp4:7bbfd5f2-cde0-4320-bd52-8f2d9eb290c0/d76d5d86-af09-4fe3-bfa5-23561be9745e/videoshort</url>
+        <checksum type="md5">55dfbedeb7e454a34b216a385fdc130e</checksum>
+        <duration>6338</duration>
+        <audio id="audio-1">
+          <device/>
+          <encoder type="AAC"/>
+          <channels>1</channels>
+          <bitrate>76477.0</bitrate>
+        </audio>
+        <video id="video-1">
+          <device/>
+          <encoder type="AVC"/>
+          <bitrate>529496.0</bitrate>
+          <framerate>30.0</framerate>
+          <resolution>654x360</resolution>
+          <scantype type="Progressive"/>
+        </video>
+      </track>
+      <track ref="track:ac61546a-c4fc-4fbb-b2cc-640515273839" type="presenter/delivery" id="track-9">
+        <mimetype>video/mp4</mimetype>
+        <tags>
+          <tag>engage</tag>
+          <tag>publish</tag>
+          <tag>quality-high</tag>
+          <tag>streaming</tag>
+        </tags>
+        <url>rtmp://lancelot.dlib.indiana.edu/vod/mp4:7bbfd5f2-cde0-4320-bd52-8f2d9eb290c0/ac61546a-c4fc-4fbb-b2cc-640515273839/videoshort</url>
+        <checksum type="md5">1dc9d5ccbc8ddedc768439c4b38f7194</checksum>
+        <duration>6338</duration>
+        <audio id="audio-1">
+          <device/>
+          <encoder type="AAC"/>
+          <channels>1</channels>
+          <bitrate>76477.0</bitrate>
+        </audio>
+        <video id="video-1">
+          <device/>
+          <encoder type="AVC"/>
+          <bitrate>2000000.0</bitrate>
+          <framerate>30.0</framerate>
+          <resolution>1308x720</resolution>
+          <scantype type="Progressive"/>
+        </video>
+      </track>
+      <track ref="track:428c9c8f-7618-416e-a32d-569582e908c2" type="presenter/delivery" id="track-10">
+        <mimetype>application/x-mpegURL</mimetype>
+        <tags>
+          <tag>engage</tag>
+          <tag>hls</tag>
+          <tag>publish</tag>
+          <tag>quality-medium</tag>
+          <tag>streaming</tag>
+        </tags>
+        <url>http://lancelot.dlib.indiana.edu/streams/7bbfd5f2-cde0-4320-bd52-8f2d9eb290c0/428c9c8f-7618-416e-a32d-569582e908c2/videoshort.mp4.m3u8</url>
+        <checksum type="md5">e940317f396734748c2ad15296dd093d</checksum>
+        <duration>6338</duration>
+        <audio id="audio-1">
+          <device/>
+          <encoder type="AAC"/>
+          <channels>1</channels>
+          <bitrate>76477.0</bitrate>
+        </audio>
+        <video id="video-1">
+          <device/>
+          <encoder type="AVC"/>
+          <bitrate>1000000.0</bitrate>
+          <framerate>30.0</framerate>
+          <resolution>872x480</resolution>
+          <scantype type="Progressive"/>
+        </video>
+      </track>
+      <track ref="track:d76d5d86-af09-4fe3-bfa5-23561be9745e" type="presenter/delivery" id="track-11">
+        <mimetype>application/x-mpegURL</mimetype>
+        <tags>
+          <tag>engage</tag>
+          <tag>hls</tag>
+          <tag>publish</tag>
+          <tag>quality-low</tag>
+          <tag>streaming</tag>
+        </tags>
+        <url>http://lancelot.dlib.indiana.edu/streams/7bbfd5f2-cde0-4320-bd52-8f2d9eb290c0/d76d5d86-af09-4fe3-bfa5-23561be9745e/videoshort.mp4.m3u8</url>
+        <checksum type="md5">55dfbedeb7e454a34b216a385fdc130e</checksum>
+        <duration>6338</duration>
+        <audio id="audio-1">
+          <device/>
+          <encoder type="AAC"/>
+          <channels>1</channels>
+          <bitrate>76477.0</bitrate>
+        </audio>
+        <video id="video-1">
+          <device/>
+          <encoder type="AVC"/>
+          <bitrate>529496.0</bitrate>
+          <framerate>30.0</framerate>
+          <resolution>654x360</resolution>
+          <scantype type="Progressive"/>
+        </video>
+      </track>
+      <track ref="track:ac61546a-c4fc-4fbb-b2cc-640515273839" type="presenter/delivery" id="track-12">
+        <mimetype>application/x-mpegURL</mimetype>
+        <tags>
+          <tag>engage</tag>
+          <tag>hls</tag>
+          <tag>publish</tag>
+          <tag>quality-high</tag>
+          <tag>streaming</tag>
+        </tags>
+        <url>http://lancelot.dlib.indiana.edu/streams/7bbfd5f2-cde0-4320-bd52-8f2d9eb290c0/ac61546a-c4fc-4fbb-b2cc-640515273839/videoshort.mp4.m3u8</url>
+        <checksum type="md5">1dc9d5ccbc8ddedc768439c4b38f7194</checksum>
+        <duration>6338</duration>
+        <audio id="audio-1">
+          <device/>
+          <encoder type="AAC"/>
+          <channels>1</channels>
+          <bitrate>76477.0</bitrate>
+        </audio>
+        <video id="video-1">
+          <device/>
+          <encoder type="AVC"/>
+          <bitrate>2000000.0</bitrate>
+          <framerate>30.0</framerate>
+          <resolution>1308x720</resolution>
+          <scantype type="Progressive"/>
+        </video>
+      </track>
+    </media>
+    <metadata/>
+    <attachments/>
+  </mediapackage>
+  <operations>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="1" exception-handler-workflow="error" fail-on-error="true" description="Inspecting the media package" state="SUCCEEDED" job="18172" id="inspect">
+      <configurations/>
+      <started>1427396506579</started>
+      <completed>1427396519104</completed>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="1" exception-handler-workflow="error" fail-on-error="false" description="Preprocessing (1/4)" state="SUCCEEDED" job="18174" id="compose">
+      <configurations>
+        <configuration key="target-flavor">presenter/source</configuration>
+        <configuration key="encoding-profile">epiphan.presenter</configuration>
+        <configuration key="source-flavor">multitrack/source</configuration>
+      </configurations>
+      <started>1427396529513</started>
+      <completed>1427396531744</completed>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="1" exception-handler-workflow="error" fail-on-error="true" description="Preprocessing (2/4)" state="SUCCEEDED" job="18175" id="prepare-av">
+      <configurations>
+        <configuration key="target-flavor">presenter/work</configuration>
+        <configuration key="rewrite">false</configuration>
+        <configuration key="promiscuous-audio-muxing">true</configuration>
+        <configuration key="source-flavor">presenter/source</configuration>
+      </configurations>
+      <started>1427396545420</started>
+      <completed>1427396549354</completed>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="1" exception-handler-workflow="error" if="${trimHold}" fail-on-error="true" description="Preprocessing (3/4)" state="SKIPPED" job="18176" id="compose">
+      <configurations>
+        <configuration key="target-flavor">presenter/preview</configuration>
+        <configuration key="encoding-profile">flash-preview.http</configuration>
+        <configuration key="source-flavor">presenter/work</configuration>
+      </configurations>
+      <started>1427396559008</started>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="1" exception-handler-workflow="error" if="${trimHold}" fail-on-error="true" description="Preprocessing (4/4)" state="SKIPPED" job="18177" id="trim">
+      <configurations>
+        <configuration key="encoding-profile">trim.work</configuration>
+        <configuration key="target-flavor-subtype">trimmed</configuration>
+        <configuration key="source-flavor">*/work</configuration>
+      </configurations>
+      <started>1427396593668</started>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="1" exception-handler-workflow="error" fail-on-error="true" description="Encoding video to mp4 (low quality)" state="SUCCEEDED" job="18178" id="compose">
+      <configurations>
+        <configuration key="target-flavor">presenter/delivery</configuration>
+        <configuration key="encoding-profile">mp4-low.http</configuration>
+        <configuration key="target-tags">engage, quality-low</configuration>
+        <configuration key="source-flavor">presenter/trimmed</configuration>
+      </configurations>
+      <started>1427396606516</started>
+      <completed>1427396635425</completed>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="1" exception-handler-workflow="error" fail-on-error="true" description="Encoding video to mp4 (medium quality)" state="SUCCEEDED" job="18181" id="compose">
+      <configurations>
+        <configuration key="target-flavor">presenter/delivery</configuration>
+        <configuration key="encoding-profile">mp4-medium.http</configuration>
+        <configuration key="target-tags">engage, quality-medium</configuration>
+        <configuration key="source-flavor">presenter/trimmed</configuration>
+      </configurations>
+      <started>1427396639252</started>
+      <completed>1427396670040</completed>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="1" exception-handler-workflow="error" fail-on-error="true" description="Encoding video to mp4 (high quality)" state="SUCCEEDED" job="18184" id="compose">
+      <configurations>
+        <configuration key="target-flavor">presenter/delivery</configuration>
+        <configuration key="encoding-profile">mp4-high.http</configuration>
+        <configuration key="target-tags">engage, quality-high</configuration>
+        <configuration key="source-flavor">presenter/trimmed</configuration>
+      </configurations>
+      <started>1427396675116</started>
+      <completed>1427396726615</completed>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="1" exception-handler-workflow="error" fail-on-error="true" description="Applying access control rules" state="SUCCEEDED" job="18187" id="apply-acl">
+      <configurations/>
+      <started>1427396734031</started>
+      <completed>1427396735345</completed>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="2" exception-handler-workflow="error" if="rtmp://lancelot.dlib.indiana.edu/vod" fail-on-error="true" description="Distributing desktop stream to server" state="SUCCEEDED" job="18188" id="distribute-streaming">
+      <configurations>
+        <configuration key="source-tags">engage,-publish</configuration>
+        <configuration key="target-tags">publish, streaming</configuration>
+      </configurations>
+      <started>1427396747157</started>
+      <completed>1427396761738</completed>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="2" exception-handler-workflow="error" if="/var/avalon/hls_streams/" fail-on-error="true" description="Distributing mobile stream to server" state="SUCCEEDED" job="18192" id="distribute-hls">
+      <configurations>
+        <configuration key="source-tags">engage,-publish</configuration>
+        <configuration key="target-tags">publish, hls, streaming</configuration>
+      </configurations>
+      <started>1427396769301</started>
+      <completed>1427396781414</completed>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="1" exception-handler-workflow="error" fail-on-error="true" description="Published" state="SUCCEEDED" job="18196" id="publish">
+      <configurations>
+        <configuration key="source-tags">publish</configuration>
+      </configurations>
+      <started>1427396789769</started>
+      <completed>1427396801867</completed>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+    <operation retry-strategy="none" execution-host="http://lancelot.dlib.indiana.edu:18080" failed-attempts="0" max-attempts="1" fail-on-error="false" description="Cleaning up" state="SUCCEEDED" job="18198" id="cleanup">
+      <configurations>
+        <configuration key="preserve-flavors"/>
+      </configurations>
+      <started>1427396808214</started>
+      <completed>1427396809621</completed>
+      <time-in-queue>0</time-in-queue>
+      <execution-history/>
+    </operation>
+  </operations>
+  <configurations/>
+  <errors/>
+</workflow>

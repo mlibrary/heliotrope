@@ -1,0 +1,27 @@
+name: hydra_derivatives
+services:
+  fcrepo4:
+    type: compose
+    app_mount: false
+    portforward: true
+    volumes:
+      fcrepo4:
+    services:
+      image: samvera/fcrepo4:4.7.5
+      command: /fedora-entrypoint.sh
+      volumes:
+        - fcrepo4:/data
+      ports:
+        - 8986:8080
+  solr:
+    type: solr:7
+    app_mount: false
+    portforward: 8985
+    core: hydra-test
+    config:
+      dir: solr/config
+proxy:
+  fcrepo4:
+    - hydra-derivatives.fcrepo4.lndo.site:8986
+  solr:
+    - hydra-derivatives.solr.lndo.site:8985

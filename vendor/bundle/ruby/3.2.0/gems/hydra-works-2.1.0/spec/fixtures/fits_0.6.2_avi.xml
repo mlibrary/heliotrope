@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fits xmlns="http://hul.harvard.edu/ois/xml/ns/fits/fits_output" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hul.harvard.edu/ois/xml/ns/fits/fits_output http://hul.harvard.edu/ois/xml/xsd/fits/fits_output.xsd" version="0.6.2" timestamp="8/28/15 3:35 PM">
+  <identification status="CONFLICT">
+    <identity format="RIFF (little-endian) data, AVI, 356 x 264, 10.00 fps, video:, audio: uncompressed PCM (mono, 11025 Hz)" mimetype="video/x-msvideo" toolname="FITS" toolversion="0.6.2">
+      <tool toolname="file utility" toolversion="5.14" />
+    </identity>
+    <identity format="AVI" mimetype="video/x-msvideo" toolname="FITS" toolversion="0.6.2">
+      <tool toolname="Exiftool" toolversion="9.06" />
+    </identity>
+    <identity format="Audio/Video Interleaved Format" mimetype="video/x-msvideo" toolname="FITS" toolversion="0.6.2">
+      <tool toolname="Droid" toolversion="3.0" />
+      <externalIdentifier toolname="Droid" toolversion="3.0" type="puid">fmt/5</externalIdentifier>
+    </identity>
+    <identity format="Audio Video Interleave)" mimetype="video/x-msvideo" toolname="FITS" toolversion="0.6.2">
+      <tool toolname="ffident" toolversion="0.2" />
+    </identity>
+  </identification>
+  <fileinfo>
+    <lastmodified toolname="Exiftool" toolversion="9.06" status="SINGLE_RESULT">2015:08:11 14:59:03-04:00</lastmodified>
+    <filepath toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">/home/grosscol/workspace/hydra-works/spec/fixtures/countdown.avi</filepath>
+    <filename toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">countdown.avi</filename>
+    <size toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">723678</size>
+    <md5checksum toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">d43ffafa098925dae10feeca46dc9a87</md5checksum>
+    <fslastmodified toolname="OIS File Information" toolversion="0.1" status="SINGLE_RESULT">1439319543000</fslastmodified>
+  </fileinfo>
+  <filestatus />
+  <metadata />
+</fits>
+

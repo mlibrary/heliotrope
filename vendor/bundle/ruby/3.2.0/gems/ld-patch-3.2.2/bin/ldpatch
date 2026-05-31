@@ -1,0 +1,81 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", 'lib')))
+require 'ld/patch'
+begin
+  require 'linkeddata'
+rescue LoadError
+  require 'rdf/ntriples'
+  require 'rdf/turtle'
+end
+require 'getoptlong'
+
+def run(graph, options = {})
+  if options[:debug]
+    puts "target graph:\n#{graph.dump(:ttl, standard_prefixes: true)}\n"
+    puts "patch:\n#{options[:patch]}\n"
+  end
+
+  if options[:verbose]
+    puts ("\npatch:\n" + options[:patch]) 
+  end
+
+  patch =  LD::Patch.parse(options[:patch], options)
+
+  puts ("\nSXP:\n" + patch.to_sse) if options[:debug] || options[:to_sxp]
+
+  unless options[:to_sxp]
+    res = patch.execute(graph, options)
+    puts res.dump(:ttl, base_uri: patch.base_uri, prefixes: patch.prefixes, standard_prefixes: true)
+  end
+end
+
+opts = GetoptLong.new(
+  ["--debug", GetoptLong::NO_ARGUMENT],
+  ["--execute", "-e", GetoptLong::REQUIRED_ARGUMENT],
+  ["--patch", GetoptLong::REQUIRED_ARGUMENT],
+  ["--progress", GetoptLong::NO_ARGUMENT],
+  ["--to-sxp", GetoptLong::NO_ARGUMENT],
+  ["--validate", GetoptLong::NO_ARGUMENT],
+  ["--verbose", GetoptLong::NO_ARGUMENT],
+  ["--help", "-?", GetoptLong::NO_ARGUMENT]
+)
+
+options = {}
+
+opts.each do |opt, arg|
+  case opt
+  when '--base'         then options[:base_uri] = arg
+  when '--debug'        then options[:debug] = true
+  when '--execute'      then options[:patch] = arg
+  when '--patch'        then options[:patch] = RDF::Util::File.open_file(arg).read
+  when '--progress'     then options[:debug] ||= 2
+  when '--to-sxp'       then options[:to_sxp] = true
+  when '--validate'     then options[:validate] = true
+  when '--verbose'      then options[:verbose] = true
+  when "--help"
+    puts "Usage: #{$0} [options] target graph file-or-uri ..."
+    puts "Options:"
+    puts "      --base:       Base URI of target graph, if different from graph location"
+    puts "      --debug:      Display detailed debug output"
+    puts "      --execute,-e: Use option argument as the patch input"
+    puts "      --patch:      Location of patch document"
+    puts "      --progress    Display parse tree"
+    puts "      --to-sxp:     Generate S-Expression for patch instead of running query"
+    puts "      --validate:   Validate patch document"
+    puts "      --verbose:    Display details of processing"
+    puts "      --help,-?:    This message"
+    exit(0)
+  end
+end
+
+raise "No patch defined" unless options[:patch]
+if ARGV.empty?
+  run(RDF::Graph.new, options)
+else
+  ARGV.each do |test_file|
+    puts "patch #{test_file}"
+    run(RDF::Graph.load(test_file), options.merge(base_uri: RDF::URI(test_file)))
+  end
+end
+puts

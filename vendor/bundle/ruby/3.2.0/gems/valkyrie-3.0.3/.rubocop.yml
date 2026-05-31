@@ -1,0 +1,51 @@
+inherit_from: .rubocop_todo.yml
+
+inherit_gem:
+  bixby: bixby_default.yml
+AllCops:
+  DisplayCopNames: true
+  Exclude:
+    - 'bin/*'
+    - 'db/schema.rb'
+    - 'vendor/**/*'
+    - 'gemfiles/vendor/**/*'
+RSpec/ScatteredSetup:
+  Enabled: false
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'lib/valkyrie/specs/**/*'
+    - 'tasks/**/*'
+    - 'db/schema.rb'
+    - 'Rakefile'
+    - '*.gemspec'
+RSpec/ExampleLength:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+Rails/TimeZone:
+  Enabled: false
+Rails/RakeEnvironment:
+  Enabled: false
+Rails/ApplicationRecord:
+  Enabled: false
+Naming/PredicateName:
+  Exclude:
+    - "lib/valkyrie/resource.rb"
+    - "lib/valkyrie/persistence/solr/queries/default_paginator.rb"
+Lint/UnusedMethodArgument:
+  AllowUnusedKeywordArguments: true
+Naming/FileName:
+  Exclude:
+    - 'Appraisals'
+    - 'Gemfile'
+Metrics/MethodLength:
+  Exclude:
+    - 'lib/valkyrie/persistence/postgres/persister.rb'
+    - 'lib/valkyrie/persistence/fedora/persister.rb'
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'lib/valkyrie/persistence/postgres/persister.rb'
+RSpec/VerifiedDoubles:
+  Exclude:
+    - 'spec/valkyrie/persistence/postgres/metadata_adapter_spec.rb'

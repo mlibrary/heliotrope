@@ -1,0 +1,127 @@
+inherit_from:
+  - .rubocop_fixme.yml
+
+inherit_gem:
+  bixby: bixby_default.yml
+
+AllCops:
+  TargetRubyVersion: 2.6
+  DisplayCopNames: true
+  Exclude:
+    - 'db/**/*'
+    - 'script/**/*'
+    - 'spec/test_app_templates/**/*'
+    - 'vendor/**/*'
+    - 'lib/hyrax/specs/**/*'
+
+Lint/ImplicitStringConcatenation:
+  Exclude:
+    - 'lib/generators/hyrax/**/*'
+
+Rails/Output:
+  Exclude:
+    - 'lib/generators/**/*'
+
+Metrics/BlockLength:
+  ExcludedMethods: ['included']
+  Exclude:
+    - 'hyrax.gemspec'
+    - 'app/models/concerns/hyrax/content_block_behavior.rb'
+    - 'app/services/hyrax/workflow/workflow_schema.rb'
+    - 'config/initializers/simple_form.rb'
+    - 'config/features.rb'
+    - 'config/routes.rb'
+    - 'lib/generators/hyrax/templates/catalog_controller.rb'
+    - 'lib/generators/hyrax/templates/config/initializers/simple_form_bootstrap.rb'
+    - 'lib/hyrax/rails/routes.rb'
+    - 'lib/tasks/*.rake'
+    - 'spec/**/*.rb'
+    - 'tasks/benchmark.rake'
+
+Style/AsciiComments:
+  Enabled: false
+
+# rubocop suggests !thing.nil? instead, but that is NOT equivalent
+Style/DoubleNegation:
+  Enabled: false
+
+Style/CollectionMethods:
+  PreferredMethods:
+    collect: 'map'
+    collect!: 'map!'
+    inject: 'reduce'
+    detect: 'find'
+    find_all: 'select'
+
+Style/SymbolArray:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/SingleLineBlockParams:
+  Enabled: false
+
+Rails/ApplicationJob:
+  Enabled: false
+
+Rails/ApplicationRecord:
+  Enabled: false
+
+Rails/RakeEnvironment:
+  Enabled: false
+
+# We define custom methods like `find_by_user_key`,
+# `find_by_created_date`, etc
+Rails/DynamicFindBy:
+  Enabled: false
+
+Rails/FilePath:
+  Exclude:
+    - 'spec/abilities/**/*'
+
+Rails/OutputSafety:
+  Exclude:
+    - 'app/builders/hyrax/form_builder.rb'
+    - 'app/helpers/hyrax/citations_behaviors/formatters/apa_formatter.rb'
+    - 'app/helpers/hyrax/citations_behaviors/formatters/chicago_formatter.rb'
+    - 'app/helpers/hyrax/citations_behaviors/formatters/mla_formatter.rb'
+    - 'app/helpers/hyrax/collections_helper.rb'
+    - 'app/helpers/hyrax/content_block_helper_behavior.rb'
+    - 'app/helpers/hyrax/hyrax_helper_behavior.rb'
+    - 'app/presenters/hyrax/fixity_status_presenter.rb'
+    - 'app/presenters/hyrax/presents_attributes.rb'
+    - 'app/renderers/hyrax/renderers/attribute_renderer.rb'
+    - 'spec/views/hyrax/my/works/_list_works.html.erb_spec.rb'
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/abilities/**/*'
+    - 'spec/config/hyrax_events_spec.rb'
+    - 'spec/conversions/**/*'
+    - 'spec/features/**/*'
+    - 'spec/inputs/**/*'
+    - 'spec/javascripts/jasmine_spec.rb'
+    - 'spec/tasks/rake_spec.rb'
+    - 'spec/views/**/*'
+
+# # By default RSpec/MessageSpies has the following:
+# #   Prefer have_received for setting message expectations. Setup form as a spy using allow or instance_spy.
+# # The default assumes EnforcedStyle is 'have_received'. Most of our specs are 'receive'
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/ExpectActual:
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/MessageExpectation:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/LeadingSubject:
+  Enabled: false

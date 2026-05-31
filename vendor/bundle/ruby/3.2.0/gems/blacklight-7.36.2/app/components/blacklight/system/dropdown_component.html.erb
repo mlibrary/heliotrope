@@ -1,0 +1,9 @@
+<%= content_tag :div, id: @id, class: @classes.join(' ') do %>
+  <%= button %>
+
+  <div class="dropdown-menu" role="menu">
+    <% options.each do |option| %>
+      <%= option %>
+    <% end %>
+  </div>
+<% end %>

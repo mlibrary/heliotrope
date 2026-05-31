@@ -1,0 +1,41 @@
+name: Ruby CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: ['2.6.10', '2.7.8']
+        # ruby-version: ['2.6.10', '2.7.8', '3.0.6', '3.1.4', '3.2.2']
+        gemfile: ['Gemfile']
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler: 2.4.17
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo groupadd clamav
+        sudo useradd -g clamav -s /bin/false -c "Clam Antivirus" clamav
+        sudo apt-get install -y clamav
+        sudo systemctl stop clamav-freshclam
+        sudo pkill freshclam || true
+        sudo freshclam
+
+    - name: Install Gems
+      run: |
+        gem install rake
+        gem install rspec
+        bundle install --jobs 4 --retry 3
+
+    - name: Run tests
+      run: bundle exec rspec

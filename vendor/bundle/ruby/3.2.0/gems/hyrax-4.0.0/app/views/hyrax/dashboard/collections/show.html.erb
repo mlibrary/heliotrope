@@ -1,0 +1,105 @@
+<% provide :page_title, construct_page_title(@presenter.title) %>
+
+<% provide :page_header do %>
+  <h1><span class="fa fa-file" aria-hidden="true"></span> <%= t('.header') %></h1>
+<% end %>
+
+<div class="collections-wrapper">
+  <section class="card collections-panel-wrapper admin-show-page">
+    <div class="card-header">
+      <%= render 'collection_title', presenter: @presenter %>
+    </div>
+
+    <div class="card-body">
+      <section>
+        <div itemscope itemtype="http://schema.org/CollectionPage" class="row collection">
+          <div class="col-sm-3 text-center">
+              <%= render 'hyrax/collections/media_display', presenter: @presenter %>
+              <%= link_to t('.public_view_label'), collection_path(id: @presenter.id) %>
+          </div>
+          <div class="col-sm-9 collection-description-wrapper">
+            <!-- Parent Collection(s) -->
+            <% if @presenter.collection_type_is_nestable? && @presenter.total_parent_collections > 0 %>
+                <h4><%= t('.parent_collection_header') %> (<%= @presenter.total_parent_collections %>)</h4>
+                <section id="parent-collections-wrapper" class="parent-collections-wrapper">
+                  <%= render 'hyrax/dashboard/collections/show_parent_collections', presenter: @presenter %>
+                </section>
+            <% end %>
+
+            <!-- Collection Description(s) -->
+            <section>
+              <%= render 'hyrax/collections/collection_description', presenter: @presenter %>
+            </section>
+
+            <% unless collection_search_parameters? %>
+              <%= render 'show_descriptions' %>
+            <% end %>
+          </div>
+        </div>
+      </section>
+
+      <!-- Search results label -->
+
+      <% if @members_count > 0 || @presenter.subcollection_count > 0 %>
+          <div class="hyc-blacklight hyc-bl-title">
+            <h2>
+              <% if collection_search_parameters? %>
+                  <%= t('hyrax.dashboard.collections.show.search_results') %>
+              <% end %>
+              <p class="sr-only"><%= t('hyrax.dashboard.collections.show.search_results') %></p>
+            </h2>
+          </div>
+      <% end %>
+
+      <!-- Search bar -->
+      <section class="collections-search-wrapper">
+        <div class="row">
+          <div class="col-sm-8">
+            <%# TODO: leaving this as it was causes rerouting to the public show page. needs work %>
+            <%= render 'hyrax/collections/search_form', presenter: @presenter, url: hyrax.dashboard_collection_path(@presenter.id) %>
+          </div>
+        </div>
+      </section>
+
+      <!-- Subcollections -->
+      <% if @presenter.collection_type_is_nestable? %>
+        <section id="sub-collections-wrapper" class="sub-collections-wrapper">
+          <h3><%= t('.subcollection_count') %> (<%= @subcollection_count %>)</h3>
+          <div class="row">
+            <div class="col-md-7">
+              <%= render 'subcollection_list', id: @presenter.id, collection: @subcollection_docs %>
+            </div>
+            <% unless collection_search_parameters? %>
+              <div class="col-md-5">
+                <%= render 'show_subcollection_actions', presenter: @presenter %>
+              </div>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+
+      <!-- Works -->
+      <section class="works-wrapper">
+        <h3><%= t('.item_count') %> (<%= @members_count %>)</h3>
+        <% unless collection_search_parameters? %>
+          <%= render 'show_add_items_actions', presenter: @presenter %>
+        <% end %>
+
+        <%= render 'sort_and_per_page', collection: @presenter %>
+        <%= render_document_index @member_docs %>
+        <%= render 'hyrax/collections/paginate' %>
+      </section>
+
+    </div><!-- /card-body -->
+  </section><!-- /collections-panel-wrapper -->
+</div><!-- /collections-wrapper -->
+
+<% if @presenter.collection_type_is_nestable? && !collection_search_parameters? %>
+  <%= render 'hyrax/my/collections/modal_add_to_collection', source: 'show' %>
+  <%= render 'hyrax/my/collections/modal_add_subcollection', id: @presenter.id, presenter: @presenter, source: 'show' %>
+  <%= render 'hyrax/dashboard/collections/modal_parent_collection_remove_deny', source: 'show' %>
+<% end %>
+
+<% unless collection_search_parameters? %>
+  <%= render '/shared/select_work_type_modal', create_work_presenter: @presenter.create_work_presenter if @presenter.draw_select_work_modal? %>
+<% end %>

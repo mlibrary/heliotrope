@@ -1,0 +1,7 @@
+<%= render Blacklight::Response::PaginationComponent.new(
+  response: paginate_compact,
+  theme: :blacklight_compact,
+  page_entries_info: page_entries_info(paginate_compact),
+  role: nil,
+  html: { aria: {} })
+%>

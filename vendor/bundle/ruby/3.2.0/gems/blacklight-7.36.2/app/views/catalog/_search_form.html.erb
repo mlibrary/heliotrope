@@ -1,0 +1,7 @@
+<%= warn "#{__FILE__} is a deprecated partial." %>
+<%= render((blacklight_config&.view_config(document_index_view_type)&.search_bar_component || Blacklight::SearchBarComponent).new(
+      url: search_action_url,
+      advanced_search_url: search_action_url(action: 'advanced_search'),
+      params: search_state.params_for_search.except(:qt),
+      search_fields: Deprecation.silence(Blacklight::ConfigurationHelperBehavior) { search_fields },
+      autocomplete_path: suggest_index_catalog_path)) %>

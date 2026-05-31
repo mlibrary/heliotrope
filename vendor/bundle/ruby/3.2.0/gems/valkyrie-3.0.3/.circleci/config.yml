@@ -1,0 +1,211 @@
+---
+version: 2.1
+jobs:
+  build:
+    parameters:
+      gemfile:
+        description: "Gemfile to run"
+        default: "Gemfile"
+        type: "string"
+      ruby:
+        description: "Ruby version"
+        default: "2.7.7"
+        type: "string"
+    docker:
+      - image: cimg/ruby:<< parameters.ruby >>
+        environment:
+          RAILS_ENV: test
+      - image: postgres:10.6-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: Valkyrie_gem_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+      - image: samvera/fcrepo4:4.7.5
+        environment:
+          CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC"
+          JAVA_OPTIONS: "-Djetty.http.port=8988"
+      - image: samvera/fcrepo4:5.1.0
+        environment:
+          CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC"
+          JAVA_OPTIONS: "-Djetty.http.port=8998 -Dfcrepo.dynamic.jms.port=61618 -Dfcrepo.dynamic.stomp.port=61614"
+      - image: fcrepo/fcrepo:6.0.0
+        environment:
+          CATALINA_OPTS: "-Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms512m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
+          JAVA_OPTS: "-Djetty.http.port=8978 -Dfcrepo.dynamic.jms.port=61619 -Dfcrepo.dynamic.stomp.port=61615 -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true"
+      - image: solr:7.7-alpine
+        command: bin/solr -cloud -noprompt -f -p 8994
+    environment:
+      BUNDLE_GEMFILE: << parameters.gemfile >>
+      POSTGRES_PORT: 5432
+      FEDORA_6_PORT: 8080
+    resource_class: medium+
+    steps:
+      - checkout
+
+      - run:
+          name: Check for 'master' branch
+          command: |
+              git fetch --all --quiet --prune --prune-tags
+              if [[ -n "$(git branch --all --list master */master)" ]]; then
+                  echo "A branch named 'master' was found. Please remove it."
+                  echo "$(git branch --all --list master */master)"
+              fi
+              [[ -z "$(git branch --all --list master */master)" ]]
+      - run:
+          name: Wait for solr
+          command: dockerize -wait tcp://localhost:8994 -timeout 1m
+      - run:
+          name: Load config into solr
+          command: |
+            cd solr/config
+            zip -1 -r solr_config.zip ./*
+            curl -H "Content-type:application/octet-stream" --data-binary @solr_config.zip "http://localhost:8994/solr/admin/configs?action=UPLOAD&name=valkyrie"
+            curl -H 'Content-type: application/json' http://localhost:8994/api/collections/ -d '{create: {name: valkyrie-core-test, config: valkyrie, numShards: 1}}'
+      # Install Bundler
+      - run: gem install bundler -v '~> 2.0'
+      - restore_cache:
+         keys:
+           - bundle-{{ checksum "<< parameters.gemfile >>" }}-{{ checksum "valkyrie.gemspec" }}-<< parameters.ruby >>-6
+      - run: sudo apt update -y && sudo apt-get install -y libpq-dev lsof
+      - run:
+          name: Set BUNDLE_GEMFILE
+          command: |
+            export BUNDLE_GEMFILE=~/project/<< parameters.gemfile >>
+      - run:
+          name: Install dependencies
+          command: bundle install --path=vendor/bundle --jobs 4 --retry 3
+      - save_cache:
+          key: bundle-{{ checksum "<< parameters.gemfile >>" }}-{{ checksum "valkyrie.gemspec" }}-<< parameters.ruby >>-6
+          paths:
+            - "vendor/bundle"
+            - "gemfiles/vendor/bundle"
+      - run:
+          name: Run Rubocop
+          command: bundle exec rake rubocop
+      - run:
+          name: Set up database
+          command: bundle exec rake db:migrate
+      - run:
+          name: Run Specs
+          command: bundle exec rspec spec
+      - store_artifacts:
+          path: coverage
+          destination: coverage
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          gemfile: "gemfiles/activerecord_7_0.gemfile"
+          ruby: 3.2.0
+          name: "Ruby3-2_rails7-0"
+      - build:
+          gemfile: "gemfiles/activerecord_6_0.gemfile"
+          ruby: 3.2.0
+          name: "Ruby3-2_Rails6-0"
+      - build:
+          gemfile: "gemfiles/activerecord_7_0.gemfile"
+          ruby: 3.1.3
+          name: "Ruby3-1_rails7-0"
+      - build:
+          gemfile: "gemfiles/activerecord_6_0.gemfile"
+          ruby: 3.1.3
+          name: "Ruby3-1_Rails6-0"
+      - build:
+          gemfile: "gemfiles/activerecord_7_0.gemfile"
+          ruby: 3.0.5
+          name: "Ruby3-0_rails7-0"
+      - build:
+          gemfile: "gemfiles/activerecord_6_0.gemfile"
+          ruby: 3.0.5
+          name: "Ruby3-0_Rails6-0"
+      - build:
+          gemfile: "gemfiles/activerecord_7_0.gemfile"
+          ruby: 2.7.7
+          name: "Ruby2-7_rails7-0"
+      - build:
+          gemfile: "gemfiles/activerecord_6_0.gemfile"
+          ruby: 2.7.7
+          name: "Ruby2-7_Rails6-0"
+      - build:
+          gemfile: "gemfiles/faraday_1.gemfile"
+          ruby: 2.7.7
+          name: "Faraday1"
+      - build:
+          gemfile: "gemfiles/faraday_0.gemfile"
+          ruby: 2.7.7
+          name: "Faraday0"
+      - build:
+          gemfile: "gemfiles/activerecord_6_0.gemfile"
+          ruby: 2.6.10
+          name: "Ruby2-6_Rails6-0"
+      - build:
+          gemfile: "gemfiles/activerecord_5_2.gemfile"
+          ruby: 2.7.7
+          name: "Ruby2-7_Rails5-2"
+      - build:
+          gemfile: "gemfiles/activerecord_5_2.gemfile"
+          ruby: 2.6.10
+          name: "Ruby2-6_Rails5-2"
+
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build:
+          gemfile: "gemfiles/activerecord_7_0.gemfile"
+          ruby: 3.2.0
+          name: "Ruby3-2_rails7-0"
+      - build:
+          gemfile: "gemfiles/activerecord_6_0.gemfile"
+          ruby: 3.2.0
+          name: "Ruby3-2_Rails6-0"
+      - build:
+          gemfile: "gemfiles/activerecord_7_0.gemfile"
+          ruby: 3.1.3
+          name: "Ruby3-1_rails7-0"
+      - build:
+          gemfile: "gemfiles/activerecord_6_0.gemfile"
+          ruby: 3.1.3
+          name: "Ruby3-1_Rails6-0"
+      - build:
+          gemfile: "gemfiles/activerecord_7_0.gemfile"
+          ruby: 3.0.5
+          name: "Ruby3-0_rails7-0"
+      - build:
+          gemfile: "gemfiles/activerecord_6_0.gemfile"
+          ruby: 3.0.5
+          name: "Ruby3-0_Rails6-0"
+      - build:
+          gemfile: "gemfiles/activerecord_7_0.gemfile"
+          ruby: 2.7.7
+          name: "Ruby2-7_rails7-0"
+      - build:
+          gemfile: "gemfiles/activerecord_6_0.gemfile"
+          ruby: 2.7.7
+          name: "Ruby2-7_Rails6-0"
+      - build:
+          gemfile: "gemfiles/faraday_1.gemfile"
+          ruby: 2.7.7
+          name: "Faraday1"
+      - build:
+          gemfile: "gemfiles/faraday_0.gemfile"
+          ruby: 2.7.7
+          name: "Faraday0"
+      - build:
+          gemfile: "gemfiles/activerecord_6_0.gemfile"
+          ruby: 2.6.10
+          name: "Ruby2-6_Rails6-0"
+      - build:
+          gemfile: "gemfiles/activerecord_5_2.gemfile"
+          ruby: 2.7.7
+          name: "Ruby2-7_Rails5-2"
+      - build:
+          gemfile: "gemfiles/activerecord_5_2.gemfile"
+          ruby: 2.6.10
+          name: "Ruby2-6_Rails5-2"

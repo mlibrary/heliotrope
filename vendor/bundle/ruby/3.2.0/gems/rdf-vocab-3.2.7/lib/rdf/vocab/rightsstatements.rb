@@ -1,0 +1,150 @@
+# -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+# This file generated automatically using rdf vocabulary format from http://rightsstatements.org/vocab/
+require 'rdf'
+module RDF::Vocab
+  # Vocabulary for <http://rightsstatements.org/vocab/>
+  # @!visibility private
+  RightsStatements = Class.new(RDF::StrictVocabulary("http://rightsstatements.org/vocab/")) do
+
+    # Extra definitions
+    term :"1.0/",
+      "http://purl.org/dc/elements/1.1/identifier": "rscs",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/title": {en: "RightsStatements.org Standardized International Rights Statements"},
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      type: "http://www.w3.org/2004/02/skos/core#ConceptScheme"
+    term :"CNE/1.0/",
+      "http://purl.org/dc/elements/1.1/identifier": "CNE",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      "http://www.w3.org/2004/02/skos/core#closeMatch": "http://www.europeana.eu/rights/unknown/",
+      "http://www.w3.org/2004/02/skos/core#relatedMatch": "http://id.loc.gov/vocabulary/preservation/copyrightStatus/unk",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "CNE",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"InC-EDU/1.0/",
+      "http://purl.org/dc/elements/1.1/identifier": "InC-EDU",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      "http://www.w3.org/2004/02/skos/core#relatedMatch": "http://id.loc.gov/vocabulary/preservation/copyrightStatus/cpr",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "InC-EDU",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"InC-NC/1.0/",
+      "http://creativecommons.org/ns#prohibits": "http://creativecommons.org/ns#CommercialUse",
+      "http://purl.org/dc/elements/1.1/identifier": "InC-NC",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      "http://www.w3.org/2004/02/skos/core#closeMatch": "http://creativecommons.org/licenses/by-nc/4.0/",
+      "http://www.w3.org/2004/02/skos/core#relatedMatch": "http://id.loc.gov/vocabulary/preservation/copyrightStatus/cpr",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "InC-NC",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"InC-OW-EU/1.0/",
+      "http://purl.org/dc/elements/1.1/identifier": "InC-OW-EU",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      "http://www.w3.org/2004/02/skos/core#closeMatch": "http://www.europeana.eu/rights/orphan-work-eu/",
+      "http://www.w3.org/2004/02/skos/core#relatedMatch": "http://id.loc.gov/vocabulary/preservation/copyrightStatus/cpr",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "InC-OW-EU",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"InC-RUU/1.0/",
+      "http://purl.org/dc/elements/1.1/identifier": "InC-RUU",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      "http://www.w3.org/2004/02/skos/core#relatedMatch": "http://id.loc.gov/vocabulary/preservation/copyrightStatus/cpr",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "InC-RUU",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"InC/1.0/",
+      "http://purl.org/dc/elements/1.1/identifier": "InC",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      "http://www.w3.org/2004/02/skos/core#closeMatch": "http://www.europeana.eu/rights/rr-f/",
+      "http://www.w3.org/2004/02/skos/core#relatedMatch": "http://id.loc.gov/vocabulary/preservation/copyrightStatus/cpr",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "InC",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"NKC/1.0/",
+      "http://purl.org/dc/elements/1.1/identifier": "NKC",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      "http://www.w3.org/2004/02/skos/core#relatedMatch": "http://id.loc.gov/vocabulary/preservation/copyrightStatus/unk",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "NKC",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"NoC-CR/1.0/",
+      "http://purl.org/dc/elements/1.1/identifier": "NoC-CR",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      "http://www.w3.org/2004/02/skos/core#relatedMatch": "http://id.loc.gov/vocabulary/preservation/copyrightStatus/pub",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "NoC-CR",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"NoC-NC/1.0/",
+      "http://creativecommons.org/ns#prohibits": "http://creativecommons.org/ns#CommercialUse",
+      "http://purl.org/dc/elements/1.1/identifier": "NoC-NC",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      "http://www.w3.org/2004/02/skos/core#relatedMatch": "http://id.loc.gov/vocabulary/preservation/copyrightStatus/pub",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "NoC-NC",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"NoC-OKLR/1.0/",
+      "http://purl.org/dc/elements/1.1/identifier": "NoC-OKLR",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      "http://www.w3.org/2004/02/skos/core#relatedMatch": "http://id.loc.gov/vocabulary/preservation/copyrightStatus/pub",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "NoC-OKLR",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"NoC-US/1.0/",
+      "http://purl.org/dc/elements/1.1/identifier": "NoC-US",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "NoC-US",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"UND/1.0/",
+      "http://purl.org/dc/elements/1.1/identifier": "UND",
+      "http://purl.org/dc/terms/creator": "http://rightsstatements.org/vocab/irswg",
+      "http://purl.org/dc/terms/modified": "2022-04-27",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      notation: "UND",
+      type: ["http://purl.org/dc/terms/RightsStatement", "http://www.w3.org/2004/02/skos/core#Concept"]
+    term :"collection-ic/1.0/",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      member: ["http://rightsstatements.org/vocab/InC-EDU/1.0/", "http://rightsstatements.org/vocab/InC-NC/1.0/", "http://rightsstatements.org/vocab/InC-OW-EU/1.0/", "http://rightsstatements.org/vocab/InC-RUU/1.0/", "http://rightsstatements.org/vocab/InC/1.0/"],
+      type: "http://www.w3.org/2004/02/skos/core#Collection"
+    term :"collection-nc/1.0/",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      member: ["http://rightsstatements.org/vocab/NoC-CR/1.0/", "http://rightsstatements.org/vocab/NoC-NC/1.0/", "http://rightsstatements.org/vocab/NoC-OKLR/1.0/", "http://rightsstatements.org/vocab/NoC-US/1.0/"],
+      type: "http://www.w3.org/2004/02/skos/core#Collection"
+    term :"collection-other/1.0/",
+      "http://www.w3.org/2002/07/owl#versionInfo": "1.0",
+      inScheme: "http://rightsstatements.org/vocab/1.0/",
+      member: ["http://rightsstatements.org/vocab/CNE/1.0/", "http://rightsstatements.org/vocab/NKC/1.0/", "http://rightsstatements.org/vocab/UND/1.0/"],
+      type: "http://www.w3.org/2004/02/skos/core#Collection"
+    term :irswg,
+      "http://xmlns.com/foaf/0.1/homepage": "http://rightsstatements.org/",
+      "http://xmlns.com/foaf/0.1/name": {en: "RightsStatements.org Consortium"},
+      prefLabel: {en: "RightsStatements.org Consortium"},
+      type: ["http://www.europeana.eu/schemas/edm/Agent", "http://xmlns.com/foaf/0.1/Group"]
+  end
+end

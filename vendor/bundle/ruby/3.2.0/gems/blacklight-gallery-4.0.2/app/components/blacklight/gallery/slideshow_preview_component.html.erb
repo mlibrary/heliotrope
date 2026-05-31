@@ -1,0 +1,5 @@
+<%= render(Blacklight::DocumentComponent.new(classes: 'slideshow-preview-thumbnail', component: :div, document: @document, counter: @counter, presenter: @presenter)) do |component| %>
+  <% component.body do %>
+    <%= @view_context.link_to_document(@document, thumbnail, class: 'thumbnail', data: { 'context-href': nil, 'slide-to': @document_counter - 1, toggle: "modal", target: "#slideshow-modal" }) %>
+  <% end %>
+<% end %>

@@ -1,0 +1,128 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bagit'
+require 'docopt'
+require 'logger'
+logger = Logger.new(STDOUT)
+
+doc = <<DOCOPT
+BagIt.
+
+Usage:
+  bagit add [-f <file>...] [-t <tagfile>...] [-a <algo>] BAGPATH
+  bagit delete [-f <file>...] [-t <tagfile>...] BAGPATH
+  bagit remove [-t <tagfile>...] BAGPATH
+  bagit validate [-o] BAGPATH
+  bagit manifest [-T] BAGPATH
+  bagit list [--tags | --all] BAGPATH
+  bagit -h | --version
+
+Options:
+  -a             A selected hashing algorithm. (md5, sha1, sha256)
+  -h --help      Show this help screen.
+  --version      Show version.
+  -f <file>      File to add to/delete from bag. Repeatable.
+  -t <tag_file>  Tag (metadata) file to add to/delete/remove from bag. Repeatable.
+  -T             Force regeneration of tag manifest files.
+  -o --oxum      Validate against oxum only (quick validate).
+  --tags         List tag files.
+  --all          List all data and tag files.
+
+DOCOPT
+
+# Possible commands for bag-info write
+#
+# bagit new [--source-organization <org>] [--organization-address <org-addr>] [--contact-name <contact>]
+#             [--contact-phone <phone>] [--contact-email <email>] [--external-description <ext-desc>]
+#             [--external-identifier <ext-id>] [--group-identifier <group-id>] [--count <count>]
+#             [--internal-sender-identifier <sender-id>] [--internal-sender-description <sender-desc>]
+#             [--bag-info-entry <label> <value>] [-f <file>...] [-t <tagfile>...] BAGPATH
+
+begin
+  opts = Docopt.docopt(doc, version: BagIt::VERSION)
+
+  bag = BagIt::Bag.new(opts['BAGPATH']) unless opts['validate']
+  #####################################
+  # commands that don't alter the bag #
+  #####################################
+  if opts['validate']
+    bag = BagIt::Bag.new(opts['BAGPATH'])
+
+    valid = if opts['--oxum']
+              bag.valid_oxum?
+            else
+              bag.valid?
+            end
+
+    if valid
+      logger.info(valid)
+    else
+      logger.error("#{valid}: #{bag.errors.full_messages.join(', ')}")
+    end
+
+    # validation commands MUST NOT change manifest or bag-info files
+    exit
+  end
+
+  if opts['list']
+    files = bag.bag_files
+    if opts['--tags']
+      files = bag.tag_files
+    elsif opts['--all']
+      files = bag.bag_files + bag.tag_files
+    end
+    files.each { |f| puts f }
+    # quit here, too
+    exit
+  end
+
+  ######################################
+  # commands that may cause data loss! #
+  ######################################
+
+  # TODO: implement delete for data and tag files; remove for tag files.
+
+  # handle add/delete bag data files
+  opts['-f']&.each do |datafile|
+    if opts['add'] || opts['new']
+      bag.add_file(File.basename(datafile), datafile)
+    elsif opts['delete']
+      bag.remove_file(File.basename(datafile))
+    end
+  rescue StandardError => e
+    logger.error("Failed operation on bag file: #{e.message}")
+  end
+
+  # handle adding tag files
+  opts['-t']&.each do |tagfile|
+    if opts['add'] || opts['new']
+      # if it does, try to manifest it
+      if File.exist?(File.join(bag.bag_dir, File.basename(tagfile)))
+        bag.add_tag_file(tagfile)
+        # otherwise, add it
+      else
+        bag.add_tag_file(File.basename(tagfile), tagfile)
+      end
+    elsif opts['delete']
+      bag.delete_tag_file(File.basename(tagfile))
+    elsif opts['remove']
+      bag.remove_tag_file(File.basename(tagfile))
+    end
+  rescue StandardError => e
+    logger.error("Failed operation on tag file: #{e.message}".red)
+  end
+
+  # if we haven't quit yet, we need to re-manifest
+  # only do tags if tag files have been explictly added/removed or it is explictly called
+  bag.tagmanifest! if opts['-T'] || !opts['-t'].nil?
+
+  if opts['-a'].nil?
+    bag.manifest!
+  else
+    bag.manifest!(algo: opts['<algo>'])
+  end
+
+rescue Docopt::Exit => e
+  logger.error(e.message.red)
+end

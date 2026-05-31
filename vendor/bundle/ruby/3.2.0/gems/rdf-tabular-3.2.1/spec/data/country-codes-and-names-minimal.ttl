@@ -1,0 +1,22 @@
+@prefix : <http://example.org/country-codes-and-names.csv#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ [
+    :country "AL";
+    :name "Albania"
+ ] .
+
+ [
+    :country "AI";
+    :name "Anguilla"
+ ] .
+
+ [
+    :country "AF";
+    :name "Afghanistan"
+ ] .
+
+ [
+    :country "AD";
+    :name "Andorra"
+ ] .

@@ -1,0 +1,86 @@
+inherit_gem:
+    bixby: bixby_default.yml
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  DisplayCopNames: true
+  Exclude:
+    - 'vendor/**/*'
+    - 'spec/internal/bin/*'
+    - 'spec/internal/db/schema.rb'
+    - Gemfile
+    - hydra-derivatives.gemspec
+    - Rakefile
+
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods
+
+Metrics/AbcSize:
+  Max: 42
+  Exclude:
+    - lib/hydra/derivatives/processors/document.rb
+    - lib/hydra/derivatives/processors/full_text.rb
+    - lib/hydra/derivatives/processors/jpeg2k_image.rb
+    - lib/hydra/derivatives/processors/shell_based_processor.rb
+    - lib/hydra/derivatives/services/persist_basic_contained_output_file_service.rb
+    - lib/hydra/derivatives/services/tempfile_service.rb
+
+Metrics/BlockLength:
+  Max: 320
+
+Metrics/LineLength:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Max: 10
+
+RSpec/ExampleWording:
+  CustomTransform:
+    be: is
+    have: has
+    not: does not
+    NOT: does NOT
+  IgnoredWords:
+    - only
+
+RSpec/FilePath:
+  Enabled: false
+
+RSpec/HookArgument:
+  Exclude:
+    - spec/spec_helper.rb
+
+RSpec/InstanceVariable:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 10
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Max: 4
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/CollectionMethods:
+  PreferredMethods:
+    collect: 'map'
+    collect!: 'map!'
+    inject: 'reduce'
+    detect: 'find'
+    find_all: 'select'
+
+Style/Documentation:
+  Enabled: false
+
+Style/SignalException:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false

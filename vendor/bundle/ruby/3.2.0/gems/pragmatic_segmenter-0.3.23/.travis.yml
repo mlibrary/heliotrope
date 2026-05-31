@@ -1,0 +1,13 @@
+language: ruby
+rvm:
+  - "2.1.5"
+  - "2.2.0"
+  - "2.2.4"
+  - "2.3.0"
+  - "2.3.1"
+# uncomment this line if your project needs to run something other than `rake`:
+# script: bundle exec rspec spec
+addons:
+  code_climate:
+    repo_token:
+      secure: "TDtg1SY+50yvYL8nRhf3YG2xtyS4b7wdJddGL7BRvYHkn5jhmGAXRU9F9+IRyPLPlwwd/VX2zxClmU4hr3DAbb7C/JUscNmVUcDeiwlMOIEUIjKXT+f+TFkLLjTsXjivdX7T9oD/pzHUHB5SjqWfWyZKIo2uAiTv6zt4PYvoeUQ="

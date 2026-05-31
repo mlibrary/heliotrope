@@ -1,0 +1,75 @@
+<div id="versioning_display" class="tab-pane">
+  <h2><%= t('.header') %></h2>
+  <%= simple_form_for [main_app, curation_concern], html: { multipart: true, class: 'nav-safety' } do |f| %>
+    <div id="fileuploadVersioning">
+      <!-- Redirect browsers with JavaScript disabled to the origin page -->
+      <noscript><input type="hidden" name="redirect" value="<%= main_app.root_path %>"/></noscript>
+
+      <%= hidden_field_tag('redirect_tab', 'versions') %>
+
+      <!-- The table listing the files available for upload/download -->
+      <div class="row fileupload-buttonbar">
+
+        <h3><%= t('.upload') %></h3>
+
+        <div class="col-4">
+          <input id="file_set_files" style="display:none;" type="file" name="files[]" single/>
+          <label for="file_set_files" class="btn btn-success fileinput-button"><%= t('.choose_file') %></label>
+        </div>
+
+        <div class="col-8 fileupload-progress versioning-files-progress fade">
+          <!-- The global progress bar -->
+          <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:0%;"></div>
+          </div>
+          <!-- The extended global progress state -->
+          <div class="progress-extended">&nbsp;</div>
+        </div> <!-- end col-8 fileupload-progress fade -->
+      </div>
+
+      <div class="row versioning-files-list">
+        <div class="col-12">
+          <div class="container">
+            <div role="presentation" class="table"><span class="files"></span></div>
+            <!-- The global file processing state -->
+            <span class="fileupload-process"></span>
+          </div> <!-- end container -->
+        </div> <!-- end row versioning-files-list -->
+      </div> <!-- end row versioning-files-list -->
+
+      <%= f.button :button,
+                   name: "update_versioning",
+                   id: "upload_submit",
+                   onclick: "confirmation_needed = false;",
+                   class: "btn btn-primary text-white" do %>
+        <%= t('.upload') %>
+      <% end %>
+
+    </div> <!-- fileuploadVersioning -->
+  <% end %>
+
+  <%= form_for [main_app, curation_concern],
+               html: { class: 'edit_file_set_previous_version nav-safety' } do |f| %>
+    <h3><%= t('.restore') %></h3>
+    <% @version_list.each do |version| %>
+      <div class="form-check">
+        <label class="form-check-label <%= version.current? ? 'disabled' : '' %>">
+          <%= radio_button_tag(:revision, version.label, false, class: 'form-check-input', disabled: version.current?, required: 'required') %>
+          <%= version.current? ? t('.current') : t('.restore_from') %>
+          <%= version.created %> [by <%= version.committer %>]
+        </label>
+      </div>
+    <% end %>
+    <div id="save_version_note" class="alert hide"><%= t('.save_your_note') %></div>
+    <%= f.button :button, name: "revert_submit",
+                 id: "revert_submit",
+                 onclick: "confirmation_needed = false;",
+                 class: "btn btn-primary",
+                 type: 'submit' do %>
+      <%= t('.save') %>
+    <% end %>
+  <% end %>
+
+  <%= render 'hyrax/uploads/js_templates_versioning' %>
+
+</div> <!-- /row -->

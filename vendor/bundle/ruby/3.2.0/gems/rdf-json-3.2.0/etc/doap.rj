@@ -1,0 +1,134 @@
+{
+    "http://ar.to/#self": {
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
+            {
+                "type": "uri",
+                "value": "http://xmlns.com/foaf/0.1/Person"
+            }
+        ],
+        "http://xmlns.com/foaf/0.1/made": [
+            {
+                "type": "uri",
+                "value": "http://rubygems.org/gems/rdf-json"
+            }
+        ],
+        "http://xmlns.com/foaf/0.1/mbox": [
+            {
+                "type": "uri",
+                "value": "mailto:arto@bendiken.net"
+            }
+        ],
+        "http://xmlns.com/foaf/0.1/name": [
+            {
+                "type": "literal",
+                "value": "Arto Bendiken"
+            }
+        ]
+    },
+    "http://rubygems.org/gems/rdf-json": {
+        "http://purl.org/dc/terms/creator": [
+            {
+                "type": "uri",
+                "value": "http://ar.to/#self"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#blog": [
+            {
+                "type": "uri",
+                "value": "http://ar.to/"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#bug-database": [
+            {
+                "type": "uri",
+                "value": "https://github.com/ruby-rdf/rdf-json/issues"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#created": [
+            {
+                "type": "literal",
+                "value": "2009-12-28"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#description": [
+            {
+                "lang": "en",
+                "type": "literal",
+                "value": "RDF.rb extension for parsing/serializing RDF/JSON data."
+            }
+        ],
+        "http://usefulinc.com/ns/doap#developer": [
+            {
+                "type": "uri",
+                "value": "http://ar.to/#self"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#documenter": [
+            {
+                "type": "uri",
+                "value": "http://ar.to/#self"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#download-page": [
+            {
+                "type": "uri",
+                "value": "http://rubygems.org/gems/rdf-json"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#homepage": [
+            {
+                "type": "uri",
+                "value": "https://rubygems.org/gems/rdf-json/"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#implements": [
+            {
+                "type": "uri",
+                "value": "http://www.w3.org/TR/rdf-json/"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#license": [
+            {
+                "type": "uri",
+                "value": "https://unlicense.org/1.0/"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#maintainer": [
+            {
+                "type": "uri",
+                "value": "http://ar.to/#self"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#name": [
+            {
+                "type": "literal",
+                "value": "RDF::JSON"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#programming-language": [
+            {
+                "type": "literal",
+                "value": "Ruby"
+            }
+        ],
+        "http://usefulinc.com/ns/doap#shortdesc": [
+            {
+                "lang": "en",
+                "type": "literal",
+                "value": "RDF/JSON support for RDF.rb."
+            }
+        ],
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
+            {
+                "type": "uri",
+                "value": "http://usefulinc.com/ns/doap#Project"
+            }
+        ],
+        "http://xmlns.com/foaf/0.1/maker": [
+            {
+                "type": "uri",
+                "value": "http://ar.to/#self"
+            }
+        ]
+    }
+}

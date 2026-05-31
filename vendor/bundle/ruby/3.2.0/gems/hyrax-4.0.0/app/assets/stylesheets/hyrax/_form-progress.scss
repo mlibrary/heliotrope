@@ -1,0 +1,52 @@
+@media (min-width: map-get($grid-breakpoints, "sm")) {
+  .fixedsticky {
+    margin-top: 1em;
+  }
+}
+
+@media (min-width: map-get($grid-breakpoints, "md")) {
+  .fixedsticky {
+    margin-top: 0;
+    top: 0; /* Required to get consistent results in Safari and Chrome */
+  }
+
+  .fixedsticky-withoutfixedfixed .fixedsticky-on,
+  .fixed-supported .fixedsticky-on {
+    left: $save-viz-widget-left;
+    /* Required so that the widget doesn't pop back to top when public desc long */
+    bottom: $save-viz-widget-bottom;
+  }
+}
+
+.legend-save-work {
+  border: none;
+  font-size: $save-viz-widget-legend-font;
+  margin-bottom: $save-viz-widget-legend-margin;
+}
+
+.requirements,
+.visibility {
+  list-style-type: none;
+  padding-left: 8px;
+}
+
+// FIXME: There should be a better way to implement these with FontAwesome direct in the markup?
+aside.form-progress {
+  .incomplete::before {
+    content: "\f00d";
+    color: $brand-danger;
+    font-family: "FontAwesome";
+    padding-right: 5px;
+  }
+
+  .complete::before {
+    content: "\f00c";
+    color: $brand-success;
+    font-family: "FontAwesome";
+    padding-right: 5px;
+  }
+}
+
+.progress-bar-complete {
+  width: 100%;
+}

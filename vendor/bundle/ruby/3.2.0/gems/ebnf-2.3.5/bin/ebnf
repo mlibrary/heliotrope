@@ -1,0 +1,112 @@
+#!/usr/bin/env ruby
+# ebnf --- Process EBNF to generate the following:
+# * S-Expression
+# * Turtle
+# * Either of the above, transformed to BNF
+# * And with First/Follow rules
+
+$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", 'lib')))
+require 'rubygems'
+require 'getoptlong'
+require 'ebnf'
+
+options = {
+  output_format: :sxp,
+  prefix: "ttl",
+  namespace: "http://www.w3.org/ns/formats/Turtle#",
+  level: 4
+}
+
+input, out = nil, STDOUT
+
+OPT_ARGS = [
+  ["--debug",           GetoptLong::NO_ARGUMENT,      "Turn on debugging output"],
+  ["--bnf",             GetoptLong::NO_ARGUMENT,      "Transform EBNF to BNF"],
+  ["--evaluate","-e",   GetoptLong::REQUIRED_ARGUMENT,"Evaluate argument as an EBNF document"],
+  ["--format", "-f",    GetoptLong::REQUIRED_ARGUMENT,"Specify output format one of abnf, abnfh, ebnf, html, isoebnf, isoebnfh, ttl, sxp, or rb"],
+  ["--input-format",    GetoptLong::REQUIRED_ARGUMENT,"Specify input format one of abnf, ebnf isoebnf, native, or sxp"],
+  ["--ll1",             GetoptLong::REQUIRED_ARGUMENT,"Generate First/Follow rules, argument is start symbol"],
+  ["--mod-name",        GetoptLong::REQUIRED_ARGUMENT,"Module name used when creating ruby tables"],
+  ["--namespace", "-n", GetoptLong::REQUIRED_ARGUMENT,"Namespace to use when generating Turtle"],
+  ["--output", "-o",    GetoptLong::REQUIRED_ARGUMENT,"Output to the specified file path"],
+  ["--peg",             GetoptLong::NO_ARGUMENT,      "Transform EBNF to PEG"],
+  ["--prefix", "-p",    GetoptLong::REQUIRED_ARGUMENT,"Prefix to use when generating Turtle"],
+  ["--progress", "-v",  GetoptLong::NO_ARGUMENT,      "Detail on execution"],
+  ["--renumber",        GetoptLong::NO_ARGUMENT,      "Renumber parsed reules"],
+  ["--validate",        GetoptLong::NO_ARGUMENT,      "Validate grammar and any generated HTML"],
+  ["--help", "-?",      GetoptLong::NO_ARGUMENT,      "This message"]
+]
+def usage
+  STDERR.puts %{#{$0} Version #{EBNF::VERSION}}
+  STDERR.puts %{Usage: #{$0} [options] file ...}
+  width = OPT_ARGS.map do |o|
+    l = o.first.length
+    l += o[1].length + 2 if o[1].is_a?(String)
+    l
+  end.max
+  OPT_ARGS.each do |o|
+    s = "  %-*s  " % [width, (o[1].is_a?(String) ? "#{o[0,2].join(', ')}" : o[0])]
+    s += o.last
+    STDERR.puts s
+  end
+  exit(1)
+end
+
+opts = GetoptLong.new(*OPT_ARGS.map {|o| o[0..-2]})
+
+opts.each do |opt, arg|
+  case opt
+  when '--debug'        then options[:level] = 0
+  when '--bnf'          then options[:bnf] = true
+  when '--evaluate'     then input = arg
+  when '--input-format'
+    unless %w(abnf ebnf isoebnf native sxp).include?(arg)
+      STDERR.puts("unrecognized input format #{arg}")
+      usage
+    end
+    options[:format] = arg.to_sym
+  when '--format'
+    unless %w(abnf abnfh ebnf html isoebnf isoebnfh rb sxp ttl).include?(arg)
+      STDERR.puts("unrecognized output format #{arg}")
+      usage
+    end
+    options[:output_format] = arg.to_sym
+  when '--ll1'          then (options[:ll1] ||= []) << arg.to_sym
+  when '--mod-name'     then options[:mod_name] = arg
+  when '--output'       then out = File.open(arg, "w")
+  when '--peg'          then options[:peg] = true
+  when '--prefix'       then options[:prefix] = arg
+  when '--renumber'     then options[:renumber] = true
+  when '--namespace'    then options[:namespace] = arg
+  when '--progress'     then options[:level] = 1 unless options[:level] == 0
+  when '--validate'     then options[:validate] = true
+  when '--help'         then usage
+  end
+end
+
+input = File.open(ARGV[0]) if ARGV[0]
+
+ebnf = EBNF.parse(input || STDIN, **options)
+ebnf.make_bnf if options[:bnf] || options[:ll1]
+ebnf.make_peg if options[:peg]
+if options[:ll1]
+  ebnf.first_follow(*options[:ll1])
+  ebnf.build_tables
+end
+
+ebnf.renumber! if options[:renumber]
+
+res = case options[:output_format]
+when :abnf      then ebnf.to_s(format: :abnf)
+when :abnfh     then ebnf.to_html(format: :abnf, validate: options[:validate])
+when :ebnf      then ebnf.to_s
+when :html      then ebnf.to_html(validate: options[:validate])
+when :isoebnf   then ebnf.to_s(format: :isoebnf)
+when :isoebnfh  then ebnf.to_html(format: :isoebnf, validate: options[:validate])
+when :sxp       then ebnf.to_sxp
+when :ttl       then ebnf.to_ttl(options[:prefix], options[:namespace])
+when :rb        then ebnf.to_ruby(out, grammarFile: ARGV[0], **options)
+else            ebnf.ast.inspect
+end
+
+out.puts res

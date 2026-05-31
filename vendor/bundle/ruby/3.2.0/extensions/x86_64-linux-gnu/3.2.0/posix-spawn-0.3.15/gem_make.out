@@ -1,0 +1,44 @@
+current directory: /tmp/workspace/mlibrary/heliotrope/vendor/bundle/ruby/3.2.0/gems/posix-spawn-0.3.15/ext
+/usr/bin/ruby3.2 -I/usr/lib/ruby/vendor_ruby extconf.rb
+creating Makefile
+
+current directory: /tmp/workspace/mlibrary/heliotrope/vendor/bundle/ruby/3.2.0/gems/posix-spawn-0.3.15/ext
+make DESTDIR\= sitearchdir\=./.gem.20260531-4168-siglfb sitelibdir\=./.gem.20260531-4168-siglfb clean
+
+current directory: /tmp/workspace/mlibrary/heliotrope/vendor/bundle/ruby/3.2.0/gems/posix-spawn-0.3.15/ext
+make DESTDIR\= sitearchdir\=./.gem.20260531-4168-siglfb sitelibdir\=./.gem.20260531-4168-siglfb
+compiling posix-spawn.c
+posix-spawn.c: In function ‘posixspawn_file_actions_init’:
+posix-spawn.c:226:34: warning: passing argument 2 of ‘rb_hash_foreach’ from incompatible pointer type [-Wincompatible-pointer-types]
+  226 |         rb_hash_foreach(options, posixspawn_file_actions_operations_iter, (VALUE)fops);
+      |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                  |
+      |                                  int (*)(VALUE,  VALUE,  posix_spawn_file_actions_t *) {aka int (*)(long unsigned int,  long unsigned int,  posix_spawn_file_actions_t *)}
+In file included from /usr/include/ruby-3.2.0/ruby/internal/scan_args.h:37,
+                 from /usr/include/ruby-3.2.0/ruby/ruby.h:47,
+                 from /usr/include/ruby-3.2.0/ruby.h:38,
+                 from posix-spawn.c:14:
+/usr/include/ruby-3.2.0/ruby/internal/intern/hash.h:83:40: note: expected ‘int (*)(VALUE,  VALUE,  VALUE)’ {aka ‘int (*)(long unsigned int,  long unsigned int,  long unsigned int)’} but argument is of type ‘int (*)(VALUE,  VALUE,  posix_spawn_file_actions_t *)’ {aka ‘int (*)(long unsigned int,  long unsigned int,  posix_spawn_file_actions_t *)’}
+   83 | void rb_hash_foreach(VALUE hash, int (*func)(VALUE key, VALUE val, VALUE arg), VALUE arg);
+      |                                  ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+posix-spawn.c: In function ‘each_env_i’:
+posix-spawn.c:314:17: warning: ‘__builtin___strncpy_chk’ output truncated before terminating nul copying as many bytes from a string as its length [-Wstringop-truncation]
+  314 |                 strncpy(*ep, name, name_len);
+      |                 ^
+posix-spawn.c:277:33: note: length computed here
+  277 |         const size_t name_len = strlen(name);
+      |                                 ^~~~~~~~~~~~
+posix-spawn.c:316:17: warning: ‘__builtin_strncpy’ output truncated before terminating nul copying as many bytes from a string as its length [-Wstringop-truncation]
+  316 |                 strncpy(*ep + name_len + 1, cval, cval_len);
+      |                 ^
+posix-spawn.c:307:35: note: length computed here
+  307 |                 size_t cval_len = strlen(cval);
+      |                                   ^~~~~~~~~~~~
+linking shared-object posix_spawn_ext.so
+
+current directory: /tmp/workspace/mlibrary/heliotrope/vendor/bundle/ruby/3.2.0/gems/posix-spawn-0.3.15/ext
+make DESTDIR\= sitearchdir\=./.gem.20260531-4168-siglfb sitelibdir\=./.gem.20260531-4168-siglfb install
+/usr/bin/install -c -m 0755 posix_spawn_ext.so ./.gem.20260531-4168-siglfb
+
+current directory: /tmp/workspace/mlibrary/heliotrope/vendor/bundle/ruby/3.2.0/gems/posix-spawn-0.3.15/ext
+make DESTDIR\= sitearchdir\=./.gem.20260531-4168-siglfb sitelibdir\=./.gem.20260531-4168-siglfb clean

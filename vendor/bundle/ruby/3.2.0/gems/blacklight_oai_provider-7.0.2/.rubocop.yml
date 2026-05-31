@@ -1,0 +1,52 @@
+require: rubocop-rspec
+
+inherit_from:
+  - .rubocop_todo.yml
+
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.2
+  Exclude:
+  - "blacklight_oai_provider.gemspec"
+
+Rails:
+  Enabled: true
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - "lib/railties/blacklight_oai_provider.rake"
+
+Metrics/LineLength:
+  Max: 200
+
+Style/StringLiterals:
+  Enabled: false
+
+Layout/IndentationConsistency:
+  EnforcedStyle: normal
+
+Rails/OutputSafety:
+  Enabled: false
+
+# engine_cart block includes conditional, not duplication
+Bundler/DuplicatedGem:
+  Exclude:
+  - 'Gemfile'
+
+# engine_cart block is following default Rails order
+Bundler/OrderedGems:
+  Exclude:
+  - 'Gemfile'
+
+RSpec/DescribeClass:
+  Exclude:
+  - 'spec/requests/**'
+  - 'spec/features/**'
+
+Style/Documentation:
+  Enabled: false
+
+Lint/UnusedMethodArgument:
+  Exclude:
+  - 'lib/blacklight_oai_provider/set.rb'

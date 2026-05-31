@@ -1,0 +1,30 @@
+inherit_gem:
+  bixby: bixby_default.yml
+
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: 2.6
+  DisplayCopNames: true
+  Exclude:
+    - 'db/**/*'
+    - 'script/**/*'
+    - 'vendor/**/*'
+
+Bundler/DuplicatedGem:
+  Enabled: false
+
+Rails:
+  Enabled: true
+
+RSpec/NestedGroups:
+  Max: 4
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - 'lib/tasks/**/*.rake'
+
+Naming/FileName:
+  Exclude:
+    - 'lib/noid-rails.rb'

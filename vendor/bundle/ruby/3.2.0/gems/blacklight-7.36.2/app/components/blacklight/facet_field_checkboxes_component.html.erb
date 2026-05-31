@@ -1,0 +1,24 @@
+<%= render(@layout.new(facet_field: @facet_field)) do |component| %>
+  <% component.with_label do %>
+    <%= @facet_field.label %>
+  <% end %>
+
+  <% component.with_body do %>
+    <ul class="facet-values list-unstyled blacklight-facet-checkboxes">
+      <% presenters.each_with_index do |presenter, idx| -%>
+        <li>
+          <span class="facet-checkbox">
+            <%= check_box_tag "f_inclusive[#{@facet_field.key}][]", presenter.value, presenter.selected?, id: "f_inclusive_#{@facet_field.key}_#{idx}"%>
+          </span>
+
+          <span class="label-and-count">
+            <%= label_tag "f_inclusive_#{@facet_field.key}_#{idx}" do %>
+              <span class="facet-label"><%= presenter.label %></span>
+              <span class="facet-count"><%= t('blacklight.search.facets.count', number: number_with_delimiter(presenter.hits)) %></span>
+            <% end %>
+          <span>
+        </li>
+      <% end -%>
+    </ul>
+  <% end %>
+<% end %>

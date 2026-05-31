@@ -1,0 +1,160 @@
+$enable-transitions: true;
+$grid-gutter-width-base: 0;
+
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "bootstrap/normalize";
+@import "bootstrap/print";
+
+@import "bootstrap/reboot";
+@import "bootstrap/type";
+@import "bootstrap/tables";
+@import "bootstrap/buttons";
+
+@import "bootstrap/button-group";
+@import "bootstrap/badge";
+
+@import "bootstrap/utilities/spacing";
+
+section.flipflop {
+  @include make-container(); /* @extend .container-fluid; */
+  margin: 5rem 0 0;
+
+  h1 {
+    padding: 0 1.4rem;
+  }
+
+  table {
+    @extend .table;
+
+    td:first-child {
+      padding-left: 1.5rem;
+    }
+
+    td:last-child {
+      padding-right: 1.5rem;
+    }
+
+    thead {
+      @extend .thead-inverse;
+
+      tr {
+        th {
+          position: relative;
+          cursor: default;
+
+          &[data-tooltip]:before, &[data-tooltip]:after {
+            @include transition(all 0.2s ease-out);
+            transform: translateY(0.2rem) translateZ(0);
+            opacity: 0;
+
+            display: block;
+            position: absolute;
+          }
+
+          &[data-tooltip]:before {
+            content: attr(data-tooltip);
+            width: 98%;
+            left: 0;
+            bottom: 3.75rem;
+            margin: 0;
+            padding: 0.5rem 0.75rem;
+            background: $gray;
+            border-radius: 0.2rem;
+            font-size: 0.875rem;
+            font-weight: normal;
+            pointer-events: none;
+          }
+
+          &[data-tooltip]:after {
+            content: " ";
+            width: 0;
+            height: 0;
+            left: 1rem;
+            bottom: 3.25rem;
+            border-left: solid transparent 0.5rem;
+            border-right: solid transparent 0.5rem;
+            border-top: solid $gray 0.5rem;
+          }
+
+          &:hover {
+            &[data-tooltip]:before, &[data-tooltip]:after {
+              transform: translateY(0) translateZ(0);
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td.status {
+          width: 2.2rem;
+          font-size: 1.1rem;
+
+          span.enabled, span.disabled {
+            width: 2rem;
+            @extend .badge;
+            @extend .badge-pill;
+            span {
+              width: auto;
+              text-align: center;
+              margin: 0 -2rem;
+            }
+          }
+
+          span.enabled { @extend .badge-success; }
+          span.disabled { @extend .badge-default; }
+        }
+
+        td.name {
+          min-width: 12rem;
+          padding-top: 0.9rem;
+          font-weight: bold;
+        }
+
+        td.description {
+          min-width: 12rem;
+          padding-top: 0.9rem;
+        }
+
+        td.toggle {
+          min-width: 10rem;
+
+          div.toolbar {
+            @extend .btn-toolbar;
+            margin-left: 0;
+
+            div.group {
+              @extend .mr-2;
+              @extend .btn-group;
+              @extend .btn-group-sm;
+
+              button {
+                @extend .btn;
+                @extend .btn-sm;
+                cursor: pointer;
+                &.active { @extend .btn-primary; }
+                &:not(.active) { @extend .btn-secondary; }
+              }
+            }
+          }
+        }
+
+        &.group {
+          background-color: $table-bg-accent;
+
+          td {
+            h2 {
+              margin: 0;
+              line-height: inherit;
+              font-size: 1.4rem;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+  }
+}
