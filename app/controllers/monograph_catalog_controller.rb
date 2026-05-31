@@ -146,6 +146,8 @@ class MonographCatalogController < ::CatalogController
     def monograph_auth_for
       auth_for(Sighrax.from_presenter(@monograph_presenter))
       for_access_icons
+      @reader_format = params[:reader_format].presence&.downcase
+      @reader_format = nil unless %w[epub pdf].include?(@reader_format)
       @ebook_download_presenter = EBookDownloadPresenter.new(@monograph_presenter, current_ability, current_actor)
       @counter_summary_presenter = CounterSummaryPresenter.new(@monograph_presenter.id, @monograph_presenter.date_published)
       # The monograph catalog page is completely user-facing, apart from a small, distinct admin menu. Any UI...
@@ -185,7 +187,9 @@ class MonographCatalogController < ::CatalogController
       # the share link gets to short-circuit visibility for, e.g. an author reviewing their draft Monograph on Fulcrum
       # this checking of the share link URL param or session variable is the reason this logic can't all be in the presenter
       return :linked if valid_share_link?
-      return :not_shown unless @monograph_presenter&.reader_ebook['visibility_ssi'] == 'open'
+      ebook_id = @monograph_presenter.reader_ebook_id_for_format(@reader_format)
+      ebook_doc = @monograph_presenter.featured_representative_docs.find { |doc| doc.id == ebook_id }
+      return :not_shown unless ebook_doc&.fetch('visibility_ssi', nil) == 'open'
 
       # GREENSUB COMPONENTS/PRODUCTS/LICENSES LOGIC
       # When a Monograph has a readable ebook but the user is not licensed to it, we show the button but disable it (no link set)

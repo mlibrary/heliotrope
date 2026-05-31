@@ -103,6 +103,7 @@ RSpec.describe MonographIndexer do
             it 'indexes fields from the EPUB OPF "package" file on the Monograph' do
               # checking that `version` was indexed will suffice, EpubSpec covers them all
               expect(subject['epub_version_ssi']).to eq("3.0")
+              expect(subject['reader_ebook_format_sim']).to eq(['EPUB'])
             end
           end
         end
@@ -117,6 +118,7 @@ RSpec.describe MonographIndexer do
             it 'indexes fields on the Monograph' do
               # checking that `screen_reader_friendly` was indexed will suffice, PdfSpec covers them all
               expect(subject['epub_a11y_screen_reader_friendly_ssi']).to eq('unknown')
+              expect(subject['reader_ebook_format_sim']).to contain_exactly('EPUB', 'PDF')
             end
           end
         end
@@ -354,8 +356,8 @@ RSpec.describe MonographIndexer do
         EbookTableOfContentsCache.create(noid: epub.file_set_id, toc: epub_toc.to_json)
       end
 
-      it "returns the epub table of contents titles" do
-        expect(described_class.new(Monograph.new).table_of_contents(monograph_noid)).to eq ["epub toc"]
+      it "returns both ebook table of contents titles" do
+        expect(described_class.new(Monograph.new).table_of_contents(monograph_noid)).to eq ["epub toc", "pdf toc"]
       end
     end
 

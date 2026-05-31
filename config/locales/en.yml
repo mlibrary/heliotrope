@@ -169,6 +169,7 @@ en:
       buy_hardcover_button_title: "Buy a hardcover copy of %{title}"
       buy_book: "Buy Book"
       catalog: "Books"
+      choose_format: "Choose Format"
       download_book: "Download"
       show_page_button: "Manage Files"
       edit_page_button: "Edit"

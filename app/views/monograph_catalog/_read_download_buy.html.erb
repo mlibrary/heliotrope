@@ -1,5 +1,28 @@
 <div class="btn-toolbar" role="toolbar">
   <div class="btn-group btn-group-lg" role="group">
+    <% if @monograph_presenter.both_ebook_formats_public? && @reader_links_display != :not_shown %>
+      <div class="btn-group btn-group-lg" id="monograph-choose-format-group">
+        <button type="button"
+                id="monograph-choose-format-btn"
+                aria-haspopup="true"
+                class="btn btn-default dropdown-toggle"
+                data-toggle="dropdown"
+                aria-expanded="false">
+          <%= t('monograph_catalog.index.choose_format') %>
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li role="menuitem">
+            <a href="<%= monograph_catalog_path(@monograph_presenter.id, reader_format: 'epub') %>"
+               data-turbolinks="false">EPUB</a>
+          </li>
+          <li role="menuitem">
+            <a href="<%= monograph_catalog_path(@monograph_presenter.id, reader_format: 'pdf') %>"
+               data-turbolinks="false">PDF</a>
+          </li>
+        </ul>
+      </div>
+    <% end %>
     <% if @reader_links_display == :not_linked %>
       <a id="monograph-read-btn"
          href=""
@@ -11,8 +34,18 @@
         <%= t('monograph_catalog.index.read_book') %>
       </a>
     <% elsif @reader_links_display == :linked %>
+      <%
+        reader_ebook_id = @monograph_presenter.reader_ebook_id_for_format(@reader_format)
+        reader_ebook_doc = @monograph_presenter.featured_representative_docs.find { |d| d.id == reader_ebook_id }
+        reader_ebook_doc ||= @monograph_presenter.reader_ebook
+        read_path = if princess_de_cleves
+                      epub_ebook_path(reader_ebook_doc)
+                    else
+                      epub_path(reader_ebook_doc)
+                    end
+      %>
       <a id="monograph-read-btn"
-         href="<%= princess_de_cleves ? epub_ebook_path(@monograph_presenter.reader_ebook) : epub_path(@monograph_presenter.reader_ebook) %>"
+         href="<%= read_path %>"
          class="btn btn-default"
          data-turbolinks="false">
         <%= t('monograph_catalog.index.read_book') %>

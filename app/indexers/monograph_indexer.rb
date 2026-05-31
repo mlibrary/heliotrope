@@ -106,12 +106,15 @@ class MonographIndexer < Hyrax::WorkIndexer
   end
 
   def table_of_contents(work_id)
-    # prefer the epub if there is one, otherwise next in order will be pdf_ebook
-    ebook_id = FeaturedRepresentative.where(work_id: work_id, kind: ['epub', 'pdf_ebook']).order(:kind).first&.file_set_id
-    return [] if ebook_id.nil?
-    toc = EbookTableOfContentsCache.where(noid: ebook_id).first&.toc
-    return [] if toc.nil?
-    JSON.parse(toc).map { |entry| entry["title"] }
+    titles = []
+    ['epub', 'pdf_ebook'].each do |kind|
+      ebook_id = FeaturedRepresentative.where(work_id: work_id, kind: kind).first&.file_set_id
+      next if ebook_id.nil?
+      toc = EbookTableOfContentsCache.where(noid: ebook_id).first&.toc
+      next if toc.nil?
+      titles += JSON.parse(toc).map { |entry| entry["title"] }
+    end
+    titles.uniq
   end
 
   def existing_filesets(existing_monograph_doc)
@@ -183,15 +186,16 @@ class MonographIndexer < Hyrax::WorkIndexer
 
   def maybe_index_accessibility_metadata(solr_doc)
     epub_fr = FeaturedRepresentative.where(work_id: object.id, kind: 'epub')&.first
+    pdf_ebook_fr = FeaturedRepresentative.where(work_id: object.id, kind: 'pdf_ebook')&.first
+    formats = []
     if epub_fr.present?
-      solr_doc['reader_ebook_format_sim'] = 'EPUB'
+      formats << 'EPUB'
       AccessibilityMetadataIndexer::Epub.new(epub_fr.file_set_id, solr_doc).index_reader_ebook_accessibility_metadata
-    else
-      pdf_ebook_fr = FeaturedRepresentative.where(work_id: object.id, kind: 'pdf_ebook')&.first
-      if pdf_ebook_fr.present?
-        solr_doc['reader_ebook_format_sim'] = 'PDF'
-        AccessibilityMetadataIndexer::Pdf.new(pdf_ebook_fr.file_set_id, solr_doc, object.press).index_reader_ebook_accessibility_metadata
-      end
     end
+    if pdf_ebook_fr.present?
+      formats << 'PDF'
+      AccessibilityMetadataIndexer::Pdf.new(pdf_ebook_fr.file_set_id, solr_doc, object.press).index_reader_ebook_accessibility_metadata
+    end
+    solr_doc['reader_ebook_format_sim'] = formats if formats.any?
   end
 end

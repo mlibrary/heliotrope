@@ -37,8 +37,33 @@ module FeaturedRepresentatives
       @reader_ebook_id ||= (epub_id || pdf_ebook_id)
     end
 
+    def reader_ebook_id_for_format(format_param = nil)
+      epub_id_val = nil
+      pdf_id_val = nil
+      featured_representatives.each do |fr|
+        if fr.kind == 'epub'
+          epub_id_val = fr.file_set_id
+        elsif fr.kind == 'pdf_ebook'
+          pdf_id_val = fr.file_set_id
+        end
+      end
+      if format_param == 'pdf' && pdf_id_val.present?
+        pdf_id_val
+      else
+        epub_id_val || pdf_id_val
+      end
+    end
+
     def reader_ebook
       featured_representative_docs.find { |doc| doc.id == reader_ebook_id }
+    end
+
+    def both_ebook_formats_public?
+      return false unless epub? && pdf_ebook?
+      epub_doc = featured_representative_docs.find { |doc| doc.id == epub_id }
+      pdf_doc = featured_representative_docs.find { |doc| doc.id == pdf_ebook_id }
+      epub_doc&.fetch('visibility_ssi', nil) == 'open' &&
+        pdf_doc&.fetch('visibility_ssi', nil) == 'open'
     end
 
     def audiobook
