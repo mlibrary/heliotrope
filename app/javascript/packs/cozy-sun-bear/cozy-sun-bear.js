@@ -1,3 +1,2 @@
-import cozy from "cozy-sun-bear";
-require("cozy-sun-bear/dist/cozy-sun-bear.css");
+import cozy from "../../cozy-sun-bear/src/cozy";
 window.cozy = cozy;

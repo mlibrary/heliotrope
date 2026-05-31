@@ -1,0 +1,1048 @@
+///////////////////////////////////
+// imports
+///////////////////////////////////
+//
+// This include of OpenDyslexic is for the preferences dialog *only*. For the EPUB iframe itself it needs to be...
+// injected, which right now is done from heliotrope via `injectStylesheet: '/assets/css/fulcrum_enhanced_display.css'`
+// Note that using a CDN seems to work better with browsers' font-fingerprinting blocking than serving from the app.
+
+// Note: @use must come before any other rules
+@use 'open-iconic';
+@use 'modals';
+@use 'loader';
+@use 'navigator';
+
+@import url('https://fonts.cdnfonts.com/css/opendyslexic');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600|Scope+One');
+
+///////////////////////////////////
+// variables
+///////////////////////////////////
+
+// colors
+$brand-color:   #002c63;
+$accent-color:  #00afec;
+
+$white:         #fff;
+$gray-1:        #f1f1f1;
+$gray-2:        #e8e8e8;
+$gray-3:        #e2e2e2;
+$dark-1:        #565b63;
+$dark-2:        #31343b;
+$black:         #111417;
+
+$shadow:        rgba($black, 0.33);
+
+$ui-success:    #43C59e;
+$ui-caution:    #ffe67a;
+$ui-warning:    #ff6663;
+
+
+// type sizes
+$alpha:    2rem; // 40px
+$beta:  1.65rem; // 33px
+$gamma: 1.15rem; // 23px
+$delta: 0.95rem; // 19px
+$milli: 0.65rem; // 13px
+
+// border radius
+$radius:     4px;
+
+// reuseable measurements
+$nav-height:         3.45rem;
+
+$stroke-width:       3px;
+$stroke-width--lg:   5px;
+
+$button-padding:     0.325em 1.5em 0.5em;
+$button-padding--xl: 0.7em 1.75em 0.825em;
+$nav-padding:        1rem 0.5rem;
+$field-padding:      0.625em 0.825em;
+
+$section-padding:    2.5rem;
+$grid-padding:       1rem;
+
+///////////////////////////////////
+// typography
+///////////////////////////////////
+
+// google webfonts
+@mixin open-sans-light {
+  font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 300;
+}
+
+@mixin open-sans-book {
+  font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+}
+
+@mixin open-sans-bold {
+  font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 600;
+}
+
+@mixin scope-one {
+  font-family: 'Scope One', Georgia, Times, "Times New Roman", serif;
+}
+
+// body {
+//   margin: 0;
+//   font-size: 16px;
+
+//   .scrolled .epub-view {
+//     height: auto !important;
+//     width: auto !important;
+//   }
+// }
+
+// nest selectors inside .cozy-container to avoid css conflicts
+.cozy-container {
+  @include open-sans-book;
+  background: $gray-1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  max-width: 100vw;
+  box-sizing: border-box;
+
+  overflow: hidden;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ///////////////////////////////////
+  // icons
+  ///////////////////////////////////
+  i[class^='icon-'] {
+    font-size: 2em;
+  }
+
+  i[class^='icon-chevron-'] {
+    color: $gray-3;
+    font-size: 2.5rem;
+    transition: 0.2s ease-in;
+  }
+
+  i[class^='icon-chevron-']:hover {
+    color: $brand-color;
+    transition: 0.2s ease-in;
+  }
+
+  i.icon-menu,
+  i.icon-fullscreen-enter {
+    font-size: inherit;
+  }
+
+  i.icon-x {
+    font-size: initial;
+  }
+
+  ///////////////////////////////////
+  // manual reset
+  ///////////////////////////////////
+
+  // reset buttons
+  button {
+    -webkit-appearance: none;
+    background: transparent;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    cursor: pointer;
+    display: block;
+    outline: none;
+    overflow: visible;
+
+    &::-moz-focus-inner {
+      border: 0;
+      padding: 0;
+    }
+  }
+
+  ///////////////////////////////////
+  // utility classes
+  ///////////////////////////////////
+
+  // Screen reader text
+  .u-screenreader {
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px;
+    overflow: hidden;
+    position: absolute !important;
+    width: 1px;
+  }
+
+  .u-screenreader--ignore {
+    speak: none;
+  }
+
+  .u-margins_off {
+    margin-top: 0 !important;
+  }
+
+  ///////////////////////////////////
+  // buttons
+  ///////////////////////////////////
+
+  @mixin button {
+    @include open-sans-book;
+    display: inline-block;
+    border-bottom: none;
+    border-radius: $radius;
+    color: $white;
+    background: $accent-color;
+    background-image: linear-gradient(to right, $brand-color 50%, $accent-color 50%);
+    background-position: -100%;
+    background-size: 201%;
+    background-repeat: no-repeat;
+    text-shadow: none;
+    text-decoration: none;
+    transition: 0.2s ease-in;
+    line-height: normal;
+
+    &:hover, &:active {
+      color: $white;
+      background-position: 0;
+      transition: 0.2s ease-in;
+    }
+
+    &:focus {
+      // background-position: 0;
+      transition: 0.2s ease-in;
+      outline: 0;
+      box-shadow: 0 0 0 6px rgba($brand-color, .25);
+    }
+
+    &:active {
+      box-shadow: inset 0 1px 12px $shadow;
+    }
+
+    &[disabled] {
+      cursor-events: none;
+      // does not pass a11y conrast check
+      background: $gray-2;
+      // background: $gray;
+
+      &:active {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .button {
+    @include button;
+    padding: 0.3em 1.625em 0.4em 1.625em;
+  }
+
+  .button--lg {
+    @include button;
+    padding: 0.65em 1.75em 0.75em 1.75em;
+    font-size: $gamma;
+  }
+
+  .button--sm {
+    @include button;
+    padding: 0.75em 1.75em 0.825em 1.75em;
+    font-size: $milli;
+  }
+
+  .button--inline {
+    @include button;
+    padding: 0.75em 1.75em 0.825em 1.75em;
+    display: inline;
+  }
+
+  [class*="button"] + [class*="button"] {
+    margin-left: 0.5rem;
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+
+    transition-property: max-height, opacity;
+    transition-duration: 0.2s;
+    // transition-delay: 0.2s;
+    transition-timing-function: linear;
+
+    max-height: 100px;
+
+    &[aria-hidden="true"] {
+      // transform: scale(0);
+      opacity: 0;
+      max-height: 0;
+    }
+
+    &[aria-hidden="false"] {
+      // transform: scale(1);
+      opacity: 1;
+      // height: auto;
+    }
+
+    .toggled {
+      // box-shadow: inset 0 1px 12px $shadow;
+      color: $white;
+      background-position: 0;
+      box-shadow: 0 0 0 6px rgba($brand-color, .75);
+    }
+  }
+
+  ///////////////////////////////////
+  // fields
+  ///////////////////////////////////
+
+  .doi-label form {
+    display: inline-block;
+  }
+
+  input[type='text'] {
+    @include open-sans-book;
+    width: 100%;
+    padding: $field-padding;
+    background: $white;
+    color: #555;
+    border: none;
+    font-size: .9em;
+  }
+
+  input[type='text']:focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);
+  }
+
+  // iframe {
+  //   background: $white;
+  // }
+}
+
+///////////////////////////////////
+// layout
+///////////////////////////////////
+
+.cozy-module-top {
+  display: flex;
+  flex-direction: column;
+}
+
+.cozy-panel-header {
+  border-bottom: 1px solid $gray-2;
+}
+
+.cozy-module-bottom {
+  display: flex;
+  flex-direction: column;
+}
+
+.cozy-module-main {
+  flex-grow: 1;
+  position: relative;
+
+  background: $white;
+  color: $black;
+
+  .cozy-theme-light & {
+    background: $white;
+    color: $black;
+
+    a {
+      color: inherit;
+    }
+  }
+
+  .cozy-theme-dark & {
+    background: #002b36;
+    color: #839496;
+    a {
+      color: #E0FFFF;
+    }
+  }
+}
+
+.cozy-module-left,
+.cozy-module-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 5%;
+  z-index: 10;
+ }
+
+.cozy-module-left {
+  left: 0;
+}
+
+.cozy-module-right {
+  right: 0;
+}
+
+.cozy-module-book-cover {
+  // background: #666;
+  border-bottom: 1px solid $gray-2;
+  border-top: 1px solid $gray-2;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+
+}
+
+.cozy-module-book {
+  margin-left: auto;
+  margin-right: auto;
+  // background: $white;
+  position: relative;
+  height: 100%;
+  width: 90%;
+  margin: 0 auto;
+  // background: PAPAYAWHIP;
+  padding: 2rem;
+
+  > div {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.cozy-module-book-epub {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.cozy-module-book[data-manager=default] {
+  .epub-container {
+    padding: 1rem 0;
+  }
+}
+
+.cozy-module-book[data-manager=default][data-layout=pre-paginated] {
+  .epub-container {
+    padding: 0.25rem 0;
+  }
+}
+
+.cozy-module-book[data-manager=continuous][data-layout=reflowable] {
+  .epub-container {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .epub-view {
+      margin-bottom: 2rem;
+      padding: 40px 0;
+      margin-left: auto;
+      margin-right: auto;
+
+      &.epub-view---loading::before {
+        display: block;
+        width: 20px;
+        height: 20px;
+        content: "";
+        visibility: visible;
+        animation: cozy-loader-continuous-page 1s ease infinite;
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      &.epub-view---loading::after {
+        display: block;
+        width: 20px;
+        height: 20px;
+        content: "";
+        visibility: visible;
+        animation: cozy-loader-continuous-page 1s ease infinite;
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+  }
+}
+
+.cozy-module-book[data-manager=continuous-none][data-layout=pre-paginated] {
+  .epub-container {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .epub-view {
+      margin-bottom: 2rem;
+      box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0,0,0,0);
+      padding: 0;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid #ddd;
+
+      &.epub-view---loading::before {
+        display: block;
+        width: 20px;
+        height: 20px;
+        content: "";
+        visibility: visible;
+        animation: cozy-loader-continuous-page 1s ease infinite;
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      &.epub-view---loading::after {
+        display: block;
+        width: 20px;
+        height: 20px;
+        content: "";
+        visibility: visible;
+        animation: cozy-loader-continuous-page 1s ease infinite;
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+  }
+}
+
+.cozy-module-book-loading {
+  height: 100%;
+  width: 100%;
+}
+
+.cozy-container div[class^='cozy-'] {
+  /* border: 1px solid #fff; */
+}
+
+.epub-container {
+  /* background: blue; */
+  /* -- padding on this container messes with horizontal scrolling */
+  /*padding: 20px;*/
+  -webkit-overflow-scrolling: touch;
+}
+
+div[class^='cozy-panel-'] {
+  display: flex;
+  flex-grow: 1;
+}
+
+.cozy-panel-sidebar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+div.cozy-panel-footer {
+  display: block;
+  margin: .5em;
+}
+
+.cozy-module-top .cozy-panel-toolbar .cozy-panel-right {
+  justify-content: flex-end;
+}
+
+.cozy-module-main .cozy-panel-sidebar {
+  // display: block;
+  // justify-content: center;
+  // align-items: center;
+  // background: $white;
+  // border-top: 1px solid $gray-2;
+  // border-bottom: 1px solid $gray-2;
+}
+
+.cozy-control {
+  display: flex;
+  .cozy-h1 {
+    @include scope-one;
+    margin: .3em .5em 0;
+    font-size: 1.5em;
+    line-height: normal;
+    max-width: 95vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  button.button--sm {
+    font-size: 1em;
+    display: flex;
+    flex: 1 1 auto;
+    // height: 100%;
+    border-radius: 0;
+    padding: .5em 1em;
+    text-transform: uppercase;
+
+    i {
+      display: flex;
+      flex: 1 1 auto;
+    }
+
+  }
+
+}
+
+///////////////////////////////////
+// widgets
+///////////////////////////////////
+
+.cozy-publisher {
+  float: left;
+}
+
+.cozy-rights {
+  float: right;
+}
+
+// previous, next buttons
+.cozy-panel-sidebar .cozy-control a {
+  width: auto;
+  display: inline-block;
+  background: transparent;
+  text-align: center;
+  min-height: 60px;
+  padding: 10px;
+}
+
+.cozy-modal {
+  background: $gray-1;
+  border: 1px solid $gray-2;
+}
+
+// table of contents
+.cozy-dropdown-menu {
+  position: absolute;
+  white-space: nowrap;
+  max-height: 550px;
+  min-width: 160px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  top: 100%;
+  left: 0;
+  margin: 0;
+  list-style-type: none;
+  padding: 5px 0;
+  background: $white;
+  border-top: 1px solid $gray-2;
+  border-right: 1px solid $gray-2;
+  box-shadow: 4px 0 6px 1px rgba(0,0,0,0.1);
+  border-bottom: 1px solid $gray-2;
+  z-index: 9000;
+}
+
+.cozy-dropdown-menu ul {
+  list-style-type: none;
+}
+
+.cozy-dropdown-menu li {
+  list-style-type: none;
+}
+
+.cozy-dropdown-menu li > a {
+  display: block;
+  clear: both;
+  white-space: nowrap;
+  padding: 3px 20px;
+  text-decoration: none;
+  color: #000;
+}
+
+.cozy-dropdown-menu li > a:hover {
+  background-color: $gray-2;
+  color: #000;
+}
+
+.cozy-panel-header .cozy-panel-left {
+  align-items: center;
+}
+
+.chooser-metadata button {
+  background: PapayaWhip;
+  border-radius: 8px;
+  font-size: 150%;
+}
+
+// citation button
+.cozy-control button.button--sm.cozy-citation {
+  font-size: 1em;
+  text-transform: none;
+}
+
+.cozy-control button.button--sm.cozy-citation.citation::after {
+  content: 'Get Citation';
+}
+
+// search widget
+.cozy-control form.search {
+  display: inline-flex;
+  height: 100%;
+
+  button.button--sm {
+    padding: .5em .5em;
+  }
+
+  button i.icon-magnifying-glass {
+    font-size: 1em;
+  }
+
+}
+
+.cozy-contents-pagelist form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  // justify-content: center;
+  margin: 1rem;
+  margin-left: 2.2rem; // to align with the ul
+
+  & > * {
+    margin: 0.25rem !important;
+    // margin-right: 0.25rem !important;
+  }
+  input[type=text] {
+    width: auto;
+    font-size: 1rem;
+  }
+  .button--sm {
+    font-size: 1rem;
+    padding-top: 0.625em;
+    padding-bottom: 0.625em;
+  }
+
+  p.pagelist-error {
+    background: $ui-caution;
+    padding: 0.5rem 1rem;
+    width: 100%;
+
+    &::before {
+      margin-right: 0.25rem;
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+}
+
+// preferences button
+.cozy-control-preferences {
+  button {
+    padding: .8em 1em 0 .6em;
+  }
+}
+
+#change-font{
+  margin-right: 10px;
+}
+
+.cozy-modal-preferences {
+  main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    //overflow: hidden;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    //overflow: hidden;
+  }
+}
+
+#text-preview {
+  position: relative;
+  border: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+  background: #e0e0e0;
+  flex-shrink: 0;
+  max-height: 200px;
+  overflow: hidden;
+
+  .preview-heading {
+    padding: 0.5rem 1rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+}
+
+#text-preferences-scrolling-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.cozy-modal fieldset.cozy-fieldset-text_options {
+  margin: 1rem;
+  border: 1px solid $brand-color;
+  padding-bottom: 15px;
+}
+
+.cozy-modal fieldset.cozy-fieldset-text_options p {
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.preview--text_preferences {
+  width: 100%;
+  height: 12rem;
+  padding: 1rem;
+  overflow: hidden;
+  margin: 0;
+}
+
+.preview--text_size {
+  width: 90%;
+  height: 12rem;
+  padding: 1rem;
+  overflow: hidden
+}
+
+.cozy-modal-preferences button.reset-text-options,
+.cozy-modal-preferences button.spinner-button {
+  padding: 2px 4px;
+  font-size: 0.8em;
+}
+
+
+// Slider option container
+.slider-option {
+  margin: 1rem 0;
+}
+
+// Label row with label on left and value on right
+.slider-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  label {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .slider-value {
+    font-family: monospace;
+    font-size: 0.9em;
+    color: #333;
+    min-width: 60px;
+    text-align: right;
+  }
+}
+
+// Control row with reset button and slider controls
+.slider-control-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+// Slider control styles
+.slider-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+
+  input[type="range"] {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .slider-button {
+    width: 30px;
+    height: 30px;
+    padding: 4px;
+    font-size: 1em;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #999;
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+
+    &:hover {
+      background-color: #e0e0e0;
+      border-color: #666;
+    }
+
+    &:active {
+      background-color: #d0d0d0;
+    }
+
+    &:focus {
+      outline: 2px solid #0066cc;
+      outline-offset: 2px;
+    }
+
+    i {
+      font-size: 0.9em;
+    }
+  }
+}
+
+// modal contents styles
+.cozy-modal main {
+
+  fieldset {
+    border: 1px solid $brand-color;
+    margin: 1rem;
+    padding: 0.35em 0.75em;
+  }
+
+  label {
+    display: block;
+    margin: 1em 0;
+  }
+
+}
+
+// engine-specific
+.cozy-container.cozy-engine-readium {
+  .book-frame.reflowable-book-frame {
+      position: absolute !important;
+      top: 2rem;
+      left: 0;
+      right: 0;
+      bottom: 2rem;
+
+      iframe {
+        border: none;
+        overflow: hidden;
+
+        &.iframe-fixed {
+          width: 100%;
+          height: 100%;
+        }
+      }
+  }
+
+  .reflowable-content-frame {
+      position: absolute !important;
+      overflow: hidden;
+
+  }
+
+  #scrolled-content-frame {
+    position: absolute;
+  }
+
+}
+
+.cozy-module-book[data-manager=prepaginated], .cozy-module-book[data-manager=prepaginated-none] {
+  .epub-view {
+    margin-bottom: 1rem;
+  }
+
+  .epub-view iframe {
+      // background: rgba(238,238,238,0.40);
+      border: 1px solid rgba(0, 0, 0,0.40) !important;
+  }
+}
+
+.cozy-module-book[data-manager=default][data-layout=pre-paginated] {
+  .epub-view iframe {
+      // background: rgba(238,238,238,0.40);
+      border: 1px solid rgba(0, 0, 0,0.40) !important;
+  }
+}
+
+.cozy-module-book[data-layout=pre-paginated][data-manager=default] {
+  .epub-container {
+    justify-content: center;
+  }
+
+  .epub-view iframe {
+      // background: rgba(238,238,238,0.40);
+      border: 1px solid rgba(0, 0, 0,0.40) !important;
+  }
+}
+
+// media queries
+@media screen and (max-width: 65em ) {
+  .cozy-control button.button--sm.cozy-citation.citation::after {
+    content: 'Cite';
+  }
+}
+
+@media screen and (max-width: 50em ) {
+
+  .permalink-label,
+  .cozy-control.cozy-container-fullscreen {
+    display: none;
+  }
+
+  .cozy-panel-header {
+    display: none !important;
+  }
+
+  .cozy-container .cozy-panel-navigator .cozy-control-navigator .cozy-navigator-range__status {
+    font-size: .7em;
+  }
+
+  #select-available-books {
+    display: none;
+  }
+
+  .cozy-control form.search {
+    width: 60%;
+  }
+
+  .cozy-control button.button--sm {
+    font-size: .8em;
+    padding: .4em .8em;
+
+    i.icon-menu {
+      font-size: .8em !important;
+    }
+  }
+
+  .cozy-control form.search button.button--sm {
+    padding: .4em .5em;
+  }
+
+  .cozy-control button.button--sm.cozy-citation {
+    font-size: .8em;
+  }
+
+  .cozy-container i[class^="icon-"] {
+    font-size: 1.5em;
+  }
+
+  .cozy-container i[class^="icon-chevron-"] {
+    font-size: 1.7rem;
+  }
+
+  .cozy-control-preferences button {
+    padding: .6em .8em 0 .4em;
+  }
+
+  .cozy-container input[type="text"] {
+    font-size: .75em;
+  }
+
+}

@@ -1,0 +1,96 @@
+@use "sass:math";
+
+$spinner-color: #222;
+$spinner-size: 100px;
+$spinner-thickness: 8px;
+$spinner-speed: math.div(1.5s, 4);
+
+$bigger-spinner-size: $spinner-size * 2.5;
+$bigger-spinner-thickness: $spinner-thickness * 2;
+
+
+// Spinner
+.cozy-loader-spinner {
+  position: absolute;
+  height: $spinner-size;
+  width: $spinner-size;
+  top: 50%;
+  left: 50%;
+  margin: (-(math.div($spinner-size, 2))) 0 0 (-(math.div($spinner-size, 2)));
+}
+
+.cozy-module-book-loading {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.cozy-module-book-loading > div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+}
+
+.cozy-module-book-loading .cozy-loader-spinner {
+  height: $bigger-spinner-size;
+  width: $bigger-spinner-size;
+}
+
+// Spinner quarters
+.cozy-loader-spinner .spinner-quarter, .cozy-loader-spinner .spinner-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  height: inherit;
+  width: inherit;
+  border: $spinner-thickness solid transparent;
+  border-radius: 50%;
+}
+
+.cozy-loader-spinner .spinner-quarter {
+  animation: cozy-loader-blink $spinner-speed infinite ease-out;
+}
+
+.cozy-module-book-loading .cozy-loader-spinner .spinner-quarter, .cozy-module-book-loading .cozy-loader-spinner .spinner-backdrop {
+  border-top-width: $bigger-spinner-thickness;
+}
+
+// blink animation
+@keyframes cozy-loader-blink {
+  0% { border-top-color: $spinner-color; }
+  33% { border-top-color: rgba($spinner-color, .33); }
+  100% { border-top-color: rgba($spinner-color, 0); }
+}
+
+// Individual spinner quarters (See compiled if needed)
+.cozy-loader-spinner {
+  @for $i from 0 through 3 {
+    .spinner-quarter--#{$i + 1} {
+      transform: rotate($i * 90deg);
+      animation-delay: math.div($spinner-speed * $i, 4);
+    }
+  }
+
+  @for $i from 0 through 3 {
+    .spinner-backdrop--#{$i + 1} {
+      transform: rotate($i * 90deg);
+      border-top-color: rgba($spinner-color, 0.10);
+      // animation-delay: math.div($spinner-speed * $i, 4);
+    }
+  }
+}
+
+@keyframes cozy-loader-continuous-page {
+  0%, 100% {
+    box-shadow: -13px 20px 0 #0052ec, 13px 20px 0 rgba(0, 82, 236, 0.2), 13px 46px 0 rgba(0, 82, 236, 0.2), -13px 46px 0 rgba(0, 82, 236, 0.2); }
+  25% {
+    box-shadow: -13px 20px 0 rgba(0, 82, 236, 0.2), 13px 20px 0 #0052ec, 13px 46px 0 rgba(0, 82, 236, 0.2), -13px 46px 0 rgba(0, 82, 236, 0.2); }
+  50% {
+    box-shadow: -13px 20px 0 rgba(0, 82, 236, 0.2), 13px 20px 0 rgba(0, 82, 236, 0.2), 13px 46px 0 #0052ec, -13px 46px 0 rgba(0, 82, 236, 0.2); }
+  75% {
+    box-shadow: -13px 20px 0 rgba(0, 82, 236, 0.2), 13px 20px 0 rgba(0, 82, 236, 0.2), 13px 46px 0 rgba(0, 82, 236, 0.2), -13px 46px 0 #0052ec; } }

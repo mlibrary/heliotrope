@@ -11,18 +11,19 @@ webpackConfig.module.rules = webpackConfig.module.rules.filter(rule => {
   return true
 })
 
-// Add our CSS handling rule — always extract to files so stylesheet_pack_tag works in all environments
+// Add our CSS/SCSS handling rule — always extract to files so stylesheet_pack_tag works in all environments
 webpackConfig.module.rules.push({
-  test: /\.css$/i,
+  test: /\.s?css$/i,
   use: [
     MiniCssExtractPlugin.loader,
     {
       loader: 'css-loader',
       options: {
-        importLoaders: 0,
+        importLoaders: 1,
         modules: false
       }
-    }
+    },
+    'sass-loader'
   ]
 })
 
@@ -34,5 +35,9 @@ webpackConfig.plugins.push(new MiniCssExtractPlugin({
   filename: 'css/[name]-[contenthash:8].css',
   chunkFilename: 'css/[name]-[contenthash:8].chunk.css'
 }))
+
+webpackConfig.resolve = webpackConfig.resolve || {}
+webpackConfig.resolve.alias = webpackConfig.resolve.alias || {}
+webpackConfig.resolve.alias.path = 'path-webpack'
 
 module.exports = webpackConfig
