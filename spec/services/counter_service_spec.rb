@@ -111,6 +111,45 @@ RSpec.describe CounterService do
     it "returns a session" do
       expect(described_class.from(controller, fs_presenter).session).to eq "99.99.99.99|Mozilla/5.0|2020-10-17|13"
     end
+
+    context "with an oversized user agent (e.g. Facebook Messenger)" do
+      let(:long_ua) { "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 [FBAN/FBIOS;FBAV/560.0.0.29.108;FBBV/961605262;FBDV/iPhone17,1;FBMD/iPhone;FBSN/iOS;FBSV/18.7.8;FBSS/3;FBCR/;FBID/phone;FBLC/en_US;FBOP/80]" }
+
+      before { allow(controller.request).to receive(:user_agent).and_return(long_ua) }
+
+      it "truncates the user agent based on IP length so the session fits in 255 chars" do
+        session = described_class.from(controller, fs_presenter).session
+        expect(session.length).to be <= 255
+      end
+    end
+  end
+
+  describe "#ua_max_length" do
+    subject(:service) { described_class.from(controller, fs_presenter) }
+
+    it "returns 233 for a short IPv4 address (7 chars)" do
+      expect(service.ua_max_length("1.1.1.1")).to eq 233
+    end
+
+    it "returns 225 for a max-length IPv4 address (15 chars)" do
+      expect(service.ua_max_length("111.111.111.111")).to eq 225
+    end
+
+    it "returns 201 for a full-length IPv6 address (39 chars)" do
+      expect(service.ua_max_length("2001:0db8:85a3:0000:0000:8a2e:0370:7334")).to eq 201
+    end
+
+    it "produces a session no longer than 255 chars for any combination" do
+      [
+        ["1.1.1.1", "A" * 300],
+        ["111.111.111.111", "B" * 300],
+        ["2001:0db8:85a3:0000:0000:8a2e:0370:7334", "C" * 300]
+      ].each do |ip, ua|
+        truncated_ua = ua[0, service.ua_max_length(ip)]
+        session = "#{ip}|#{truncated_ua}|2020-10-17|23"
+        expect(session.length).to be <= 255, "session was #{session.length} chars for IP #{ip}"
+      end
+    end
   end
 
   describe "#access_type" do

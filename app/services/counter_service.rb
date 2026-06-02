@@ -73,13 +73,24 @@ class CounterService
     end
   end
 
+  SESSION_MAX_LENGTH = 255
+  # Fixed overhead: 3 pipe separators (3) + date YYYY-MM-DD (10) + max hour digits (2) = 15
+  SESSION_FIXED_OVERHEAD = 15
+
   def session
     ip   = @controller.request.remote_ip
-    ua   = @controller.request.user_agent
+    ua   = @controller.request.user_agent&.slice(0, ua_max_length(ip))
     date = DateTime.now.strftime('%Y-%m-%d')
     hour = DateTime.now.hour
-    # Per COUNTER v5 section 7.4, this is ok for session
+    # Per COUNTER v5 section 7.4, this is ok for session.
+    # UA is dynamically capped so the full session fits within the 255-char DB column limit.
     "#{ip}|#{ua}|#{date}|#{hour}"
+  end
+
+  # Returns the maximum number of characters allowed for the user agent string in a session,
+  # given the actual IP address, to keep the assembled session within SESSION_MAX_LENGTH.
+  def ua_max_length(ip)
+    SESSION_MAX_LENGTH - SESSION_FIXED_OVERHEAD - ip.to_s.length
   end
 
   def access_type # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
