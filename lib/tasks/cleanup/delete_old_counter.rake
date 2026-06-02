@@ -11,7 +11,7 @@ namespace :heliotrope do
     task delete_old_counter: :environment do
       # This task is intended to clean up old CounterReport records on the preview environment.
       # It will not run in production or development environments.
-      CounterReport.where('created_at < ?', 1.week.ago).delete_all
+      CounterReport.where('created_at < ?', 1.day.ago).delete_all
       puts "Old CounterReport records deleted from preview environment."
     end
   else
