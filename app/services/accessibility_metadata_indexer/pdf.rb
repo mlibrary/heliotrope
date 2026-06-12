@@ -41,23 +41,20 @@ module AccessibilityMetadataIndexer
         press_dir = File.join(Settings.pdf_ebook_accessibility_metadata.dir, @press)
         return nil unless Dir.exist?(press_dir)
 
-        pdf_label = file_set_label
-        return nil if pdf_label.blank?
+        checksum = file_set_checksum
+        return nil if checksum.blank?
 
-        pdf_basename = File.basename(pdf_label, '.*')
-        json_file = Dir.glob(File.join(press_dir, '*.json')).find do |f|
-          File.basename(f, '.json').casecmp(pdf_basename).zero?
-        end
-        return nil unless json_file && File.exist?(json_file)
+        json_file = File.join(press_dir, "#{checksum}.json")
+        return nil unless File.exist?(json_file)
 
         JSON.parse(File.read(json_file))
       rescue JSON::ParserError
         nil
       end
 
-      def file_set_label
-        result = ActiveFedora::SolrService.query("{!terms f=id}#{file_set_id}", fl: ['label_tesim'], rows: 1).first
-        result&.dig('label_tesim')&.first
+      def file_set_checksum
+        result = ActiveFedora::SolrService.query("{!terms f=id}#{file_set_id}", fl: ['original_checksum_ssim'], rows: 1).first
+        result&.dig('original_checksum_ssim')&.first
       end
 
       def accessibility_summary
