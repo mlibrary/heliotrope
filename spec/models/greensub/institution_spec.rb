@@ -268,31 +268,45 @@ RSpec.describe Greensub::Institution, type: :model do
     end
   end
 
+  describe 'auto-create default institution affiliations on create' do
+    it 'creates one InstitutionAffiliation per AFFILIATION when an institution is created' do
+      institution = create(:institution)
+      expect(institution.institution_affiliations.count).to eq Greensub::InstitutionAffiliation::AFFILIATIONS.count
+      expect(institution.institution_affiliations.pluck(:affiliation)).to match_array(Greensub::InstitutionAffiliation::AFFILIATIONS)
+      expect(institution.institution_affiliations.pluck(:dlps_institution_id).uniq).to eq [institution.identifier.to_i]
+    end
+  end
+
+  describe 'auto-destroy institution affiliations on destroy' do
+    it 'destroys all InstitutionAffiliations when the institution is destroyed' do
+      institution = create(:institution)
+      expect(Greensub::InstitutionAffiliation.count).to eq Greensub::InstitutionAffiliation::AFFILIATIONS.count
+      institution.destroy
+      expect(Greensub::Institution.count).to eq 0
+      expect(Greensub::InstitutionAffiliation.count).to eq 0
+    end
+  end
+
   describe 'institution affiliations' do
     let(:institutions) { [] }
 
     before do
-      for i in 0..2
-        institutions << create(:institution)
-        for j in 0..Greensub::InstitutionAffiliation.affiliations.count - 1
-          create(:institution_affiliation, institution: institutions[i], dlps_institution_id: 1 + (i * 100) + j, affiliation: Greensub::InstitutionAffiliation.affiliations[j])
-        end
-      end
+      3.times { institutions << create(:institution) }
     end
 
     it do
       expect(institutions[0].institution_affiliations.count).to eq Greensub::InstitutionAffiliation.affiliations.count
-      expect(described_class.containing_dlps_institution_id(1).count).to eq 1
-      expect(described_class.containing_dlps_institution_id(1).first).to eq institutions[0]
-      expect(described_class.containing_dlps_institution_id(101).count).to eq 1
-      expect(described_class.containing_dlps_institution_id(101).first).to eq institutions[1]
-      expect(described_class.containing_dlps_institution_id(201).count).to eq 1
-      expect(described_class.containing_dlps_institution_id(201).first).to eq institutions[2]
-      expect(described_class.containing_dlps_institution_id([1, 2, 3]).count).to eq 1
-      expect(described_class.containing_dlps_institution_id([1, 101, 201]).count).to eq 3
-      expect(institutions[0].dlps_institution_ids).to contain_exactly(1, 2, 3)
-      expect(institutions[1].dlps_institution_ids).to contain_exactly(101, 102, 103)
-      expect(institutions[2].dlps_institution_ids).to contain_exactly(201, 202, 203)
+      expect(described_class.containing_dlps_institution_id(institutions[0].identifier.to_i).count).to eq 1
+      expect(described_class.containing_dlps_institution_id(institutions[0].identifier.to_i).first).to eq institutions[0]
+      expect(described_class.containing_dlps_institution_id(institutions[1].identifier.to_i).count).to eq 1
+      expect(described_class.containing_dlps_institution_id(institutions[1].identifier.to_i).first).to eq institutions[1]
+      expect(described_class.containing_dlps_institution_id(institutions[2].identifier.to_i).count).to eq 1
+      expect(described_class.containing_dlps_institution_id(institutions[2].identifier.to_i).first).to eq institutions[2]
+      expect(described_class.containing_dlps_institution_id([institutions[0].identifier.to_i, institutions[1].identifier.to_i]).count).to eq 2
+      expect(described_class.containing_dlps_institution_id([institutions[0].identifier.to_i, institutions[1].identifier.to_i, institutions[2].identifier.to_i]).count).to eq 3
+      expect(institutions[0].dlps_institution_ids).to contain_exactly(*([institutions[0].identifier.to_i] * Greensub::InstitutionAffiliation.affiliations.count))
+      expect(institutions[1].dlps_institution_ids).to contain_exactly(*([institutions[1].identifier.to_i] * Greensub::InstitutionAffiliation.affiliations.count))
+      expect(institutions[2].dlps_institution_ids).to contain_exactly(*([institutions[2].identifier.to_i] * Greensub::InstitutionAffiliation.affiliations.count))
     end
   end
 end

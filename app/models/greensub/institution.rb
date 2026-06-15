@@ -19,8 +19,10 @@ module Greensub
     validates :security_domain, uniqueness: true, allow_blank: true
 
     has_many :licenses, as: :licensee, dependent: :restrict_with_error
-    has_many :institution_affiliations, dependent: :restrict_with_error
+    has_many :institution_affiliations, dependent: :destroy
     alias_attribute :affiliations, :institution_affiliations
+
+    after_create :create_default_affiliations
 
     before_validation(on: :update) do
       if identifier_changed?
@@ -41,7 +43,7 @@ module Greensub
     end
 
     def destroy?
-      affiliations.empty? && !licenses? && !grants?
+      !licenses? && !grants?
     end
 
     def shibboleth?
@@ -85,6 +87,12 @@ module Greensub
 
       def type
         @type ||= /^Greensub::(.+$)/.match(self.class.to_s)[1].to_sym
+      end
+
+      def create_default_affiliations
+        InstitutionAffiliation::AFFILIATIONS.each do |affiliation|
+          institution_affiliations.create!(dlps_institution_id: identifier.to_i, affiliation: affiliation)
+        end
       end
   end
 end
