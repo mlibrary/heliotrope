@@ -20,6 +20,8 @@ describe Hyrax::MonographForm do
                            creator
                            contributor
                            creator_display
+                           author_bio
+                           author_place_of_origin
                            publisher
                            date_created
                            subject
@@ -91,6 +93,8 @@ describe Hyrax::MonographForm do
                            description
                            contributor
                            creator_display
+                           author_bio
+                           author_place_of_origin
                            subject
                            keyword
                            language

@@ -26,6 +26,8 @@ module Hyrax
     self.terms = self.terms.insert(self.terms.index(:description) - 1, :date_published)
     self.terms.delete_at(self.terms.index(:creator_display))
     self.terms = self.terms.insert(self.terms.index(:contributor) + 1, :creator_display)
+    self.terms = self.terms.insert(self.terms.index(:creator_display) + 1, :author_bio)
+    self.terms = self.terms.insert(self.terms.index(:author_bio) + 1, :author_place_of_origin)
     self.terms.delete_at(self.terms.index(:identifier))
     self.terms = self.terms.insert(self.terms.index(:hdl) + 1, :identifier)
     self.terms.delete_at(self.terms.index(:license))

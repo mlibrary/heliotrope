@@ -5,7 +5,9 @@ require 'rails_helper'
 describe 'Create a monograph' do
   context 'a logged in user' do
     let(:user) { create(:platform_admin) }
-    let!(:press) { create(:press, content_warning_information: "Some Press-level content warning information, with a <a href=\"https://www.bing.com\">link</a>.") }
+    let!(:press) { create(:press,
+                          show_author_bios: true,
+                          content_warning_information: "Some Press-level content warning information, with a <a href=\"https://www.bing.com\">link</a>.") }
 
     before do
       allow(Hyrax::TimeService).to receive(:time_in_utc).and_return('2023-01-01T10:10:20+00:00')
@@ -61,9 +63,13 @@ describe 'Create a monograph' do
       fill_in 'Holding Contact', with: 'http://www.blahpresscompany.com/'
 
       # Authorship Metadata
-      # # 'Authors' is ambiguous
+      # 'Authors' is ambiguous
       fill_in 'monograph[creator]', with: "Johns, Jimmy\nWay, Sub (editor)"
       fill_in 'Contributor(s)', with: 'Shoppe, Sandwich (another unused role)'
+      expect(page).to have_css('textarea.monograph_author_bio', count: 1)
+      fill_in 'monograph_author_bio_0', with: 'Timmy McGinty was born in a very small town in the northwest of the United States.'
+      expect(page).to have_css('input.monograph_author_place_of_origin', count: 1)
+      fill_in 'Author Place of Origin', with: 'Smalltown, USA'
 
       # Citation Metadata
       # publisher
@@ -100,6 +106,10 @@ describe 'Create a monograph' do
       expect(page).to have_content press.name
       expect(page).to have_content 'Blahdy blah description works'
       expect(page).to have_content 'Jimmy Johns, Sub Way and Sandwich Shoppe'
+      expect(page).to have_content 'Timmy McGinty was born in a very small town in the northwest of the United States.'
+      # author_place_of_origin is not displayed on the Monograph catalog page
+      expect(page).not_to have_content 'Smalltown, USA'
+
       expect(page).to have_field('Citable Link', with: HandleNet::DOI_ORG_PREFIX + '<doi>')
       expect(page).to have_content '123-456-7890'
       expect(page).to have_content 'Your files are being processed by Fulcrum in the background.'
@@ -136,8 +146,14 @@ describe 'Create a monograph' do
       expect(page).to have_css('input#monograph_date_published', count: 1)
       expect(page.find('input#monograph_date_published')['value']).to eq('2023-01-01T10:10:20')
 
-      # add citation_display to test authorship override
+      # add creator_display to test authorship override
       fill_in 'Authorship Display (free-form text)', with: 'Fancy Authorship Name Stuff That Takes Precedence'
+      expect(page).to have_css('textarea.monograph_author_bio', count: 2)
+      page.all(:fillable_field, 'monograph[author_bio][]').last.set('Frank Writers is a city slicker, through and through.')
+      expect(page).to have_css('input.monograph_author_place_of_origin', count: 2)
+      page.all(:fillable_field, 'monograph[author_place_of_origin][]').last.set('The Big Shmoke')
+      expect(page).to have_css('input.monograph_author_place_of_origin', count: 2)
+      page.all(:fillable_field, 'monograph[author_place_of_origin][]').last.set('A small town in the northwest of the United States.')
       expect(page).to have_css('input.monograph_subject', count: 2)
       page.all(:fillable_field, 'monograph[subject][]').last.set('green stuff')
       expect(page).to have_css('input.monograph_keyword', count: 2)
@@ -162,6 +178,13 @@ describe 'Create a monograph' do
       # check authorship override
       expect(page).to have_content "Fancy Authorship Name Stuff That Takes Precedence"
       expect(page).not_to have_content "Jimmy Johns, Sub Way and Shoppe Sandwich"
+
+      expect(page).to have_content 'Timmy McGinty was born in a very small town in the northwest of the United States.'
+      expect(page).to have_content 'Frank Writers is a city slicker, through and through.'
+      # author_place_of_origin is not displayed on the Monograph catalog page
+      expect(page).not_to have_content 'Smalltown, USA'
+      expect(page).not_to have_content 'The Big Shmoke'
+
       # collection
       expect(page).to have_content 'Collection of Stuffs'
       expect(page).to have_content 'Moar Collection of Stuffs'

@@ -84,6 +84,14 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
+  property :author_bio, predicate: ::RDF::URI.new('http://fulcrum.org/ns#AuthorBio') do |index|
+    index.as :stored_searchable
+  end
+
+  property :author_place_of_origin, predicate: ::RDF::URI.new('http://fulcrum.org/ns#AuthorPlaceOfOrigin') do |index|
+    index.as :stored_searchable, :facetable
+  end
+
   include HeliotropeUniversalMetadata
   include ::Hyrax::WorkBehavior
   # This must come after the WorkBehavior because it finalizes the metadata

@@ -406,6 +406,10 @@ en:
 
         For example:
         --2022|Golden Anniversary Monograph Award|National Communication Association;2000|EMS Monograph Award|European Mathematical Society;2011|Outstanding Monograph Prize|American Society for Aesthetics
+      author_bio: |
+        Biographical note(s) for the author(s). Separate multiple bios with a semicolon.
+      author_place_of_origin: |
+        Place(s) of origin for the author(s). Separate multiple values with a semicolon.
       article_title: |
         If the resource belongs to a journal article, this is the title of that article
       article_creator: |

@@ -56,6 +56,8 @@ en:
   allow_hi_res: "Allow Hi-Res?"
   alt_text: "Alternative Text"
   author: "Author"
+  author_bio: "Author Bio"
+  author_place_of_origin: "Author Place of Origin"
   bar_number: "BAR Number"
   blacklight:
     search:
@@ -296,6 +298,8 @@ en:
         date_created: "Publication Year" # used on :date_created for Monographs
         description: "Description"
         edition_name: :"edition_name"
+        author_bio: "Author Bio"
+        author_place_of_origin: "Author Place of Origin"
         funder: "Funder"
         funder_display: "Funder Display"
         identifier: :"identifier"

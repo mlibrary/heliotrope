@@ -8,6 +8,14 @@ module SolrDocumentExtensions
       vector('award_tesim')
     end
 
+    def author_bio
+      vector('author_bio_tesim')
+    end
+
+    def author_place_of_origin
+      vector('author_place_of_origin_tesim')
+    end
+
     def buy_url
       vector('buy_url_ssim')
     end

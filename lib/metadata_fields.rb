@@ -78,6 +78,8 @@ METADATA_FIELDS ||=
     { object: :monograph, field_name: 'OCLC Work Identifier', metadata_name: 'oclc_owi', required: false, multivalued: :no, description: I18n.t('csv.descriptions.oclc_owi') },
     { object: :monograph, field_name: 'Copyright Year', metadata_name: 'copyright_year', required: false, multivalued: :no, description: I18n.t('csv.descriptions.copyright_year') },
     { object: :monograph, field_name: 'Award(s)', metadata_name: 'award', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.award') },
+    { object: :monograph, field_name: 'Author Bio', metadata_name: 'author_bio', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.author_bio') },
+    { object: :monograph, field_name: 'Author Place of Origin', metadata_name: 'author_place_of_origin', required: false, multivalued: :yes_split, description: I18n.t('csv.descriptions.author_place_of_origin') },
     { object: :file_set, field_name: 'Article Title', metadata_name: 'article_title', required: false, multivalued: :no, description: I18n.t('csv.descriptions.article_title') },
     { object: :file_set, field_name: 'Article Creator(s)', metadata_name: 'article_creator', required: false, multivalued: :yes_multiline, description: I18n.t('csv.descriptions.article_creator') },
     { object: :file_set, field_name: 'Article Permalink', metadata_name: 'article_permalink', required: false, multivalued: :no, description: I18n.t('csv.descriptions.article_permalink') },
