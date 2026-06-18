@@ -52,17 +52,16 @@ RSpec.describe Greensub::InstitutionAffiliation, type: :model do
   end
 
   it 'belongs to institution' do
+    # creating institution auto-creates AFFILIATIONS.count affiliations;
+    # subject creates one additional affiliation (dlps_institution_id: 1, affiliation: 'member')
+    auto_count = Greensub::InstitutionAffiliation::AFFILIATIONS.count
     subject
     expect(Greensub::Institution.count).to eq 1
-    expect(Greensub::InstitutionAffiliation.count).to eq 1
-    expect(institution.destroy).to be false
-    expect(institution.errors.count).to eq 1
-    expect(institution.errors.errors.first.attribute).to eq :base
-    expect(institution.errors.errors.first.message).to eq "Cannot delete record because dependent institution affiliations exist"
-    institution_affiliation.destroy
-    expect(Greensub::InstitutionAffiliation.count).to eq 0
-    expect(Greensub::Institution.count).to eq 1
-    institution.destroy
+    expect(Greensub::InstitutionAffiliation.count).to eq auto_count + 1
+
+    # destroying the institution now cascades and removes all affiliated records
+    expect(institution.destroy).not_to be false
     expect(Greensub::Institution.count).to eq 0
+    expect(Greensub::InstitutionAffiliation.count).to eq 0
   end
 end

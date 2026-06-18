@@ -546,8 +546,6 @@ RSpec.describe EPubsController, type: :controller do
 
         it "Subscribed Institution" do
           institution = create(:institution, identifier: dlps_institution_id)
-          create(:institution_affiliation, institution_id: institution.id, dlps_institution_id: dlps_institution_id, affiliation: "member")
-          create(:institution_affiliation, institution_id: institution.id, dlps_institution_id: dlps_institution_id + 1, affiliation: "alum")
           product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
           product.save!
@@ -561,8 +559,10 @@ RSpec.describe EPubsController, type: :controller do
 
         it "Subscribed Institution with the wrong affiliation" do
           institution = create(:institution, identifier: dlps_institution_id)
-          create(:institution_affiliation, institution_id: institution.id, dlps_institution_id: dlps_institution_id, affiliation: "member")
-          create(:institution_affiliation, institution_id: institution.id, dlps_institution_id: dlps_institution_id + 1, affiliation: "alum")
+          # Re-locate the alum affiliation to a different dlps_institution_id so that
+          # a user arriving with dlps_institution_id (9999) is only a 'member', not an 'alum'.
+          institution.institution_affiliations.where(affiliation: 'alum').destroy_all
+          institution.institution_affiliations.create!(dlps_institution_id: dlps_institution_id + 1, affiliation: 'alum')
           product = Greensub::Product.create!(identifier: 'product', name: 'name', purchase: 'purchase')
           product.components << component
           product.save!

@@ -19,35 +19,36 @@ describe DlpsInstitutionAffiliation do
       it { is_expected.to eq [] }
 
       context 'institution_affiliations' do
+        # institutions auto-create one InstitutionAffiliation per AFFILIATION (member/alum/walk-in)
+        # with dlps_institution_id equal to the institution's own identifier
         let(:institution_1) { create(:institution, identifier: '1', entity_id: 'entity_1') }
-        let(:institution_1_affiliation_1) { create(:institution_affiliation, institution: institution_1, dlps_institution_id: 1, affiliation: 'member') }
-        let(:institution_1_affiliation_2) { create(:institution_affiliation, institution: institution_1, dlps_institution_id: 3, affiliation: 'alum') }
         let(:institution_2) { create(:institution, identifier: '2', entity_id: 'entity_2') }
-        let(:institution_2_affiliation_1) { create(:institution_affiliation, institution: institution_2, dlps_institution_id: 2, affiliation: 'member') }
 
         before do
-          institution_1_affiliation_1
-          institution_1_affiliation_2
-          institution_2_affiliation_1
+          institution_1
+          institution_2
         end
 
         context 'ip_based' do
           let(:ids) { [institution_2.identifier] }
           let(:entity_id) { 'entity_id' }
 
-          it { is_expected.to contain_exactly(institution_2_affiliation_1) }
+          # ip_based lookup by dlps_institution_id matches all auto-created affiliations for institution_2
+          it { is_expected.to contain_exactly(*institution_2.institution_affiliations.to_a) }
         end
 
         context 'shib' do
           let(:ids) { ['ids'] }
           let(:entity_id) { institution_1.entity_id }
 
-          it { is_expected.to contain_exactly(institution_1_affiliation_1) }
+          # shib with default 'member' affiliation finds institution_1's auto-created member affiliation
+          it { is_expected.to contain_exactly(*institution_1.institution_affiliations.where(affiliation: 'member').to_a) }
 
           context 'eduPersonScopedAffiliation' do
             let(:scoped_affiliations) { ['staff@x.y.z', 'alum@z.y.x', 'joker@z.z.z'] }
 
-            it { is_expected.to contain_exactly(institution_1_affiliation_2) }
+            # scoped affiliations map to 'alum' - finds institution_1's auto-created alum affiliation
+            it { is_expected.to contain_exactly(*institution_1.institution_affiliations.where(affiliation: %w[staff alum joker]).to_a) }
           end
         end
 
@@ -55,12 +56,15 @@ describe DlpsInstitutionAffiliation do
           let(:ids) { [institution_1.identifier, institution_2.identifier] }
           let(:entity_id) { institution_1.entity_id }
 
-          it { is_expected.to contain_exactly(institution_1_affiliation_1, institution_2_affiliation_1) }
+          # ip_based finds all auto-created affiliations for both institutions;
+          # shib adds institution_1 'member' (already present); combined result is all 6
+          it { is_expected.to contain_exactly(*(institution_1.institution_affiliations.to_a + institution_2.institution_affiliations.to_a)) }
 
           context 'eduPersonScopedAffiliation' do
             let(:scoped_affiliations) { ['staff@x.y.z', 'alum@z.y.x', 'joker@z.z.z'] }
 
-            it { is_expected.to contain_exactly(institution_1_affiliation_1, institution_1_affiliation_2, institution_2_affiliation_1) }
+            # shib adds institution_1 'alum' (already in ip_based results); combined still all 6
+            it { is_expected.to contain_exactly(*(institution_1.institution_affiliations.to_a + institution_2.institution_affiliations.to_a)) }
           end
         end
       end

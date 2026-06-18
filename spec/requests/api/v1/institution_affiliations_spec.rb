@@ -34,16 +34,19 @@ RSpec.describe "InstitutionAffiliations", type: :request do
   context 'authorized' do
     before { allow_any_instance_of(API::ApplicationController).to receive(:authorize_request).and_return(nil) }
 
+    let(:affiliation_count) { Greensub::InstitutionAffiliation::AFFILIATIONS.count }
+
     describe 'GET /api/v1/institution/:institution_id/affiliation' do
       it 'institution not_found' do
-        get api_institution_find_affiliation_path(1), params: { dlps_institution_id: 1, affiliation: 'member' }, headers: headers
+        get api_institution_find_affiliation_path(1), params: {}, headers: headers
         expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution")
       end
 
       it 'non existing affiliation not_found' do
-        get api_institution_find_affiliation_path(institution.id), params: { dlps_institution_id: 1, affiliation: 'member' }, headers: headers
+        # use a dlps_institution_id that can never match the auto-created affiliations
+        get api_institution_find_affiliation_path(institution.id), params: { dlps_institution_id: institution.identifier.to_i + 1, affiliation: 'member' }, headers: headers
         expect(response.content_type).to eq("application/json")
         expect(response).to have_http_status(:not_found)
         expect(response.body).to be_empty
@@ -78,15 +81,17 @@ RSpec.describe "InstitutionAffiliations", type: :request do
         expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:not_found)
         expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution")
-        expect(Greensub::InstitutionAffiliation.count).to eq(2)
+        # 2 institutions (each with affiliation_count auto + 1 explicit affiliation)
+        expect(Greensub::InstitutionAffiliation.count).to eq((affiliation_count + 1) * 2)
       end
 
-      it 'empty ok' do
+      it 'default affiliations ok' do
         get api_institution_affiliations_path(institution), headers: headers
         expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
-        expect(response_body).to eq([])
-        expect(Greensub::InstitutionAffiliation.count).to eq(2)
+        expect(response_body.count).to eq(affiliation_count)
+        # institution (affiliation_count auto) + institution_affiliation's inst (affiliation_count+1) + new_institution_affiliation's inst (affiliation_count+1)
+        expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count * 3 + 2)
       end
 
       it 'affiliation ok' do
@@ -94,8 +99,8 @@ RSpec.describe "InstitutionAffiliations", type: :request do
         get api_institution_affiliations_path(institution), headers: headers
         expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
-        expect(response_body).to eq([institution_affiliation_obj(institution_affiliation: institution_affiliation)])
-        expect(Greensub::InstitutionAffiliation.count).to eq(2)
+        expect(response_body).to include(institution_affiliation_obj(institution_affiliation: institution_affiliation))
+        expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count * 3 + 2)
       end
 
       it 'affiliations ok' do
@@ -104,8 +109,9 @@ RSpec.describe "InstitutionAffiliations", type: :request do
         get api_institution_affiliations_path(institution), headers: headers
         expect(response.content_type).to eq("application/json; charset=utf-8")
         expect(response).to have_http_status(:ok)
-        expect(response_body).to eq([institution_affiliation_obj(institution_affiliation: institution_affiliation), institution_affiliation_obj(institution_affiliation: new_institution_affiliation)])
-        expect(Greensub::InstitutionAffiliation.count).to eq(2)
+        expect(response_body).to include(institution_affiliation_obj(institution_affiliation: institution_affiliation))
+        expect(response_body).to include(institution_affiliation_obj(institution_affiliation: new_institution_affiliation))
+        expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count * 3 + 2)
       end
     end
 
@@ -128,7 +134,8 @@ RSpec.describe "InstitutionAffiliations", type: :request do
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_body[:dlps_institution_id.to_s]).to eq(["can't be blank"])
         expect(response_body[:affiliation.to_s]).to eq(["can't be blank", "is not included in the list"])
-        expect(Greensub::InstitutionAffiliation.count).to eq(0)
+        # institution was created (auto-creates affiliation_count affiliations); the invalid POST adds none
+        expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count)
       end
 
       context 'valid params' do
@@ -140,7 +147,8 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:created)
           expect(response_body).to eq(institution_affiliation_obj(institution_affiliation: Greensub::InstitutionAffiliation.last))
-          expect(Greensub::InstitutionAffiliation.count).to eq(1)
+          # institution auto-creates affiliation_count affiliations; POST creates 1 more
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count + 1)
         end
       end
     end
@@ -160,7 +168,8 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
-          expect(Greensub::InstitutionAffiliation.count).to eq(1)
+          # institution_affiliation's own institution auto-creates affiliation_count affiliations + 1 explicit
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count + 1)
         end
       end
 
@@ -170,7 +179,8 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::InstitutionAffiliation with")
-          expect(Greensub::InstitutionAffiliation.count).to eq(0)
+          # institution auto-creates affiliation_count affiliations
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count)
         end
 
         it 'existing institution_affiliation ok' do
@@ -179,7 +189,8 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:ok)
           expect(response_body).to eq(institution_affiliation_obj(institution_affiliation: institution_affiliation))
-          expect(Greensub::InstitutionAffiliation.count).to eq(1)
+          # institution (affiliation_count auto) + institution_affiliation moved (originally in its own inst with affiliation_count auto)
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count * 2 + 1)
         end
       end
     end
@@ -203,7 +214,8 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
-          expect(Greensub::InstitutionAffiliation.count).to eq(1)
+          # institution_affiliation's own institution auto-creates affiliation_count affiliations + 1 explicit
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count + 1)
         end
       end
 
@@ -213,7 +225,8 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::InstitutionAffiliation with")
-          expect(Greensub::InstitutionAffiliation.count).to eq(0)
+          # institution auto-creates affiliation_count affiliations
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count)
         end
 
         it 'existing institution_affiliation but not this institution unprocessable_entity' do
@@ -222,8 +235,9 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:institution_id.to_s]).to eq(["institution affiliation institution_id '#{institution_affiliation.institution_id}' does not match institution id '#{institution.id}'"])
           expect(institution.affiliations).not_to include(institution_affiliation)
-          expect(institution.affiliations.count).to eq(0)
-          expect(Greensub::InstitutionAffiliation.count).to eq(1)
+          # institution has its affiliation_count auto affiliations; institution_affiliation was not moved
+          expect(institution.affiliations.count).to eq(affiliation_count)
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count * 2 + 1)
         end
 
         it 'existing institution_affiliation and this institution ok' do
@@ -236,8 +250,9 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response_body[:dlps_institution_id.to_s]).to eq(dlps_institution_id)
           expect(response_body[:affiliation.to_s]).to eq(affiliation)
           expect(institution.affiliations).to include(institution_affiliation)
-          expect(institution.affiliations.count).to eq(1)
-          expect(Greensub::InstitutionAffiliation.count).to eq(1)
+          # institution has affiliation_count auto + institution_affiliation (moved from its own inst)
+          expect(institution.affiliations.count).to eq(affiliation_count + 1)
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count * 2 + 1)
         end
       end
     end
@@ -257,20 +272,22 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:not_found)
           expect(response_body[:exception.to_s]).to include("ActiveRecord::RecordNotFound: Couldn't find Greensub::Institution with")
-          expect(Greensub::InstitutionAffiliation.count).to eq(1)
+          # institution_affiliation's own institution auto-creates affiliation_count affiliations + 1 explicit
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count + 1)
         end
       end
 
       context 'existing institution' do
         it 'non existing institution_affiliation ok' do
           institution.affiliations << institution_affiliation
-          delete api_institution_affiliation_path(institution, 1), headers: headers
+          delete api_institution_affiliation_path(institution, Greensub::InstitutionAffiliation.maximum(:id) + 999), headers: headers
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
           expect(institution.affiliations).to include(institution_affiliation)
-          expect(institution.affiliations.count).to eq(1)
-          expect(Greensub::InstitutionAffiliation.count).to eq(1)
+          # institution has affiliation_count auto + institution_affiliation (moved); nothing was deleted
+          expect(institution.affiliations.count).to eq(affiliation_count + 1)
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count * 2 + 1)
         end
 
         it 'existing institution_affiliation but not this institution unprocessable_entity' do
@@ -278,9 +295,10 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response.content_type).to eq("application/json; charset=utf-8")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response_body[:institution_id.to_s]).to eq(["institution affiliation institution_id '#{institution_affiliation.institution_id}' does not match institution id '#{institution.id}'"])
-          expect(institution.affiliations).to be_empty
-          expect(institution.affiliations.count).to eq(0)
-          expect(Greensub::InstitutionAffiliation.count).to eq(1)
+          # institution has its auto-created affiliations; institution_affiliation belongs to a different institution
+          expect(institution.affiliations).not_to include(institution_affiliation)
+          expect(institution.affiliations.count).to eq(affiliation_count)
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count * 2 + 1)
         end
 
         it 'existing institution_affiliation ok' do
@@ -289,9 +307,10 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(institution.affiliations).to include(institution_affiliation)
-          expect(institution.affiliations.count).to eq(0)
-          expect(Greensub::InstitutionAffiliation.count).to eq(0)
+          # institution_affiliation was destroyed; institution retains its affiliation_count auto affiliations
+          expect(institution.affiliations.reload).not_to include(institution_affiliation)
+          expect(institution.affiliations.count).to eq(affiliation_count)
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count * 2)
         end
 
         it 'existing institution_affiliation twice ok' do
@@ -301,9 +320,10 @@ RSpec.describe "InstitutionAffiliations", type: :request do
           expect(response.content_type).to eq("application/json")
           expect(response).to have_http_status(:ok)
           expect(response.body).to be_empty
-          expect(institution.affiliations).to include(institution_affiliation)
-          expect(institution.affiliations.count).to eq(0)
-          expect(Greensub::InstitutionAffiliation.count).to eq(0)
+          # institution_affiliation was destroyed on first delete; institution retains affiliation_count auto affiliations
+          expect(institution.affiliations.reload).not_to include(institution_affiliation)
+          expect(institution.affiliations.count).to eq(affiliation_count)
+          expect(Greensub::InstitutionAffiliation.count).to eq(affiliation_count * 2)
         end
       end
     end
