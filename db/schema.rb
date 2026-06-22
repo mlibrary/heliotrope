@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_04_07_190607) do
+ActiveRecord::Schema.define(version: 2026_06_22_120000) do
 
   create_table "api_requests", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "user_id"
@@ -448,6 +448,7 @@ ActiveRecord::Schema.define(version: 2026_04_07_190607) do
     t.string "doi_prefixes"
     t.string "readership_map_url"
     t.text "navigation_block", size: :medium
+    t.boolean "ereader_format_choice", default: false
     t.boolean "default_list_view", default: false
     t.boolean "aboutware", default: false
     t.boolean "interval", default: false

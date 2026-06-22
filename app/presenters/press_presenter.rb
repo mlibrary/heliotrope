@@ -114,6 +114,11 @@ class PressPresenter < ApplicationPresenter
     true
   end
 
+  def ereader_format_choice?
+    return true if press.ereader_format_choice == true
+    false
+  end
+
   def accessible_copy_request_form_url
     @press&.accessible_copy_request_form_url.presence
   end
@@ -161,5 +166,9 @@ class PressPresenterNullObject
   def method_missing(name, *args, &block)
     Rails.logger.error("PressPresenterNullObject has no #{name} method")
     ""
+  end
+
+  def ereader_format_choice?
+    false
   end
 end

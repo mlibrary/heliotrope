@@ -140,6 +140,51 @@ RSpec.describe MonographCatalogController, type: :controller do
               expect(assigns(:reader_links_display)).to eq :not_shown
             end
           end
+
+          context 'when both epub and pdf_ebook reps exist' do
+            let(:press) { create(:press, ereader_format_choice: true) }
+            let(:monograph) { create(:public_monograph, press: press.subdomain) }
+            let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
+            let(:pdf_file_set) { create(:file_set) }
+
+            before do
+              create(:featured_representative, work_id: monograph.id, file_set_id: pdf_file_set.id, kind: 'pdf_ebook')
+              monograph.ordered_members << pdf_file_set
+              monograph.save!
+              pdf_file_set.save!
+            end
+
+            it 'uses reader_format param when evaluating read visibility' do
+              get :index, params: { id: monograph.id, reader_format: 'pdf' }
+              expect(assigns(:reader_links_display)).to eq :not_shown
+
+              get :index, params: { id: monograph.id, reader_format: 'epub' }
+              expect(assigns(:reader_links_display)).to eq :linked
+            end
+          end
+        end
+
+        context 'reader_format param sanitization' do
+          let(:press) { create(:press, ereader_format_choice: true) }
+          let(:monograph) { create(:public_monograph, press: press.subdomain) }
+          let(:file_set) { create(:public_file_set, content: File.open(File.join(fixture_path, 'fake_epub_multi_rendition.epub'))) }
+
+          it 'sets @reader_format only for epub/pdf values' do
+            get :index, params: { id: monograph.id, reader_format: 'PDF' }
+            expect(assigns(:reader_format)).to eq 'pdf'
+
+            get :index, params: { id: monograph.id, reader_format: 'bad-value' }
+            expect(assigns(:reader_format)).to be_nil
+          end
+
+          context 'when ereader_format_choice is disabled on the press' do
+            let(:press) { create(:press, ereader_format_choice: false) }
+
+            it 'ignores the reader_format param and leaves @reader_format nil' do
+              get :index, params: { id: monograph.id, reader_format: 'epub' }
+              expect(assigns(:reader_format)).to be_nil
+            end
+          end
         end
       end
     end

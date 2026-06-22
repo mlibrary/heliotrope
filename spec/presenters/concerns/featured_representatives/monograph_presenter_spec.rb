@@ -290,9 +290,47 @@ RSpec.describe FeaturedRepresentatives::MonographPresenter do
         end
       end
 
+      describe "#reader_ebook_id_for_format" do
+        it "returns the epub id by default" do
+          expect(subject.reader_ebook_id_for_format).to eq 'epubid'
+        end
+
+        it "returns the epub id for epub format" do
+          expect(subject.reader_ebook_id_for_format('epub')).to eq 'epubid'
+        end
+
+        it "returns the pdf id for pdf format" do
+          expect(subject.reader_ebook_id_for_format('pdf')).to eq 'pdfebookid'
+        end
+      end
+
       describe "#reader_ebook" do
         it "returns the epub's solr_doc, giving precedence to the epub" do
           expect(subject.epub['id']).to eq 'epubid'
+        end
+      end
+
+      describe "#both_ebook_formats_public?" do
+        context 'both featured representative docs are public' do
+          let(:public_epub) { SolrDocument.new(id: 'epubid', visibility_ssi: 'open') }
+          let(:public_pdf) { SolrDocument.new(id: 'pdfebookid', visibility_ssi: 'open') }
+
+          before { allow(subject).to receive(:featured_representative_docs).and_return([public_epub, public_pdf]) }
+
+          it 'returns true' do
+            expect(subject.both_ebook_formats_public?).to be true
+          end
+        end
+
+        context 'one featured representative doc is not public' do
+          let(:public_epub) { SolrDocument.new(id: 'epubid', visibility_ssi: 'open') }
+          let(:private_pdf) { SolrDocument.new(id: 'pdfebookid', visibility_ssi: 'restricted') }
+
+          before { allow(subject).to receive(:featured_representative_docs).and_return([public_epub, private_pdf]) }
+
+          it 'returns false' do
+            expect(subject.both_ebook_formats_public?).to be false
+          end
         end
       end
 

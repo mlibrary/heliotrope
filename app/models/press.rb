@@ -45,6 +45,11 @@ class Press < ApplicationRecord
     false
   end
 
+  def ereader_format_choice?
+    return true if ereader_format_choice == true
+    false
+  end
+
   def to_param
     subdomain
   end

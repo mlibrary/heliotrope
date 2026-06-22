@@ -67,6 +67,7 @@
               label: 'Press DOI Prefixes',
               hint: 'Enter one or more DOI prefixes separated by semi-colons, e.g 10.1234.<br />If allowed by the setting above, component DOIs will be created for all FileSets that use any DOI prefix in this list, or our own prefix.'.html_safe %>
   </fieldset>
+  <%= f.input :ereader_format_choice, label: 'Allow User to Choose E-Reader Format?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
   <%= f.input :default_list_view, label: 'Select the default view', as: :radio_buttons, collection: [['List View', true], ['Gallery View', false]], default: false %>
   <%= f.input :aboutware, label: 'Press has "aboutware" (MAY include a complex "navigation_block" or MAY NOT)', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
   <%= f.submit label: 'Save Publisher' %>

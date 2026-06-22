@@ -85,7 +85,8 @@ class PressesController < ApplicationController
                                     :accessibility_webpage_url,
                                     :show_accessibility_metadata,
                                     :show_request_accessible_copy_button,
-                                    :accessible_copy_request_form_url
+                                    :accessible_copy_request_form_url,
+                                    :ereader_format_choice
                                    )
     end
 end

@@ -1,6 +1,12 @@
 <% if press_presenter.show_accessibility_metadata? %>
   <%
-    a11y_presenter = @presenter.epub? ? EpubAccessibilityMetadataPresenter.new(@presenter.solr_document) : PdfAccessibilityMetadataPresenter.new(@presenter.solr_document)
+    a11y_presenter = if @reader_format == 'pdf'
+                       PdfAccessibilityMetadataPresenter.new(@presenter.solr_document)
+                     elsif @presenter.epub?
+                       EpubAccessibilityMetadataPresenter.new(@presenter.solr_document)
+                     else
+                       PdfAccessibilityMetadataPresenter.new(@presenter.solr_document)
+                     end
   %>
   <div class="a11y-metadata">
     <p><b>Format:</b> <%= a11y_presenter.a11y_format %></p>

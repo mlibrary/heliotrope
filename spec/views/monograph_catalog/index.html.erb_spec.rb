@@ -274,6 +274,9 @@ RSpec.describe "monograph_catalog/index.html.erb" do
           allow_any_instance_of(EbookIntervalDownloadOperation).to receive(:allowed?).and_return(true)
           allow(monograph_presenter).to receive(:reader_ebook?).and_return(true)
           allow(monograph_presenter).to receive(:reader_ebook).and_return({ id: 'validnoid', 'visibility_ssi' => 'open' })
+          allow(monograph_presenter).to receive(:reader_ebook_id_for_format).and_return('validnoid')
+          allow(monograph_presenter).to receive(:featured_representative_docs).and_return([SolrDocument.new(id: 'validnoid', visibility_ssi: 'open')])
+          allow(monograph_presenter).to receive(:both_ebook_formats_public?).and_return(false)
           allow(monograph_presenter).to receive(:epub?).and_return(false)
           allow(monograph_presenter).to receive(:toc?).and_return(true)
           allow(monograph_presenter).to receive(:pdf_ebook_presenter).and_return(pdf_ebook_presenter)
@@ -301,12 +304,46 @@ RSpec.describe "monograph_catalog/index.html.erb" do
               is_expected.to render_template(partial: '_read_download_buy')
               is_expected.to_not render_template(partial: '_read_download_buy_registration_required')
               # Read button present and linked
-              is_expected.to have_link(t('monograph_catalog.index.read_book'), href: epub_path(monograph_presenter.reader_ebook))
+              is_expected.to have_link(t('monograph_catalog.index.read_book'), href: epub_path('validnoid'))
               # No "Registration required to download" Google Form
               is_expected.to_not match 'https://docs.google.com/forms/d/e/1FAKEQLSfakeFAKEfakeFAKEfakeFAKEfakeFAKEfakeFAKE/viewform'
               # ToC entries from _index_epub_toc.html.erb are present and linked
               is_expected.to match 'Foreword | Timmy B. Wright'
               is_expected.to match 'toc-link'
+            end
+
+            context 'both epub and pdf are public' do
+              let(:press_presenter) do
+                pp = PressPresenterNullObject.new
+                allow(pp).to receive(:ereader_format_choice?).and_return(true)
+                pp
+              end
+
+              before do
+                allow(monograph_presenter).to receive(:both_ebook_formats_public?).and_return(true)
+                assign(:press_presenter, press_presenter)
+                assign(:reader_format, 'pdf')
+                render
+              end
+
+              it 'shows choose format dropdown and links read button with selected format' do
+                is_expected.to have_css('#monograph-choose-format-group')
+                is_expected.to have_link('EPUB', href: monograph_catalog_path(monograph_presenter.id, reader_format: 'epub'))
+                is_expected.to have_link('PDF', href: monograph_catalog_path(monograph_presenter.id, reader_format: 'pdf'))
+                is_expected.to have_link(t('monograph_catalog.index.read_book'), href: epub_path('validnoid'))
+              end
+
+              context 'but ereader_format_choice is disabled on the press' do
+                let(:press_presenter) do
+                  pp = PressPresenterNullObject.new
+                  allow(pp).to receive(:ereader_format_choice?).and_return(false)
+                  pp
+                end
+
+                it 'does not show the choose format dropdown' do
+                  is_expected.to_not have_css('#monograph-choose-format-group')
+                end
+              end
             end
           end
 
@@ -401,6 +438,9 @@ RSpec.describe "monograph_catalog/index.html.erb" do
           allow_any_instance_of(EbookIntervalDownloadOperation).to receive(:allowed?).and_return(true)
           allow(monograph_presenter).to receive(:reader_ebook?).and_return(true)
           allow(monograph_presenter).to receive(:reader_ebook).and_return({ id: 'validnoid', 'visibility_ssi' => 'open' })
+          allow(monograph_presenter).to receive(:reader_ebook_id_for_format).and_return('validnoid')
+          allow(monograph_presenter).to receive(:featured_representative_docs).and_return([SolrDocument.new(id: 'validnoid', visibility_ssi: 'open')])
+          allow(monograph_presenter).to receive(:both_ebook_formats_public?).and_return(false)
           allow(monograph_presenter).to receive(:epub?).and_return(false)
           allow(monograph_presenter).to receive(:toc?).and_return(true)
           allow(monograph_presenter).to receive(:pdf_ebook_presenter).and_return(pdf_ebook_presenter)
