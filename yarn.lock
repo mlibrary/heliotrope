@@ -1966,14 +1966,14 @@ core-util-is@~1.0.0:
   resolved "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.3.tgz"
   integrity sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==
 
-"cozy-sun-bear-too@git+https://github.com/mlibrary/cozy-sun-bear.git#too":
+"cozy-sun-bear-too@git+https://github.com/mlibrary/cozy-sun-bear.git#bd8eac3c800c4be3cf14ed045560856f4633b2c5":
   version "1.0.0"
-  resolved "git+ssh://git@github.com/mlibrary/cozy-sun-bear.git"
+  resolved "git+ssh://git@github.com/mlibrary/cozy-sun-bear.git#bd8eac3c800c4be3cf14ed045560856f4633b2c5"
   integrity sha512-MyNYPXmJNhktRcMZA4TtqqV4XQSeEcRi8PmZaIigXYgOmBa0Nvdi6vfdY2yGkSE7BMNzeX98D6TpHQRTs4eYGw==
   dependencies:
     ajv "^8.0.0"
     core-js "^3.39.0"
-    epubjs "git+https://github.com/mlibrary/epub.js.git#cozy-sun-bear-2026"
+    epubjs "git+https://github.com/mlibrary/epub.js.git#90d69c4ed0b969a13902aa928d5a3bfdf826d9f0"
     event-emitter "^0.3.5"
     jszip "^3.10.0"
     lodash "^4.18.1"
@@ -2145,9 +2145,9 @@ envinfo@^7.7.3:
   resolved "https://registry.npmjs.org/envinfo/-/envinfo-7.21.0.tgz"
   integrity sha512-Lw7I8Zp5YKHFCXL7+Dz95g4CcbMEpgvqZNNq3AmlT5XAV6CgAAk6gyAMqn2zjw08K9BHfcNuKrMiCPLByGafow==
 
-"epubjs@git+https://github.com/mlibrary/epub.js.git#cozy-sun-bear-2026":
+"epubjs@git+https://github.com/mlibrary/epub.js.git#90d69c4ed0b969a13902aa928d5a3bfdf826d9f0":
   version "0.3.81"
-  resolved "git+ssh://git@github.com/mlibrary/epub.js.git"
+  resolved "git+ssh://git@github.com/mlibrary/epub.js.git#90d69c4ed0b969a13902aa928d5a3bfdf826d9f0"
   integrity sha512-A/g81GVOQDTHQtB/7V0dKVRRzuFfy7IGGqZogXSbcAHZQeer86ipYs3BNYSUmgaj8r+wr/R3iCxll9ao7K4W7A==
   dependencies:
     "@types/jszip" "^3.1.4"
