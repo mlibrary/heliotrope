@@ -1,0 +1,235 @@
+/*
+ * cozy-iframe-overrides.css
+ *
+ * heliotrope: Linked from web/viewer.html (see the <link> tag marked
+ * "heliotrope addition" in that file). Hides the stock pdf.js chrome that
+ * lives inside the iframe; cozy-sun-bear provides the real controls on the
+ * parent page. Re-apply the <link> tag whenever re-vendoring pdf.js.
+ *
+ * CSP check (pdf.js 6.0.227 viewer.html): the CSP meta tag reads
+ *   style-src 'self'; style-src-elem 'self' 'unsafe-inline'
+ * A same-origin linked stylesheet is explicitly allowed by 'self' in both
+ * style-src and style-src-elem, so this <link> requires no CSP changes.
+ *
+ * Selectors verified against 6.0.227 web/viewer.html:
+ *   - .toolbar / #toolbarContainer / #toolbarViewer — main toolbar bar
+ *   - #viewsManager — new in 6.0.227 (replaces #sidebarContainer)
+ *   - .sidebarResizer — class (not ID) in 6.0.227
+ *   - #editorModeButtons — editor mode buttons in toolbar right
+ *   - #findbar — floating find bar (inside toolbar)
+ *   - #loadingBar — pdf load progress bar
+ *   - #editorUndoBar — undo toast bar
+ *   - Editor panels: #editorSignature/#editorHighlight/#editorFreeText/#editorInk/#editorStamp
+ *   - #secondaryToolbar — overflow/secondary toolbar
+ *   - Functional dialogs (#passwordDialog, #documentPropertiesDialog, etc.) are NOT hidden
+ */
+
+/* ── Hide stock toolbar / toolbar chrome ── */
+.toolbar,
+#toolbarContainer,
+#toolbarViewer {
+  display: none !important;
+}
+
+/* ── Hide the views manager panel (replaces old #sidebarContainer in 6.x) ── */
+#viewsManager {
+  display: none !important;
+}
+
+/* ── Hide sidebar resizer handles ── */
+.sidebarResizer,
+#editorCommentsSidebarResizer {
+  display: none !important;
+}
+
+/* ── Hide the find/search bar (cozy-sun-bear has its own search widget) ── */
+#findbar {
+  display: none !important;
+}
+
+/* ── Hide editor mode buttons and per-editor toolbars ── */
+#editorModeButtons,
+#editorSignature,
+#editorHighlight,
+#editorFreeText,
+#editorInk,
+#editorStamp {
+  display: none !important;
+}
+
+/* ── Hide secondary overflow toolbar ── */
+#secondaryToolbar {
+  display: none !important;
+}
+
+/* ── Hide progress / undo bars ── */
+#loadingBar,
+#editorUndoBar {
+  display: none !important;
+}
+
+/* ── Reclaim the space occupied by the hidden toolbar ──
+ * In the stock viewer, #mainContainer has padding-top equal to the toolbar
+ * height. After hiding the toolbar we reset that so the page view fills
+ * the full iframe height. The exact value varies by pdf.js version; using 0
+ * is safe because there is no toolbar to avoid.
+ */
+#mainContainer {
+  padding-top: 0 !important;
+  top: 0 !important;
+}
+
+#viewerContainer {
+  top: 0 !important;
+  overflow: auto !important;
+  width: 100% !important;
+}
+
+/* ── Page centering inside the iframe ── */
+/* pdf.js 6.0.227: scroll-mode classes may not be applied early enough;
+ * force centering directly so pages appear centred in the iframe viewport. */
+.pdfViewer {
+  width: 100% !important;
+  text-align: center !important;
+  display: block !important;
+}
+
+.pdfViewer .page {
+  display: inline-block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* ── Text/annotation layers (inside iframe) ── */
+.textLayer {
+  position: absolute;
+  text-align: initial;
+  inset: 0;
+  overflow: hidden;
+  line-height: 1;
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  text-size-adjust: none;
+  forced-color-adjust: none;
+  transform-origin: 0 0;
+  z-index: 2;
+  caret-color: CanvasText;
+}
+
+.annotationLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  transform-origin: 0 0;
+  z-index: 3;
+}
+
+/* ── PDF page loading icon ── */
+.pdfViewer .page .loadingIcon {
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: url('images/loading-icon.gif') center no-repeat;
+}
+
+/* ── Canvas wrapper ── */
+.pdfViewer .canvasWrapper {
+  overflow: hidden;
+}
+
+/* ── Presentation mode: remove toolbar offset ── */
+.pdfPresentationMode #viewerContainer {
+  top: 0 !important;
+}
+
+/* NOTE: #passwordDialog and other functional dialogs are intentionally
+ * NOT hidden here — they can still be triggered programmatically even
+ * though their toolbar triggers are hidden. */
+
+/* ── Relocated from cozy-honey-bear-reader.css (dead in parent doc; now applied inside iframe) ── */
+
+/* Text layer — search highlight colours etc. */
+.textLayer .highlight {
+  margin: -1px;
+  padding: 1px;
+  background-color: rgb(180, 0, 170);
+  border-radius: 4px;
+}
+
+.textLayer .highlight.begin { border-radius: 4px 0 0 4px; }
+.textLayer .highlight.end   { border-radius: 0 4px 4px 0; }
+.textLayer .highlight.middle { border-radius: 0; }
+.textLayer .highlight.selected { background-color: rgb(0, 100, 0); }
+
+/* Annotation layer form elements */
+.annotationLayer section { position: absolute; }
+
+.annotationLayer .linkAnnotation > a,
+.annotationLayer .buttonWidgetAnnotation.pushButton > a {
+  position: absolute;
+  font-size: 1em;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.annotationLayer .linkAnnotation > a:hover,
+.annotationLayer .buttonWidgetAnnotation.pushButton > a:hover {
+  opacity: 0.2;
+  background: #ff0;
+  box-shadow: 0 2px 10px #ff0;
+}
+
+.annotationLayer .textAnnotation img { position: absolute; cursor: pointer; }
+
+.annotationLayer .textWidgetAnnotation input,
+.annotationLayer .textWidgetAnnotation textarea,
+.annotationLayer .choiceWidgetAnnotation select,
+.annotationLayer .buttonWidgetAnnotation.checkBox input,
+.annotationLayer .buttonWidgetAnnotation.radioButton input {
+  background-color: rgba(0, 54, 255, 0.13);
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  font-size: 9px;
+  height: 100%;
+  margin: 0;
+  padding: 0 3px;
+  vertical-align: top;
+  width: 100%;
+}
+
+/* Page layout */
+.pdfViewer .page {
+  margin: 1rem auto 1rem auto;
+  background-color: white;
+  box-shadow: 0 10px 13px -7px #000, 0 6px 15px 5px rgba(0,0,0,0);
+  box-sizing: content-box;
+  margin-bottom: 2rem;
+}
+
+.pdfViewer .page canvas { margin: 0; display: block; }
+.pdfViewer .page canvas[hidden] { display: none; }
+
+/* Scroll mode and spread modes */
+.pdfViewer.scrollHorizontal, .pdfViewer.scrollWrapped, .spread {
+  margin-left: 3.5px;
+  margin-right: 3.5px;
+  text-align: center;
+}
+
+.pdfViewer.scrollHorizontal, .spread { white-space: nowrap; }
+
+.spread .page,
+.pdfViewer.scrollHorizontal .page,
+.pdfViewer.scrollWrapped .page,
+.pdfViewer.scrollHorizontal .spread,
+.pdfViewer.scrollWrapped .spread {
+  display: inline-block;
+  vertical-align: middle;
+}
+
