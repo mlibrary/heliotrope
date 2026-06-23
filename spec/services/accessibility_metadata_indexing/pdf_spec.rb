@@ -6,13 +6,13 @@ RSpec.describe AccessibilityMetadataIndexer::Pdf do
   let(:file_set_id) { 'validnoid1' }
   let(:solr_doc) { {} }
   let(:press) { 'testpress' }
-  let(:pdf_filename) { 'native_tagged_bookmarks.pdf' }
+  let(:pdf_checksum) { 'native_tagged_bookmarks' }
 
   # Settings.pdf_ebook_accessibility_metadata.dir is configured in config/settings/test.yml
   # to point at spec/fixtures/accessibility_metadata_indexer/, so most tests need no Settings stub.
   before do
     allow(ActiveFedora::SolrService).to receive(:query).and_return(
-      [{ 'label_tesim' => [pdf_filename] }]
+      [{ 'original_checksum_ssim' => [pdf_checksum] }]
     )
   end
 
@@ -38,8 +38,8 @@ RSpec.describe AccessibilityMetadataIndexer::Pdf do
       end
     end
 
-    context 'when no matching JSON file exists for the PDF label' do
-      let(:pdf_filename) { 'no_such_file.pdf' }
+    context 'when no matching JSON file exists for the PDF checksum' do
+      let(:pdf_checksum) { 'no_such_checksum' }
 
       it 'indexes nothing and does not raise' do
         expect { index! }.not_to raise_error
@@ -50,7 +50,7 @@ RSpec.describe AccessibilityMetadataIndexer::Pdf do
     context 'with a native PDF (tagged, has bookmarks, all conformance checks fail)' do
       # Drawn from a real ummaa PDF; title, creator and ISBN obfuscated.
       # Fixture: spec/fixtures/accessibility_metadata_indexer/testpress/native_tagged_bookmarks.json
-      let(:pdf_filename) { 'native_tagged_bookmarks.pdf' }
+      let(:pdf_checksum) { 'native_tagged_bookmarks' }
 
       it 'indexes the document type' do
         index!
@@ -90,7 +90,7 @@ RSpec.describe AccessibilityMetadataIndexer::Pdf do
     context 'with a scanned OCR PDF (tagged, has bookmarks, passes PDF/UA-1 and WCAG 2.2 AA)' do
       # Drawn from a real heb PDF; title, creator and ISBN obfuscated.
       # Fixture: spec/fixtures/accessibility_metadata_indexer/testpress/scanned_ocr_pdfua_pass.json
-      let(:pdf_filename) { 'scanned_ocr_pdfua_pass.pdf' }
+      let(:pdf_checksum) { 'scanned_ocr_pdfua_pass' }
 
       it 'indexes the document type' do
         index!
@@ -129,7 +129,7 @@ RSpec.describe AccessibilityMetadataIndexer::Pdf do
 
     context 'with a scanned unreadable PDF (not tagged, no bookmarks, all conformance checks fail)' do
       # Fixture: spec/fixtures/accessibility_metadata_indexer/testpress/scanned_unreadable_no_features.json
-      let(:pdf_filename) { 'scanned_unreadable_no_features.pdf' }
+      let(:pdf_checksum) { 'scanned_unreadable_no_features' }
 
       it 'indexes the document type' do
         index!
