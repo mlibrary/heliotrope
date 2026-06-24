@@ -1,0 +1,1126 @@
+<% provide :page_title, @title || "Title" %>
+<%# https://github.com/mlibrary/heliotrope/issues/1228 %>
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+  <%# Altmetric badge JS %>
+  <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+  <% if @parent_presenter.doi.present? %>
+    <%# Dimensions badge JS %>
+    <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
+  <% end %>
+
+  <meta name="viewport" content="width=device-width">
+  <meta name="google" content="notranslate">
+
+  <%# pdf.mjs is NOT loaded in the parent document — the iframe loads its own copy.
+      A second parent-side pdf.mjs was removed to prevent GlobalWorkerOptions conflicts.
+      Any pdf.js APIs needed are obtained via iframe.contentWindow.PDFViewerApplication. %>
+
+  <% if defined? @subdomain %>
+    <% if @parent_presenter.use_hypothesis? %>
+      <!-- hypothes.is -->
+      <script type="text/javascript">
+        window.hypothesisConfig = function () {
+          return {
+            openSidebar: false,
+            theme: 'clean',
+            enableMultiFrameSupport: true,
+            onLayoutChange: function(state) {
+              var $frame = $('.annotator-frame');
+              var $reader = $("#reader");
+            },
+            enableExperimentalNewNoteButton: true
+          };
+        };
+      </script>
+      <script src="https://cdn.hypothes.is/hypothesis"></script>
+    <% end %>
+  <% end %>
+
+<% end %>
+
+<% provide :body do %>
+  <% if defined? @presenter.file_set_coins_title %>
+    <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
+  <% end %>
+
+  <%= render partial: "survey_oa" %>
+
+  <div class="skip"></div>
+  <div id="pdfLoadingProgressBar" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+  <%= tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
+    <div id="reader">
+      <div id="mainContainer"></div>
+    </div>
+  <% end %>
+
+  <script type="module">
+    // pdf.js 6.0.227 iframe-based viewer
+
+    <% if @parent_presenter.use_hypothesis? %>
+      // Create custom annotator button that is aware of its state
+      var AnnotationTool = cozy.Control.Widget.Toggle.extend({
+        defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
+
+        initialize: function(options) {
+          cozy.Control.Widget.Toggle.prototype.initialize.apply(this, arguments);
+
+          this.options.states = [{
+            stateName: 'close-annotator',
+            onClick: this.openAnnotator.bind(this)
+          },
+          {
+            stateName: 'open-annotator',
+            onClick: this.closeAnnotator.bind(this)
+          }];
+        },
+
+        openAnnotator: function(self, reader) {
+          this.options.$panel.removeClass("annotator-collapsed");
+          self.state('open-annotator');
+        },
+
+        closeAnnotator: function(self, reader) {
+          this.options.$panel.addClass("annotator-collapsed");
+          self.state('close-annotator');
+        }
+      })
+    <% end %>
+
+    // PDF Scale preferences
+    cozy.Control.Preferences.fieldset.PDFScale = cozy.Control.Preferences.fieldset.Scale.extend({
+      options: {},
+
+      intialize: function(control, options) {
+        cozy.Control.Preferences.fieldset.Scale.prototype.onAdd.apply(this, arguments);
+      },
+
+      initializeForm: function(form) {
+        if ( ! this._inputs ) {
+          this._inputs = form.querySelector('#x' + this._id + '-list');
+          this._actionReset = form.querySelector('#x' + this._id + '-reset');
+          this._actionReset.addEventListener('click', function(event) {
+            event.preventDefault();
+            this._inputs.querySelector('input[value="auto"]').checked = true;
+            this._updatePreview();
+          }.bind(this));
+        }
+
+        this._preview = form.querySelector(`#x${this._id}-preview > div`);
+
+        var currentScale = this._control._reader.options.scale || 'auto';
+        if (this._inputs.querySelector('input[value="' + currentScale + '"]')) {
+          this._inputs.querySelector('input[value="' + currentScale + '"]').checked = true;
+        }
+        this._current.scale = currentScale;
+
+        this._inputs.addEventListener('change', function(event) {
+          var target = event.target;
+          if ( target.tagName == 'INPUT' ) {
+            this._updatePreview();
+          }
+        }.bind(this));
+
+        this._updatePreview();
+      },
+
+      updateForm: function(form, options, saveable) {
+        var current = this._inputs.querySelector('input:checked') ? this._inputs.querySelector('input:checked').value : 'auto';
+        options.scale = saveable.scale = current;
+      },
+
+      _updatePreview: function() {
+        var current = this._inputs.querySelector('input:checked') ? this._inputs.querySelector('input:checked').value : 'auto';
+        var scale = ( parseFloat(current, 10) );
+        if ( isNaN(scale) ) {
+          scale = '1.0';
+        }
+        this._preview.parentNode.dataset.scale = current;
+        this._preview.style.transform = "scale(" + scale + ")";
+      },
+
+      template: function() {
+        var html = '<fieldset class="cozy-fieldset-pdf-scale">' +
+          '<legend>Zoom In/Out</legend>' +
+          '<style>' +
+            '.cozy-fieldset-pdf-scale label { margin: 0.5 0 !important; }' +
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="auto"] { height: auto; }' +
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-fit"] { height: auto; width: 60%; }' +
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-width"] { width: 60%; }' +
+            '.cozy-fieldset-pdf-scale .preview--text_size[data-scale="page-actual"] > div { width: 150%; transform: scale(1.5) !important; }' +
+          '</style>' +
+          '<div class="preview--text_size" id="x${this._id}-preview">' +
+            '<div style="transform-origin: top left">' +
+              '"Yes, that\'s it," said the Hatter with a sigh: "it\'s always tea-time, and we\'ve no time to wash the things between whiles."' +
+            '</div>' +
+          '</div>' +
+          '<ul id="x${this._id}-list" style="margin-top: 1rem">' +
+            '<li><label><input type="radio" name="scaleSelect" value="auto" /> Automatic Zoom</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="page-actual" /> Actual Size</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="page-fit" /> Page Fit</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="page-width" /> Page Width</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="0.5" /> 50%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="0.75" /> 75%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="1" /> 100%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="1.25" /> 125%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="1.5" /> 150%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="2" /> 200%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="3" /> 300%</label></li>' +
+            '<li><label><input type="radio" name="scaleSelect" value="4" /> 400%</label></li>' +
+          '</ul>' +
+          '<p style="margin-top: 1.5rem">' +
+            '<button id="x${this._id}-reset" class="reset button--inline" style="margin-left: 8px">Reset</button>' +
+          '</p>' +
+        '</fieldset>';
+        return html.replace(/\$\{this._id\}/g, this._id);
+      }
+    });
+
+    cozy.Control.Preferences.prototype._createPanel = function() {
+      var self = this;
+      if ( this._modal._container.querySelector('form') ) { return; }
+
+      var template = '';
+      var possible_fieldsets = [];
+      possible_fieldsets.push('PDFScale');
+      this._fieldsets = [];
+      possible_fieldsets.forEach(function(cls) {
+        var fieldset = new cozy.Control.Preferences.fieldset[cls](this);
+        template += fieldset.template();
+        this._fieldsets.push(fieldset);
+      }.bind(this));
+
+      template = '<form>' + template + '</form>';
+
+      this._modal._container.querySelector('main').innerHTML = template;
+      this._form = this._modal._container.querySelector('form');
+    };
+
+    var PDFPreferences = cozy.Control.Preferences.extend({
+      EOT: true
+    });
+
+    // PDF Navigator
+    var PDFNavigator = cozy.Control.Navigator.extend({
+      EOT: true
+    });
+
+    // PDF Search
+    var PDFSearch = cozy.Control.Search.extend({
+
+      onAdd: function(reader) {
+        var self = this;
+        this._reader.on('ready', function() {
+          this._reader.PDFViewerApplication.eventBus.on('updatefindmatchescount', this._waitForResults.bind(this));
+          this._reader.PDFViewerApplication.eventBus.on('updatefindcontrolstate', this._waitForQuery.bind(this));
+        }.bind(this));
+
+        return cozy.Control.Search.prototype.onAdd.apply(this, arguments);
+      },
+
+      submitQuery: function() {
+        // pdf.js 6.0.227 viewer.mjs: phraseSearch was removed; matchDiacritics added.
+        // FindState enum: FOUND=0, NOT_FOUND=1, WRAPPED=2, PENDING=3 (same as 5.x).
+        this._doWaitForResults = false;
+        this._reader.PDFViewerApplication.eventBus.dispatch('find', {
+          source: this._reader,
+          type: 'find',
+          query: this.searchString,
+          caseSensitive: false,
+          matchDiacritics: false,
+          entireWord: false,
+          highlightAll: true,
+          findPrevious: null
+        })
+      },
+
+      _waitForQuery: function(argv) {
+        if ( argv.state == 0 || argv.state == 2 ) {
+          this._doWaitForResults = true;
+        } else if ( argv.state == 1 ) {
+          this._data = { highlight_off: "yes", search_results: [] };
+          this._buildResults();
+        }
+      },
+
+      _waitForResults: function(argv) {
+        if ( ! this._doWaitForResults ) { return; }
+        if ( this.searchTimer ) { clearTimeout(this.searchTimer); }
+        this.searchTimer = setTimeout(this._gatherResults.bind(this), 500);
+      },
+
+      _gatherResults: function() {
+        var self = this;
+
+        this._data = { search_results: [], highlight_off: 'yes' };
+        var pdfViewer = this._reader.pdfViewer;
+        var findController = this._reader.PDFViewerApplication.findController;
+
+        // pdf.js 6.0.227 viewer.mjs: findController.pageMatches is a public getter (line ~12393).
+        // _pageContents remains a regular underscore-prefixed field (not ES #private), still accessible.
+        var allPageMatches = findController.pageMatches || [];
+        for(var i = 0; i < pdfViewer.pagesCount; i++) {
+          var matches = allPageMatches[i];
+          if ( ! matches ) { continue ; }
+          var text = (findController._pageContents && findController._pageContents[i]) || '';
+          matches.forEach(function(match, index) {
+            var snippet = self._getMatch(text, self.searchString, match);
+            self._data.search_results.push({ cfi: 'page=' + ( i + 1 ), matchIdx: match, snippet: snippet });
+          })
+        }
+
+        this._buildResults();
+      },
+
+      _getMatch: function(string, term, index) {
+        if(index >= 0) {
+          var _ws = [" ","\t"];
+          var whitespace = 0;
+          var rightLimit = 0;
+          var leftLimit = 0;
+          var whitespaceLimit = 8;
+
+          for(rightLimit = index + term.length; whitespace < whitespaceLimit; rightLimit++) {
+            if(rightLimit >= string.length){break}
+            if(_ws.indexOf(string.charAt(rightLimit)) >= 0){whitespace += 1}
+          }
+
+          whitespace = 0;
+          for(leftLimit = index; whitespace < whitespaceLimit; leftLimit--) {
+            if(leftLimit < 0){break}
+            if(_ws.indexOf(string.charAt(leftLimit)) >= 0){whitespace += 1}
+          }
+
+          var snippet = string.substr(leftLimit + 1, rightLimit - leftLimit - 1).replace(/([\.\;\,])(\w)/g, '$1 $2');
+          snippet = snippet.replace(/([a-z])([A-Z])/g, '$1 $2');
+          snippet = snippet.replace(/([a-z])(\d+)([a-z])/gi, '$1 $2 $3');
+          snippet = snippet.replace(/[^ -~]+/g, "");
+          return snippet;
+        }
+        return
+      },
+
+      EOT: true
+    });
+
+    // PDF Contents/Sidebar
+    var PDFContents = cozy.Control.Contents.extend({
+      _bindEvents: function() {
+        var self = this;
+
+        this._control.setAttribute('id', 'sidebarToggle');
+
+        // pdf.js 6.0.227 viewer.html: sidebar is now inside #viewsManager; outline is #outlinesView,
+        // thumbnails are #thumbnailsView (both inside #viewsManagerContent). The parent modal
+        // keeps its own local IDs (#outlineView, #thumbnailView) — _copySidebarFromIframe maps between them.
+        <% if @parent_presenter.pdf_ebook_presenter.intervals? %>
+          var template =
+            '<div id="toolbarSidebar">' +
+              '<div class="splitToolbarButton toggled">' +
+                '<button id="viewOutline" class="toolbarButton toggled" title="Show Table of Contents (double-click to expand/collapse all items)" tabindex="-1">Table of Contents</button>' +
+                '<button id="viewThumbnail" class="toolbarButton" title="Show Thumbnails" tabindex="-1">Thumbnails</button>' +
+                '<button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="-1">Attachments</button>' +
+              '</div>' +
+            '</div>' +
+            '<div id="sidebarContent">' +
+              '<div id="outlineView"></div>' +
+              '<div id="thumbnailView" class="hidden"></div>' +
+              '<div id="attachmentsView" class="hidden"></div>' +
+            '</div>';
+        <% else %>
+          var template =
+            '<div id="toolbarSidebar">' +
+              '<div class="splitToolbarButton toggled hidden">' +
+                '<button id="viewOutline" class="toolbarButton" title="Show Table of Contents (double-click to expand/collapse all items)" tabindex="-1">Table of Contents</button>' +
+                '<button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="-1">Thumbnails</button>' +
+                '<button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="-1">Attachments</button>' +
+              '</div>' +
+            '</div>' +
+            '<div id="sidebarContent">' +
+              '<div id="outlineView" class="hidden"></div>' +
+              '<div id="thumbnailView"></div>' +
+              '<div id="attachmentsView" class="hidden"></div>' +
+            '</div>';
+        <% end %>
+
+        this._modal = this._reader.modal({
+          template: template,
+          title: 'Contents',
+          region: 'left',
+          className: 'cozy-modal-contents',
+          callbacks: {
+            onShow: function() {
+              self._copySidebarFromIframe();
+            },
+            onClose: function() {
+              // Clean up if needed
+            }
+          }
+        });
+
+        this._modal._container.querySelector('.modal__content').setAttribute('id', 'sidebarContainer');
+
+        this._reader.on('updateContents', function(data) {
+          this._pdfSidebar = this._reader.PDFViewerApplication.pdfSidebar;
+
+          $(this._control).on('click', function(event) {
+            self._reader.tracking.action('contents/open');
+            self._modal.activate();
+          });
+        }.bind(this));
+      },
+
+      _copySidebarFromIframe: function() {
+        var self = this;
+
+        if (!this._reader.PDFViewerApplication) {
+          return;
+        }
+
+        try {
+          var iframeDoc = this._reader._iframe.contentDocument || this._reader._iframe.contentWindow.document;
+
+          // Copy relevant CSS from iframe to modal (one time only)
+          if (!this._stylesCopied) {
+            this._copySidebarStyles(iframeDoc);
+            this._stylesCopied = true;
+          }
+
+          // pdf.js 6.0.227 viewer.html: outline is #outlinesView (with 's'), thumbnails are #thumbnailsView (with 's')
+          // inside #viewsManagerContent. Parent modal keeps local IDs #outlineView / #thumbnailView.
+          var iframeOutlineView = iframeDoc.querySelector('#outlinesView') || iframeDoc.querySelector('#outlineView');
+          var iframeThumbnailView = iframeDoc.querySelector('#thumbnailsView') || iframeDoc.querySelector('#thumbnailView');
+
+          // Get modal's containers
+          var modalOutlineView = this._modal._container.querySelector('#outlineView');
+          var modalThumbnailView = this._modal._container.querySelector('#thumbnailView');
+
+          if (iframeOutlineView && modalOutlineView) {
+            modalOutlineView.innerHTML = iframeOutlineView.innerHTML;
+            this._wireOutlineClicks(modalOutlineView);
+          }
+
+          if (iframeThumbnailView && modalThumbnailView) {
+            modalThumbnailView.innerHTML = iframeThumbnailView.innerHTML;
+            this._wireThumbnailClicks(modalThumbnailView);
+          }
+
+          this._setupViewButtons();
+
+        } catch (e) {
+          console.error("PDF reader: Error copying sidebar:", e);
+        }
+      },
+
+      _copySidebarStyles: function(iframeDoc) {
+        try {
+          // Find viewer.css in the iframe and copy rules relevant to sidebar content.
+          // pdf.js 6.0.227: selectors use #outlinesView and #thumbnailsView (with 's').
+          var stylesheets = iframeDoc.styleSheets;
+          var viewerCSS = '';
+
+          for (var i = 0; i < stylesheets.length; i++) {
+            var sheet = stylesheets[i];
+            if (sheet.href && sheet.href.indexOf('viewer.css') > -1) {
+              try {
+                var rules = sheet.cssRules || sheet.rules;
+                for (var j = 0; j < rules.length; j++) {
+                  var rule = rules[j];
+                  var text = rule.cssText;
+
+                  // Match both 5.x (#outlineView) and 6.x (#outlinesView) selector names
+                  if (text && (
+                    text.indexOf('.treeItem') > -1 ||
+                    text.indexOf('.thumbnail') > -1 ||
+                    text.indexOf('#outlineView') > -1 ||
+                    text.indexOf('#outlinesView') > -1 ||
+                    text.indexOf('#thumbnailView') > -1 ||
+                    text.indexOf('#thumbnailsView') > -1 ||
+                    text.indexOf('.treeWithDeepNesting') > -1 ||
+                    text.indexOf('#sidebarContent') > -1 ||
+                    text.indexOf('#viewsManagerContent') > -1
+                  )) {
+                    viewerCSS += text + '\n';
+                  }
+                }
+              } catch (e) {
+                // Cross-origin or access issues, skip
+              }
+            }
+          }
+
+          if (viewerCSS) {
+            var style = document.createElement('style');
+            style.id = 'pdf-sidebar-styles';
+            style.textContent = viewerCSS;
+            this._modal._container.appendChild(style);
+          } else {
+            this._addFallbackStyles();
+          }
+        } catch (e) {
+          this._addFallbackStyles();
+        }
+      },
+
+      _addFallbackStyles: function() {
+        // Basic styles for sidebar content
+        var style = document.createElement('style');
+        style.id = 'pdf-sidebar-fallback-styles';
+        style.textContent = `
+          #sidebarContent {
+            overflow: auto;
+            height: 100%;
+            flex-grow: 1;
+            margin-top: 1rem;
+          }
+
+          .treeWithDeepNesting {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+          }
+
+          .treeItem {
+            list-style: none;
+          }
+
+          #outlineView .treeItem a {
+            display: block;
+            padding: 1em 1em 1em 1.2em;
+            text-decoration: none;
+            color: inherit;
+          }
+
+          .thumbnail {
+            cursor: pointer;
+            display: inline-block;
+            margin: 4px;
+          }
+
+          #outlineView {
+            padding: 4px 4px 0;
+          }
+        `;
+        this._modal._container.appendChild(style);
+      },
+
+      _wireOutlineClicks: function(outlineView) {
+        var self = this;
+
+        // Find all outline links
+        var links = outlineView.querySelectorAll('a');
+        links.forEach(function(link) {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Get the original destination from the link
+            var dest = link.getAttribute('href');
+            if (!dest || !dest.startsWith('#')) {
+              return;
+            }
+
+            // Remove the # prefix
+            var destName = decodeURIComponent(dest.substring(1));
+
+
+            // Try to navigate using PDF.js's link service inside the iframe
+            try {
+              var pdfLinkService = self._reader.PDFViewerApplication.pdfLinkService;
+
+              // Check if it's a simple page reference first
+              var pageMatch = destName.match(/^page[=\s]+(\d+)$/i);
+              if (pageMatch) {
+                var pageNum = parseInt(pageMatch[1], 10);
+                self._reader.gotoPage(pageNum);
+                self._modal.closeModal();
+                return;
+              }
+
+              // Check if it's a JSON-encoded destination array (e.g., [{"num":123,"gen":0},{"name":"XYZ"},...])
+              var destToUse = destName;
+              if (destName.startsWith('[') || destName.startsWith('{')) {
+                try {
+                  destToUse = JSON.parse(destName);
+                } catch (parseErr) {
+                  // Keep as string, will try as named destination
+                }
+              }
+
+              // Navigate using PDF.js link service
+              if (pdfLinkService) {
+                pdfLinkService.goToDestination(destToUse).then(function() {
+                  self._modal.closeModal();
+                }).catch(function(err) {
+                  // Try alternative: click the original link in the iframe
+                  self._clickIframeOutlineItem(link);
+                });
+              } else {
+              }
+            } catch (err) {
+            }
+          });
+        });
+      },
+
+      _clickIframeOutlineItem: function(clonedLink) {
+        // Fallback: find and click the corresponding link inside the iframe
+        var self = this;
+        try {
+          var href = clonedLink.getAttribute('href');
+          if (!href) return;
+
+          var iframeDoc = this._reader._iframe.contentDocument;
+          var originalLink = iframeDoc.querySelector('a[href="' + href + '"]');
+
+          if (originalLink) {
+            originalLink.click();
+
+            // Close modal after a brief delay to allow navigation
+            setTimeout(function() {
+              self._modal.closeModal();
+            }, 300);
+          }
+        } catch (err) {
+        }
+      },
+
+      _wireThumbnailClicks: function(thumbnailView) {
+        var self = this;
+
+        // Find all thumbnail elements
+        var thumbnails = thumbnailView.querySelectorAll('.thumbnail');
+        thumbnails.forEach(function(thumbnail) {
+          thumbnail.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Get page number from data attribute
+            var pageNum = parseInt(thumbnail.getAttribute('data-page-number'), 10);
+            if (pageNum) {
+              self._reader.gotoPage(pageNum);
+              self._modal.closeModal();
+            }
+          });
+        });
+      },
+
+      _setupViewButtons: function() {
+        var self = this;
+        var modal = this._modal._container;
+        var sidebarContainer = modal.querySelector('#sidebarContainer');
+        var toolbarSidebar = sidebarContainer ? sidebarContainer.querySelector('#toolbarSidebar') : modal.querySelector('#toolbarSidebar');
+
+        if (!toolbarSidebar) {
+          return;
+        }
+
+        var outlineBtn = toolbarSidebar.querySelector('#viewOutline');
+        var thumbnailBtn = toolbarSidebar.querySelector('#viewThumbnail');
+        var attachmentsBtn = toolbarSidebar.querySelector('#viewAttachments');
+
+        var outlineView = modal.querySelector('#outlineView');
+        var thumbnailView = modal.querySelector('#thumbnailView');
+        var attachmentsView = modal.querySelector('#attachmentsView');
+
+        if (outlineBtn) {
+          outlineBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (outlineView) outlineView.classList.remove('hidden');
+            if (thumbnailView) thumbnailView.classList.add('hidden');
+            if (attachmentsView) attachmentsView.classList.add('hidden');
+            outlineBtn.classList.add('toggled');
+            if (thumbnailBtn) thumbnailBtn.classList.remove('toggled');
+            if (attachmentsBtn) attachmentsBtn.classList.remove('toggled');
+          });
+        }
+
+        if (thumbnailBtn) {
+          thumbnailBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (outlineView) outlineView.classList.add('hidden');
+            if (thumbnailView) thumbnailView.classList.remove('hidden');
+            if (attachmentsView) attachmentsView.classList.add('hidden');
+            if (outlineBtn) outlineBtn.classList.remove('toggled');
+            thumbnailBtn.classList.add('toggled');
+            if (attachmentsBtn) attachmentsBtn.classList.remove('toggled');
+          });
+        }
+
+        if (attachmentsBtn) {
+          attachmentsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (outlineView) outlineView.classList.add('hidden');
+            if (thumbnailView) thumbnailView.classList.add('hidden');
+            if (attachmentsView) attachmentsView.classList.remove('hidden');
+            if (outlineBtn) outlineBtn.classList.remove('toggled');
+            if (thumbnailBtn) thumbnailBtn.classList.remove('toggled');
+            attachmentsBtn.classList.add('toggled');
+          });
+        }
+      }
+    });
+
+    // Main PDF Reader - Iframe-based
+    var PDFIframeReader = cozy.Reader.extend({
+
+      open: function(target, cb) {
+        var self = this;
+        if ( cb == null ) { cb = function() {}; }
+
+        // Create and insert the iframe into the book container
+        this._createIframeContainer();
+
+        this._iframe = document.getElementById('pdf-viewer-iframe');
+        this._pdfWindow = null;
+
+        // Build viewer URL with PDF file
+        const pdfUrl = '/epubs/<%= @presenter.id %>/file?<%= @presenter.browser_cache_breaker %>';
+        const viewerUrl = new URL('/mozilla-pdf-viewer/web/viewer.html', window.location.origin);
+        viewerUrl.searchParams.set('file', pdfUrl);
+
+        // Handle initial page from hash
+        const initialHash = window.location.hash;
+        if (initialHash) {
+          viewerUrl.hash = initialHash.substring(1);
+        }
+
+        this._iframe.src = viewerUrl.toString();
+
+        this.annotations = {
+          reset: function() { /* NOP */ }
+        };
+
+        // Turn off default updateLocation handler
+        this.off('updateLocation');
+
+        // Setup location tracking
+        this.on('updateLocation', function(location) {
+          var tmp_href = window.location.href.split('#');
+          var tracking = { cfi: location.start, href: location.href, action: self.tracking.action()};
+
+          var pageMatch = location.start.match(/page=(\d+)/);
+          if (pageMatch) {
+            var newHash = 'page=' + pageMatch[1];
+            tmp_href[1] = newHash;
+
+            var currentHash = window.location.hash.substring(1);
+            if (currentHash !== newHash) {
+              var context = [{ cfi: location.start }, '', tmp_href.join('#')];
+              if ( tracking.action && tracking.action.match(/\/go\/link/) ) {
+                history.pushState.apply(history, context);
+              } else {
+                history.replaceState.apply(history, context);
+              }
+            }
+          }
+
+          if ( location.percentage ) {
+            var p = Math.ceil(location.percentage * 100);
+            document.title = `${p}% - ${self._original_document_title}`;
+          }
+
+          self.fire('trackPageview', tracking)
+        });
+
+        // Wait for iframe to load
+        this._iframe.addEventListener('load', function() {
+          self._pdfWindow = self._iframe.contentWindow;
+          self._waitForPDFInit(cb);
+        });
+      },
+
+      _createIframeContainer: function() {
+        // Find the book content container created by cozy-sun-bear
+        var bookContainer = document.querySelector('.cozy-module-book-epub');
+        if (!bookContainer) {
+          // Fallback: create it if it doesn't exist yet
+          bookContainer = document.createElement('div');
+          bookContainer.className = 'cozy-module-book-epub';
+          var mainContainer = document.getElementById('mainContainer');
+          if (mainContainer) {
+            mainContainer.appendChild(bookContainer);
+          }
+        }
+
+        // Create iframe structure inside the book container
+        bookContainer.innerHTML =
+          '<div id="viewerContainer" style="width: 100%; height: 100%; position: relative;">' +
+            '<iframe ' +
+              'id="pdf-viewer-iframe" ' +
+              'src="" ' +
+              'style="width: 100%; height: 100%; border: none; display: block;" ' +
+              'title="PDF Viewer" ' +
+              'allowfullscreen>' +
+            '</iframe>' +
+          '</div>';
+      },
+
+      _waitForPDFInit: function(cb) {
+        var self = this;
+
+        // pdf.js 6.0.227 viewer.mjs: PDFViewerApplication.initializedPromise is a public getter
+        // (returns _initializedCapability.promise). Await it then open; fall back to polling if
+        // the promise is unavailable so we don't regress on unexpected builds.
+        var pdfApp = self._pdfWindow.PDFViewerApplication;
+
+        function _setup(pdfApp) {
+          self.PDFViewerApplication = pdfApp;
+          self.pdfViewer = pdfApp.pdfViewer;
+
+          // pdf.js 6.0.227 viewer.mjs: pdfLinkService._ignoreDestinationZoom is still a writable
+          // underscore-prefixed property (set in PDFLinkService constructor, line ~6450). Setting it
+          // to true suppresses zoom-on-destination-navigate (ToC clicks, bookmarks).
+          if (pdfApp.pdfLinkService && '_ignoreDestinationZoom' in pdfApp.pdfLinkService) {
+            pdfApp.pdfLinkService._ignoreDestinationZoom = true;
+          }
+
+          self._setupHistoryTracking();
+          self._setupPageChangeEvents();
+          self._loadMetadata(cb);
+        }
+
+        if (pdfApp && typeof pdfApp.initializedPromise !== 'undefined') {
+          // Preferred: await the public initializedPromise, then wait for a document.
+          var timeoutId = setTimeout(function() {
+            console.error("PDF reader: initializedPromise timed out; aborting init");
+          }, 30000);
+
+          pdfApp.initializedPromise.then(function() {
+            clearTimeout(timeoutId);
+            // initializedPromise resolves after preferences are loaded but before open().
+            // Poll briefly for pdfDocument (open() is called internally by the viewer URL params).
+            var docAttempts = 0;
+            var docInterval = setInterval(function() {
+              docAttempts++;
+              if (pdfApp.pdfDocument) {
+                clearInterval(docInterval);
+                _setup(pdfApp);
+              } else if (docAttempts >= 150) {
+                clearInterval(docInterval);
+                console.error("PDF reader: document did not load after initializedPromise resolved");
+              }
+            }, 100);
+          }).catch(function(err) {
+            clearTimeout(timeoutId);
+            console.error("PDF reader: initializedPromise rejected:", err);
+          });
+
+        } else {
+          // Fallback: poll PDFViewerApplication.pdfDocument (same as 5.x behavior)
+          var attempts = 0;
+          var maxAttempts = 100;
+          var checkInterval = setInterval(function() {
+            attempts++;
+            try {
+              var app = self._pdfWindow.PDFViewerApplication;
+              if (app && app.pdfDocument) {
+                clearInterval(checkInterval);
+                _setup(app);
+              } else if (attempts >= maxAttempts) {
+                clearInterval(checkInterval);
+                console.error("PDF reader: PDF failed to initialize");
+              }
+            } catch (e) {
+              // Not ready yet, keep trying
+            }
+          }, 100);
+        }
+      },
+
+      _setupHistoryTracking: function() {
+        var self = this;
+        var pdfHistory = this.PDFViewerApplication.pdfLinkService.pdfHistory;
+
+        if (!pdfHistory) {
+          // pdfHistory can be null when the viewer is embedded — degrade gracefully.
+          return;
+        }
+
+        // Wrap push() to track ToC/bookmark clicks (best-effort; sealed/renamed degrades gracefully)
+        if (typeof pdfHistory.push === 'function') {
+          var originalPush = pdfHistory.push.bind(pdfHistory);
+          pdfHistory.push = function(params) {
+            self.tracking.action('contents/go/link');
+            return originalPush(params);
+          };
+        }
+
+        // Wrap pushPage() to track thumbnail clicks
+        if (typeof pdfHistory.pushPage === 'function') {
+          var originalPushPage = pdfHistory.pushPage.bind(pdfHistory);
+          pdfHistory.pushPage = function(pageNumber) {
+            self.tracking.action('contents/go/link');
+            return originalPushPage(pageNumber);
+          };
+        }
+      },
+
+      _setupPageChangeEvents: function() {
+        var self = this;
+        var pdfInitialized = false;
+
+        // Wait a moment for initial page to settle
+        setTimeout(function() {
+          pdfInitialized = true;
+        }, 500);
+
+        this.PDFViewerApplication.eventBus.on('pagechanging', function(evt) {
+          var pageNumber = evt.pageNumber;
+
+          if (pdfInitialized) {
+            self.fire('relocated', { start: pageNumber });
+            self.fire('updateLocation', {
+              start: 'epubcfi(page=' + pageNumber + ')',
+              href: self.options.href + '#page=' + pageNumber,
+              percentage: ( pageNumber / self.PDFViewerApplication.pagesCount )
+            });
+          }
+        });
+
+        // Handle manual hash changes
+        window.addEventListener('hashchange', function(e) {
+          var newHash = window.location.hash;
+          if (newHash && newHash.indexOf('#page=') === 0) {
+            var pageMatch = newHash.match(/#page=(\d+)/);
+            if (pageMatch) {
+              var targetPage = parseInt(pageMatch[1], 10);
+              if (self.pdfViewer && self.pdfViewer.currentPageNumber !== targetPage) {
+                self.pdfViewer.currentPageNumber = targetPage;
+              }
+            }
+          }
+        });
+      },
+
+      _loadMetadata: function(cb) {
+        var self = this;
+
+        this.PDFViewerApplication.pdfDocument.getMetadata().then(function(data) {
+          var metadata = {};
+          metadata.layout = 'pdf';
+
+          if ( data.metadata ) {
+            if ( data.metadata.has("dc:title") ) {
+              metadata.title = data.metadata.get("dc:title");
+            }
+            if ( data.metadata.has("dc:author") ) {
+              metadata.author = data.metadata.get("dc:author");
+            }
+            metadata.noid = '<%= @noid %>';
+            metadata.press_subdomain = '<%= @subdomain %>';
+          }
+          self.metadata = metadata;
+
+          self.fire("updateTitle", self.metadata);
+          self.fire('updateContents', {});
+
+          self.locations = { total: self.PDFViewerApplication.pagesCount };
+          self.locations.locationFromCfi = function(pageNum) {
+            return pageNum;
+          };
+          self.locations.percentageFromCfi = function(pageNum) {
+            return ( pageNum / self.locations.total );
+          };
+          self.locations.cfiFromPercentage = function(percent) {
+            var pageNum = Math.round(self.locations.total * percent);
+            if ( pageNum < 1 ) { pageNum = 1; }
+            if ( pageNum > this.total ) { pageNum = this.total; }
+            return { start: pageNum };
+          };
+
+          self.fire('updateLocations',  self.locations);
+          self.fire('relocated', self.currentLocation());
+          self._disableBookLoader();
+
+          self.fire("ready");
+
+
+          cb();
+        });
+      },
+
+      currentLocation: function() {
+        return { start: { cfi: this.PDFViewerApplication.page } };
+      },
+
+      _scroll: function(delta) {
+        if (!this.PDFViewerApplication) return;
+
+        switch(delta) {
+          case 'PREV':
+            this.PDFViewerApplication.page--;
+            break;
+          case 'NEXT':
+            this.PDFViewerApplication.page++;
+            break;
+          case 'HOME':
+            this.PDFViewerApplication.page = 1;
+            break;
+          case 'END':
+            this.PDFViewerApplication.page = this.PDFViewerApplication.pagesCount;
+            break;
+        }
+      },
+
+      gotoPage: function(value) {
+        var pageNum;
+        if ( typeof(value) == "string" ) {
+          if ( value.indexOf('epubcfi') > -1 ) {
+            pageNum = value.replace('epubcfi(page=','').replace(')', '');
+          } else {
+            pageNum = value.replace('page=','');
+          }
+        } else if ( typeof(value) == 'object' && value.start ) {
+          pageNum = value.start;
+        } else {
+          pageNum = value;
+        }
+
+        if (this.pdfViewer) {
+          this.pdfViewer.currentPageNumber = parseInt(pageNum, 10);
+        }
+      },
+
+      reopen: function(options) {
+        if (options.scale && this.pdfViewer) {
+          this.options.scale = options.scale;
+          this.pdfViewer.currentScaleValue = options.scale;
+        }
+      },
+
+      // Rotate pages clockwise
+      rotateCW: function() {
+        if (this.pdfViewer) {
+          this.pdfViewer.pagesRotation += 90;
+        }
+      },
+
+      // Rotate pages counter-clockwise
+      rotateCCW: function() {
+        if (this.pdfViewer) {
+          this.pdfViewer.pagesRotation -= 90;
+        }
+      },
+
+      EOT: true
+    });
+
+    // Initialize reader
+    var reader = new PDFIframeReader('mainContainer', {
+      href: '/epubs/<%= @presenter.id %>',
+      download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
+      metadata: {
+        title: '<%= raw escape_javascript(@parent_presenter.page_title) %>'
+      }
+    });
+
+    // Add all cozy-sun-bear controls
+    <%= render partial: "cozy_controls_top", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
+
+    <%= render partial: "cozy_controls_bottom", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
+
+    <% if @parent_presenter.use_hypothesis? %>
+      // Annotation widget initialization
+      var tm;
+      function checkForAnnotator(cb, w) {
+        if (!w) {
+          w = window;
+        }
+        tm = setTimeout(function () {
+          if (w && w.annotator) {
+            clearTimeout(tm);
+            cb();
+          } else {
+            checkForAnnotator(cb, w);
+          }
+        }, 100);
+      }
+
+      var $panel = $('.annotator-frame');
+
+      var annotation_tool = new AnnotationTool({
+        region: 'top.toolbar.left',
+        $panel: $panel
+      })
+      annotation_tool.addTo(reader);
+    <% end %>
+
+    // Start reader
+    reader.start();
+
+    // Wire up buttons that need to communicate with iframe
+    function wireUpIframeControls() {
+      // Rotation button
+      var rotateButton = document.getElementById('pageRotateCw');
+      if (rotateButton && !rotateButton.dataset.wiredUp) {
+        rotateButton.dataset.wiredUp = 'true';
+        rotateButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          reader.rotateCW();
+        });
+      }
+
+      // Previous page button - try multiple selectors
+      var previousButton = document.querySelector('.cozy-control-previous') ||
+                          document.querySelector('[data-control="previous"]') ||
+                          document.querySelector('.cozy-control.previous');
+
+      if (previousButton && !previousButton.dataset.wiredUp) {
+        previousButton.dataset.wiredUp = 'true';
+        previousButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (reader.PDFViewerApplication) {
+            reader._scroll('PREV');
+          }
+        }, true);
+      }
+
+      // Next page button - try multiple selectors
+      var nextButton = document.querySelector('.cozy-control-next') ||
+                      document.querySelector('[data-control="next"]') ||
+                      document.querySelector('.cozy-control.next');
+
+      if (nextButton && !nextButton.dataset.wiredUp) {
+        nextButton.dataset.wiredUp = 'true';
+        nextButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (reader.PDFViewerApplication) {
+            reader._scroll('NEXT');
+          }
+        }, true);
+      }
+    }
+
+    wireUpIframeControls();
+    setTimeout(wireUpIframeControls, 500);
+    setTimeout(wireUpIframeControls, 1000);
+    setTimeout(wireUpIframeControls, 2000);
+
+    reader.on('ready', function() {
+      wireUpIframeControls();
+    });
+  </script>
+
+  <%= render 'shared/ga' %>
+<% end %>
+<%= render template: 'layouts/mozilla-pdf-viewer' %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
