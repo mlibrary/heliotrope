@@ -12,9 +12,9 @@
   <meta name="viewport" content="width=device-width">
   <meta name="google" content="notranslate">
 
-  <link rel="resource" type="application/l10n" href="/web/locale/locale.properties">
-
-  <script src="/mozilla-pdf-viewer/build/pdf.js"></script>
+  <%# pdf.mjs is NOT loaded in the parent document — the iframe loads its own copy.
+      A second parent-side pdf.mjs was removed to prevent GlobalWorkerOptions conflicts.
+      Any pdf.js APIs needed are obtained via iframe.contentWindow.PDFViewerApplication. %>
 
   <% if defined? @subdomain %>
     <% if @parent_presenter.use_hypothesis? %>
@@ -23,7 +23,7 @@
         window.hypothesisConfig = function () {
           return {
             openSidebar: false,
-            theme: 'clean', // "clean" or "classic"
+            theme: 'clean',
             enableMultiFrameSupport: true,
             onLayoutChange: function(state) {
               var $frame = $('.annotator-frame');
@@ -47,533 +47,48 @@
   <%= render partial: "survey_oa" %>
 
   <div class="skip"></div>
-  <!-- `role="status"` implies `aria-live="polite"` but redundancy is recommended for maximum compatibility -->
-  <!-- see https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions -->
   <div id="pdfLoadingProgressBar" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
-    <%= tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
-      <div id="reader">
-        <div id="mainContainer"></div>
-      </div>
-    <% end %>
 
-    <%# hide the elements that make up the Mozilla viewer, apart from `mainContainer`, which is moved above. %>
-    <%# `tabindex` values in here don't matter, this stuff is copied straight out of web/viewer.html in the... %>
-    <%#  pdf.js archive. web/viewer.html is not used in heliotrope (deleted from fulcrum/mozilla-pdf-reader/web) %>
-    <div id="mozilla-pdf-viewer-ui" style="display: none">
-
-      <div id="outerContainer">
-
-        <div id="sidebarContainer">
-          <div id="toolbarSidebar">
-            <div id="toolbarSidebarLeft">
-              <div id="sidebarViewButtons" class="splitToolbarButton toggled" role="radiogroup">
-                <button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="2" data-l10n-id="thumbs" role="radio" aria-checked="true" aria-controls="thumbnailView">
-                  <span data-l10n-id="thumbs_label">Thumbnails</span>
-                </button>
-                <button id="viewOutline" class="toolbarButton" title="Show Document Outline (double-click to expand/collapse all items)" tabindex="3" data-l10n-id="document_outline" role="radio" aria-checked="false" aria-controls="outlineView">
-                  <span data-l10n-id="document_outline_label">Document Outline</span>
-                </button>
-                <button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="4" data-l10n-id="attachments" role="radio" aria-checked="false" aria-controls="attachmentsView">
-                  <span data-l10n-id="attachments_label">Attachments</span>
-                </button>
-                <button id="viewLayers" class="toolbarButton" title="Show Layers (double-click to reset all layers to the default state)" tabindex="5" data-l10n-id="layers" role="radio" aria-checked="false" aria-controls="layersView">
-                  <span data-l10n-id="layers_label">Layers</span>
-                </button>
-              </div>
-            </div>
-
-            <div id="toolbarSidebarRight">
-              <div id="outlineOptionsContainer" class="hidden">
-                <div class="verticalToolbarSeparator"></div>
-
-                <button id="currentOutlineItem" class="toolbarButton" disabled="disabled" title="Find Current Outline Item" tabindex="6" data-l10n-id="current_outline_item">
-                  <span data-l10n-id="current_outline_item_label">Current Outline Item</span>
-                </button>
-              </div>
-            </div>
-          </div>
-          <div id="sidebarContent">
-            <div id="thumbnailView">
-            </div>
-            <div id="outlineView" class="hidden">
-            </div>
-            <div id="attachmentsView" class="hidden">
-            </div>
-            <div id="layersView" class="hidden">
-            </div>
-          </div>
-          <div id="sidebarResizer"></div>
-        </div>  <!-- sidebarContainer -->
-
-        <div id="mainContainer">
-          <div class="findbar hidden doorHanger" id="findbar">
-            <div id="findbarInputContainer">
-              <input id="findInput" class="toolbarField" title="Find" placeholder="Find in document…" tabindex="91" data-l10n-id="find_input" aria-invalid="false">
-              <div class="splitToolbarButton">
-                <button id="findPrevious" class="toolbarButton" title="Find the previous occurrence of the phrase" tabindex="92" data-l10n-id="find_previous">
-                  <span data-l10n-id="find_previous_label">Previous</span>
-                </button>
-                <div class="splitToolbarButtonSeparator"></div>
-                <button id="findNext" class="toolbarButton" title="Find the next occurrence of the phrase" tabindex="93" data-l10n-id="find_next">
-                  <span data-l10n-id="find_next_label">Next</span>
-                </button>
-              </div>
-            </div>
-
-            <div id="findbarOptionsOneContainer">
-              <input type="checkbox" id="findHighlightAll" class="toolbarField" tabindex="94">
-              <label for="findHighlightAll" class="toolbarLabel" data-l10n-id="find_highlight">Highlight All</label>
-              <input type="checkbox" id="findMatchCase" class="toolbarField" tabindex="95">
-              <label for="findMatchCase" class="toolbarLabel" data-l10n-id="find_match_case_label">Match Case</label>
-            </div>
-            <div id="findbarOptionsTwoContainer">
-              <input type="checkbox" id="findMatchDiacritics" class="toolbarField" tabindex="96">
-              <label for="findMatchDiacritics" class="toolbarLabel" data-l10n-id="find_match_diacritics_label">Match Diacritics</label>
-              <input type="checkbox" id="findEntireWord" class="toolbarField" tabindex="97">
-              <label for="findEntireWord" class="toolbarLabel" data-l10n-id="find_entire_word_label">Whole Words</label>
-            </div>
-
-            <div id="findbarMessageContainer" aria-live="polite">
-              <span id="findResultsCount" class="toolbarLabel"></span>
-              <span id="findMsg" class="toolbarLabel"></span>
-            </div>
-          </div>  <!-- findbar -->
-
-          <div class="editorParamsToolbar hidden doorHangerRight" id="editorFreeTextParamsToolbar">
-            <div class="editorParamsToolbarContainer">
-              <div class="editorParamsSetter">
-                <label for="editorFreeTextColor" class="editorParamsLabel" data-l10n-id="editor_free_text_color">Color</label>
-                <input type="color" id="editorFreeTextColor" class="editorParamsColor" tabindex="100">
-              </div>
-              <div class="editorParamsSetter">
-                <label for="editorFreeTextFontSize" class="editorParamsLabel" data-l10n-id="editor_free_text_size">Size</label>
-                <input type="range" id="editorFreeTextFontSize" class="editorParamsSlider" value="10" min="5" max="100" step="1" tabindex="101">
-              </div>
-            </div>
-          </div>
-
-          <div class="editorParamsToolbar hidden doorHangerRight" id="editorInkParamsToolbar">
-            <div class="editorParamsToolbarContainer">
-              <div class="editorParamsSetter">
-                <label for="editorInkColor" class="editorParamsLabel" data-l10n-id="editor_ink_color">Color</label>
-                <input type="color" id="editorInkColor" class="editorParamsColor" tabindex="102">
-              </div>
-              <div class="editorParamsSetter">
-                <label for="editorInkThickness" class="editorParamsLabel" data-l10n-id="editor_ink_thickness">Thickness</label>
-                <input type="range" id="editorInkThickness" class="editorParamsSlider" value="1" min="1" max="20" step="1" tabindex="103">
-              </div>
-              <div class="editorParamsSetter">
-                <label for="editorInkOpacity" class="editorParamsLabel" data-l10n-id="editor_ink_opacity">Opacity</label>
-                <input type="range" id="editorInkOpacity" class="editorParamsSlider" value="100" min="1" max="100" step="1" tabindex="104">
-              </div>
-            </div>
-          </div>
-
-          <div class="editorParamsToolbar hidden doorHangerRight" id="editorStampParamsToolbar">
-            <div class="editorParamsToolbarContainer">
-              <button id="editorStampAddImage" class="secondaryToolbarButton" title="Add image" tabindex="105" data-l10n-id="editor_stamp_add_image">
-                <span data-l10n-id="editor_stamp_add_image_label">Add image</span>
-              </button>
-            </div>
-          </div>
-
-          <div id="secondaryToolbar" class="secondaryToolbar hidden doorHangerRight">
-            <div id="secondaryToolbarButtonContainer">
-              <button id="secondaryOpenFile" class="secondaryToolbarButton visibleLargeView" title="Open File" tabindex="51" data-l10n-id="open_file">
-                <span data-l10n-id="open_file_label">Open</span>
-              </button>
-
-              <button id="secondaryPrint" class="secondaryToolbarButton visibleMediumView" title="Print" tabindex="52" data-l10n-id="print">
-                <span data-l10n-id="print_label">Print</span>
-              </button>
-
-              <button id="secondaryDownload" class="secondaryToolbarButton visibleMediumView" title="Save" tabindex="53" data-l10n-id="save">
-                <span data-l10n-id="save_label">Save</span>
-              </button>
-
-              <div class="horizontalToolbarSeparator visibleLargeView"></div>
-
-              <button id="presentationMode" class="secondaryToolbarButton" title="Switch to Presentation Mode" tabindex="54" data-l10n-id="presentation_mode">
-                <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
-              </button>
-
-              <a href="#" id="viewBookmark" class="secondaryToolbarButton" title="Current Page (View URL from Current Page)" tabindex="55" data-l10n-id="bookmark1">
-                <span data-l10n-id="bookmark1_label">Current Page</span>
-              </a>
-
-              <div id="viewBookmarkSeparator" class="horizontalToolbarSeparator"></div>
-
-              <button id="firstPage" class="secondaryToolbarButton" title="Go to First Page" tabindex="56" data-l10n-id="first_page">
-                <span data-l10n-id="first_page_label">Go to First Page</span>
-              </button>
-              <button id="lastPage" class="secondaryToolbarButton" title="Go to Last Page" tabindex="57" data-l10n-id="last_page">
-                <span data-l10n-id="last_page_label">Go to Last Page</span>
-              </button>
-
-              <div class="horizontalToolbarSeparator"></div>
-
-<!--              <button id="pageRotateCw" class="secondaryToolbarButton" title="Rotate Clockwise" tabindex="58" data-l10n-id="page_rotate_cw">-->
-<!--                <span data-l10n-id="page_rotate_cw_label">Rotate Clockwise</span>-->
-<!--              </button>-->
-              <button id="pageRotateCcw" class="secondaryToolbarButton" title="Rotate Counterclockwise" tabindex="59" data-l10n-id="page_rotate_ccw">
-                <span data-l10n-id="page_rotate_ccw_label">Rotate Counterclockwise</span>
-              </button>
-
-              <div class="horizontalToolbarSeparator"></div>
-
-              <div id="cursorToolButtons" role="radiogroup">
-                <button id="cursorSelectTool" class="secondaryToolbarButton toggled" title="Enable Text Selection Tool" tabindex="60" data-l10n-id="cursor_text_select_tool" role="radio" aria-checked="true">
-                  <span data-l10n-id="cursor_text_select_tool_label">Text Selection Tool</span>
-                </button>
-                <button id="cursorHandTool" class="secondaryToolbarButton" title="Enable Hand Tool" tabindex="61" data-l10n-id="cursor_hand_tool" role="radio" aria-checked="false">
-                  <span data-l10n-id="cursor_hand_tool_label">Hand Tool</span>
-                </button>
-              </div>
-
-              <div class="horizontalToolbarSeparator"></div>
-
-              <div id="scrollModeButtons" role="radiogroup">
-                <button id="scrollPage" class="secondaryToolbarButton" title="Use Page Scrolling" tabindex="62" data-l10n-id="scroll_page" role="radio" aria-checked="false">
-                  <span data-l10n-id="scroll_page_label">Page Scrolling</span>
-                </button>
-                <button id="scrollVertical" class="secondaryToolbarButton toggled" title="Use Vertical Scrolling" tabindex="63" data-l10n-id="scroll_vertical" role="radio" aria-checked="true">
-                  <span data-l10n-id="scroll_vertical_label" >Vertical Scrolling</span>
-                </button>
-                <button id="scrollHorizontal" class="secondaryToolbarButton" title="Use Horizontal Scrolling" tabindex="64" data-l10n-id="scroll_horizontal" role="radio" aria-checked="false">
-                  <span data-l10n-id="scroll_horizontal_label">Horizontal Scrolling</span>
-                </button>
-                <button id="scrollWrapped" class="secondaryToolbarButton" title="Use Wrapped Scrolling" tabindex="65" data-l10n-id="scroll_wrapped" role="radio" aria-checked="false">
-                  <span data-l10n-id="scroll_wrapped_label">Wrapped Scrolling</span>
-                </button>
-              </div>
-
-              <div class="horizontalToolbarSeparator"></div>
-
-              <div id="spreadModeButtons" role="radiogroup">
-                <button id="spreadNone" class="secondaryToolbarButton toggled" title="Do not join page spreads" tabindex="66" data-l10n-id="spread_none" role="radio" aria-checked="true">
-                  <span data-l10n-id="spread_none_label">No Spreads</span>
-                </button>
-                <button id="spreadOdd" class="secondaryToolbarButton" title="Join page spreads starting with odd-numbered pages" tabindex="67" data-l10n-id="spread_odd" role="radio" aria-checked="false">
-                  <span data-l10n-id="spread_odd_label">Odd Spreads</span>
-                </button>
-                <button id="spreadEven" class="secondaryToolbarButton" title="Join page spreads starting with even-numbered pages" tabindex="68" data-l10n-id="spread_even" role="radio" aria-checked="false">
-                  <span data-l10n-id="spread_even_label">Even Spreads</span>
-                </button>
-              </div>
-
-              <div class="horizontalToolbarSeparator"></div>
-
-              <button id="documentProperties" class="secondaryToolbarButton" title="Document Properties…" tabindex="69" data-l10n-id="document_properties" aria-controls="documentPropertiesDialog">
-                <span data-l10n-id="document_properties_label">Document Properties…</span>
-              </button>
-            </div>
-          </div>  <!-- secondaryToolbar -->
-
-          <div class="toolbar">
-            <div id="toolbarContainer">
-              <div id="toolbarViewer">
-                <div id="toolbarViewerLeft">
-                  <button id="sidebarToggle" class="toolbarButton" title="Toggle Sidebar" tabindex="11" data-l10n-id="toggle_sidebar" aria-expanded="false" aria-controls="sidebarContainer">
-                    <span data-l10n-id="toggle_sidebar_label">Toggle Sidebar</span>
-                  </button>
-                  <div class="toolbarButtonSpacer"></div>
-                  <button id="viewFind" class="toolbarButton" title="Find in Document" tabindex="12" data-l10n-id="findbar" aria-expanded="false" aria-controls="findbar">
-                    <span data-l10n-id="findbar_label">Find</span>
-                  </button>
-                  <div class="splitToolbarButton hiddenSmallView">
-                    <button class="toolbarButton" title="Previous Page" id="previous" tabindex="13" data-l10n-id="previous">
-                      <span data-l10n-id="previous_label">Previous</span>
-                    </button>
-                    <div class="splitToolbarButtonSeparator"></div>
-                    <button class="toolbarButton" title="Next Page" id="next" tabindex="14" data-l10n-id="next">
-                      <span data-l10n-id="next_label">Next</span>
-                    </button>
-                  </div>
-                  <input type="number" id="pageNumber" class="toolbarField" title="Page" value="1" min="1" tabindex="15" data-l10n-id="page" autocomplete="off">
-                  <span id="numPages" class="toolbarLabel"></span>
-                </div>
-                <div id="toolbarViewerRight">
-                  <button id="openFile" class="toolbarButton hiddenLargeView" title="Open File" tabindex="31" data-l10n-id="open_file">
-                    <span data-l10n-id="open_file_label">Open</span>
-                  </button>
-
-                  <button id="print" class="toolbarButton hiddenMediumView" title="Print" tabindex="32" data-l10n-id="print">
-                    <span data-l10n-id="print_label">Print</span>
-                  </button>
-
-                  <button id="download" class="toolbarButton hiddenMediumView" title="Save" tabindex="33" data-l10n-id="save">
-                    <span data-l10n-id="save_label">Save</span>
-                  </button>
-
-                  <div class="verticalToolbarSeparator hiddenMediumView"></div>
-
-                  <div id="editorModeButtons" class="splitToolbarButton toggled" role="radiogroup">
-                    <button id="editorFreeText" class="toolbarButton" disabled="disabled" title="Text" role="radio" aria-checked="false" aria-controls="editorFreeTextParamsToolbar" tabindex="34" data-l10n-id="editor_free_text2">
-                      <span data-l10n-id="editor_free_text2_label">Text</span>
-                    </button>
-                    <button id="editorInk" class="toolbarButton" disabled="disabled" title="Draw" role="radio" aria-checked="false" aria-controls="editorInkParamsToolbar" tabindex="35" data-l10n-id="editor_ink2">
-                      <span data-l10n-id="editor_ink2_label">Draw</span>
-                    </button>
-                    <button id="editorStamp" class="toolbarButton hidden" disabled="disabled" title="Add or edit images" role="radio" aria-checked="false" aria-controls="editorStampParamsToolbar" tabindex="36" data-l10n-id="editor_stamp1">
-                      <span data-l10n-id="editor_stamp1_label">Add or edit images</span>
-                    </button>
-                  </div>
-
-                  <div id="editorModeSeparator" class="verticalToolbarSeparator"></div>
-
-                  <button id="secondaryToolbarToggle" class="toolbarButton" title="Tools" tabindex="48" data-l10n-id="tools" aria-expanded="false" aria-controls="secondaryToolbar">
-                    <span data-l10n-id="tools_label">Tools</span>
-                  </button>
-                </div>
-                <div id="toolbarViewerMiddle">
-                  <div class="splitToolbarButton">
-                    <button id="zoomOut" class="toolbarButton" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out">
-                      <span data-l10n-id="zoom_out_label">Zoom Out</span>
-                    </button>
-                    <div class="splitToolbarButtonSeparator"></div>
-                    <button id="zoomIn" class="toolbarButton" title="Zoom In" tabindex="22" data-l10n-id="zoom_in">
-                      <span data-l10n-id="zoom_in_label">Zoom In</span>
-                    </button>
-                  </div>
-                  <span id="scaleSelectContainer" class="dropdownToolbarButton">
-                  <select id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom">
-                    <option id="pageAutoOption" title="" value="auto" selected="selected" data-l10n-id="page_scale_auto">Automatic Zoom</option>
-                    <option id="pageActualOption" title="" value="page-actual" data-l10n-id="page_scale_actual">Actual Size</option>
-                    <option id="pageFitOption" title="" value="page-fit" data-l10n-id="page_scale_fit">Page Fit</option>
-                    <option id="pageWidthOption" title="" value="page-width" data-l10n-id="page_scale_width">Page Width</option>
-                    <option id="customScaleOption" title="" value="custom" disabled="disabled" hidden="true"></option>
-                    <option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 50 }'>50%</option>
-                    <option title="" value="0.75" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 75 }'>75%</option>
-                    <option title="" value="1" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 100 }'>100%</option>
-                    <option title="" value="1.25" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 125 }'>125%</option>
-                    <option title="" value="1.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 150 }'>150%</option>
-                    <option title="" value="2" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 200 }'>200%</option>
-                    <option title="" value="3" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 300 }'>300%</option>
-                    <option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 400 }'>400%</option>
-                  </select>
-                </span>
-                </div>
-              </div>
-<!--  heliotrope change - comment out loading bar, which we override outside this hidden layout-->
-<!--              <div id="loadingBar">-->
-<!--                <div class="progress">-->
-<!--                  <div class="glimmer">-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
-            </div>
-          </div>
-
-          <div id="viewerContainer" tabindex="0">
-            <div id="viewer" class="pdfViewer"></div>
-          </div>
-        </div> <!-- mainContainer -->
-
-        <div id="dialogContainer">
-          <dialog id="passwordDialog">
-            <div class="row">
-              <label for="password" id="passwordText" data-l10n-id="password_label">Enter the password to open this PDF file:</label>
-            </div>
-            <div class="row">
-              <input type="password" id="password" class="toolbarField">
-            </div>
-            <div class="buttonRow">
-              <button id="passwordCancel" class="dialogButton"><span data-l10n-id="password_cancel">Cancel</span></button>
-              <button id="passwordSubmit" class="dialogButton"><span data-l10n-id="password_ok">OK</span></button>
-            </div>
-          </dialog>
-          <dialog id="documentPropertiesDialog">
-            <div class="row">
-              <span id="fileNameLabel" data-l10n-id="document_properties_file_name">File name:</span>
-              <p id="fileNameField" aria-labelledby="fileNameLabel">-</p>
-            </div>
-            <div class="row">
-              <span id="fileSizeLabel" data-l10n-id="document_properties_file_size">File size:</span>
-              <p id="fileSizeField" aria-labelledby="fileSizeLabel">-</p>
-            </div>
-            <div class="separator"></div>
-            <div class="row">
-              <span id="titleLabel" data-l10n-id="document_properties_title">Title:</span>
-              <p id="titleField" aria-labelledby="titleLabel">-</p>
-            </div>
-            <div class="row">
-              <span id="authorLabel" data-l10n-id="document_properties_author">Author:</span>
-              <p id="authorField" aria-labelledby="authorLabel">-</p>
-            </div>
-            <div class="row">
-              <span id="subjectLabel" data-l10n-id="document_properties_subject">Subject:</span>
-              <p id="subjectField" aria-labelledby="subjectLabel">-</p>
-            </div>
-            <div class="row">
-              <span id="keywordsLabel" data-l10n-id="document_properties_keywords">Keywords:</span>
-              <p id="keywordsField" aria-labelledby="keywordsLabel">-</p>
-            </div>
-            <div class="row">
-              <span id="creationDateLabel" data-l10n-id="document_properties_creation_date">Creation Date:</span>
-              <p id="creationDateField" aria-labelledby="creationDateLabel">-</p>
-            </div>
-            <div class="row">
-              <span id="modificationDateLabel" data-l10n-id="document_properties_modification_date">Modification Date:</span>
-              <p id="modificationDateField" aria-labelledby="modificationDateLabel">-</p>
-            </div>
-            <div class="row">
-              <span id="creatorLabel" data-l10n-id="document_properties_creator">Creator:</span>
-              <p id="creatorField" aria-labelledby="creatorLabel">-</p>
-            </div>
-            <div class="separator"></div>
-            <div class="row">
-              <span id="producerLabel" data-l10n-id="document_properties_producer">PDF Producer:</span>
-              <p id="producerField" aria-labelledby="producerLabel">-</p>
-            </div>
-            <div class="row">
-              <span id="versionLabel" data-l10n-id="document_properties_version">PDF Version:</span>
-              <p id="versionField" aria-labelledby="versionLabel">-</p>
-            </div>
-            <div class="row">
-              <span id="pageCountLabel" data-l10n-id="document_properties_page_count">Page Count:</span>
-              <p id="pageCountField" aria-labelledby="pageCountLabel">-</p>
-            </div>
-            <div class="row">
-              <span id="pageSizeLabel" data-l10n-id="document_properties_page_size">Page Size:</span>
-              <p id="pageSizeField" aria-labelledby="pageSizeLabel">-</p>
-            </div>
-            <div class="separator"></div>
-            <div class="row">
-              <span id="linearizedLabel" data-l10n-id="document_properties_linearized">Fast Web View:</span>
-              <p id="linearizedField" aria-labelledby="linearizedLabel">-</p>
-            </div>
-            <div class="buttonRow">
-              <button id="documentPropertiesClose" class="dialogButton"><span data-l10n-id="document_properties_close">Close</span></button>
-            </div>
-          </dialog>
-          <dialog id="altTextDialog" aria-labelledby="dialogLabel" aria-describedby="dialogDescription">
-            <div id="altTextContainer">
-              <div id="overallDescription">
-                <span id="dialogLabel" data-l10n-id="editor_alt_text_dialog_label" class="title">Choose an option</span>
-                <span id="dialogDescription" data-l10n-id="editor_alt_text_dialog_description">
-                Alt text (alternative text) helps when people can’t see the image or when it doesn’t load.
-              </span>
-              </div>
-              <div id="addDescription">
-                <div class="radio">
-                  <div class="radioButton">
-                    <input type="radio" id="descriptionButton" name="altTextOption" tabindex="0" aria-describedby="descriptionAreaLabel" checked>
-                    <label for="descriptionButton" data-l10n-id="editor_alt_text_add_description_label">Add a description</label>
-                  </div>
-                  <div class="radioLabel">
-                  <span id="descriptionAreaLabel" data-l10n-id="editor_alt_text_add_description_description">
-                    Aim for 1-2 sentences that describe the subject, setting, or actions.
-                  </span>
-                  </div>
-                </div>
-                <div class="descriptionArea">
-                  <textarea id="descriptionTextarea" placeholder="For example, “A young man sits down at a table to eat a meal”" aria-labelledby="descriptionAreaLabel" data-l10n-id="editor_alt_text_textarea" tabindex="0"></textarea>
-                </div>
-              </div>
-              <div id="markAsDecorative">
-                <div class="radio">
-                  <div class="radioButton">
-                    <input type="radio" id="decorativeButton" name="altTextOption" aria-describedby="decorativeLabel">
-                    <label for="decorativeButton" data-l10n-id="editor_alt_text_mark_decorative_label">Mark as decorative</label>
-                  </div>
-                  <div class="radioLabel">
-                  <span id="decorativeLabel" data-l10n-id="editor_alt_text_mark_decorative_description">
-                    This is used for ornamental images, like borders or watermarks.
-                  </span>
-                  </div>
-                </div>
-              </div>
-              <div id="buttons">
-                <button id="altTextCancel" tabindex="0"><span data-l10n-id="editor_alt_text_cancel_button">Cancel</span></button>
-                <button id="altTextSave" tabindex="0"><span data-l10n-id="editor_alt_text_save_button">Save</span></button>
-              </div>
-            </div>
-          </dialog>
-          <dialog id="printServiceDialog" style="min-width: 200px;">
-            <div class="row">
-              <span data-l10n-id="print_progress_message">Preparing document for printing…</span>
-            </div>
-            <div class="row">
-              <progress value="0" max="100"></progress>
-              <span data-l10n-id="print_progress_percent" data-l10n-args='{ "progress": 0 }' class="relative-progress">0%</span>
-            </div>
-            <div class="buttonRow">
-              <button id="printCancel" class="dialogButton"><span data-l10n-id="print_progress_close">Cancel</span></button>
-            </div>
-          </dialog>
-        </div>  <!-- dialogContainer -->
-        <!-- heliotrope change: chucking this inside the hidden outerContainer to fix to a non-breaking console TypeError error -->
-        <input type="file" id="fileInput" class="hidden">
-      </div> <!-- outerContainer -->
+  <%= tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
+    <div id="reader">
+      <div id="mainContainer"></div>
     </div>
+  <% end %>
 
-  <script type="text/javascript">
-
-    // jQuery.getScript makes it difficult to debug scripts;
-    // this version makes the script visible in browser debuggers.
-    jQuery.extend({
-        loadScript: function(url, callback) {
-          var head = document.getElementsByTagName("head")[0];
-          var script = document.createElement("script");
-          script.src = url;
-
-          // Handle Script loading
-          {
-             var done = false;
-
-             // Attach handlers for all browsers
-             script.onload = script.onreadystatechange = function(){
-                if ( !done && (!this.readyState ||
-                      this.readyState == "loaded" || this.readyState == "complete") ) {
-                   done = true;
-                   if (callback)
-                      callback();
-
-                   // Handle memory leak in IE
-                   script.onload = script.onreadystatechange = null;
-                }
-             };
-          }
-
-          head.appendChild(script);
-
-          // We handle everything using the script element injection
-          return undefined;
-       },
-    });
+  <script type="module">
+    // pdf.js 6.0.227 iframe-based viewer
 
     <% if @parent_presenter.use_hypothesis? %>
-        // Create custom annotator button that is aware of its state
-        AnnotationTool = cozy.Control.Widget.Toggle.extend({
+      // Create custom annotator button that is aware of its state
+      var AnnotationTool = cozy.Control.Widget.Toggle.extend({
         defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
 
         initialize: function(options) {
+          cozy.Control.Widget.Toggle.prototype.initialize.apply(this, arguments);
 
-              cozy.Control.Widget.Toggle.prototype.initialize.apply(this, arguments);
+          this.options.states = [{
+            stateName: 'close-annotator',
+            onClick: this.openAnnotator.bind(this)
+          },
+          {
+            stateName: 'open-annotator',
+            onClick: this.closeAnnotator.bind(this)
+          }];
+        },
 
-              this.options.states = [{
-                stateName: 'close-annotator',
-                onClick: this.openAnnotator.bind(this)
-              },
-              {
-                stateName: 'open-annotator',
-                onClick: this.closeAnnotator.bind(this)
-              }];
-            },
+        openAnnotator: function(self, reader) {
+          this.options.$panel.removeClass("annotator-collapsed");
+          self.state('open-annotator');
+        },
 
-            openAnnotator: function(self, reader) {
-              this.options.$panel.removeClass("annotator-collapsed");
-              self.state('open-annotator');
-            },
+        closeAnnotator: function(self, reader) {
+          this.options.$panel.addClass("annotator-collapsed");
+          self.state('close-annotator');
+        }
+      })
+    <% end %>
 
-            closeAnnotator: function(self, reader) {
-              this.options.$panel.addClass("annotator-collapsed");
-              self.state('close-annotator');
-            }
-
-        })
-      <% end %>
-
+    // PDF Scale preferences
     cozy.Control.Preferences.fieldset.PDFScale = cozy.Control.Preferences.fieldset.Scale.extend({
       options: {},
 
@@ -582,7 +97,6 @@
       },
 
       initializeForm: function(form) {
-        // EOT
         if ( ! this._inputs ) {
           this._inputs = form.querySelector('#x' + this._id + '-list');
           this._actionReset = form.querySelector('#x' + this._id + '-reset');
@@ -638,7 +152,7 @@
           '</style>' +
           '<div class="preview--text_size" id="x${this._id}-preview">' +
             '<div style="transform-origin: top left">' +
-              '‘Yes, that’s it,’ said the Hatter with a sigh: ‘it’s always tea-time, and we’ve no time to wash the things between whiles.’' +
+              '"Yes, that\'s it," said the Hatter with a sigh: "it\'s always tea-time, and we\'ve no time to wash the things between whiles."' +
             '</div>' +
           '</div>' +
           '<ul id="x${this._id}-list" style="margin-top: 1rem">' +
@@ -684,35 +198,20 @@
     };
 
     var PDFPreferences = cozy.Control.Preferences.extend({
-
       EOT: true
-
     });
 
-    // -- if we needed to extend the Navigator, we'd start here.
+    // PDF Navigator
     var PDFNavigator = cozy.Control.Navigator.extend({
-
-      // _initializeNavigator: function(locations) {
-      //   this._initiated = true;
-      //   this._total = locations.total;
-      //   this._last_value = this._control.value;
-      //   this._spanTotalLocations.innerHTML = this._total;
-      //   this._update();
-      //   setTimeout(function() {
-      //     this._container.classList.add('initialized');
-      //   }.bind(this), 0);
-      // },
-
       EOT: true
     });
 
+    // PDF Search
     var PDFSearch = cozy.Control.Search.extend({
 
       onAdd: function(reader) {
         var self = this;
-        console.log("AHOY AHOY", this);
         this._reader.on('ready', function() {
-          // updatefindcontrolstate -- emites state=FOUND before all the results are found
           this._reader.PDFViewerApplication.eventBus.on('updatefindmatchescount', this._waitForResults.bind(this));
           this._reader.PDFViewerApplication.eventBus.on('updatefindcontrolstate', this._waitForQuery.bind(this));
         }.bind(this));
@@ -721,29 +220,34 @@
       },
 
       submitQuery: function() {
+        // pdf.js 6.0.227 viewer.mjs: phraseSearch was removed; matchDiacritics added.
+        // FindState enum: FOUND=0, NOT_FOUND=1, WRAPPED=2, PENDING=3 (same as 5.x).
         this._doWaitForResults = false;
-          // https://github.com/mozilla/pdf.js/wiki/Third-party-viewer-usage#event-bus
-          // https://stackoverflow.com/a/53482474
-        this._reader.PDFViewerApplication.eventBus.dispatch('find', { source: this._reader, type: 'find', query: this.searchString, phraseSearch: true, caseSensitive: false, entireWord: false, highlightAll: true, findPrevious: null })
+        this._reader.PDFViewerApplication.eventBus.dispatch('find', {
+          source: this._reader,
+          type: 'find',
+          query: this.searchString,
+          caseSensitive: false,
+          matchDiacritics: false,
+          entireWord: false,
+          highlightAll: true,
+          findPrevious: null
+        })
       },
 
       _waitForQuery: function(argv) {
-        // if ( this.queryTimer ) { clearTimeout(this.queryTimer); }
         if ( argv.state == 0 || argv.state == 2 ) {
-          // the query is done, so we can start computing the results
           this._doWaitForResults = true;
         } else if ( argv.state == 1 ) {
           this._data = { highlight_off: "yes", search_results: [] };
           this._buildResults();
         }
-        console.log("AHOY updatefindcontrolstate", argv);
       },
 
       _waitForResults: function(argv) {
         if ( ! this._doWaitForResults ) { return; }
         if ( this.searchTimer ) { clearTimeout(this.searchTimer); }
         this.searchTimer = setTimeout(this._gatherResults.bind(this), 500);
-        console.log("AHOY updatefindmatchescount", argv.matchesCount.total);
       },
 
       _gatherResults: function() {
@@ -753,10 +257,13 @@
         var pdfViewer = this._reader.pdfViewer;
         var findController = this._reader.PDFViewerApplication.findController;
 
+        // pdf.js 6.0.227 viewer.mjs: findController.pageMatches is a public getter (line ~12393).
+        // _pageContents remains a regular underscore-prefixed field (not ES #private), still accessible.
+        var allPageMatches = findController.pageMatches || [];
         for(var i = 0; i < pdfViewer.pagesCount; i++) {
-          var matches = findController._pageMatches[i];
+          var matches = allPageMatches[i];
           if ( ! matches ) { continue ; }
-          var text = findController._pageContents[i];
+          var text = (findController._pageContents && findController._pageContents[i]) || '';
           matches.forEach(function(match, index) {
             var snippet = self._getMatch(text, self.searchString, match);
             self._data.search_results.push({ cfi: 'page=' + ( i + 1 ), matchIdx: match, snippet: snippet });
@@ -767,79 +274,73 @@
       },
 
       _getMatch: function(string, term, index) {
-        if(index >= 0)
-        {
+        if(index >= 0) {
           var _ws = [" ","\t"];
-
           var whitespace = 0;
           var rightLimit = 0;
           var leftLimit = 0;
+          var whitespaceLimit = 8;
 
-          var whitespaceLimit = 8; // 4
-
-          // right trim index
-          for(rightLimit = index + term.length; whitespace < whitespaceLimit; rightLimit++)
-          {
+          for(rightLimit = index + term.length; whitespace < whitespaceLimit; rightLimit++) {
             if(rightLimit >= string.length){break}
             if(_ws.indexOf(string.charAt(rightLimit)) >= 0){whitespace += 1}
           }
 
           whitespace = 0;
-          // left trim index
-          for(leftLimit = index; whitespace < whitespaceLimit; leftLimit--)
-          {
+          for(leftLimit = index; whitespace < whitespaceLimit; leftLimit--) {
             if(leftLimit < 0){break}
             if(_ws.indexOf(string.charAt(leftLimit)) >= 0){whitespace += 1}
           }
 
           var snippet = string.substr(leftLimit + 1, rightLimit - leftLimit - 1).replace(/([\.\;\,])(\w)/g, '$1 $2');
-
           snippet = snippet.replace(/([a-z])([A-Z])/g, '$1 $2');
           snippet = snippet.replace(/([a-z])(\d+)([a-z])/gi, '$1 $2 $3');
           snippet = snippet.replace(/[^ -~]+/g, "");
-          // // --- cozy-sun-bear doesn't highlight terms in search results
-          // var termRe = new RegExp('(' + term + ')', 'gi');
-          // snippet = snippet.replace(termRe, '<strong>$1</strong>');
           return snippet;
         }
-        return // return nothing
+        return
       },
 
       EOT: true
-
     });
 
+    // PDF Contents/Sidebar
     var PDFContents = cozy.Control.Contents.extend({
       _bindEvents: function() {
         var self = this;
 
         this._control.setAttribute('id', 'sidebarToggle');
 
+        // pdf.js 6.0.227 viewer.html: sidebar is now inside #viewsManager; outline is #outlinesView,
+        // thumbnails are #thumbnailsView (both inside #viewsManagerContent). The parent modal
+        // keeps its own local IDs (#outlineView, #thumbnailView) — _copySidebarFromIframe maps between them.
+        // note that button--lg is added to viewThumbnail, viewOutline, and viewAttachments to allow them to
+        // inherit some press-specific stuff from themes.scss.
         <% if @parent_presenter.pdf_ebook_presenter.intervals? %>
           var template =
             '<div id="toolbarSidebar">' +
               '<div class="splitToolbarButton toggled">' +
-                '<button id="viewOutline" class="toolbarButton toggled" title="Show Table of Contents (double-click to expand/collapse all items)" tabindex="-1">Table of Contents</button>' +
-                '<button id="viewThumbnail" class="toolbarButton" title="Show Thumbnails" tabindex="-1">Thumbnails</button>' +
-                '<button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="-1">Attachments</button>' +
+                '<button id="viewOutline" class="toolbarButton toggled button--lg" title="Show Table of Contents (double-click to expand/collapse all items)" tabindex="0">Table of Contents</button>' +
+                '<button id="viewThumbnail" class="toolbarButton button--lg" title="Show Thumbnails" tabindex="0">Thumbnails</button>' +
+                '<button id="viewAttachments" class="toolbarButton button--lg" title="Show Attachments" tabindex="0">Attachments</button>' +
               '</div>' +
             '</div>' +
             '<div id="sidebarContent">' +
-              '<div id="outlineView"></div>' +
+              '<div id="outlineView" class="treeView"></div>' +
               '<div id="thumbnailView" class="hidden"></div>' +
               '<div id="attachmentsView" class="hidden"></div>' +
             '</div>';
         <% else %>
           var template =
             '<div id="toolbarSidebar">' +
-              '<div class="splitToolbarButton toggled hidden">' +
-                '<button id="viewOutline" class="toolbarButton" title="Show Table of Contents (double-click to expand/collapse all items)" tabindex="-1">Table of Contents</button>' +
-                '<button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="-1">Thumbnails</button>' +
-                '<button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="-1">Attachments</button>' +
+              '<div class="splitToolbarButton toggled hidden button--lg">' +
+                '<button id="viewOutline" class="toolbarButton" title="Show Table of Contents (double-click to expand/collapse all items)" tabindex="0">Table of Contents</button>' +
+                '<button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="0">Thumbnails</button>' +
+                '<button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="0">Attachments</button>' +
               '</div>' +
             '</div>' +
             '<div id="sidebarContent">' +
-              '<div id="outlineView" class="hidden"></div>' +
+              '<div id="outlineView" class="treeView hidden"></div>' +
               '<div id="thumbnailView"></div>' +
               '<div id="attachmentsView" class="hidden"></div>' +
             '</div>';
@@ -852,10 +353,10 @@
           className: 'cozy-modal-contents',
           callbacks: {
             onShow: function() {
-              self._pdfSidebar.open()
+              self._copySidebarFromIframe();
             },
             onClose: function() {
-              self._pdfSidebar.close()
+              // Clean up if needed
             }
           }
         });
@@ -863,193 +364,780 @@
         this._modal._container.querySelector('.modal__content').setAttribute('id', 'sidebarContainer');
 
         this._reader.on('updateContents', function(data) {
-
           this._pdfSidebar = this._reader.PDFViewerApplication.pdfSidebar;
-          this._pdfSidebar.outlineButton.removeAttribute('tabindex');
-          this._pdfSidebar.thumbnailButton.removeAttribute('tabindex');
-          this._pdfSidebar.attachmentsButton.removeAttribute('tabindex');
 
           $(this._control).on('click', function(event) {
             self._reader.tracking.action('contents/open');
             self._modal.activate();
           });
-
-          this._pdfSidebar.eventBus.on('pagechanging', function(evt) {
-            if ( this._pdfSidebar.isOpen ) {
-              this._modal.closeModal();
-            }
-          }.bind(this))
-
         }.bind(this));
+      },
+
+      _copySidebarFromIframe: function() {
+        var self = this;
+
+        if (!this._reader.PDFViewerApplication) {
+          return;
+        }
+
+        try {
+          var iframeDoc = this._reader._iframe.contentDocument || this._reader._iframe.contentWindow.document;
+
+          // Copy relevant CSS from iframe to modal (one time only)
+          if (!this._stylesCopied) {
+            this._copySidebarStyles(iframeDoc);
+            this._stylesCopied = true;
+          }
+
+          // pdf.js 6.0.227 viewer.html: outline is #outlinesView (with 's')
+          // inside #viewsManagerContent. Parent modal keeps local ID #outlineView.
+          var iframeOutlineView = iframeDoc.querySelector('#outlinesView') || iframeDoc.querySelector('#outlineView');
+
+          // Get modal's containers
+          var modalOutlineView = this._modal._container.querySelector('#outlineView');
+          var modalThumbnailView = this._modal._container.querySelector('#thumbnailView');
+
+          if (iframeOutlineView && modalOutlineView) {
+            modalOutlineView.innerHTML = iframeOutlineView.innerHTML;
+            this._wireOutlineClicks(modalOutlineView);
+          }
+
+          // Thumbnails: do NOT copy from the iframe's hidden #thumbnailsView —
+          // #viewsManager is display:none in the iframe so pdf.js never renders any
+          // thumbnail images (getVisibleThumbs() always returns nothing). Instead we
+          // render thumbnails directly from the PDF document when the tab is shown.
+          if (modalThumbnailView && !modalThumbnailView.classList.contains('hidden')) {
+            // Thumbnail tab is the default active view — start rendering right away.
+            if (!self._thumbnailsRendered) {
+              self._thumbnailsRendered = true;
+              self._renderThumbnailsDirect(modalThumbnailView);
+            }
+          }
+
+          this._setupViewButtons();
+
+        } catch (e) {
+          console.error("PDF reader: Error copying sidebar:", e);
+        }
+      },
+
+      // Render all page thumbnails directly from the PDF document.
+      // This bypasses the iframe's hidden sidebar (which pdf.js never populates because
+      // #viewsManager is display:none) and uses pdfDocument.getPage() + page.render()
+      // to paint each thumbnail to a canvas, then sets the img src from the data URL.
+      _renderThumbnailsDirect: function(thumbnailView) {
+        var self = this;
+        var app = self._reader.PDFViewerApplication;
+
+        if (!app || !app.pdfDocument) {
+          // Not ready yet — retry shortly
+          setTimeout(function() {
+            self._thumbnailsRendered = false;
+            self._renderThumbnailsDirect(thumbnailView);
+          }, 300);
+          return;
+        }
+
+        var pdfDocument = app.pdfDocument;
+        var totalPages = app.pagesCount;
+        var THUMB_WIDTH = 126; // matches THUMBNAIL_WIDTH in pdf.js
+
+        thumbnailView.innerHTML = '';
+
+        // Build placeholder divs for every page up-front so the scroll area has
+        // the correct height and the user can see progress as thumbnails render.
+        var renderItems = [];
+        for (var p = 1; p <= totalPages; p++) {
+          var thumbDiv = document.createElement('div');
+          thumbDiv.className = 'thumbnail';
+          thumbDiv.setAttribute('page-number', String(p));
+
+          var imageContainer = document.createElement('div');
+          imageContainer.className = 'thumbnailImageContainer missingThumbnailImage';
+          imageContainer.setAttribute('role', 'button');
+          imageContainer.setAttribute('tabindex', '-1');
+          imageContainer.setAttribute('page-number', String(p));
+
+          var img = document.createElement('img');
+          img.alt = 'Page ' + p;
+          imageContainer.appendChild(img);
+          thumbDiv.appendChild(imageContainer);
+          thumbnailView.appendChild(thumbDiv);
+
+          renderItems.push({ pageNum: p, img: img, imageContainer: imageContainer });
+        }
+
+        self._wireThumbnailClicks(thumbnailView);
+
+        // Render pages one at a time, yielding between each so the UI stays
+        // responsive. Rendering at 2× the display size gives crisp thumbnails.
+        var renderIndex = 0;
+
+        function renderNext() {
+          if (renderIndex >= renderItems.length) return;
+
+          var item = renderItems[renderIndex++];
+
+          pdfDocument.getPage(item.pageNum).then(function(pdfPage) {
+            var viewport = pdfPage.getViewport({ scale: 1 });
+            var scale = (THUMB_WIDTH * 2) / viewport.width;
+            var scaledViewport = pdfPage.getViewport({ scale: scale });
+
+            var canvas = document.createElement('canvas');
+            canvas.width = Math.floor(scaledViewport.width);
+            canvas.height = Math.floor(scaledViewport.height);
+
+            var ctx = canvas.getContext('2d');
+            return pdfPage.render({
+              canvasContext: ctx,
+              viewport: scaledViewport
+            }).promise.then(function() {
+              item.img.src = canvas.toDataURL('image/jpeg', 0.75);
+              item.imageContainer.style.height = Math.floor(canvas.height / 2) + 'px';
+              item.imageContainer.classList.remove('missingThumbnailImage');
+              // Free the temporary canvas memory
+              canvas.width = 0;
+              canvas.height = 0;
+            });
+          }).catch(function() {
+            // Leave the placeholder visible if the page fails to render
+          }).then(function() {
+            // Yield to the browser event loop before the next page
+            setTimeout(renderNext, 0);
+          });
+        }
+
+        renderNext();
+      },
+
+      _copySidebarStyles: function(iframeDoc) {
+        try {
+          // Find viewer.css in the iframe and copy rules relevant to sidebar content.
+          // pdf.js 6.0.227: selectors use #outlinesView and #thumbnailsView (with 's').
+          var stylesheets = iframeDoc.styleSheets;
+          var viewerCSS = '';
+
+          for (var i = 0; i < stylesheets.length; i++) {
+            var sheet = stylesheets[i];
+            if (sheet.href && sheet.href.indexOf('viewer.css') > -1) {
+              try {
+                var rules = sheet.cssRules || sheet.rules;
+                for (var j = 0; j < rules.length; j++) {
+                  var rule = rules[j];
+                  var text = rule.cssText;
+
+                  // Match both 5.x (#outlineView) and 6.x (#outlinesView) selector names.
+                  // Do NOT copy #sidebarContent rules — the iframe uses position:absolute which
+                  // breaks the parent flex layout; cozy-honey-bear-reader.css handles it instead.
+                  if (text && (
+                    text.indexOf('.treeItem') > -1 ||
+                    text.indexOf('.thumbnail') > -1 ||
+                    text.indexOf('#outlineView') > -1 ||
+                    text.indexOf('#outlinesView') > -1 ||
+                    text.indexOf('#thumbnailView') > -1 ||
+                    text.indexOf('#thumbnailsView') > -1 ||
+                    text.indexOf('.treeWithDeepNesting') > -1 ||
+                    text.indexOf('#viewsManagerContent') > -1
+                  )) {
+                    viewerCSS += text + '\n';
+                  }
+                }
+              } catch (e) {
+                // Cross-origin or access issues, skip
+              }
+            }
+          }
+
+          if (viewerCSS) {
+            var style = document.createElement('style');
+            style.id = 'pdf-sidebar-styles';
+            style.textContent = viewerCSS;
+            this._modal._container.appendChild(style);
+          } else {
+            this._addFallbackStyles();
+          }
+        } catch (e) {
+          this._addFallbackStyles();
+        }
+      },
+
+      _addFallbackStyles: function() {
+        // Basic styles for sidebar content
+        var style = document.createElement('style');
+        style.id = 'pdf-sidebar-fallback-styles';
+        style.textContent = `
+          #sidebarContent {
+            overflow: auto;
+            flex-grow: 1;
+            min-height: 0;
+          }
+
+          .treeWithDeepNesting {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+          }
+
+          .treeItem {
+            list-style: none;
+          }
+
+          #outlineView .treeItem a {
+            display: block;
+            padding: 1em 1em 1em 1.2em;
+            text-decoration: none;
+            color: inherit;
+          }
+
+          .thumbnail {
+            cursor: pointer;
+            display: inline-block;
+            margin: 4px;
+          }
+
+          #outlineView {
+            padding: 4px 4px 0;
+          }
+        `;
+        this._modal._container.appendChild(style);
+      },
+
+      _wireOutlineClicks: function(outlineView) {
+        var self = this;
+
+        // Find all outline links
+        var links = outlineView.querySelectorAll('a');
+        links.forEach(function(link) {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Get the original destination from the link
+            var dest = link.getAttribute('href');
+            if (!dest || !dest.startsWith('#')) {
+              return;
+            }
+
+            // Remove the # prefix
+            var destName = decodeURIComponent(dest.substring(1));
+
+
+            // Try to navigate using PDF.js's link service inside the iframe
+            try {
+              var pdfLinkService = self._reader.PDFViewerApplication.pdfLinkService;
+
+              // Check if it's a simple page reference first
+              var pageMatch = destName.match(/^page[=\s]+(\d+)$/i);
+              if (pageMatch) {
+                var pageNum = parseInt(pageMatch[1], 10);
+                self._reader.gotoPage(pageNum);
+                self._modal.closeModal();
+                return;
+              }
+
+              // Check if it's a JSON-encoded destination array (e.g., [{"num":123,"gen":0},{"name":"XYZ"},...])
+              var destToUse = destName;
+              if (destName.startsWith('[') || destName.startsWith('{')) {
+                try {
+                  destToUse = JSON.parse(destName);
+                } catch (parseErr) {
+                  // Keep as string, will try as named destination
+                }
+              }
+
+              // Navigate using PDF.js link service
+              if (pdfLinkService) {
+                pdfLinkService.goToDestination(destToUse).then(function() {
+                  self._modal.closeModal();
+                }).catch(function(err) {
+                  // Try alternative: click the original link in the iframe
+                  self._clickIframeOutlineItem(link);
+                });
+              } else {
+              }
+            } catch (err) {
+            }
+          });
+        });
+      },
+
+      _clickIframeOutlineItem: function(clonedLink) {
+        // Fallback: find and click the corresponding link inside the iframe
+        var self = this;
+        try {
+          var href = clonedLink.getAttribute('href');
+          if (!href) return;
+
+          var iframeDoc = this._reader._iframe.contentDocument;
+          var originalLink = iframeDoc.querySelector('a[href="' + href + '"]');
+
+          if (originalLink) {
+            originalLink.click();
+
+            // Close modal after a brief delay to allow navigation
+            setTimeout(function() {
+              self._modal.closeModal();
+            }, 300);
+          }
+        } catch (err) {
+        }
+      },
+
+      _wireThumbnailClicks: function(thumbnailView) {
+        var self = this;
+
+        // Find all thumbnail elements
+        var thumbnails = thumbnailView.querySelectorAll('.thumbnail');
+        thumbnails.forEach(function(thumbnail) {
+          thumbnail.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // pdf.js 6.x uses non-prefixed "page-number" attribute; older versions used "data-page-number"
+            var pageNum = parseInt(
+              thumbnail.getAttribute('page-number') || thumbnail.getAttribute('data-page-number'),
+              10
+            );
+            if (pageNum) {
+              self._reader.gotoPage(pageNum);
+              self._modal.closeModal();
+            }
+          });
+        });
+      },
+
+      _setupViewButtons: function() {
+        var self = this;
+        var modal = this._modal._container;
+        var sidebarContainer = modal.querySelector('#sidebarContainer');
+        var toolbarSidebar = sidebarContainer ? sidebarContainer.querySelector('#toolbarSidebar') : modal.querySelector('#toolbarSidebar');
+
+        if (!toolbarSidebar) {
+          return;
+        }
+
+        var outlineBtn = toolbarSidebar.querySelector('#viewOutline');
+        var thumbnailBtn = toolbarSidebar.querySelector('#viewThumbnail');
+        var attachmentsBtn = toolbarSidebar.querySelector('#viewAttachments');
+
+        var outlineView = modal.querySelector('#outlineView');
+        var thumbnailView = modal.querySelector('#thumbnailView');
+        var attachmentsView = modal.querySelector('#attachmentsView');
+
+        if (outlineBtn) {
+          outlineBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (outlineView) outlineView.classList.remove('hidden');
+            if (thumbnailView) thumbnailView.classList.add('hidden');
+            if (attachmentsView) attachmentsView.classList.add('hidden');
+            outlineBtn.classList.add('toggled');
+            if (thumbnailBtn) thumbnailBtn.classList.remove('toggled');
+            if (attachmentsBtn) attachmentsBtn.classList.remove('toggled');
+          });
+        }
+
+        if (thumbnailBtn) {
+          thumbnailBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (outlineView) outlineView.classList.add('hidden');
+            if (thumbnailView) thumbnailView.classList.remove('hidden');
+            if (attachmentsView) attachmentsView.classList.add('hidden');
+            if (outlineBtn) outlineBtn.classList.remove('toggled');
+            thumbnailBtn.classList.add('toggled');
+            if (attachmentsBtn) attachmentsBtn.classList.remove('toggled');
+
+            // Render thumbnails directly from the PDF document on first open.
+            // The iframe's #viewsManager is display:none so pdf.js's lazy scroll-based
+            // renderer never fires — copying innerHTML from it only gives blank images.
+            if (!self._thumbnailsRendered) {
+              self._thumbnailsRendered = true;
+              self._renderThumbnailsDirect(thumbnailView);
+            }
+          });
+        }
+
+        if (attachmentsBtn) {
+          attachmentsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (outlineView) outlineView.classList.add('hidden');
+            if (thumbnailView) thumbnailView.classList.add('hidden');
+            if (attachmentsView) attachmentsView.classList.remove('hidden');
+            if (outlineBtn) outlineBtn.classList.remove('toggled');
+            if (thumbnailBtn) thumbnailBtn.classList.remove('toggled');
+            attachmentsBtn.classList.add('toggled');
+          });
+        }
       }
     });
 
-    var PDFReader = cozy.Reader.extend({
+    // Main PDF Reader - Iframe-based
+    var PDFIframeReader = cozy.Reader.extend({
 
       open: function(target, cb) {
         var self = this;
         if ( cb == null ) { cb = function() {}; }
 
-        this._panes['epub'].setAttribute('id', 'viewerContainer');
-        $(this._panes['epub']).append('<div id="viewer" class="pdfViewer"></div>');
+        // Create and insert the iframe into the book container
+        this._createIframeContainer();
+
+        this._iframe = document.getElementById('pdf-viewer-iframe');
+        this._pdfWindow = null;
+
+        // Build viewer URL with PDF file
+        const pdfUrl = '/epubs/<%= @presenter.id %>/file';
+        const viewerUrl = new URL('/mozilla-pdf-viewer/web/viewer.html', window.location.origin);
+        viewerUrl.searchParams.set('file', pdfUrl);
+
+        // Handle initial page from hash
+        const initialHash = window.location.hash;
+        if (initialHash) {
+          viewerUrl.hash = initialHash.substring(1);
+        }
+
+        this._iframe.src = viewerUrl.toString();
 
         this.annotations = {
           reset: function() { /* NOP */ }
         };
 
-        // turn off the default updateLocation handler
+        // Turn off default updateLocation handler
         this.off('updateLocation');
 
+        // Setup location tracking
         this.on('updateLocation', function(location) {
           var tmp_href = window.location.href.split('#');
-          tmp_href[1] = location.start.substr(8, location.start.length - 8 - 1);
-          var context = [{ cfi: location.start }, '', tmp_href.join('#')];
           var tracking = { cfi: location.start, href: location.href, action: self.tracking.action()};
-          if ( tracking.action && tracking.action.match(/\/go\/link/) ) {
-            history.pushState.apply(history, context);
-          } else {
-            history.replaceState.apply(history, context);
+
+          var pageMatch = location.start.match(/page=(\d+)/);
+          if (pageMatch) {
+            var newHash = 'page=' + pageMatch[1];
+            tmp_href[1] = newHash;
+
+            var currentHash = window.location.hash.substring(1);
+            if (currentHash !== newHash) {
+              var context = [{ cfi: location.start }, '', tmp_href.join('#')];
+              if ( tracking.action && tracking.action.match(/\/go\/link/) ) {
+                history.pushState.apply(history, context);
+              } else {
+                history.replaceState.apply(history, context);
+              }
+            }
           }
+
           if ( location.percentage ) {
             var p = Math.ceil(location.percentage * 100);
             document.title = `${p}% - ${self._original_document_title}`;
           }
+
           self.fire('trackPageview', tracking)
         });
 
-        // use the viewer.js loading (download progress) bar, with tweaked styles. The div structure here is from viewer.js
-        // note, the screen reader `aria-live` stuff is on #pdfLoadingProgressBar above because:
-        //   1) no chance of MutationObserver infinite loops by altering the observed element in the callback
-        //   2) many sources say the `aria-live` element must be present on the document to be picked up before changes are made
-        //   3) it's a hidden `class="sr-only"` element (with dynamically-changing percentage text), whereas this one is visible
-        $('<div id="loadingBar" class="helio-loading-bar" aria-hidden="true"><div class="progress" ><div class="glimmer"></div></div></div>').prependTo('.cozy-module-main');
-        var helioPdfProgressBar = document.querySelector("#loadingBar");
-        var helioPdfProgressBarAnnounce = document.querySelector("#pdfLoadingProgressBar");
+        // Wait for iframe to load
+        this._iframe.addEventListener('load', function() {
+          self._pdfWindow = self._iframe.contentWindow;
 
-        var observerOptions = {
-          attributes: true,
-          attributeFilter: ['style']
-        };
-
-        var lastAnnounceTime;
-
-        var observer = new MutationObserver(function() {
-          var progressBarWidth = getComputedStyle(helioPdfProgressBar).getPropertyValue('--progressBar-percent');
-          var helioPdfProgressBarAnnouncement = progressBarWidth + ' loaded';
-          var helioPdfProgressBarPercent = parseInt(progressBarWidth, 10);
-
-          if(!lastAnnounceTime) {
-            helioPdfProgressBarAnnounce.innerHTML = 'PDF loading started';
-            lastAnnounceTime = $.now();
+          // Set --body-bg-color to white inside the iframe AND force single-page
+          // (non-spread) layout BEFORE pdf.js renders any pages — otherwise the
+          // viewer briefly flashes a 2-up layout because pdf.js page elements
+          // resolve to display:inline-block at wide viewport widths (the page
+          // element itself only sets width/height inline, but a viewer.css rule
+          // — combined with the parent .pdfViewer being inline-block — lets
+          // multiple pages flow onto one row). Forcing every .page to display:
+          // block with auto horizontal margins keeps them in a single column.
+          try {
+            var iframeDoc = self._iframe.contentDocument || self._iframe.contentWindow.document;
+            if (iframeDoc) {
+              var style = iframeDoc.createElement('style');
+              style.id = 'heliotrope-body-bg-override';
+              style.textContent =
+                ':root { --body-bg-color: white !important; }' +
+                'body { background-color: white !important; }' +
+                // Force single-column layout regardless of spread/scroll mode
+                // or viewport width. ID-prefixed selectors beat .pdfViewer .page.
+                '#viewer.pdfViewer > .page,' +
+                '#viewer.pdfViewer > .dummyPage,' +
+                '#viewer.pdfViewer .spread > .page,' +
+                '#viewer.pdfViewer .spread > .dummyPage {' +
+                  'display: block !important;' +
+                  'vertical-align: initial !important;' +
+                  'margin-left: auto !important;' +
+                  'margin-right: auto !important;' +
+                '}' +
+                '#viewer.pdfViewer .spread {' +
+                  'display: block !important;' +
+                  'white-space: normal !important;' +
+                  'text-align: center !important;' +
+                  'width: auto !important;' +
+                '}';
+              (iframeDoc.head || iframeDoc.documentElement).appendChild(style);
+            }
+          } catch (e) {
+            // Cross-origin or access issues — degrade gracefully
           }
-          else if ($.now() - lastAnnounceTime > 5000) { // wait 5 seconds minimum between spoken updates
-            helioPdfProgressBarAnnounce.innerHTML = helioPdfProgressBarAnnouncement;
-            lastAnnounceTime = $.now();
-          }
 
-          if (helioPdfProgressBarPercent === 100) {
-            helioPdfProgressBarAnnounce.innerHTML = 'PDF loading complete';
-            this.disconnect();
-          }
+          self._waitForPDFInit(cb);
         });
-        observer.observe(helioPdfProgressBar, observerOptions);
+      },
 
-        $.loadScript("/web/viewer.js", function() {
-          // stop Mozilla viewer messing with page title, also alters external link behavior, apparently
-          // https://github.com/mozilla/pdf.js/blob/85acc9acac4c7699303216727a6300a6097e4dd3/web/app.js#L136
-          window.PDFViewerApplication.isViewerEmbedded = true;
-          window.PDFViewerApplication.setTitle = function(title) { /* NOP */ }
-          self.PDFViewerApplication = window.PDFViewerApplication;
-          self.PDFViewerApplication.open({ url: self.options.href }).then(function() {
-            self.pdfViewer = this.PDFViewerApplication.pdfViewer;
+      _createIframeContainer: function() {
+        // Find the book content container created by cozy-sun-bear
+        var bookContainer = document.querySelector('.cozy-module-book-epub');
+        if (!bookContainer) {
+          // Fallback: create it if it doesn't exist yet
+          bookContainer = document.createElement('div');
+          bookContainer.className = 'cozy-module-book-epub';
+          var mainContainer = document.getElementById('mainContainer');
+          if (mainContainer) {
+            mainContainer.appendChild(bookContainer);
+          }
+        }
 
-            // this option is weird to tweak in viewer.js, it seems to very much be geared to user preferences in...
-            // Firefox's about:config (BasePreferences in viewer.js). Setting it here does what we want for...
-            // HELIO-2866/HELIO-4266 without tracking  more hacks to viewer.js in Confluence.
-            self.PDFViewerApplication.pdfLinkService._ignoreDestinationZoom = true;
+        // Create iframe structure inside the book container.
+        //
+        // The `enable-annotation` attribute opts this same-origin iframe in to
+        // hypothes.is annotation. The hypothes.is client is loaded on the parent
+        // page (see <head> above) and uses a MutationObserver to discover child
+        // frames carrying this attribute, injecting its boot script into them so
+        // pdf.js's textLayer becomes annotatable. Without the attribute the
+        // client only annotates parent-page selections, never the PDF content.
+        // See: https://h.readthedocs.io/projects/client/en/latest/publishers/embedding/
+        var enableAnnotationAttr = <%== @parent_presenter.use_hypothesis? ? "'enable-annotation '" : "''" %>;
+        bookContainer.innerHTML =
+          '<div id="viewerContainer" style="width: 100%; height: 100%; position: relative;">' +
+            '<iframe ' +
+              'id="pdf-viewer-iframe" ' +
+              enableAnnotationAttr +
+              'src="" ' +
+              'style="width: 100%; height: 100%; border: none; display: block;" ' +
+              'title="PDF Viewer" ' +
+              'allowfullscreen>' +
+            '</iframe>' +
+          '</div>';
+      },
 
-            // monkeypatch the PDFLinkService to be able to track when _it_
-            // thinks clicks are worth of pushing onto history so we can
-            // tell when to push links onto history.
-            self.PDFViewerApplication.pdfLinkService.pdfHistory = {
-              pushCurrentPosition: function() { /* NO OP */ },
-              // ToC links, i.e. all PDF bookmarks
-              push: function(context) {
-                self.tracking.action('contents/go/link');
-              },
-              // thumbnail links
-              pushPage: function(pageNumber) {
-                self.tracking.action('contents/go/link');
-              }
-            };
+      _waitForPDFInit: function(cb) {
+        var self = this;
 
-            var setupInterval = setInterval(function() {
-              if ( self.PDFViewerApplication.pdfDocument != null ) {
-                clearInterval(setupInterval);
+        // pdf.js 6.0.227 viewer.mjs: PDFViewerApplication.initializedPromise is a public getter
+        // (returns _initializedCapability.promise). Await it then open; fall back to polling if
+        // the promise is unavailable so we don't regress on unexpected builds.
+        var pdfApp = self._pdfWindow.PDFViewerApplication;
 
-                // --- reset the zoom?
-                // self.pdfViewer.currentScaleValue = 'auto';
-                // self.options.scale = 'auto';
+        function _setup(pdfApp) {
+          self.PDFViewerApplication = pdfApp;
+          self.pdfViewer = pdfApp.pdfViewer;
 
-                // --- or update to what was stored
-                self.options.scale = self.pdfViewer.currentScaleValue;
+          // pdf.js 6.0.227 viewer.mjs: pdfLinkService._ignoreDestinationZoom is still a writable
+          // underscore-prefixed property (set in PDFLinkService constructor, line ~6450). Setting it
+          // to true suppresses zoom-on-destination-navigate (ToC clicks, bookmarks).
+          if (pdfApp.pdfLinkService && '_ignoreDestinationZoom' in pdfApp.pdfLinkService) {
+            pdfApp.pdfLinkService._ignoreDestinationZoom = true;
+          }
 
+          self._setupHistoryTracking();
+          self._setupPageChangeEvents();
+          self._enforceSinglePageSpread();
+          self._loadMetadata(cb);
+        }
 
-                // add events to viewer
-                self.PDFViewerApplication.eventBus.on('pagechanging', function(evt) {
-                  var pageNumber = evt.pageNumber;
-                  self.fire('relocated', { start: pageNumber });
-                  self.fire('updateLocation', {
-                    start: 'epubcfi(page=' + pageNumber + ')',
-                    href: self.options.href + '#page=' + pageNumber,
-                    percentage: ( pageNumber / self.PDFViewerApplication.pagesCount )
-                  });
-                });
+        if (pdfApp && typeof pdfApp.initializedPromise !== 'undefined') {
+          // Preferred: await the public initializedPromise, then wait for a document.
+          var timeoutId = setTimeout(function() {
+            console.error("PDF reader: initializedPromise timed out; aborting init");
+          }, 30000);
 
-                self.PDFViewerApplication.pdfDocument.getMetadata().then(function(data) {
-                  var metadata = {};
-                  metadata.layout = 'pdf';
-
-                  if ( data.metadata ) {
-                    if ( data.metadata.has("dc:title") ) {
-                      metadata.title = data.metadata.get("dc:title");
-                    }
-                    if ( data.metadata.has("dc:author") ) {
-                      metadata.author = data.metadata.get("dc:author");
-                    }
-                    metadata.noid = '<%= @noid %>';
-                    metadata.press_subdomain = '<%= @subdomain %>';
-                  }
-                  self.metadata = metadata;
-
-                  self.fire("updateTitle", self.metadata);
-                  self.fire('updateContents', {});
-                  self.locations = { total: self.PDFViewerApplication.pagesCount };
-                  self.locations.locationFromCfi = function(pageNum) {
-                    return pageNum;
-                  };
-                  self.locations.percentageFromCfi = function(pageNum) {
-                    return ( pageNum / self.locations.total );
-                  };
-                  self.locations.cfiFromPercentage = function(percent) {
-                    var pageNum = Math.round(self.locations.total * percent);
-                    if ( pageNum < 1 ) { pageNum = 1; }
-                    if ( pageNum > this._total ) { pageNum = this._total; }
-                    return { start: pageNum };
-                  };
-
-                  self.fire('updateLocations',  self.locations);
-                  self.fire('relocated', self.currentLocation());
-                  self._disableBookLoader();
-                  cb();
-                });
-
-                self.fire("ready");
-              } else {
-                console.log("AHOY WAITING");
+          pdfApp.initializedPromise.then(function() {
+            clearTimeout(timeoutId);
+            // initializedPromise resolves after preferences are loaded but before open().
+            // Poll briefly for pdfDocument (open() is called internally by the viewer URL params).
+            var docAttempts = 0;
+            var docInterval = setInterval(function() {
+              docAttempts++;
+              if (pdfApp.pdfDocument) {
+                clearInterval(docInterval);
+                _setup(pdfApp);
+              } else if (docAttempts >= 150) {
+                clearInterval(docInterval);
+                console.error("PDF reader: document did not load after initializedPromise resolved");
               }
             }, 100);
+          }).catch(function(err) {
+            clearTimeout(timeoutId);
+            console.error("PDF reader: initializedPromise rejected:", err);
           });
+
+        } else {
+          // Fallback: poll PDFViewerApplication.pdfDocument (same as 5.x behavior)
+          var attempts = 0;
+          var maxAttempts = 100;
+          var checkInterval = setInterval(function() {
+            attempts++;
+            try {
+              var app = self._pdfWindow.PDFViewerApplication;
+              if (app && app.pdfDocument) {
+                clearInterval(checkInterval);
+                _setup(app);
+              } else if (attempts >= maxAttempts) {
+                clearInterval(checkInterval);
+                console.error("PDF reader: PDF failed to initialize");
+              }
+            } catch (e) {
+              // Not ready yet, keep trying
+            }
+          }, 100);
+        }
+      },
+
+      _setupHistoryTracking: function() {
+        var self = this;
+        var pdfHistory = this.PDFViewerApplication.pdfLinkService.pdfHistory;
+
+        if (!pdfHistory) {
+          // pdfHistory can be null when the viewer is embedded — degrade gracefully.
+          return;
+        }
+
+        // Wrap push() to track ToC/bookmark clicks (best-effort; sealed/renamed degrades gracefully)
+        if (typeof pdfHistory.push === 'function') {
+          var originalPush = pdfHistory.push.bind(pdfHistory);
+          pdfHistory.push = function(params) {
+            self.tracking.action('contents/go/link');
+            return originalPush(params);
+          };
+        }
+
+        // Wrap pushPage() to track thumbnail clicks
+        if (typeof pdfHistory.pushPage === 'function') {
+          var originalPushPage = pdfHistory.pushPage.bind(pdfHistory);
+          pdfHistory.pushPage = function(pageNumber) {
+            self.tracking.action('contents/go/link');
+            return originalPushPage(pageNumber);
+          };
+        }
+      },
+
+      // Belt to the CSS braces in _createIframeContainer's load handler: lock
+      // pdfViewer.spreadMode and pdfViewer.scrollMode to 0 (single-page,
+      // vertical scroll) so user keyboard shortcuts (Ctrl+Alt+1/2/3 for spread,
+      // Ctrl+Alt+P/H/V/W for scroll) can't put pdf.js into a layout state that
+      // disagrees with the visual single-column we force via CSS.
+      _enforceSinglePageSpread: function() {
+        var viewer = this.pdfViewer;
+        if (!viewer) return;
+
+        function lockProp(name, value) {
+          try {
+            try { viewer[name] = value; } catch (e) { /* triggers initial layout */ }
+            Object.defineProperty(viewer, name, {
+              configurable: true,
+              enumerable: true,
+              get: function() { return value; },
+              set: function() { /* locked */ }
+            });
+          } catch (e) { /* defensive */ }
+        }
+
+        lockProp('spreadMode', 0); // PDFJS SpreadMode.NONE
+        lockProp('scrollMode', 0); // PDFJS ScrollMode.VERTICAL
+      },
+
+      _setupPageChangeEvents: function() {
+        var self = this;
+        var pdfInitialized = false;
+
+        // Wait a moment for initial page to settle
+        setTimeout(function() {
+          pdfInitialized = true;
+        }, 500);
+
+        // Re-centre #viewerContainer whenever the zoom level changes.
+        // pdf.js sets a fixed pixel width on #viewer on each scale change and does
+        // not reset scrollLeft, so after zooming in and back out the viewport can
+        // appear off-centre. Resetting scrollLeft here keeps it anchored at 0.
+        this.PDFViewerApplication.eventBus.on('scalechanging', function(evt) {
+          try {
+            var viewerContainer = self._pdfWindow.document.getElementById('viewerContainer');
+            if (viewerContainer) {
+              viewerContainer.scrollLeft = 0;
+            }
+          } catch (e) { /* cross-origin guard */ }
+        });
+
+        this.PDFViewerApplication.eventBus.on('pagechanging', function(evt) {
+          var pageNumber = evt.pageNumber;
+
+          if (pdfInitialized) {
+            self.fire('relocated', { start: pageNumber });
+            self.fire('updateLocation', {
+              start: 'epubcfi(page=' + pageNumber + ')',
+              href: self.options.href + '#page=' + pageNumber,
+              percentage: ( pageNumber / self.PDFViewerApplication.pagesCount )
+            });
+          }
+        });
+
+        // Handle manual hash changes
+        window.addEventListener('hashchange', function(e) {
+          var newHash = window.location.hash;
+          if (newHash && newHash.indexOf('#page=') === 0) {
+            var pageMatch = newHash.match(/#page=(\d+)/);
+            if (pageMatch) {
+              var targetPage = parseInt(pageMatch[1], 10);
+              if (self.pdfViewer && self.pdfViewer.currentPageNumber !== targetPage) {
+                self.pdfViewer.currentPageNumber = targetPage;
+              }
+            }
+          }
+        });
+      },
+
+      _loadMetadata: function(cb) {
+        var self = this;
+
+        this.PDFViewerApplication.pdfDocument.getMetadata().then(function(data) {
+          var metadata = {};
+          metadata.layout = 'pdf';
+
+          if ( data.metadata ) {
+            var _hasMeta = typeof data.metadata.has === 'function';
+            var _getMeta = typeof data.metadata.get === 'function';
+            var _hasTitle = _hasMeta ? data.metadata.has("dc:title") : Object.prototype.hasOwnProperty.call(data.metadata, "dc:title");
+            var _hasAuthor = _hasMeta ? data.metadata.has("dc:author") : Object.prototype.hasOwnProperty.call(data.metadata, "dc:author");
+            if ( _hasTitle ) {
+              metadata.title = _getMeta ? data.metadata.get("dc:title") : data.metadata["dc:title"];
+            }
+            if ( _hasAuthor ) {
+              metadata.author = _getMeta ? data.metadata.get("dc:author") : data.metadata["dc:author"];
+            }
+            metadata.noid = '<%= @noid %>';
+            metadata.press_subdomain = '<%= @subdomain %>';
+          }
+          self.metadata = metadata;
+
+          self.fire("updateTitle", self.metadata);
+          self.fire('updateContents', {});
+
+          self.locations = { total: self.PDFViewerApplication.pagesCount };
+          self.locations.locationFromCfi = function(pageNum) {
+            return pageNum;
+          };
+          self.locations.percentageFromCfi = function(pageNum) {
+            return ( pageNum / self.locations.total );
+          };
+          self.locations.cfiFromPercentage = function(percent) {
+            var pageNum = Math.round(self.locations.total * percent);
+            if ( pageNum < 1 ) { pageNum = 1; }
+            if ( pageNum > this.total ) { pageNum = this.total; }
+            return { start: pageNum };
+          };
+
+          self.fire('updateLocations',  self.locations);
+          self.fire('relocated', self.currentLocation());
+          self._disableBookLoader();
+
+          self.fire("ready");
+
+
+          cb();
         });
       },
 
@@ -1058,12 +1146,14 @@
       },
 
       _scroll: function(delta) {
+        if (!this.PDFViewerApplication) return;
+
         switch(delta) {
           case 'PREV':
-            this.prev();
+            this.PDFViewerApplication.page--;
             break;
           case 'NEXT':
-            this.next();
+            this.PDFViewerApplication.page++;
             break;
           case 'HOME':
             this.PDFViewerApplication.page = 1;
@@ -1087,85 +1177,151 @@
         } else {
           pageNum = value;
         }
-        this.pdfViewer.currentPageNumber = parseInt(pageNum, 10);
+
+        if (this.pdfViewer) {
+          this.pdfViewer.currentPageNumber = parseInt(pageNum, 10);
+        }
       },
 
       reopen: function(options) {
-        this.options.scale = options.scale;
-        var newScale = this.options.scale;
-        // var currentScale = this.pdfViewer.currentScaleValue;
-        // var newScale = parseInt(options.scale) / 100.0;
-        // if ( newScale == 1.0 ) { newScale = 'auto'; }
-        // else {
-        //   // calculate what 'auto' would be
-        //   var currentPage = reader.pdfViewer._pages[reader.pdfViewer._currentPageNumber - 1];
-        //   var hPadding = 40; var vPadding = 5;
-        //   var pageWidthScale = (reader.pdfViewer.container.clientWidth - hPadding) /
-        //                        currentPage.width * currentPage.scale;
-        //   var pageHeightScale = (reader.pdfViewer.container.clientHeight - vPadding) /
-        //                         currentPage.height * currentPage.scale;
-        //   var horizontalScale = pageWidthScale;
-        //   newScale = Math.min(1.25, horizontalScale) * newScale;
-        // }
-        // this.options._currentScaleValue = newScale;
-        this.pdfViewer.currentScaleValue = newScale;
+        if (options.scale && this.pdfViewer) {
+          this.options.scale = options.scale;
+          this.pdfViewer.currentScaleValue = options.scale;
+        }
+      },
+
+      // Rotate pages clockwise
+      rotateCW: function() {
+        if (this.pdfViewer) {
+          this.pdfViewer.pagesRotation += 90;
+        }
+      },
+
+      // Rotate pages counter-clockwise
+      rotateCCW: function() {
+        if (this.pdfViewer) {
+          this.pdfViewer.pagesRotation -= 90;
+        }
       },
 
       EOT: true
-
     });
 
-    var reader = new PDFReader('mainContainer', {
-      // href: location.search.replace('?file=', ''),
-      href: '<%= "#{@presenter.id}/file?#{@presenter.browser_cache_breaker}" %>',
+    // Initialize reader
+    var reader = new PDFIframeReader('mainContainer', {
+      href: '/epubs/<%= @presenter.id %>',
       download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
       metadata: {
         title: '<%= raw escape_javascript(@parent_presenter.page_title) %>'
       }
     });
 
+    // Add all cozy-sun-bear controls
     <%= render partial: "cozy_controls_top", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
 
     <%= render partial: "cozy_controls_bottom", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
 
     <% if @parent_presenter.use_hypothesis? %>
-    // Annotation widget checks and initialization
-        var tm;
-        function checkForAnnotator(cb, w) {
-          if (!w) {
-            w = window;
-          }
-          tm = setTimeout(function () {
-            if (w && w.annotator) {
-              clearTimeout(tm);
-              cb();
-            } else {
-              checkForAnnotator(cb, w);
-            }
-          }, 100);
+      // Annotation widget initialization
+      var tm;
+      function checkForAnnotator(cb, w) {
+        if (!w) {
+          w = window;
         }
+        tm = setTimeout(function () {
+          if (w && w.annotator) {
+            clearTimeout(tm);
+            cb();
+          } else {
+            checkForAnnotator(cb, w);
+          }
+        }, 100);
+      }
 
-        var $panel = $('.annotator-frame');
+      var $panel = $('.annotator-frame');
 
-        // pass the reference to the panel
-        var annotation_tool = new AnnotationTool({
-          region: 'top.toolbar.left',
-          $panel: $panel
-        })
-        annotation_tool.addTo(reader);
-      <% end %>
+      var annotation_tool = new AnnotationTool({
+        region: 'top.toolbar.left',
+        $panel: $panel
+      })
+      annotation_tool.addTo(reader);
+    <% end %>
 
-    // start reader
+    // Start reader
     reader.start();
 
-    // distinguish these buttons from the links underneath, too much CSS to add otherwise, methinks
-    var element = document.getElementById("viewOutline");
-    element.classList.add("cozy-control", "button--lg");
-    var element = document.getElementById("viewThumbnail");
-    element.classList.add("cozy-control", "button--lg");
-  </script>
+    // Wire up buttons that need to communicate with iframe
+    function wireUpIframeControls() {
+      // Rotation button
+      var rotateButton = document.getElementById('pageRotateCw');
+      if (rotateButton && !rotateButton.dataset.wiredUp) {
+        rotateButton.dataset.wiredUp = 'true';
+        rotateButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          reader.rotateCW();
+        });
+      }
 
+      // Previous page button - try multiple selectors
+      var previousButton = document.querySelector('.cozy-control-previous') ||
+                          document.querySelector('[data-control="previous"]') ||
+                          document.querySelector('.cozy-control.previous');
+
+      if (previousButton && !previousButton.dataset.wiredUp) {
+        previousButton.dataset.wiredUp = 'true';
+        previousButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (reader.PDFViewerApplication) {
+            reader._scroll('PREV');
+          }
+        }, true);
+      }
+
+      // Next page button - try multiple selectors
+      var nextButton = document.querySelector('.cozy-control-next') ||
+                      document.querySelector('[data-control="next"]') ||
+                      document.querySelector('.cozy-control.next');
+
+      if (nextButton && !nextButton.dataset.wiredUp) {
+        nextButton.dataset.wiredUp = 'true';
+        nextButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (reader.PDFViewerApplication) {
+            reader._scroll('NEXT');
+          }
+        }, true);
+      }
+    }
+
+    wireUpIframeControls();
+    setTimeout(wireUpIframeControls, 500);
+    setTimeout(wireUpIframeControls, 1000);
+    setTimeout(wireUpIframeControls, 2000);
+
+    reader.on('ready', function() {
+      wireUpIframeControls();
+    });
+  </script>
 
   <%= render 'shared/ga' %>
 <% end %>
 <%= render template: 'layouts/mozilla-pdf-viewer' %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
