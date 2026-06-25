@@ -5,18 +5,12 @@ class CatalogController < ApplicationCatalogController
 
   configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
     config.search_builder_class = ::SearchBuilder
-    ## Default parameters to send to solr for all search-like requests. See also SolrHelper#solr_search_params
-    config.default_solr_params = {
-      qf: 'title_tesim creator_tesim creator_full_name_tesim creator_display_tesim subject_tesim description_tesim keyword_tesim contributor_tesim caption_tesim transcript_tesim translation_tesim alt_text_tesim identifier_tesim identifier_ssim isbn_numeric table_of_contents_tesim doi_ssim doi_url_ssim',
-      qt: 'search',
-      rows: 10
-    }
 
-    # solr field configuration for search results/index views
-    config.index.title_field = solr_name('title', :stored_searchable)
-    config.index.display_type_field = solr_name('has_model', :symbol)
+    # `default_solr_params`, `index.title_field`, `index.display_type_field`,
+    # `index.thumbnail_field` and the `add_results_collection_tool` calls
+    # are configured in ApplicationCatalogController and apply to all
+    # catalog controllers.
 
-    config.index.thumbnail_field = 'thumbnail_path_ss'
     config.index.partials.delete(:thumbnail) # we render this inside _index_default.html.erb
     config.index.partials += [:action_menu]
 
@@ -260,10 +254,5 @@ class CatalogController < ApplicationCatalogController
         set_fields: [{ label: 'Press', solr_field: 'press_name_ssim' }]
       }
     }
-
-    # Blacklight 7
-    config.add_results_collection_tool(:sort_widget)
-    config.add_results_collection_tool(:per_page_widget)
-    config.add_results_collection_tool(:view_type_group)
   end
 end
