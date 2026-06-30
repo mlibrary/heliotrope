@@ -12,8 +12,15 @@ module Hyrax
         render 'hyrax/base/unauthorized', status: :unauthorized unless ['analytics', 'counter', 'altmetric', 'dimensions', 'institution', 'licenses'].include?(@partial)
 
         if @partial == 'counter'
-          set_presses
-          set_institutions
+          # set_presses
+          # set_institutions
+          # HELIO-5067
+          # We used to a sowmwhat COUNTER-like reports for logged in users but since SIQ
+          # and especially COUNTER 5.1 those reports don't really make a lot of sense anymore as
+          # we haven't updated the code in services/counter_report/ for 5.1.
+          # So instead the views/hyrax/admin/stats/_counter.html.erb just has a link to SIQ.
+          # We should *proably* do this with the institution_report method too,
+          # but I'm not sure about that yet, so we'll see.
         end
 
         if @partial == 'licenses'

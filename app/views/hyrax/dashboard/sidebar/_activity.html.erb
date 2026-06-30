@@ -44,10 +44,12 @@
       <span class="fa fa-cubes"></span> <span class="sidebar-action-text">Dimensions Reports</span>
     <% end %>
 
+    <!-- HELIO-5067 We want to remove this but I'm not sure if anyone needs it
+         so commenting out for now and we'll see.
     <%= menu.nav_link(hyrax.admin_stats_path + ';partial=institution', class: "nav-link") do %>
       <span class="fa fa-graduation-cap"></span> <span class="sidebar-action-text">Institution Usage</span>
     <% end %>
-
+    -->
     <%= menu.nav_link(hyrax.admin_stats_path + ';partial=licenses', class: "nav-link") do %>
       <span class="fa fa-ticket"></span><span class="sidebar-action-text">Product Licenses</span>
     <% end %>
