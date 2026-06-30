@@ -59,9 +59,13 @@
   display: none !important;
 }
 
-/* Loading bar (hidden; parent page has its own #pdfLoadingProgressBar aria-live announcer) */
+/* Loading bar: keep it visible at the top of the iframe (the toolbar is hidden,
+ * so pdf.js's default top:var(--toolbar-height) would leave a gap). The parent
+ * page's #pdfLoadingProgressBar aria-live announcer is fed by a MutationObserver
+ * in show_pdf.html.erb watching this element's --progressBar-percent. */
 #loadingBar {
-  display: none !important;
+  top: 0 !important;
+  inset-block-start: 0 !important;
 }
 
 /* Undo bar */
