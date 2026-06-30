@@ -867,11 +867,56 @@
                   'white-space: normal !important;' +
                   'text-align: center !important;' +
                   'width: auto !important;' +
-                '}';
+                '}' +
+                // pdf.js 6.0.227 uses --progressBar-color for the visible loading bar.
+                // Setting it on :root inside the iframe applies the per-press brand color
+                // without fighting the cascade; see viewer.css ~L2008 and ~L2378.
+                ':root { --progressBar-color: <%= press_presenter.brand_color %>; }';
               (iframeDoc.head || iframeDoc.documentElement).appendChild(style);
             }
           } catch (e) {
             // Cross-origin or access issues — degrade gracefully
+          }
+
+          // Re-attach screen-reader announcements for the pdf.js loading bar.
+          // pdf.js 6.0.227 drives #loadingBar via the --progressBar-percent CSS custom property
+          // (viewer.css ~L2356). The iframe is same-origin so contentDocument access is safe.
+          // The #pdfLoadingProgressBar aria-live element lives in the parent (not in the iframe)
+          // to avoid MutationObserver feedback loops from altering the observed element, and
+          // because aria-live regions must be present in the document before changes begin.
+          try {
+            var iframeDoc2 = self._iframe.contentDocument || self._iframe.contentWindow.document;
+            var iframeLoadingBar = iframeDoc2 && iframeDoc2.getElementById('loadingBar');
+            var srAnnounce = document.getElementById('pdfLoadingProgressBar');
+
+            if (iframeLoadingBar && srAnnounce) {
+              var lastAnnounceTime;
+
+              var progressObserver = new MutationObserver(function() {
+                var pct = getComputedStyle(iframeLoadingBar).getPropertyValue('--progressBar-percent');
+                var pctInt = parseInt(pct, 10);
+
+                if (!lastAnnounceTime) {
+                  srAnnounce.innerHTML = 'PDF loading started';
+                  lastAnnounceTime = $.now();
+                } else if ($.now() - lastAnnounceTime > 5000) { // wait 5 seconds minimum between spoken updates
+                  srAnnounce.innerHTML = pct + ' loaded';
+                  lastAnnounceTime = $.now();
+                }
+
+                if (pctInt === 100) {
+                  srAnnounce.innerHTML = 'PDF loading complete';
+                  this.disconnect();
+                }
+              });
+
+              progressObserver.observe(iframeLoadingBar, {
+                attributes: true,
+                attributeFilter: ['style']
+              });
+            }
+          } catch (e) {
+            // Cross-origin / not-ready — degrade silently, same as the bg-color block above.
           }
 
           self._waitForPDFInit(cb);

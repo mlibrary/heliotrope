@@ -118,6 +118,53 @@ class PressPresenter < ApplicationPresenter
     @press&.accessible_copy_request_form_url.presence
   end
 
+  # Returns a hex color string for the press loading-bar brand color.
+  # Used to theme the pdf.js #loadingBar inside the iframe (--progressBar-color).
+  # Falls back to #00afec (the old cozy-honey-bear default) for unrecognised presses.
+  BRAND_COLORS = {
+    'aberdeenunipress' => '#111D2F',
+    'ahpi'             => '#80561B',
+    'amherst'          => '#311a4d',
+    'aperio'           => '#E57200',
+    'a2ru'             => '#64b145',
+    'atg'              => '#333333',
+    'barpublishing'    => '#d40b13',
+    'belin'            => '#00274c',
+    'bigten'           => '#393D42',
+    'boydellandbrewer' => '#005159',
+    'bridwell'         => '#354ca1',
+    'fia'              => '#00274c',
+    'gabii'            => '#1b2f43',
+    'heb'              => '#333333',
+    'icmc'             => '#002e5e',
+    'leverpress'       => '#003352',
+    'livedplaces'      => '#BF3C01',
+    'maizebooks'       => '#002e5e',
+    'michigan'         => '#00274C',
+    'michelt'          => '#00274C',
+    'mps'              => '#1d7491',
+    'msupress'         => '#18453B',
+    'ncid'             => '#00274c',
+    'newprairiepress'  => '#26183F',
+    'nyupress'         => '#57068c',
+    'rekihaku'         => '#111111',
+    'sarpress'         => '#a75534',
+    'seas'             => '#00274c',
+    'sussex'           => '#C54B20',
+    'um-pccn'          => '#00274c',
+    'uncpress'         => '#0D7686',
+    'vermont'          => '#154734',
+    'westminster'      => '#B13C32'
+  }.freeze
+
+  def brand_color
+    press_subdomains.each do |sub|
+      color = BRAND_COLORS[sub]
+      return color if color
+    end
+    '#00afec'
+  end
+
   private
 
     def initialize(subdomain, press)
@@ -156,6 +203,10 @@ class PressPresenterNullObject
 
   def all_google_analytics_4
     []
+  end
+
+  def brand_color
+    '#00afec'
   end
 
   def method_missing(name, *args, &block)

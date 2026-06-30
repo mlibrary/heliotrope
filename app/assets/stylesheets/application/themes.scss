@@ -727,11 +727,6 @@ $aberdeenunipress-black: #000000;
       background-color: $aberdeenunipress-brand-color;
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $aberdeenunipress-brand-color;
-    }
-
   }
 
   @media(max-width: 768px) {
@@ -1415,11 +1410,6 @@ button:focus {
       }
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $heb-brand-color;
-    }
-
   }
 
 }
@@ -2072,11 +2062,6 @@ $aperio-white: #fff;
       background-color: $aperio-brand-color;
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $aperio-brand-color;
-    }
-
   }
 
   @media(max-width: 768px) {
@@ -2471,11 +2456,6 @@ $ahpi-white: #fff;
       img {
         height: 47px;
       }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $ahpi-brand-color;
     }
 
   }
@@ -2909,11 +2889,6 @@ $atg-black-80: #342f2e;
       img {
         height: 47px;
       }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $atg-brand-color;
     }
 
   }
@@ -3392,11 +3367,6 @@ $amherst-grey-3: #dee2e6;
       img {
         height: 47px;
       }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $amherst-brand-color;
     }
 
   }
@@ -4045,11 +4015,6 @@ $bigten-black: #000;
       background-color: $bigten-accent-color-light;
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $bigten-accent-color;
-    }
-
   }
 
 }
@@ -4537,11 +4502,6 @@ $bridwell-black-80: #342f2e;
     i[class^='icon-chevron-']:hover {
       @include epub-hover-prev-next-color($bridwell-brand-color);
       transition: 0.2s ease-in;
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $bridwell-brand-color;
     }
 
   }
@@ -5195,11 +5155,6 @@ $barpublishing-white: #fff;
       img {
         height: 47px;
       }
-    }
-
-    // PDF download progress bar
-    .helio-loading-bar .progress {
-      background-color: $barpublishing-brand-color;
     }
 
   }
@@ -5922,11 +5877,6 @@ $boydell-text: #000;
     }
 
     .modal__footer {
-      background-color: $boydell-brand-color;
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
       background-color: $boydell-brand-color;
     }
 
@@ -6664,11 +6614,6 @@ $lever-black-80: #342f2e;
         margin-top: 6px;
         margin-left: 11px;
       }
-    }
-
-    // PDF download progress bar
-    .helio-loading-bar .progress {
-      background-color: $lever-brand-color;
     }
 
   }
@@ -7444,11 +7389,6 @@ $livedplaces-light-secondary: #EEE9E3;
       background-color: $livedplaces-light-secondary;
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $livedplaces-button;
-    }
-
   }
 
 }
@@ -8101,11 +8041,6 @@ $um-white: #fff;
       background-color: $um-accent-color-light;
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $um-accent-color;
-    }
-
   }
 
 }
@@ -8658,11 +8593,6 @@ $um-white: #fff;
 
     .modal__footer {
       background-color: $um-accent-color-light;
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $um-accent-color;
     }
 
   }
@@ -9221,11 +9151,6 @@ $gabii-link-hover:    #1e5667;
         }
 
       }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $gabii-brand-color;
     }
 
   }
@@ -10130,11 +10055,6 @@ $mps-teal-100: #e9f2f5;
       transition: 0.2s ease-in;
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $mps-teal-400;
-    }
-
   }
 
   @media only screen and (max-width : 1198px) {
@@ -10709,11 +10629,6 @@ $a2ru-white: #fafafa;
       }
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $a2ru-brand-color;
-    }
-
   }
 
 }
@@ -11168,11 +11083,6 @@ $fia-teal-100: #e9f2f5;
       transition: 0.2s ease-in;
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $fia-blue-400;
-    }
-
   }
 
   @media only screen and (max-width : 1198px) {
@@ -11454,11 +11364,6 @@ $icmc-black-80: #342f2e;
     i[class^='icon-chevron-']:hover {
       @include epub-hover-prev-next-color($icmc-brand-color);
       transition: 0.2s ease-in;
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $icmc-brand-color;
     }
 
   }
@@ -11867,11 +11772,6 @@ $maize-black-80: #342f2e;
       transition: 0.2s ease-in;
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $maize-brand-color;
-    }
-
   }
 
 }
@@ -12268,11 +12168,6 @@ $pccn-black-80: #342f2e;
         margin-top: 6px;
         margin-left: 11px;
       }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $pccn-brand-color;
     }
 
   }
@@ -12696,11 +12591,6 @@ $seas-black-80: #342f2e;
         margin-top: 6px;
         margin-left: 11px;
       }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $seas-brand-color;
     }
 
   }
@@ -13140,11 +13030,6 @@ $msupress-neutral-100: #e5e9ed;
     i[class^='icon-chevron-']:hover {
       @include epub-hover-prev-next-color($msupress-link !important);
       transition: 0.2s ease-in;
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $msupress-green;
     }
 
   }
@@ -13799,11 +13684,6 @@ $unc-black-80: #342f2e;
       }
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $unc-brand-color;
-    }
-
   }
 
 }
@@ -14413,11 +14293,6 @@ $ncid-black-80: #342f2e;
     i[class^='icon-chevron-']:hover {
       @include epub-hover-prev-next-color($ncid-brand-color);
       transition: 0.2s ease-in;
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $ncid-brand-color;
     }
 
   }
@@ -15085,11 +14960,6 @@ $npp-highlight-dark: #FFDF00;
 
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $npp-brand-color;
-    }
-
   }
 
   @media only screen and (max-width: 1220px) {
@@ -15473,11 +15343,6 @@ $nyu-gray-2: #342f2e;
         margin-top: .5em;
         margin-left: .55em;
       }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $nyu-brand-color;
     }
 
   }
@@ -16255,11 +16120,6 @@ $reki-black-80: #342f2e;
       }
     }
 
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $reki-brand-color;
-    }
-
   }
 
 }
@@ -16636,11 +16496,6 @@ $sarpress-accent-link: $sarpress-blue;
       img {
         height: 47px;
       }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $sarpress-brand-color;
     }
 
   }
@@ -17024,11 +16879,6 @@ $sussex-black-80: #342f2e;
       img {
         height: 47px;
       }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $sussex-brand-color;
     }
 
   }
@@ -17702,11 +17552,6 @@ $vermont-button-hover-border-color: #9db0a9;
       img {
         height: 47px;
       }
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $vermont-brand-color;
     }
 
   }
@@ -18461,11 +18306,6 @@ $westminster-button-hover-border-color: #0a5554;
     .modal__header h3,
     .modal__header button {
       color: $westminster-white;
-    }
-
-    // PDF loading progress bar
-    .helio-loading-bar .progress {
-      background-color: $westminster-brand-color;
     }
 
   }
