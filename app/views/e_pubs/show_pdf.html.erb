@@ -900,13 +900,13 @@
                   srAnnounce.innerHTML = 'PDF loading started';
                   lastAnnounceTime = $.now();
                 } else if ($.now() - lastAnnounceTime > 5000) { // wait 5 seconds minimum between spoken updates
-                  srAnnounce.innerHTML = pct + ' loaded';
+                  srAnnounce.innerHTML = pctInt + '% loaded';
                   lastAnnounceTime = $.now();
                 }
 
                 if (pctInt === 100) {
                   srAnnounce.innerHTML = 'PDF loading complete';
-                  this.disconnect();
+                  progressObserver.disconnect();
                 }
               });
 
