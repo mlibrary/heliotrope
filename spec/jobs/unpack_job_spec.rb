@@ -30,7 +30,7 @@ RSpec.describe UnpackJob, type: :job do
         allow(monograph).to receive(:update_index)
       end
 
-      it "unzips the epub, caches the ToC, creates the search database and doesn't make chapter files derivatives" do
+      it "unzips the epub, caches the ToC, creates the search database and makes the chapter EPUB derivatives" do
         # check that we're reindexing to get the ToC and accessibility metadata on the parent Monograph's Solr doc
         expect(monograph).to receive(:update_index)
         described_class.perform_now(reflowable_epub.id, 'epub')
@@ -38,9 +38,14 @@ RSpec.describe UnpackJob, type: :job do
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: reflowable_epub.id).toc)[0]['title']).to eq 'Damage report!'
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: reflowable_epub.id).toc)[0]['level']).to eq 1
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: reflowable_epub.id).toc)[0]['cfi']).to eq '/6/2[Chapter01]!/4/1:0'
-        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: reflowable_epub.id).toc)[0]['downloadable?']).to eq false
+        # EpubChaptersService produces a `<index>.epub` for every ToC entry regardless of layout,
+        # so downloadable? is true for reflowable epubs now too.
+        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: reflowable_epub.id).toc)[0]['downloadable?']).to eq true
         expect(File.exist?(File.join(root_path, reflowable_epub.id + '.db'))).to be true
-        expect(Dir.exist?(chapters_dir)).to be false
+        # The new EpubChaptersService produces a `<index>.epub` per top-level ToC entry
+        expect(Dir.exist?(chapters_dir)).to be true
+        chapter_files = Dir.glob(File.join(chapters_dir, '*.epub')).sort
+        expect(chapter_files.map { |f| File.basename(f) }).to eq ['0.epub', '1.epub', '2.epub']
       end
     end
 
@@ -60,13 +65,14 @@ RSpec.describe UnpackJob, type: :job do
         allow(monograph).to receive(:update_index)
       end
 
-      it 'unzips the epub, caches the ToC, creates the search database and makes the chapter files derivatives' do
+      it 'unzips the epub, caches the ToC, creates the search database and makes the chapter EPUB derivatives' do
         # check that we're reindexing to get the ToC and accessibility metadata on the parent Monograph's Solr doc
         expect(monograph).to receive(:update_index)
         described_class.perform_now(fixed_layout_epub.id, 'epub')
         expect(File.exist?(File.join(root_path, fixed_layout_epub.id + '.db'))).to be true
         expect(Dir.exist?(chapters_dir)).to be true
-        expect(Dir.glob(File.join(chapters_dir, '**', '*')).select { |file| File.file?(file) }.count).to eq 14
+        # one `<index>.epub` per top-level ToC entry
+        expect(Dir.glob(File.join(chapters_dir, '*.epub')).count).to eq 14
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: fixed_layout_epub.id).toc).length).to eq 14
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: fixed_layout_epub.id).toc)[0]['title']).to eq 'Frontmatter'
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: fixed_layout_epub.id).toc)[0]['level']).to eq 1

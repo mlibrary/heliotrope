@@ -33,6 +33,7 @@ module EPub
                   "/6/#{index * 2}[#{idref}]!/4/1:0"
                 end
           args = {
+            id: @publication.id,
             title: header.text,
             depth: header.depth,
             cfi: cfi,
@@ -42,6 +43,8 @@ module EPub
         end
         break
       end
+      # mirrors PDFEbook::Publication#extract_titles_and_pages: needed so Interval#downloadable? can find its <index>.epub
+      @intervals.each_with_index { |interval, i| interval.overall_index = i }
       @intervals
     end
 

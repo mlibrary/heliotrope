@@ -26,6 +26,8 @@ module EPub
 
     # Instance Methods
 
+    attr_accessor :overall_index
+
     def title
       @args[:title] || ''
     end
@@ -39,7 +41,7 @@ module EPub
     end
 
     def downloadable?
-      downloadable_pages.count.positive? || false
+      File.exist?(File.join(UnpackService.root_path_from_noid(@args[:id], 'epub_chapters'), overall_index.to_s + '.epub'))
     end
 
     def pages

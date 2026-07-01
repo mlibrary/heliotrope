@@ -2,9 +2,10 @@
 
 class EbookIntervalDownloadOperation < EbookOperation
   def allowed?
-    return false unless ebook.publisher.interval?
+    return false if ebook.is_a?(Sighrax::EpubEbook) && !ebook.publisher.epub_chapter_downloads?
+    return false if ebook.is_a?(Sighrax::PdfEbook) && !ebook.publisher.pdf_chapter_downloads?
 
-    # The placement of the can? :update check after the publisher.interval? check
+    # The placement of the can? :update check after the publisher chapter-download checks
     # is intentional since a user that can? :update can download the entire ebook.
     # It will also be a more consistent user experience since most publishers
     # don't allow interval downloads.

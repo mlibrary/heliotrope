@@ -24,7 +24,11 @@ module Sighrax
       false
     end
 
-    def interval?
+    def epub_chapter_downloads?
+      false
+    end
+
+    def pdf_chapter_downloads?
       false
     end
 

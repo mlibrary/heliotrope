@@ -34,9 +34,10 @@ RSpec.describe EPubPresenter do
 
       it { is_expected.to be false }
 
-      context 'intervals' do
-        let(:intervals) { [interval] }
-        let(:interval) { double('interval') }
+      context 'with a cached ToC' do
+        before do
+          EbookTableOfContentsCache.create(noid: epub.id, toc: [{ title: "A", level: 1, cfi: "/6/2[Chapter01]!/4/1:0", downloadable?: false }].to_json)
+        end
 
         it { is_expected.to be true }
       end
@@ -52,13 +53,20 @@ RSpec.describe EPubPresenter do
   end
 
   describe '#intervals' do
-    subject { presenter.intervals.first }
+    context 'with no cached ToC' do
+      # The rendition-based fallback has been removed in favor of a single
+      # source of truth (EpubChaptersService via UnpackJob#cache_epub_toc),
+      # so a missing cache is now surfaced as nil.
+      subject { presenter.intervals }
 
-    it { is_expected.to be_nil }
+      it { is_expected.to be_nil }
+    end
 
-    context 'intervals' do
+    context 'with a cached ToC' do
+      subject { presenter.intervals.first }
+
       before do
-        EbookTableOfContentsCache.create(noid: epub.id, toc: [{ title: "A", depth: 1, cfi: "/6/2[Chapter01]!/4/1:0", download?: false }].to_json)
+        EbookTableOfContentsCache.create(noid: epub.id, toc: [{ title: "A", level: 1, cfi: "/6/2[Chapter01]!/4/1:0", downloadable?: false }].to_json)
       end
 
       it { is_expected.to be_an_instance_of(EBookIntervalPresenter) }

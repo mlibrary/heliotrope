@@ -126,16 +126,23 @@ class EPubsController < CheckpointController
     chapter_index = params[:chapter_index]
     chapter_title = get_chapter_title_from_cache(chapter_index)
     return head :no_content if chapter_title.blank?
-    chapter_file_name = chapter_index + '.pdf'
-    chapter_download_name = chapter_index + '_' + chapter_title.gsub(/[^0-9A-Za-z\-]/, ' ').squish.tr(' ', '_') + '.pdf'
+    extension = @entity.is_a?(Sighrax::EpubEbook) ? '.epub' : '.pdf'
+    chapter_file_name = chapter_index + extension
+    chapter_download_name = chapter_index + '_' + chapter_title.gsub(/[^0-9A-Za-z\-]/, ' ').squish.tr(' ', '_') + extension
     chapter_dir = @entity.is_a?(Sighrax::EpubEbook) ? 'epub_chapters' : 'pdf_ebook_chapters'
     chapter_dir_path = UnpackService.root_path_from_noid(@noid, chapter_dir)
 
     chapter_file_path = File.join(chapter_dir_path, chapter_file_name)
-    run_watermark_checks(chapter_file_path)
 
     CounterService.from(self, @presenter).count(request: 1, section_type: "Chapter", section: chapter_title, book_segment: chapter_index.to_i + 1)
-    send_data watermark_pdf(@entity, chapter_title, chapter_file_path, chapter_index), type: "application/pdf", filename: chapter_download_name, disposition: "inline"
+
+    if @entity.is_a?(Sighrax::EpubEbook)
+      return head :no_content unless File.exist?(chapter_file_path)
+      send_file chapter_file_path, type: "application/epub+zip", filename: chapter_download_name, disposition: "attachment"
+    else
+      run_watermark_checks(chapter_file_path)
+      send_data watermark_pdf(@entity, chapter_title, chapter_file_path, chapter_index), type: "application/pdf", filename: chapter_download_name, disposition: "inline"
+    end
   rescue StandardError => e
     Rails.logger.error "EPubsController.download_interval raised #{e}"
     head :no_content

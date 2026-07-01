@@ -229,10 +229,11 @@ RSpec.describe "EPubs", type: :request do
           it do
             expect { subject }.not_to raise_error
             expect(response).to have_http_status(:ok)
-            # watermarking will change the file content and add fonts
-            expect(response.body).not_to eq File.read(Rails.root.join(fixture_path, '0.pdf'))
-            expect(response.body).to include('OpenSans-Regular')
-            expect(response.body).to include('OpenSans-Italic')
+            expect(response.headers['Content-Type']).to eq 'application/epub+zip'
+            expect(response.headers['Content-Disposition']).to include 'attachment'
+            expect(response.headers['Content-Disposition']).to include '0_title.epub'
+            # epub chapters are pre-built and sent as-is (no watermarking)
+            expect(response.body).to eq File.read(Rails.root.join(fixture_path, '0.epub'))
             expect(counter_service).to have_received(:count).with(request: 1, section: 'title', section_type: 'Chapter', book_segment: 1)
           end
         end
