@@ -16,7 +16,7 @@ gem 'rails-html-sanitizer'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 # Use Puma as the app server
-gem 'puma', '~> 7.2.1'
+gem 'puma', '5.6.9' # '~> 7.2.1'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 6.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -37,7 +37,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 # gem 'rack', '> 1', '< 3'
-gem 'rack', '2.2.18'
+gem 'rack', '2.2.23' # '2.2.18'
 
 # HELIO-2404 APTRUST PRESERVATION
 gem 'bagit'

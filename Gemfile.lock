@@ -780,7 +780,7 @@ GEM
       pry (>= 0.10.4)
     psych (3.3.4)
     public_suffix (7.0.5)
-    puma (7.2.1)
+    puma (5.6.9)
       nio4r (~> 2.0)
     qa (5.11.0)
       activerecord-import
@@ -792,7 +792,7 @@ GEM
       rails (>= 5.0, < 7.2)
       rdf
     racc (1.8.1)
-    rack (2.2.18)
+    rack (2.2.23)
     rack-linkeddata (3.2.3)
       linkeddata (~> 3.2, >= 3.2.2)
       rack (>= 2.2, < 4)
@@ -1330,8 +1330,8 @@ DEPENDENCIES
   pragmatic_segmenter (~> 0.3)
   prawn (~> 2.2)
   pry-rails
-  puma (~> 7.2.1)
-  rack (= 2.2.18)
+  puma (= 5.6.9)
+  rack (= 2.2.23)
   rails (~> 6.1.7)
   rails-controller-testing (~> 1.0.5)
   rails-html-sanitizer
