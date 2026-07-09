@@ -51,5 +51,13 @@ recurring_usage_reports:
 
 world_institution_identifier: 0
 
+# When true, restricts all requests to signed-in users or requests whose
+# current_institutions include one of the identifiers in allowed_institution_identifiers.
+# Intended for the preview/demo server which cannot sit behind Cloudflare.
+restrict_preview_access: false
+allowed_institution_identifiers:
+  - '1'
+  - '490'
+
 pdf_ebook_accessibility_metadata:
   dir: <%= Rails.root.join('pdf_a11y_metadata') %>
