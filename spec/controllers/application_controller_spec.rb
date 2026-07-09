@@ -155,4 +155,82 @@ RSpec.describe ApplicationController, type: :controller do
       expect(controller.instance_variable_get(:@auth)).to be auth
     end
   end
+
+  describe '#restrict_preview_access!' do
+    controller do
+      def index
+        render plain: 'ok'
+      end
+    end
+
+    before { routes.draw { get 'index' => 'anonymous#index' } }
+
+    context 'when Settings.restrict_preview_access is false' do
+      before { allow(Settings).to receive(:restrict_preview_access).and_return(false) }
+
+      it 'allows the request through' do
+        get :index
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when Settings.restrict_preview_access is true' do
+      before do
+        allow(Settings).to receive(:restrict_preview_access).and_return(true)
+        allow(Settings).to receive(:allowed_institution_identifiers).and_return(['1', '490'])
+      end
+
+      context 'anonymous visitor with no allowed institution' do
+        before do
+          allow(controller).to receive(:valid_user_signed_in?).and_return(false)
+          allow(controller).to receive(:current_institutions).and_return([])
+        end
+
+        it 'redirects to the login page' do
+          get :index
+          expect(response).to redirect_to("/login?locale=en")
+        end
+      end
+
+      context 'signed-in user' do
+        before do
+          allow(controller).to receive(:valid_user_signed_in?).and_return(true)
+          allow(controller).to receive(:current_institutions).and_return([])
+        end
+
+        it 'allows the request through' do
+          get :index
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context 'anonymous visitor from an allowed institution' do
+        let(:institution) { instance_double(Greensub::Institution, 'inst', identifier: '490') }
+
+        before do
+          allow(controller).to receive(:valid_user_signed_in?).and_return(false)
+          allow(controller).to receive(:current_institutions).and_return([institution])
+        end
+
+        it 'allows the request through' do
+          get :index
+          expect(response).to have_http_status(:ok)
+        end
+      end
+
+      context 'anonymous visitor from a disallowed institution' do
+        let(:institution) { instance_double(Greensub::Institution, 'inst', identifier: '9999') }
+
+        before do
+          allow(controller).to receive(:valid_user_signed_in?).and_return(false)
+          allow(controller).to receive(:current_institutions).and_return([institution])
+        end
+
+        it 'redirects to the login page' do
+          get :index
+          expect(response).to redirect_to("/login?locale=en")
+        end
+      end
+    end
+  end
 end

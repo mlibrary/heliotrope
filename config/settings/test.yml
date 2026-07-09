@@ -51,5 +51,10 @@ recurring_usage_reports:
 
 world_institution_identifier: 0
 
+restrict_preview_access: false
+allowed_institution_identifiers:
+  - '1'
+  - '490'
+
 pdf_ebook_accessibility_metadata:
   dir: <%= Rails.root.join('spec/fixtures/accessibility_metadata_indexer') %>

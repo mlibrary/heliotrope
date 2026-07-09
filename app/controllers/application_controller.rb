@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   # as `authenticate_user!` (or whatever your resource is) will halt the filter chain and redirect
   # before the location can be stored.
   before_action :store_user_location!, if: :storable_location?
+  before_action :restrict_preview_access!
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -135,6 +136,36 @@ class ApplicationController < ActionController::Base
       sign_out(:user)
       session.destroy
       flash.clear
+    end
+
+    # When enabled (see Settings.restrict_preview_access), restricts all requests to signed-in
+    # users, or unauthenticated visitors whose current_institutions include one of the
+    # identifiers in Settings.allowed_institution_identifiers. All other visitors are redirected
+    # to the login page.
+    #
+    # This is intended for the preview/demo server which cannot sit behind Cloudflare and
+    # was being overwhelmed by bot traffic (HELIO-XXXX).
+    def restrict_preview_access!
+      return unless Settings.respond_to?(:restrict_preview_access) && Settings.restrict_preview_access
+      return if preview_access_allowed?
+
+      respond_to do |format|
+        format.html { redirect_to main_app.new_user_session_path, alert: t('preview_access.login_required', default: 'Please sign in to access this preview server.') }
+        format.any  { head :unauthorized }
+      end
+    end
+
+    def preview_access_allowed?
+      # Always allow the login flow itself so users can actually sign in.
+      return true if devise_controller?
+      return true if is_a?(SessionsController) || is_a?(ShibbolethsController)
+      return true if valid_user_signed_in?
+
+      allowed = Array(Settings.allowed_institution_identifiers).map(&:to_s)
+      current_institutions.any? { |inst| allowed.include?(inst.identifier.to_s) }
+    rescue StandardError => e
+      Rails.logger.warn("[restrict_preview_access!] error determining access, denying: #{e.class} #{e.message}")
+      false
     end
 
     # Its important that the location is NOT stored if:
