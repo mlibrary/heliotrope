@@ -79,6 +79,7 @@ class PressesController < ApplicationController
                                     :default_list_view,
                                     :aboutware,
                                     :interval,
+                                    :show_author_bios,
                                     :tombstone_message,
                                     :content_warning_information,
                                     :show_irus_stats,

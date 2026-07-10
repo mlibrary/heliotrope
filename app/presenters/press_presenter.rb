@@ -100,6 +100,11 @@ class PressPresenter < ApplicationPresenter
     true
   end
 
+  def show_author_bios?
+    return false if press.show_author_bios == false
+    true
+  end
+
   def accessibility_webpage_url
     @press&.accessibility_webpage_url.presence
   end

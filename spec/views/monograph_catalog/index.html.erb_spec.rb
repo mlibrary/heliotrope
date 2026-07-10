@@ -393,6 +393,35 @@ RSpec.describe "monograph_catalog/index.html.erb" do
         end
       end
 
+      describe 'author bio tab' do
+        let(:press_presenter) { instance_double(PressPresenter, show_irus_stats?: true, show_author_bios?: show_author_bios, content_warning_information: '') }
+
+        before do
+          allow(monograph_presenter).to receive(:author_bio?).and_return(true)
+          allow(monograph_presenter).to receive(:author_bio).and_return(['A bio.'])
+          allow(view).to receive(:press_presenter).and_return(press_presenter)
+          render
+        end
+
+        context 'when press_presenter.show_author_bios? is true' do
+          let(:show_author_bios) { true }
+
+          it 'shows the Author Bio tab and section' do
+            is_expected.to have_css('a#tab-author-bio')
+            is_expected.to have_css('section#author-bio')
+          end
+        end
+
+        context 'when press_presenter.show_author_bios? is false' do
+          let(:show_author_bios) { false }
+
+          it 'does not show the Author Bio tab nor section' do
+            is_expected.not_to have_css('a#tab-author-bio')
+            is_expected.not_to have_css('section#author-bio')
+          end
+        end
+      end
+
       describe 'chapter links' do
         let(:pdf_ebook_presenter) { instance_double("pdf_ebook_presenter", id: 'validnoid') }
 

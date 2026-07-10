@@ -72,6 +72,26 @@ RSpec.describe PressPresenter do
       end
     end
 
+    describe "#show_author_bios?" do
+      context "is set to true" do
+        let(:press) { create(:press, show_author_bios: true) }
+
+        it { expect(subject.show_author_bios?).to be true }
+      end
+
+      context "is set to false" do
+        let(:press) { create(:press, show_author_bios: false) }
+
+        it { expect(subject.show_author_bios?).to be false }
+      end
+
+      context "defaults to false" do
+        let(:press) { create(:press) }
+
+        it { expect(subject.show_author_bios?).to be false }
+      end
+    end
+
     describe "#accessibility_webpage_url" do
       let(:press) { create(:press, subdomain: "blah", accessibility_webpage_url: accessibility_webpage_url) }
       let(:accessibility_webpage_url) { "https://mypublisher.com/a11y-stuff" }

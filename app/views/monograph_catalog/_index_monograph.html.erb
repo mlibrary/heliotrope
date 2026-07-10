@@ -129,6 +129,13 @@
             </div>
           </li>
         <% end %>
+        <% if @monograph_presenter.author_bio? && press_presenter.show_author_bios? %>
+          <li role="presentation">
+            <div class="tab-text">
+              <a id="tab-author-bio" href="#author-bio" aria-controls="author-bio" role="tab" data-toggle="tab" aria-selected="false" aria-expanded="false" tabindex="-1">Author Bio</a>
+            </div>
+          </li>
+        <% end %>
         <% if @monograph_presenter.reviews? %>
           <li role="presentation">
             <div class="tab-text">
@@ -209,6 +216,17 @@
           <section id="award" class="tab-pane fade award row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-funder" tabindex="0">
             <div class="col-sm-12">
               <div aria-label="award" class="award"><%= render_markdown @monograph_presenter.awards %></div>
+            </div>
+          </section>
+        <% end %>
+        <!-- AUTHOR BIO -->
+        <% if @monograph_presenter.author_bio? && press_presenter.show_author_bios? %>
+          <section id="author-bio" class="tab-pane fade author-bio row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-author-bio" tabindex="0">
+            <div class="col-sm-12">
+              <% @monograph_presenter.author_bio.each_with_index do |bio, index| %>
+                <% if index > 0 %><hr aria-label="Next author bio" class="author-bio-separator" /><% end %>
+                <section aria-label="author bio" class="author_bio"><%= render_markdown bio %></section>
+              <% end %>
             </div>
           </section>
         <% end %>
