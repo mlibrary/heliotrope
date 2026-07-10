@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true do
-  let(:press) { create(:press, interval: interval) }
+  let(:press) { create(:press, pdf_chapter_downloads: pdf_chapter_downloads) }
   let(:monograph) { create(:public_monograph, press: press.subdomain, open_access: open_access, representative_id: cover.id) }
   let(:cover) { create(:file_set, content: File.open(File.join(fixture_path, 'lorum_ipsum_toc_cover.png'))) }
   # as of 202103 the PDF FileSet needs to be public for ToC Read/Download buttons to show, allow_download is not relevant
@@ -26,8 +26,8 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
     false
   end
 
-  context 'Press interval set to false' do
-    let(:interval) { false }
+  context 'Press pdf_chapter_downloads set to false' do
+    let(:pdf_chapter_downloads) { false }
 
     context 'OA title' do
       let(:open_access) { 'yes' }
@@ -88,8 +88,8 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
     end
   end
 
-  context 'Press interval set to true' do
-    let(:interval) { true }
+  context 'Press pdf_chapter_downloads set to true' do
+    let(:pdf_chapter_downloads) { true }
 
     context 'OA title' do
       let(:open_access) { 'yes' }

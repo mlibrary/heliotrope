@@ -14,21 +14,25 @@ class EPubPresenter < ApplicationPresenter
   end
 
   def intervals?
-    return true if EbookTableOfContentsCache.find_by(noid: id).present?
-    @epub&.rendition&.intervals&.count&.positive?
+    EbookTableOfContentsCache.find_by(noid: id).present?
   end
 
   def intervals
-    @intervals ||= begin
-      record = EbookTableOfContentsCache.find_by(noid: @epub.id)
-      if record.present?
-        JSON.parse(record.toc).map do |i|
-          EBookIntervalPresenter.new(i.symbolize_keys)
-        end
-      else
-        Rails.logger.error("[FIXME ERROR EPubPresenter: EbookTableOfContentsCache] No Cached TOC for #{@epub.id}")
-        @epub.rendition.intervals.map { |interval| RemoveMeEPubIntervalPresenter.new(interval) }
-      end
-    end
+    return @intervals if defined?(@intervals)
+    record = EbookTableOfContentsCache.find_by(noid: @epub.id)
+    @intervals = if record.present?
+                   JSON.parse(record.toc).map do |i|
+                     EBookIntervalPresenter.new(i.symbolize_keys)
+                   end
+                 else
+                   # No cached ToC. The previous fallback that rebuilt intervals
+                   # from EPub::Rendition on-the-fly has been removed in favor
+                   # of a single source of truth (EpubChaptersService, via
+                   # UnpackJob#cache_epub_toc). If something went wrong with
+                   # UnpackJob that should be noticed during QC before the
+                   # book is published, so we just log and return nil here.
+                   Rails.logger.error("[FIXME ERROR EPubPresenter: EbookTableOfContentsCache] No Cached TOC for #{@epub.id}")
+                   nil
+                 end
   end
 end

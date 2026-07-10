@@ -42,9 +42,10 @@ RSpec.describe Sighrax::Publisher, type: :model do
 
     let(:publisher) { described_class.send(:new, subdomain, press) }
     let(:subdomain) { 'publisher' }
-    let(:press) { create(:press, subdomain: subdomain, watermark: watermark, interval: interval) }
+    let(:press) { create(:press, subdomain: subdomain, watermark: watermark, epub_chapter_downloads: epub_chapter_downloads, pdf_chapter_downloads: pdf_chapter_downloads) }
     let(:watermark) { false }
-    let(:interval) { false }
+    let(:epub_chapter_downloads) { false }
+    let(:pdf_chapter_downloads) { false }
 
     it { is_expected.to be_an_instance_of described_class }
     it { expect(subject.subdomain).to eq subdomain }
@@ -59,7 +60,8 @@ RSpec.describe Sighrax::Publisher, type: :model do
     it { expect(subject.resource_noids(true)).to be_empty }
     it { expect(subject.user_ids(true)).to be_empty }
     it { expect(subject.watermark?).to be false }
-    it { expect(subject.interval?).to be false }
+    it { expect(subject.epub_chapter_downloads?).to be false }
+    it { expect(subject.pdf_chapter_downloads?).to be false }
 
     context 'watermark' do
       let(:watermark) { true }
@@ -67,10 +69,16 @@ RSpec.describe Sighrax::Publisher, type: :model do
       it { expect(subject.watermark?). to be true }
     end
 
-    context 'interval' do
-      let(:interval) { true }
+    context 'epub_chapter_downloads' do
+      let(:epub_chapter_downloads) { true }
 
-      it { expect(subject.interval?).to be true }
+      it { expect(subject.epub_chapter_downloads?).to be true }
+    end
+
+    context 'pdf_chapter_downloads' do
+      let(:pdf_chapter_downloads) { true }
+
+      it { expect(subject.pdf_chapter_downloads?).to be true }
     end
 
     context 'with child' do

@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
-  let(:press) { create(:press, interval: interval) }
+  let(:press) { create(:press, epub_chapter_downloads: epub_chapter_downloads) }
   let(:monograph) { create(:public_monograph, press: press.subdomain, open_access: open_access, representative_id: cover.id) }
   let(:cover) { create(:file_set, content: File.open(File.join(fixture_path, 'csv', 'miranda.jpg'))) }
   # as of 202103 the EPUB FileSet needs to be public for ToC Read/Download buttons to show, allow_download is not relevant
@@ -29,8 +29,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
   context 'free flow epub' do
     let(:epub) { 'moby-dick.epub' }
 
-    context 'Press interval set to false' do
-      let(:interval) { false }
+    context 'Press epub_chapter_downloads set to false' do
+      let(:epub_chapter_downloads) { false }
 
       context 'OA title' do
         let(:open_access) { 'yes' }
@@ -97,8 +97,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
       end
     end
 
-    context 'Press interval set to true' do
-      let(:interval) { true }
+    context 'Press epub_chapter_downloads set to true' do
+      let(:epub_chapter_downloads) { true }
 
       context 'OA title' do
         let(:open_access) { 'yes' }
@@ -169,8 +169,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
   context 'page image epub' do
     let(:epub) { 'the-whale.epub' }
 
-    context 'Press interval set to false' do
-      let(:interval) { false }
+    context 'Press epub_chapter_downloads set to false' do
+      let(:epub_chapter_downloads) { false }
 
       context 'OA title' do
         let(:open_access) { 'yes' }
@@ -235,8 +235,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
       end
     end
 
-    context 'Press interval set to true' do
-      let(:interval) { true }
+    context 'Press epub_chapter_downloads set to true' do
+      let(:epub_chapter_downloads) { true }
 
       context 'OA title' do
         let(:open_access) { 'yes' }

@@ -8,9 +8,17 @@ RSpec.describe EbookIntervalDownloadOperation do
 
     let(:policy) { described_class.new(actor, ebook) }
     let(:actor) { Anonymous.new({}) }
-    let(:ebook) { instance_double(Sighrax::Ebook, 'ebook', publisher: publisher) }
-    let(:publisher) { instance_double(Sighrax::Publisher, 'publisher', interval?: interval) }
-    let(:interval) { false }
+    let(:ebook_class) { Sighrax::PdfEbook }
+    let(:ebook) do
+      instance_double(ebook_class, 'ebook', publisher: publisher).tap do |dbl|
+        # `instance_double` doesn't preserve real ancestry, so stub `is_a?`
+        # to match the ebook type this double is standing in for.
+        allow(dbl).to receive(:is_a?) { |klass| ebook_class <= klass }
+      end
+    end
+    let(:publisher) { instance_double(Sighrax::Publisher, 'publisher', epub_chapter_downloads?: epub_chapter_downloads, pdf_chapter_downloads?: pdf_chapter_downloads) }
+    let(:epub_chapter_downloads) { false }
+    let(:pdf_chapter_downloads) { false }
     let(:can_update) { false }
     let(:accessible_online) { false }
     let(:unrestricted) { false }
@@ -25,8 +33,8 @@ RSpec.describe EbookIntervalDownloadOperation do
 
     it { is_expected.to be false }
 
-    context 'when publisher interval' do
-      let(:interval) { true }
+    context 'when publisher allows chapter downloads for this ebook type' do
+      let(:pdf_chapter_downloads) { true }
 
       it { is_expected.to be false }
 
@@ -93,6 +101,49 @@ RSpec.describe EbookIntervalDownloadOperation do
       let(:licensed_for_download) { true }
 
       it { is_expected.to be false }
+    end
+
+    context 'when the ebook is an EpubEbook' do
+      let(:ebook_class) { Sighrax::EpubEbook }
+
+      it 'is not allowed when the publisher disallows epub chapter downloads' do
+        expect(subject).to be false
+      end
+
+      # Sanity check: the pdf setting must not affect epub ebooks.
+      context 'when only pdf_chapter_downloads is enabled' do
+        let(:pdf_chapter_downloads) { true }
+        let(:accessible_online) { true }
+        let(:unrestricted) { true }
+
+        it { is_expected.to be false }
+      end
+
+      context 'when publisher allows epub chapter downloads' do
+        let(:epub_chapter_downloads) { true }
+
+        it { is_expected.to be false }
+
+        context 'when can edit' do
+          let(:can_update) { true }
+
+          it { is_expected.to be true }
+        end
+
+        context 'when online access and unrestricted' do
+          let(:accessible_online) { true }
+          let(:unrestricted) { true }
+
+          it { is_expected.to be true }
+        end
+
+        context 'when online access and licensed for download' do
+          let(:accessible_online) { true }
+          let(:licensed_for_download) { true }
+
+          it { is_expected.to be true }
+        end
+      end
     end
   end
 end

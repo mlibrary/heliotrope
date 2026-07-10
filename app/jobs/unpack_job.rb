@@ -41,11 +41,16 @@ class UnpackJob < ApplicationJob
     case kind
     when 'epub'
       unpack_epub(id, root_path, file)
+      # Create the split chapter EPUBs *before* caching the ToC: the cache is
+      # built directly from EpubChaptersService's return value (single source
+      # of truth), so the two can never disagree on titles/levels/indices/
+      # downloadability. This also has to happen before insert_embed_codes()
+      # so the split chapters get the un-modified xhtml.
+      chapters = create_epub_chapters(id, root_path)
+      cache_epub_toc(id, chapters)
       insert_embed_codes(file_set.parent.id, root_path)
       create_search_index(root_path)
-      cache_epub_toc(id, root_path)
       file_set.parent.update_index if file_set.parent.present? # index the ToC and "Accessibility Claims" metadata to the monograph
-      create_epub_chapters(id, root_path) # has to come after cache_epub_toc()
       epub_webgl_bridge(id, root_path, kind)
     when 'webgl'
       unpack_zipped_js_app(id, kind, root_path, file)
@@ -75,14 +80,39 @@ class UnpackJob < ApplicationJob
       EbookTableOfContentsCache.create(noid: pdf_ebook.id, toc: intervals.map { |i| i.to_h_for_toc }.to_json)
     end
 
-    def cache_epub_toc(id, root_path)
+    def cache_epub_toc(id, chapters)
       EbookTableOfContentsCache.find_by(noid: id)&.destroy
-      epub = EPub::Publication.from_directory(root_path)
-      intervals = epub&.rendition&.intervals
-      EbookTableOfContentsCache.create(noid: epub.id, toc: intervals.map { |i| i.to_h_for_toc }.to_json)
+      return if chapters.blank?
+      # `chapters` comes from EpubChaptersService.create_chapters and already
+      # contains :title, :level, :cfi, :downloadable? — the exact shape that
+      # Interval#to_h_for_toc produces for the pdf_ebook flow.
+      toc = chapters.map { |c| c.slice(:title, :level, :cfi, :downloadable?) }
+      EbookTableOfContentsCache.create(noid: id, toc: toc.to_json)
     end
 
+    # Produce one downloadable EPUB chapter file per top-level Table of Contents
+    # entry of the unpacked EPUB at `root_path`. Each chapter is written as
+    # `<index>.epub` (0-based) into a sibling `_chapters` directory.
+    # See EpubChaptersService for the splitting/link-rewriting strategy.
+    # Returns the Array of chapter hashes produced by EpubChaptersService, or
+    # nil on failure. Used by cache_epub_toc as the single source of truth for
+    # the ToC cache.
     def create_epub_chapters(id, root_path)
+      return nil unless Dir.exist?(root_path)
+
+      chapter_dir = prepare_chapter_dir(id, 'epub', root_path)
+      EpubChaptersService.create_chapters(root_path, chapter_dir)
+    rescue StandardError => e
+      Rails.logger.error("[EPUB CHAPTER FAILURE] Could not create EPUB chapters for #{id}: #{e.message}\n#{e.backtrace&.first(10)&.join("\n")}")
+      nil
+    end
+
+    # DEPRECATED: predecessor of `create_epub_chapters`, which now produces
+    # actual EPUB chapter files via EpubChaptersService. This method rendered
+    # a PDF per top-level ToC entry using EPub::Marshaller::PDF and is no
+    # longer wired into `perform`. Left in place pending removal (and the
+    # removal of the associated EPub gem code paths) under a dedicated ticket.
+    def create_epub_chapters_as_pdfs(id, root_path)
       publication = EPub::Publication.from_directory(UnpackService.root_path_from_noid(id, 'epub'))
       epub_presenter = EPubPresenter.new(publication)
 

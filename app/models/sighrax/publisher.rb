@@ -96,8 +96,12 @@ module Sighrax
       press.watermark
     end
 
-    def interval?
-      press.interval
+    def epub_chapter_downloads?
+      press.epub_chapter_downloads
+    end
+
+    def pdf_chapter_downloads?
+      press.pdf_chapter_downloads
     end
 
     def tombstone_message # rubocop:disable Rails/Delegate
