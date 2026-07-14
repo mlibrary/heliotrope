@@ -19,9 +19,19 @@ require 'zip'
 #   ToC entry's target). All such spine items are included in the chapter EPUB.
 # - Hyperlinks inside the chapter to other files in the same chapter, and
 #   fragment-only or external (mailto:, http(s)://, etc.) links, are kept as-is.
-# - Hyperlinks to files outside this chapter are rewritten as in-chapter
-#   endnotes that state the ToC entry the link originally targeted. This
-#   preserves the link's reading context while remaining accessible.
+# - Two kinds of cross-file links have their *destination content* copied into
+#   the chapter EPUB so the reader can still follow them:
+#     1. Endnote references (`<a epub:type="noteref">`) that point at note
+#        definitions (`epub:type="endnote"`/`"footnote"`/`"rearnote"`) living
+#        in another spine file. Only the note definitions actually referenced
+#        by this chapter are copied, into a file that keeps the original
+#        filename (so the existing hrefs keep resolving).
+#     2. "Extended description" links — an `<a>` inside a paragraph carrying the
+#        `image-right_back` class (the only reliable marker these vendors give
+#        us). The whole target file is copied in verbatim.
+# - Any *other* hyperlink to a file outside this chapter is rewritten as an
+#   in-chapter endnote that states the ToC entry the link originally targeted.
+#   This preserves the link's reading context while remaining accessible.
 module EpubChaptersService
   module_function
 
@@ -36,6 +46,33 @@ module EpubChaptersService
     DC_NS   = 'http://purl.org/dc/elements/1.1/'
     XHTML_NS = 'http://www.w3.org/1999/xhtml'
     EPUB_NS = 'http://www.idpf.org/2007/ops'
+
+    # epub:type values that mark a *note definition* (the thing a noteref points
+    # at). Deliberately excludes "noteref" (the reference itself).
+    NOTE_DEFINITION_TYPES = %w[endnote footnote rearnote].freeze
+
+    # Paragraph class(es) that wrap an "extended description" link. This is the
+    # only reliable marker the sampled vendors give us to detect these links.
+    EXTENDED_DESCRIPTION_CLASSES = %w[image-right_back].freeze
+
+    # Per-chapter accumulator threaded through the link-rewriting pass.
+    # - resources:            Set of resource hrefs (images/css/...) to bundle
+    # - placeholder_endnotes: Array of {id:, target_title:, original_text:} for
+    #                         cross-chapter links we couldn't copy (see
+    #                         append_endnotes_section)
+    # - copied_endnote_refs:  Hash of source_spine_href => [fragment_id, ...]
+    #                         for note definitions to copy into the chapter
+    # - extended_desc_hrefs:  Array of spine_hrefs to copy wholesale
+    Collector = Struct.new(:resources, :placeholder_endnotes, :copied_endnote_refs, :extended_desc_hrefs) do
+      def add_endnote_ref(source_href, fragment)
+        list = (self.copied_endnote_refs[source_href] ||= [])
+        list << fragment unless list.include?(fragment)
+      end
+
+      def add_extended_desc(href)
+        extended_desc_hrefs << href unless extended_desc_hrefs.include?(href)
+      end
+    end
 
     def initialize(epub_root_path, output_dir)
       @epub_root  = epub_root_path
@@ -215,7 +252,7 @@ module EpubChaptersService
           File.write(File.join(tmpdir, 'META-INF', 'container.xml'), container_xml_content)
 
           resources = Set.new
-          endnotes = []
+          collector = Collector.new(resources, [], {}, [])
 
           # First pass: copy + rewrite each spine xhtml in this chapter
           chapter[:spine_hrefs].each do |spine_href|
@@ -227,7 +264,7 @@ module EpubChaptersService
             dst = File.join(opf_dir_tmp, spine_href)
             FileUtils.mkdir_p(File.dirname(dst))
             doc = Nokogiri::XML(File.read(src))
-            rewrite_links(doc, spine_href, chapter, endnotes)
+            rewrite_links(doc, spine_href, chapter, collector)
             collect_resources(doc, spine_href, resources)
             File.write(dst, doc.to_xml)
           end
@@ -236,14 +273,21 @@ module EpubChaptersService
           chapter = chapter.merge(spine_hrefs: chapter[:spine_hrefs].select { |h| File.exist?(File.join(opf_dir_tmp, h)) })
           next if chapter[:spine_hrefs].empty?
 
-          # Append endnotes (if any) to the last spine file
-          if endnotes.any?
+          # Append placeholder endnotes (if any) to the last (main) spine file
+          if collector.placeholder_endnotes.any?
             last_href = chapter[:spine_hrefs].last
             last_path = File.join(opf_dir_tmp, last_href)
             doc = Nokogiri::XML(File.read(last_path))
-            append_endnotes_section(doc, endnotes)
+            append_endnotes_section(doc, collector.placeholder_endnotes)
             File.write(last_path, doc.to_xml)
           end
+
+          # Copy destination content for cross-file endnote references and
+          # "extended description" links, adding those files to the chapter's
+          # spine (after the main content).
+          copied_hrefs = copy_referenced_endnote_files(collector, opf_dir_tmp, resources)
+          copied_hrefs += copy_extended_description_files(collector, chapter, opf_dir_tmp, resources)
+          chapter = chapter.merge(spine_hrefs: chapter[:spine_hrefs] + copied_hrefs) if copied_hrefs.any?
 
           # Copy referenced resources (preserving relative paths from opf_dir)
           resources.each do |res_href|
@@ -272,9 +316,9 @@ module EpubChaptersService
 
       # ---------------- Link rewriting ----------------
 
-      def rewrite_links(doc, current_spine_href, chapter, endnotes)
+      def rewrite_links(doc, current_spine_href, chapter, collector)
         current_dir = File.dirname(current_spine_href)
-        endnote_target_file = chapter[:spine_hrefs].last
+        placeholder_target_file = chapter[:spine_hrefs].last
 
         doc.css('a[href]').each do |a|
           href = a['href']
@@ -283,31 +327,143 @@ module EpubChaptersService
           next if href.start_with?('#')
           next if href.match?(%r{\A[a-zA-Z][a-zA-Z0-9+\-.]*:})
 
-          target_path, _frag = href.split('#', 2)
+          target_path, fragment = href.split('#', 2)
           resolved = resolve_href_to_opf_dir(target_path, current_dir)
 
           # Internal-to-chapter link - keep as-is (the file is present in this chapter epub)
           next if chapter[:spine_hrefs].include?(resolved)
 
-          # Cross-chapter link - convert to an in-chapter endnote
-          target_chapter_idx = @href_to_chapter_index[resolved]
-          target_title = if target_chapter_idx
-                           @chapter_ranges[target_chapter_idx][:title]
-                         else
-                           'another section of the book'
-                         end
-          en_index = endnotes.length + 1
-          en_id = "epub-chapter-endnote-#{en_index}"
-          endnotes << { id: en_id, target_title: target_title, original_text: a.text.to_s.strip }
+          # 1) Endnote reference into another file: remember which note to copy.
+          #    The copied file keeps `resolved`'s path, so the href still resolves
+          #    and needs no rewriting.
+          if noteref?(a) && fragment.present?
+            collector.add_endnote_ref(resolved, fragment)
+            next
+          end
 
-          new_href = if current_spine_href == endnote_target_file
-                       "##{en_id}"
-                     else
-                       "#{rel_path_between(current_spine_href, endnote_target_file)}##{en_id}"
-                     end
-          a['href'] = new_href
-          a['role'] = 'doc-noteref'
-          a['epub:type'] = 'noteref'
+          # 2) "Extended description" link: copy the whole target file in. Again
+          #    the href keeps resolving because the file lands at `resolved`.
+          if extended_description_link?(a)
+            collector.add_extended_desc(resolved)
+            next
+          end
+
+          # 3) Other cross-chapter link - convert to an in-chapter endnote
+          add_placeholder_endnote(a, resolved, current_spine_href, placeholder_target_file, collector.placeholder_endnotes)
+        end
+      end
+
+      def add_placeholder_endnote(anchor, resolved, current_spine_href, target_file, endnotes)
+        target_chapter_idx = @href_to_chapter_index[resolved]
+        target_title = if target_chapter_idx
+                         @chapter_ranges[target_chapter_idx][:title]
+                       else
+                         'another section of the book'
+                       end
+        en_index = endnotes.length + 1
+        en_id = "epub-chapter-endnote-#{en_index}"
+        endnotes << { id: en_id, target_title: target_title, original_text: anchor.text.to_s.strip }
+
+        new_href = if current_spine_href == target_file
+                     "##{en_id}"
+                   else
+                     "#{rel_path_between(current_spine_href, target_file)}##{en_id}"
+                   end
+        anchor['href'] = new_href
+        anchor['role'] = 'doc-noteref'
+        anchor['epub:type'] = 'noteref'
+      end
+
+      # An endnote/footnote reference: `epub:type="noteref"` or `role="doc-noteref"`.
+      def noteref?(anchor)
+        epub_type_tokens(anchor).include?('noteref') ||
+          anchor['role'].to_s.split(/\s+/).include?('doc-noteref')
+      end
+
+      # An "extended description" link is only reliably identifiable by the class
+      # on its enclosing paragraph. Exclude the reciprocal "back" links (which
+      # share the same paragraph class) so we don't treat them as forward links.
+      def extended_description_link?(anchor)
+        return false if anchor['role'].to_s.split(/\s+/).include?('doc-backlink')
+        (enclosing_paragraph_classes(anchor) & EXTENDED_DESCRIPTION_CLASSES).any?
+      end
+
+      def enclosing_paragraph_classes(node)
+        n = node.parent
+        while n&.element?
+          return n['class'].to_s.split(/\s+/) if n.name == 'p'
+          n = n.parent
+        end
+        []
+      end
+
+      def epub_type_tokens(node)
+        raw = node['epub:type'] || node.attribute_with_ns('type', EPUB_NS)&.value
+        raw.to_s.split(/\s+/)
+      end
+
+      # ---------------- Copying destination content ----------------
+
+      # Write a trimmed copy of each source file that holds note definitions this
+      # chapter references, keeping only the referenced notes and the original
+      # filename. Returns the hrefs written (to be appended to the spine).
+      def copy_referenced_endnote_files(collector, opf_dir_tmp, resources)
+        collector.copied_endnote_refs.filter_map do |source_href, fragments|
+          src = File.join(@opf_dir_full, source_href)
+          next unless File.exist?(src)
+
+          doc = Nokogiri::XML(File.read(src))
+          trim_to_referenced_notes(doc, fragments)
+          collect_resources(doc, source_href, resources)
+
+          dst = File.join(opf_dir_tmp, source_href)
+          FileUtils.mkdir_p(File.dirname(dst))
+          File.write(dst, doc.to_xml)
+          source_href
+        end
+      end
+
+      # Remove every note definition in `doc` whose id isn't in `wanted_ids`,
+      # leaving surrounding structure (headers, container lists) intact.
+      def trim_to_referenced_notes(doc, wanted_ids)
+        wanted = wanted_ids.to_set
+        nodes = note_definition_nodes(doc)
+        nodes.each { |node| node.remove unless wanted.include?(node['id']) }
+      end
+
+      def note_definition_nodes(doc)
+        typed = doc.xpath('//*[@id]').select { |n| (epub_type_tokens(n) & NOTE_DEFINITION_TYPES).any? }
+        return typed if typed.any?
+
+        # Fallback for vendors that don't type each note: <li id> inside a
+        # recognizable endnotes/footnotes container.
+        doc.xpath('//*[@id]').select do |n|
+          n.name == 'li' && n.ancestors.any? { |anc| note_container?(anc) }
+        end
+      end
+
+      def note_container?(node)
+        (epub_type_tokens(node) & %w[footnotes endnotes rearnotes]).any? ||
+          node['role'].to_s.split(/\s+/).include?('doc-endnotes')
+      end
+
+      # Copy each "extended description" target file verbatim (its reciprocal
+      # back-link points at a file that lives in this chapter). Returns the hrefs
+      # written (to be appended to the spine).
+      def copy_extended_description_files(collector, chapter, opf_dir_tmp, resources)
+        collector.extended_desc_hrefs.filter_map do |href|
+          next if chapter[:spine_hrefs].include?(href)
+
+          src = File.join(@opf_dir_full, href)
+          next unless File.exist?(src)
+
+          doc = Nokogiri::XML(File.read(src))
+          collect_resources(doc, href, resources)
+
+          dst = File.join(opf_dir_tmp, href)
+          FileUtils.mkdir_p(File.dirname(dst))
+          File.write(dst, doc.to_xml)
+          href
         end
       end
 

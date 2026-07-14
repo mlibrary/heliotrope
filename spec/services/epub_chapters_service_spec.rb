@@ -45,6 +45,16 @@ RSpec.describe EpubChaptersService do
     contents
   end
 
+  # The spine hrefs actually written into a chapter epub's content.opf (which
+  # can include files copied in beyond the ToC-planned spine, e.g. endnote and
+  # extended-description files).
+  def opf_spine_hrefs(contents, opf_key = 'OEBPS/content.opf')
+    opf = Nokogiri::XML(contents[opf_key]).remove_namespaces!
+    opf.xpath('//spine/itemref').map do |itemref|
+      opf.at_xpath("//manifest/item[@id='#{itemref['idref']}']")['href']
+    end
+  end
+
   describe '.create_chapters' do
     context 'with a real-world EPUB' do
       let(:epub_root) { unpack(sample_dir.join('9780000000001_continuation_cases.epub').to_s) }
@@ -93,33 +103,71 @@ RSpec.describe EpubChaptersService do
         expect(contents).to have_key('OEBPS/fakebook1-0023.xhtml')
       end
 
-      it 'rewrites cross-chapter links as in-chapter endnotes' do
+      it 'copies referenced cross-file endnotes into the chapter (keeping the original filename) and trims the unreferenced ones' do
         chapters = described_class.create_chapters(epub_root, output_dir)
-        # Chapter "Chapter One" (-0009.xhtml) has fnref anchors pointing at
-        # fakebook1-0022.xhtml#fnXX (which lives in the Footnotes chapter).
+        # "Chapter One" (-0009.xhtml) has noteref anchors pointing at
+        # fakebook1-0022.xhtml#fn1..fn3 (the Footnotes file, a different chapter).
         ch_idx = chapters.index { |c| c[:spine_hrefs].include?('fakebook1-0009.xhtml') }
         expect(ch_idx).not_to be_nil
         contents = open_chapter(File.join(output_dir, "#{ch_idx}.epub"))
+
+        # The noteref hrefs are left untouched: they still point at the (now
+        # copied-in) endnotes file, which keeps its original filename.
         body = contents['OEBPS/fakebook1-0009.xhtml']
+        expect(body).to include('href="fakebook1-0022.xhtml#fn1"')
+        expect(body).to include('epub:type="noteref"')
 
-        # No remaining href references should reach across to the footnotes file
-        expect(body).not_to include('href="fakebook1-0022.xhtml')
-        # The cross-chapter links are rewritten to point at the endnotes section,
-        # which lives at the end of the chapter's last spine file.
+        # The endnotes file itself is copied into the chapter epub, and its
+        # spine entry is added to the content.opf.
+        expect(contents).to have_key('OEBPS/fakebook1-0022.xhtml')
+        expect(opf_spine_hrefs(contents)).to include('fakebook1-0022.xhtml')
+
+        # Only the referenced notes (fn1, fn2, fn3) are copied; the unreferenced
+        # notes (fn4, fn5) are trimmed away.
+        notes = contents['OEBPS/fakebook1-0022.xhtml']
+        expect(notes).to include('id="fn1"', 'id="fn2"', 'id="fn3"')
+        expect(notes).not_to include('id="fn4"')
+        expect(notes).not_to include('id="fn5"')
+        # The copied notes keep their proper EPUB markup and back-links.
+        expect(notes).to include('epub:type="endnote"')
+        expect(notes).to include('href="fakebook1-0009.xhtml#fn1r"')
+      end
+
+      it 'copies the whole target file of an "extended description" link into the chapter' do
+        chapters = described_class.create_chapters(epub_root, output_dir)
+        # "Chapter Two" (-0010.xhtml) has a <p class="image-right_back"> link to
+        # fakebook1-ext-0001.xhtml (a tail-of-spine, non-ToC file).
+        ch_idx = chapters.index { |c| c[:spine_hrefs].include?('fakebook1-0010.xhtml') }
+        expect(ch_idx).not_to be_nil
+        contents = open_chapter(File.join(output_dir, "#{ch_idx}.epub"))
+
+        # The forward link is left untouched (the file is now present).
+        body = contents['OEBPS/fakebook1-0010.xhtml']
+        expect(body).to include('href="fakebook1-ext-0001.xhtml#ed1"')
+
+        # The extended-description file is copied verbatim and added to the spine.
+        expect(contents).to have_key('OEBPS/fakebook1-ext-0001.xhtml')
+        expect(opf_spine_hrefs(contents)).to include('fakebook1-ext-0001.xhtml')
+        ext = contents['OEBPS/fakebook1-ext-0001.xhtml']
+        expect(ext).to include('Extended Description for Figure 1')
+        expect(ext).to include('A long textual description')
+        # Its image resource is bundled too.
+        expect(contents.keys).to include('OEBPS/images/cover.jpg')
+      end
+
+      it 'still rewrites other cross-chapter links as in-chapter placeholder endnotes' do
+        chapters = described_class.create_chapters(epub_root, output_dir)
+        # The Footnotes chapter (-0022.xhtml) contains doc-backlink anchors that
+        # point back at chapters (-0009/-0011) not present in its own epub. Those
+        # are neither noterefs nor extended-description links, so they fall
+        # through to the placeholder-endnote behavior.
+        ch_idx = chapters.index { |c| c[:spine_hrefs].first == 'fakebook1-0022.xhtml' }
+        expect(ch_idx).not_to be_nil
+        contents = open_chapter(File.join(output_dir, "#{ch_idx}.epub"))
         last_href = chapters[ch_idx][:spine_hrefs].last
-        if last_href == 'fakebook1-0009.xhtml'
-          expect(body).to include('href="#epub-chapter-endnote-1"')
-        else
-          expect(body).to include(%Q(href="#{last_href}#epub-chapter-endnote-1"))
-        end
-
-        # The endnotes section itself is appended to that last file
         last_body = contents["OEBPS/#{last_href}"]
         expect(last_body).to include('doc-endnotes')
         expect(last_body).to include('id="epub-chapter-endnote-1"')
-        # And the endnote text references the title of the chapter the link
-        # originally pointed at
-        expect(last_body).to include('Footnotes')
       end
 
       it 'preserves external (http) and fragment-only links untouched' do
