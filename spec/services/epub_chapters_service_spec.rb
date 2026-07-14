@@ -45,6 +45,16 @@ RSpec.describe EpubChaptersService do
     contents
   end
 
+  # The spine hrefs actually written into a chapter epub's content.opf (which
+  # can include files copied in beyond the ToC-planned spine, e.g. endnote and
+  # extended-description files).
+  def opf_spine_hrefs(contents, opf_key = 'OEBPS/content.opf')
+    opf = Nokogiri::XML(contents[opf_key]).remove_namespaces!
+    opf.xpath('//spine/itemref').map do |itemref|
+      opf.at_xpath("//manifest/item[@id='#{itemref['idref']}']")['href']
+    end
+  end
+
   describe '.create_chapters' do
     context 'with a real-world EPUB' do
       let(:epub_root) { unpack(sample_dir.join('9780000000001_continuation_cases.epub').to_s) }
@@ -93,33 +103,94 @@ RSpec.describe EpubChaptersService do
         expect(contents).to have_key('OEBPS/fakebook1-0023.xhtml')
       end
 
-      it 'rewrites cross-chapter links as in-chapter endnotes' do
+      it 'copies referenced cross-file endnotes into the chapter (keeping the original filename) and trims the unreferenced ones' do
         chapters = described_class.create_chapters(epub_root, output_dir)
-        # Chapter "Chapter One" (-0009.xhtml) has fnref anchors pointing at
-        # fakebook1-0022.xhtml#fnXX (which lives in the Footnotes chapter).
+        # "Chapter One" (-0009.xhtml) has noteref anchors pointing at
+        # fakebook1-0022.xhtml#fn1..fn3 (the Footnotes file, a different chapter).
         ch_idx = chapters.index { |c| c[:spine_hrefs].include?('fakebook1-0009.xhtml') }
         expect(ch_idx).not_to be_nil
         contents = open_chapter(File.join(output_dir, "#{ch_idx}.epub"))
+
+        # The noteref hrefs are left untouched: they still point at the (now
+        # copied-in) endnotes file, which keeps its original filename.
         body = contents['OEBPS/fakebook1-0009.xhtml']
+        expect(body).to include('href="fakebook1-0022.xhtml#fn1"')
+        expect(body).to include('epub:type="noteref"')
 
-        # No remaining href references should reach across to the footnotes file
-        expect(body).not_to include('href="fakebook1-0022.xhtml')
-        # The cross-chapter links are rewritten to point at the endnotes section,
-        # which lives at the end of the chapter's last spine file.
-        last_href = chapters[ch_idx][:spine_hrefs].last
-        if last_href == 'fakebook1-0009.xhtml'
-          expect(body).to include('href="#epub-chapter-endnote-1"')
-        else
-          expect(body).to include(%Q(href="#{last_href}#epub-chapter-endnote-1"))
+        # The endnotes file itself is copied into the chapter epub, and its
+        # spine entry is added to the content.opf.
+        expect(contents).to have_key('OEBPS/fakebook1-0022.xhtml')
+        expect(opf_spine_hrefs(contents)).to include('fakebook1-0022.xhtml')
+
+        # Only the referenced notes (fn1, fn2, fn3) are copied; the unreferenced
+        # notes (fn4, fn5) are trimmed away.
+        notes = contents['OEBPS/fakebook1-0022.xhtml']
+        expect(notes).to include('id="fn1"', 'id="fn2"', 'id="fn3"')
+        expect(notes).not_to include('id="fn4"')
+        expect(notes).not_to include('id="fn5"')
+        # The copied notes keep their proper EPUB markup and back-links.
+        expect(notes).to include('epub:type="endnote"')
+        expect(notes).to include('href="fakebook1-0009.xhtml#fn1r"')
+      end
+
+      it 'copies the whole target file of a linear="no" supplementary link (e.g. extended description) into the chapter' do
+        chapters = described_class.create_chapters(epub_root, output_dir)
+        # "Chapter Two" (-0010.xhtml) links to fakebook1-ext-0001.xhtml, a
+        # tail-of-spine, non-ToC file whose spine itemref is marked linear="no"
+        # (the EPUB signal for out-of-line content). Detection is purely
+        # structural now: the link paragraph deliberately carries NO
+        # `image-right_back` class, proving we no longer rely on it.
+        ch_idx = chapters.index { |c| c[:spine_hrefs].include?('fakebook1-0010.xhtml') }
+        expect(ch_idx).not_to be_nil
+        contents = open_chapter(File.join(output_dir, "#{ch_idx}.epub"))
+
+        # Sanity: the fixture link really has no vendor CSS class.
+        expect(contents['OEBPS/fakebook1-0010.xhtml']).not_to include('image-right_back')
+
+        # The forward link is left untouched (the file is now present).
+        body = contents['OEBPS/fakebook1-0010.xhtml']
+        expect(body).to include('href="fakebook1-ext-0001.xhtml#ed1"')
+
+        # The supplementary (linear="no") file is copied verbatim and added to the spine.
+        expect(contents).to have_key('OEBPS/fakebook1-ext-0001.xhtml')
+        expect(opf_spine_hrefs(contents)).to include('fakebook1-ext-0001.xhtml')
+        ext = contents['OEBPS/fakebook1-ext-0001.xhtml']
+        expect(ext).to include('Extended Description for Figure 1')
+        expect(ext).to include('A long textual description')
+        # Its image resource is bundled too.
+        expect(contents.keys).to include('OEBPS/images/cover.jpg')
+      end
+
+      it 'does not append linear="no" supplementary files to unrelated chapters (e.g. the last one)' do
+        chapters = described_class.create_chapters(epub_root, output_dir)
+        # fakebook1-ext-0001.xhtml is linear="no" and only linked from "Chapter
+        # Two" (-0010.xhtml). It must NOT be swept into the last chapter's spine
+        # range as a trailing continuation item, and must appear in exactly one
+        # chapter EPUB: the one that links it.
+        linking_idx = chapters.index { |c| c[:spine_hrefs].include?('fakebook1-0010.xhtml') }
+
+        chapters.each_with_index do |chapter, idx|
+          expect(chapter[:spine_hrefs]).not_to include('fakebook1-ext-0001.xhtml')
+          contents = open_chapter(File.join(output_dir, "#{idx}.epub"))
+          present = contents.key?('OEBPS/fakebook1-ext-0001.xhtml')
+          expect(present).to eq(idx == linking_idx),
+                                 "expected ext file only in chapter #{linking_idx}, but present=#{present} in #{idx}"
         end
+      end
 
-        # The endnotes section itself is appended to that last file
+      it 'still rewrites other cross-chapter links as in-chapter placeholder endnotes' do
+        chapters = described_class.create_chapters(epub_root, output_dir)
+        # The Footnotes chapter (-0022.xhtml) contains doc-backlink anchors that
+        # point back at chapters (-0009/-0011) not present in its own epub. Those
+        # are neither noterefs nor extended-description links, so they fall
+        # through to the placeholder-endnote behavior.
+        ch_idx = chapters.index { |c| c[:spine_hrefs].first == 'fakebook1-0022.xhtml' }
+        expect(ch_idx).not_to be_nil
+        contents = open_chapter(File.join(output_dir, "#{ch_idx}.epub"))
+        last_href = chapters[ch_idx][:spine_hrefs].last
         last_body = contents["OEBPS/#{last_href}"]
         expect(last_body).to include('doc-endnotes')
         expect(last_body).to include('id="epub-chapter-endnote-1"')
-        # And the endnote text references the title of the chapter the link
-        # originally pointed at
-        expect(last_body).to include('Footnotes')
       end
 
       it 'preserves external (http) and fragment-only links untouched' do
@@ -144,6 +215,66 @@ RSpec.describe EpubChaptersService do
         contents = open_chapter(File.join(output_dir, "#{cover_idx}.epub"))
         # any jpg/jpeg image is fine
         expect(contents.keys.any? { |k| k.match?(/\.(jpe?g|png|gif|svg)\z/i) }).to be true
+      end
+
+      it 'carries the book\'s full metadata (esp. EPUB accessibility) into each chapter content.opf' do
+        # Inject a realistic metadata block — including EPUB accessibility
+        # metadata, an a11y:-namespaced element, and a refined dc:creator whose
+        # id ("pub-id" collision aside) must keep resolving — into the *unpacked*
+        # OPF before splitting. (We mutate the on-disk copy, never the committed
+        # fixture EPUB.)
+        opf_path = File.join(epub_root, 'OEBPS', 'content.opf')
+        original = File.read(opf_path)
+        rich_metadata = <<~META.strip
+          <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:a11y="http://www.idpf.org/epub/vocab/package/a11y/#">
+              <dc:identifier id="pub-id">urn:isbn:9780000000001</dc:identifier>
+              <dc:title>Fake Book One (Continuation Cases)</dc:title>
+              <dc:creator id="creator">Ada Author</dc:creator>
+              <meta refines="#creator" property="role" scheme="marc:relators">aut</meta>
+              <dc:language>en</dc:language>
+              <meta property="dcterms:modified">2026-01-01T00:00:00Z</meta>
+              <meta property="schema:accessMode">textual</meta>
+              <meta property="schema:accessMode">visual</meta>
+              <meta property="schema:accessModeSufficient">textual</meta>
+              <meta property="schema:accessibilityFeature">tableOfContents</meta>
+              <meta property="schema:accessibilityFeature">alternativeText</meta>
+              <meta property="schema:accessibilityHazard">none</meta>
+              <meta property="schema:accessibilitySummary">This publication conforms to WCAG 2.0 AA.</meta>
+              <link rel="dcterms:conformsTo" href="http://www.idpf.org/epub/a11y/accessibility-20170105.html#wcag-aa"/>
+              <a11y:certifiedBy>Fulcrum</a11y:certifiedBy>
+            </metadata>
+        META
+        File.write(opf_path, original.sub(%r{  <metadata.*?</metadata>}m, "  #{rich_metadata}"))
+
+        described_class.create_chapters(epub_root, output_dir)
+        opf_raw = open_chapter(File.join(output_dir, '0.epub'))['OEBPS/content.opf']
+
+        # Accessibility metadata is copied verbatim...
+        %w[
+          schema:accessMode schema:accessModeSufficient schema:accessibilityFeature
+          schema:accessibilityHazard schema:accessibilitySummary
+        ].each { |prop| expect(opf_raw).to include(%(property="#{prop}")) }
+        expect(opf_raw).to include('This publication conforms to WCAG 2.0 AA.')
+        expect(opf_raw).to include('rel="dcterms:conformsTo"')
+        # ...as are other elements, prefixed namespaces, and refinements.
+        expect(opf_raw).to include('<a11y:certifiedBy>Fulcrum</a11y:certifiedBy>')
+        expect(opf_raw).to include('xmlns:a11y="http://www.idpf.org/epub/vocab/package/a11y/#"')
+        expect(opf_raw).to include('Ada Author')
+        expect(opf_raw).to include('refines="#creator"')
+
+        opf = Nokogiri::XML(opf_raw).remove_namespaces!
+        # The chapter title is scoped to the ToC entry...
+        expect(opf.at_xpath('//metadata/title').text).to include('Cover')
+        # ...and exactly one dcterms:modified survives (EPUB 3 requires that),
+        # freshly stamped rather than the book's original.
+        modifieds = opf.xpath('//metadata/meta[@property="dcterms:modified"]')
+        expect(modifieds.length).to eq 1
+        expect(modifieds.first.text).not_to eq '2026-01-01T00:00:00Z'
+        # A fresh, unique identifier is added without colliding with the book's
+        # "pub-id", and the package points at it.
+        unique_id_ref = Nokogiri::XML(opf_raw).root['unique-identifier']
+        expect(unique_id_ref).not_to eq 'pub-id'
+        expect(opf.xpath("//metadata/identifier[@id='#{unique_id_ref}']").text).to start_with('urn:uuid:')
       end
 
       it 'writes a content.opf whose manifest matches the included files and whose spine matches the chapter spine_hrefs' do

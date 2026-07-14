@@ -19,9 +19,21 @@ require 'zip'
 #   ToC entry's target). All such spine items are included in the chapter EPUB.
 # - Hyperlinks inside the chapter to other files in the same chapter, and
 #   fragment-only or external (mailto:, http(s)://, etc.) links, are kept as-is.
-# - Hyperlinks to files outside this chapter are rewritten as in-chapter
-#   endnotes that state the ToC entry the link originally targeted. This
-#   preserves the link's reading context while remaining accessible.
+# - Two kinds of cross-file links have their *destination content* copied into
+#   the chapter EPUB so the reader can still follow them:
+#     1. Endnote references (`<a epub:type="noteref">`) that point at note
+#        definitions (`epub:type="endnote"`/`"footnote"`/`"rearnote"`) living
+#        in another spine file. Only the note definitions actually referenced
+#        by this chapter are copied, into a file that keeps the original
+#        filename (so the existing hrefs keep resolving).
+#     2. Links to a "supplementary content document" — an XHTML file that sits
+#        outside the linear reading order (not in the spine, or in the spine
+#        with `linear="no"`, e.g. an "extended description" page). The whole
+#        target file is copied in verbatim. This is detected structurally, with
+#        no dependence on vendor-specific CSS classes.
+# - Any *other* hyperlink to a file outside this chapter is rewritten as an
+#   in-chapter endnote that states the ToC entry the link originally targeted.
+#   This preserves the link's reading context while remaining accessible.
 module EpubChaptersService
   module_function
 
@@ -36,6 +48,29 @@ module EpubChaptersService
     DC_NS   = 'http://purl.org/dc/elements/1.1/'
     XHTML_NS = 'http://www.w3.org/1999/xhtml'
     EPUB_NS = 'http://www.idpf.org/2007/ops'
+
+    # epub:type values that mark a *note definition* (the thing a noteref points
+    # at). Deliberately excludes "noteref" (the reference itself).
+    NOTE_DEFINITION_TYPES = %w[endnote footnote rearnote].freeze
+
+    # Per-chapter accumulator threaded through the link-rewriting pass.
+    # - resources:            Set of resource hrefs (images/css/...) to bundle
+    # - placeholder_endnotes: Array of {id:, target_title:, original_text:} for
+    #                         cross-chapter links we couldn't copy (see
+    #                         append_endnotes_section)
+    # - copied_endnote_refs:  Hash of source_spine_href => [fragment_id, ...]
+    #                         for note definitions to copy into the chapter
+    # - extended_desc_hrefs:  Array of spine_hrefs to copy wholesale
+    Collector = Struct.new(:resources, :placeholder_endnotes, :copied_endnote_refs, :extended_desc_hrefs) do
+      def add_endnote_ref(source_href, fragment)
+        list = (self.copied_endnote_refs[source_href] ||= [])
+        list << fragment unless list.include?(fragment)
+      end
+
+      def add_extended_desc(href)
+        extended_desc_hrefs << href unless extended_desc_hrefs.include?(href)
+      end
+    end
 
     def initialize(epub_root_path, output_dir)
       @epub_root  = epub_root_path
@@ -90,17 +125,30 @@ module EpubChaptersService
         @manifest_href_to_id = {}
         @manifest_items.each { |id, info| @manifest_href_to_id[info[:href]] = id }
 
-        @spine_idrefs = @opf_doc_ns.xpath('//spine/itemref').map { |i| i['idref'] }
+        itemrefs = @opf_doc_ns.xpath('//spine/itemref')
+        @spine_idrefs = itemrefs.map { |i| i['idref'] }
         @spine_href_to_index = {}
-        @spine_idrefs.each_with_index do |idref, i|
-          info = @manifest_items[idref]
+        # Spine hrefs whose itemref carries linear="no": content that lives in the
+        # spine but sits *outside* the linear reading order (e.g. extended
+        # descriptions). Used to decide what to copy wholesale into a chapter.
+        @nonlinear_spine_hrefs = Set.new
+        itemrefs.each_with_index do |itemref, i|
+          info = @manifest_items[itemref['idref']]
           next if info.nil?
           @spine_href_to_index[info[:href]] = i
+          @nonlinear_spine_hrefs << info[:href] if itemref['linear'].to_s.strip.casecmp('no').zero?
         end
 
         @opf_language = @opf_doc_ns.at_xpath('//metadata/language')&.text&.strip
         @opf_language = 'en' if @opf_language.blank?
         @opf_title = @opf_doc_ns.at_xpath('//metadata/title')&.text&.strip || ''
+
+        # A namespace-preserving parse of the same OPF, used to carry the book's
+        # full <metadata> (dc:*, and especially the EPUB accessibility metadata:
+        # schema:accessMode, schema:accessibilityFeature, dcterms:conformsTo, ...)
+        # over into each chapter's content.opf verbatim. @opf_doc_ns has had its
+        # namespaces stripped, so it can't be used to reproduce dc:/a11y: prefixes.
+        @opf_metadata_node = Nokogiri::XML(File.read(@opf_full_path)).at_xpath('//*[local-name()="metadata"]')
       end
 
       def load_nav
@@ -159,7 +207,14 @@ module EpubChaptersService
           next_sibling_or_shallower = @toc_entries[(idx + 1)..].to_a.find { |e| e[:depth] <= entry[:depth] }
           end_idx = next_sibling_or_shallower ? next_sibling_or_shallower[:spine_index] - 1 : @spine_idrefs.length - 1
           end_idx = start_idx if end_idx < start_idx
+          start_href = @manifest_items[@spine_idrefs[start_idx]]&.dig(:href)
           spine_hrefs = (start_idx..end_idx).filter_map { |i| @manifest_items[@spine_idrefs[i]]&.dig(:href) }
+          # Drop non-linear spine items (linear="no", e.g. extended descriptions):
+          # out-of-line supplementary content shouldn't ride along in a chapter's
+          # reading order. They're copied only into chapters that actually link to
+          # them (see supplementary_content_doc?). Never drop the entry's own
+          # target file, though.
+          spine_hrefs = spine_hrefs.reject { |h| h != start_href && @nonlinear_spine_hrefs.include?(h) }
           {
             # `title`, `level`, `cfi`, `downloadable?` are the keys consumed by
             # EbookTableOfContentsCache (see UnpackJob#cache_epub_toc) and match
@@ -215,7 +270,7 @@ module EpubChaptersService
           File.write(File.join(tmpdir, 'META-INF', 'container.xml'), container_xml_content)
 
           resources = Set.new
-          endnotes = []
+          collector = Collector.new(resources, [], {}, [])
 
           # First pass: copy + rewrite each spine xhtml in this chapter
           chapter[:spine_hrefs].each do |spine_href|
@@ -227,7 +282,7 @@ module EpubChaptersService
             dst = File.join(opf_dir_tmp, spine_href)
             FileUtils.mkdir_p(File.dirname(dst))
             doc = Nokogiri::XML(File.read(src))
-            rewrite_links(doc, spine_href, chapter, endnotes)
+            rewrite_links(doc, spine_href, chapter, collector)
             collect_resources(doc, spine_href, resources)
             File.write(dst, doc.to_xml)
           end
@@ -236,14 +291,21 @@ module EpubChaptersService
           chapter = chapter.merge(spine_hrefs: chapter[:spine_hrefs].select { |h| File.exist?(File.join(opf_dir_tmp, h)) })
           next if chapter[:spine_hrefs].empty?
 
-          # Append endnotes (if any) to the last spine file
-          if endnotes.any?
+          # Append placeholder endnotes (if any) to the last (main) spine file
+          if collector.placeholder_endnotes.any?
             last_href = chapter[:spine_hrefs].last
             last_path = File.join(opf_dir_tmp, last_href)
             doc = Nokogiri::XML(File.read(last_path))
-            append_endnotes_section(doc, endnotes)
+            append_endnotes_section(doc, collector.placeholder_endnotes)
             File.write(last_path, doc.to_xml)
           end
+
+          # Copy destination content for cross-file endnote references and
+          # "extended description" links, adding those files to the chapter's
+          # spine (after the main content).
+          copied_hrefs = copy_referenced_endnote_files(collector, opf_dir_tmp, resources)
+          copied_hrefs += copy_extended_description_files(collector, chapter, opf_dir_tmp, resources)
+          chapter = chapter.merge(spine_hrefs: chapter[:spine_hrefs] + copied_hrefs) if copied_hrefs.any?
 
           # Copy referenced resources (preserving relative paths from opf_dir)
           resources.each do |res_href|
@@ -272,9 +334,9 @@ module EpubChaptersService
 
       # ---------------- Link rewriting ----------------
 
-      def rewrite_links(doc, current_spine_href, chapter, endnotes)
+      def rewrite_links(doc, current_spine_href, chapter, collector)
         current_dir = File.dirname(current_spine_href)
-        endnote_target_file = chapter[:spine_hrefs].last
+        placeholder_target_file = chapter[:spine_hrefs].last
 
         doc.css('a[href]').each do |a|
           href = a['href']
@@ -283,31 +345,150 @@ module EpubChaptersService
           next if href.start_with?('#')
           next if href.match?(%r{\A[a-zA-Z][a-zA-Z0-9+\-.]*:})
 
-          target_path, _frag = href.split('#', 2)
+          target_path, fragment = href.split('#', 2)
           resolved = resolve_href_to_opf_dir(target_path, current_dir)
 
           # Internal-to-chapter link - keep as-is (the file is present in this chapter epub)
           next if chapter[:spine_hrefs].include?(resolved)
 
-          # Cross-chapter link - convert to an in-chapter endnote
-          target_chapter_idx = @href_to_chapter_index[resolved]
-          target_title = if target_chapter_idx
-                           @chapter_ranges[target_chapter_idx][:title]
-                         else
-                           'another section of the book'
-                         end
-          en_index = endnotes.length + 1
-          en_id = "epub-chapter-endnote-#{en_index}"
-          endnotes << { id: en_id, target_title: target_title, original_text: a.text.to_s.strip }
+          # 1) Endnote reference into another file: remember which note to copy.
+          #    The copied file keeps `resolved`'s path, so the href still resolves
+          #    and needs no rewriting.
+          if noteref?(a) && fragment.present?
+            collector.add_endnote_ref(resolved, fragment)
+            next
+          end
 
-          new_href = if current_spine_href == endnote_target_file
-                       "##{en_id}"
-                     else
-                       "#{rel_path_between(current_spine_href, endnote_target_file)}##{en_id}"
-                     end
-          a['href'] = new_href
-          a['role'] = 'doc-noteref'
-          a['epub:type'] = 'noteref'
+          # 2) Supplementary content document (out of the linear reading order,
+          #    e.g. an "extended description" page): copy the whole target file
+          #    in. The href keeps resolving because the file lands at `resolved`.
+          if supplementary_content_doc?(resolved)
+            collector.add_extended_desc(resolved)
+            next
+          end
+
+          # 3) Other cross-chapter link - convert to an in-chapter endnote
+          add_placeholder_endnote(a, resolved, current_spine_href, placeholder_target_file, collector.placeholder_endnotes)
+        end
+      end
+
+      def add_placeholder_endnote(anchor, resolved, current_spine_href, target_file, endnotes)
+        target_chapter_idx = @href_to_chapter_index[resolved]
+        target_title = if target_chapter_idx
+                         @chapter_ranges[target_chapter_idx][:title]
+                       else
+                         'another section of the book'
+                       end
+        en_index = endnotes.length + 1
+        en_id = "epub-chapter-endnote-#{en_index}"
+        endnotes << { id: en_id, target_title: target_title, original_text: anchor.text.to_s.strip }
+
+        new_href = if current_spine_href == target_file
+                     "##{en_id}"
+                   else
+                     "#{rel_path_between(current_spine_href, target_file)}##{en_id}"
+                   end
+        anchor['href'] = new_href
+        anchor['role'] = 'doc-noteref'
+        anchor['epub:type'] = 'noteref'
+      end
+
+      # An endnote/footnote reference: `epub:type="noteref"` or `role="doc-noteref"`.
+      def noteref?(anchor)
+        epub_type_tokens(anchor).include?('noteref') ||
+          anchor['role'].to_s.split(/\s+/).include?('doc-noteref')
+      end
+
+      # A link target we should copy wholesale into the chapter: a *supplementary
+      # content document* the reader can still reach. Detected structurally, with
+      # no dependence on vendor-specific CSS classes: the target is an XHTML
+      # document that sits outside the linear reading order - either absent from
+      # the spine entirely, or present but marked `linear="no"` (the EPUB
+      # mechanism for out-of-line content such as extended descriptions).
+      def supplementary_content_doc?(resolved_href)
+        return false unless xhtml_content_doc?(resolved_href)
+        !@spine_href_to_index.key?(resolved_href) || @nonlinear_spine_hrefs.include?(resolved_href)
+      end
+
+      # True when `resolved_href` is (or looks like) an XHTML content document, so
+      # we can safely parse and inline it. Prefer the manifest's declared media
+      # type; fall back to the file extension when the target isn't in the
+      # manifest. This guards the copy path (which parses the file as XHTML) from
+      # being handed images, PDFs, audio, etc.
+      def xhtml_content_doc?(resolved_href)
+        id = @manifest_href_to_id[resolved_href]
+        media_type = id && @manifest_items[id][:media_type]
+        return media_type == 'application/xhtml+xml' if media_type
+        %w[.xhtml .html .htm].include?(File.extname(resolved_href).downcase)
+      end
+
+      def epub_type_tokens(node)
+        raw = node['epub:type'] || node.attribute_with_ns('type', EPUB_NS)&.value
+        raw.to_s.split(/\s+/)
+      end
+
+      # ---------------- Copying destination content ----------------
+
+      # Write a trimmed copy of each source file that holds note definitions this
+      # chapter references, keeping only the referenced notes and the original
+      # filename. Returns the hrefs written (to be appended to the spine).
+      def copy_referenced_endnote_files(collector, opf_dir_tmp, resources)
+        collector.copied_endnote_refs.filter_map do |source_href, fragments|
+          src = File.join(@opf_dir_full, source_href)
+          next unless File.exist?(src)
+
+          doc = Nokogiri::XML(File.read(src))
+          trim_to_referenced_notes(doc, fragments)
+          collect_resources(doc, source_href, resources)
+
+          dst = File.join(opf_dir_tmp, source_href)
+          FileUtils.mkdir_p(File.dirname(dst))
+          File.write(dst, doc.to_xml)
+          source_href
+        end
+      end
+
+      # Remove every note definition in `doc` whose id isn't in `wanted_ids`,
+      # leaving surrounding structure (headers, container lists) intact.
+      def trim_to_referenced_notes(doc, wanted_ids)
+        wanted = wanted_ids.to_set
+        nodes = note_definition_nodes(doc)
+        nodes.each { |node| node.remove unless wanted.include?(node['id']) }
+      end
+
+      def note_definition_nodes(doc)
+        typed = doc.xpath('//*[@id]').select { |n| (epub_type_tokens(n) & NOTE_DEFINITION_TYPES).any? }
+        return typed if typed.any?
+
+        # Fallback for vendors that don't type each note: <li id> inside a
+        # recognizable endnotes/footnotes container.
+        doc.xpath('//*[@id]').select do |n|
+          n.name == 'li' && n.ancestors.any? { |anc| note_container?(anc) }
+        end
+      end
+
+      def note_container?(node)
+        (epub_type_tokens(node) & %w[footnotes endnotes rearnotes]).any? ||
+          node['role'].to_s.split(/\s+/).include?('doc-endnotes')
+      end
+
+      # Copy each "extended description" target file verbatim (its reciprocal
+      # back-link points at a file that lives in this chapter). Returns the hrefs
+      # written (to be appended to the spine).
+      def copy_extended_description_files(collector, chapter, opf_dir_tmp, resources)
+        collector.extended_desc_hrefs.filter_map do |href|
+          next if chapter[:spine_hrefs].include?(href)
+
+          src = File.join(@opf_dir_full, href)
+          next unless File.exist?(src)
+
+          doc = Nokogiri::XML(File.read(src))
+          collect_resources(doc, href, resources)
+
+          dst = File.join(opf_dir_tmp, href)
+          FileUtils.mkdir_p(File.dirname(dst))
+          File.write(dst, doc.to_xml)
+          href
         end
       end
 
@@ -404,20 +585,12 @@ module EpubChaptersService
           "    <itemref idref=\"#{xml_escape(idref)}\"/>"
         end.join("\n")
 
-        modified = Time.now.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
-        unique_id = "urn:uuid:#{SecureRandom.uuid}"
-        chapter_title  = xml_escape("#{@opf_title} - #{chapter[:title]}".strip.sub(/\A-\s*/, ''))
-        language       = xml_escape(@opf_language)
+        metadata_xml, unique_id_ref = build_metadata_xml(chapter)
 
         <<~OPF
           <?xml version="1.0" encoding="utf-8"?>
-          <package xmlns="#{OPF_NS}" version="3.0" unique-identifier="pub-id">
-            <metadata xmlns:dc="#{DC_NS}">
-              <dc:identifier id="pub-id">#{xml_escape(unique_id)}</dc:identifier>
-              <dc:title>#{chapter_title}</dc:title>
-              <dc:language>#{language}</dc:language>
-              <meta property="dcterms:modified">#{modified}</meta>
-            </metadata>
+          <package xmlns="#{OPF_NS}" version="3.0" unique-identifier="#{xml_escape(unique_id_ref)}">
+          #{metadata_xml}
             <manifest>
           #{manifest_xml}
             </manifest>
@@ -426,6 +599,83 @@ module EpubChaptersService
             </spine>
           </package>
         OPF
+      end
+
+      # Build the chapter's <metadata> block. When the source OPF has a
+      # <metadata> element (the normal case), copy it wholesale — preserving all
+      # of the book's metadata, especially the EPUB accessibility metadata
+      # (schema:accessMode, schema:accessibilityFeature, schema:accessibilityHazard,
+      # schema:accessibilitySummary, dcterms:conformsTo, a11y:certifiedBy, ...) —
+      # and only override the fields that must be chapter-specific:
+      #   * a fresh, unique dc:identifier (referenced by the package's
+      #     unique-identifier attribute)
+      #   * the dc:title (scoped to this chapter)
+      #   * exactly one meta[property="dcterms:modified"]
+      # Returns [metadata_xml, unique_identifier_id].
+      def build_metadata_xml(chapter)
+        modified   = Time.now.utc.strftime('%Y-%m-%dT%H:%M:%SZ')
+        unique_id  = "urn:uuid:#{SecureRandom.uuid}"
+        uid_id     = unique_pub_id
+        full_title = "#{@opf_title} - #{chapter[:title]}".strip.sub(/\A-\s*/, '')
+
+        return [default_metadata_xml(uid_id, unique_id, full_title, modified), uid_id] if @opf_metadata_node.nil?
+
+        meta = @opf_metadata_node.dup(1)
+        # EPUB 3 permits exactly one dcterms:modified; drop the book's and add ours.
+        meta.xpath('.//*[local-name()="meta"][@property="dcterms:modified"]').each(&:remove)
+
+        title_node = meta.at_xpath('./*[local-name()="title"]')
+        title_node.content = full_title if title_node
+
+        prepend = [%(<dc:identifier id="#{xml_escape(uid_id)}">#{xml_escape(unique_id)}</dc:identifier>)]
+        prepend << %(<dc:title>#{xml_escape(full_title)}</dc:title>) if title_node.nil?
+        prepend << %(<dc:language>#{xml_escape(@opf_language)}</dc:language>) if meta.at_xpath('./*[local-name()="language"]').nil?
+        append  = [%(<meta property="dcterms:modified">#{modified}</meta>)]
+
+        inner = (prepend + [meta.children.map(&:to_xml).join.strip] + append).reject(&:empty?).join("\n    ")
+        metadata_xml = %(  <metadata xmlns:dc="#{DC_NS}"#{extra_namespace_attrs(meta)}>\n    #{inner}\n  </metadata>)
+        [metadata_xml, uid_id]
+      end
+
+      # Fallback metadata block for the (unexpected) case of a source OPF with no
+      # <metadata> element.
+      def default_metadata_xml(uid_id, unique_id, full_title, modified)
+        <<~METADATA.chomp
+            <metadata xmlns:dc="#{DC_NS}">
+              <dc:identifier id="#{xml_escape(uid_id)}">#{xml_escape(unique_id)}</dc:identifier>
+              <dc:title>#{xml_escape(full_title)}</dc:title>
+              <dc:language>#{xml_escape(@opf_language)}</dc:language>
+              <meta property="dcterms:modified">#{modified}</meta>
+            </metadata>
+        METADATA
+      end
+
+      # An id for our chapter's dc:identifier that won't collide with any id
+      # already present in the book's metadata (the book's own unique-identifier
+      # is frequently "pub-id" too, and its refinements reference it).
+      def unique_pub_id
+        base = 'pub-id'
+        return base if @opf_metadata_node.nil?
+
+        taken = @opf_metadata_node.xpath('.//@id').map(&:value)
+        return base unless taken.include?(base)
+
+        candidate = "epub-chapter-#{base}"
+        candidate = "epub-chapter-#{SecureRandom.hex(4)}" while taken.include?(candidate)
+        candidate
+      end
+
+      # Namespace declarations (other than the default OPF ns, which the package
+      # element carries, and dc, which the metadata element carries) that are in
+      # scope for the copied metadata — e.g. a11y:, opf:, xsi: — so any prefixed
+      # elements/attributes inside the copied metadata stay well-formed.
+      def extra_namespace_attrs(meta)
+        decls = {}
+        (meta.namespace_scopes + meta.namespace_definitions).each do |ns|
+          next if ns.prefix.nil? || ns.prefix == 'dc'
+          decls[ns.prefix] = ns.href
+        end
+        decls.map { |prefix, href| %( xmlns:#{prefix}="#{xml_escape(href)}") }.join
       end
 
       def build_nav_xhtml(chapter, chapter_idx)
