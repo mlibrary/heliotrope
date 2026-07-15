@@ -11078,7 +11078,8 @@ if (typeof module !== "undefined" && module.exports) {
 		var rates, currentRate, index, newRate, vimeoMin, vimeoMax;
 
 		if (this.player === 'html5') {
-			this.setPlaybackRate(this.getPlaybackRate() + (0.25 * dir));
+			// heliotrope change, see HELIO-5093 and https://github.com/ableplayer/ableplayer/issues/764
+			this.setPlaybackRate(this.getPlaybackRate() + (0.05 * dir));
 		}
 		else if (this.player === 'youtube') {
 			if (this.youTubePlayerReady) {
