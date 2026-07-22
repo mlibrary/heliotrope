@@ -31,7 +31,7 @@ module EPub
       SQLite3::Database.new @db_file do |db|
         @epub_publication.chapters_from_file.each do |c|
           text = c.doc.search('//text()').map(&:text).delete_if { |x| x !~ /\w/ }
-          db.execute "INSERT INTO chapters VALUES (?, ?, ?, ?, ?)", c.id, c.href, c.title, c.basecfi, text.join(" ")
+          db.execute "INSERT INTO chapters VALUES (?, ?, ?, ?, ?)", [c.id, c.href, c.title, c.basecfi, text.join(" ")]
         end
       end
     end

@@ -201,7 +201,7 @@ gem 'sinatra', '>= 0.9.2'
 gem 'sprockets', '3.7.2'
 
 # sqlite for epub indexing
-gem 'sqlite3', '1.4.2'
+gem 'sqlite3', '~> 2.0'
 
 # SwaggerClient - the Ruby gem for the COUNTER_SUSHI5_0 API
 gem 'swagger_client', git: 'https://github.com/mlibrary/swagger_client', branch: 'master'
