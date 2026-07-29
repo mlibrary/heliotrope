@@ -18,9 +18,6 @@ class PressCatalogController < ApplicationCatalogController
     config.view.gallery.partials = %i[index]
   end
 
-  def show_site_search?
-    true
-  end
 
   instrument_method
   def facet
