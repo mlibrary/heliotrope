@@ -700,7 +700,7 @@ GEM
       prism (~> 1.5)
     mize (0.5.0)
     mono_logger (1.1.2)
-    msgpack (1.7.5)
+    msgpack (1.8.2)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.4.1)
