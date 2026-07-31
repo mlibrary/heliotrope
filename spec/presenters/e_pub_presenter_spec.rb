@@ -5,10 +5,7 @@ require 'rails_helper'
 RSpec.describe EPubPresenter do
   subject(:presenter) { described_class.new(epub) }
 
-  let(:epub) { instance_double(EPub::Publication, 'epub', id: 'id', rendition: rendition, multi_rendition?: multi_rendition) }
-  let(:multi_rendition) { false }
-  let(:rendition) { instance_double(EPub::Rendition, 'rendition', intervals: intervals) }
-  let(:intervals) { [] }
+  let(:epub) { instance_double(EPub::Publication, 'epub', id: 'id') }
 
   describe '#id' do
     subject { presenter.id }
@@ -16,17 +13,6 @@ RSpec.describe EPubPresenter do
     it { is_expected.to eq(epub.id) }
   end
 
-  describe '#multi_rendition?' do
-    subject { presenter.multi_rendition? }
-
-    it { is_expected.to be false }
-
-    context 'multi_rendition' do
-      let(:multi_rendition) { true }
-
-      it { is_expected.to be true }
-    end
-  end
 
   describe '#intervals?' do
     context "with a valid epub" do

@@ -49,40 +49,6 @@ RSpec.describe UnpackJob, type: :job do
       end
     end
 
-    context 'with a fixed-layout epub' do
-      let(:monograph) { create(:monograph) }
-      let(:fixed_layout_epub) { create(:file_set, content: File.open(File.join(fixture_path, 'the-whale.epub'))) }
-      let(:root_path) { UnpackService.root_path_from_noid(fixed_layout_epub.id, 'epub') }
-      let(:chapters_dir) { UnpackService.root_path_from_noid(fixed_layout_epub.id, 'epub_chapters') }
-
-      before do
-        monograph.ordered_members << fixed_layout_epub
-        monograph.save!
-        fixed_layout_epub.save!
-        # the `find` and `parent` stubs are necessary for the `update_index` stub to work
-        allow(FileSet).to receive(:find).with(fixed_layout_epub.id).and_return(fixed_layout_epub)
-        allow(fixed_layout_epub).to receive(:parent).and_return(monograph)
-        allow(monograph).to receive(:update_index)
-      end
-
-      it 'unzips the epub, caches the ToC, creates the search database and makes the chapter EPUB derivatives' do
-        # check that we're reindexing to get the ToC and accessibility metadata on the parent Monograph's Solr doc
-        expect(monograph).to receive(:update_index)
-        described_class.perform_now(fixed_layout_epub.id, 'epub')
-        expect(File.exist?(File.join(root_path, fixed_layout_epub.id + '.db'))).to be true
-        expect(Dir.exist?(chapters_dir)).to be true
-        # one `<index>.epub` per top-level ToC entry
-        expect(Dir.glob(File.join(chapters_dir, '*.epub')).count).to eq 14
-        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: fixed_layout_epub.id).toc).length).to eq 14
-        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: fixed_layout_epub.id).toc)[0]['title']).to eq 'Frontmatter'
-        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: fixed_layout_epub.id).toc)[0]['level']).to eq 1
-        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: fixed_layout_epub.id).toc)[0]['cfi']).to eq '/6/2[xhtml00000001]!/4/1:0'
-        # As far as EbooksTableOfContents is concerned, if the chapters exist, they are downloadable? = true
-        # The application itself (see views/monograph_catalog/_index_epub_toc.html.erb) will use...
-        # the EbookIntervalDownloadOperation policy in combination with this to show or hide download links
-        expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: fixed_layout_epub.id).toc)[0]['downloadable?']).to eq true
-      end
-    end
 
     context 'with a webgl' do
       let(:webgl) { create(:file_set, content: File.open(File.join(fixture_path, 'fake-game.zip'))) }

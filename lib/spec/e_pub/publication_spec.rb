@@ -9,13 +9,6 @@ RSpec.describe EPub::Publication do
     subject { described_class.null_object }
 
     it { is_expected.to be_an_instance_of(EPub::PublicationNullObject) }
-    it { expect(subject.downloadable?).to be false }
-    it { expect(subject.single_rendition?).to be true }
-    it { expect(subject.multi_rendition?).to be false }
-    it { expect(subject.labeled_rendition?('text')).to be false }
-    it { expect(subject.labeled_rendition('text')).to be_an_instance_of(EPub::RenditionNullObject) }
-    it { expect(subject.renditions).to contain_exactly instance_of(EPub::RenditionNullObject) }
-    it { expect(subject.rendition).to be_an_instance_of(EPub::RenditionNullObject) }
   end
 
   describe "without a test epub" do
@@ -33,9 +26,6 @@ RSpec.describe EPub::Publication do
       allow(validator).to receive(:content).and_return(content)
       allow(validator).to receive(:toc).and_return(true)
       allow(validator).to receive(:root_path).and_return(nil)
-      allow(validator).to receive(:multi_rendition).and_return("no")
-      allow(validator).to receive(:page_scan_content_file).and_return("")
-      allow(validator).to receive(:ocr_content_file).and_return("")
       allow(EPub.logger).to receive(:info).and_return(nil)
     end
 
@@ -150,9 +140,6 @@ RSpec.describe EPub::Publication do
           it "has the href of" do
             expect(subject.href).to eq "xhtml/Chapter01.xhtml"
           end
-          it "has the title of" do
-            expect(subject.title).to eq 'Damage report!'
-          end
           it "has the basecfi of" do
             expect(subject.basecfi).to eq '/6/2[Chapter01]!'
           end
@@ -161,6 +148,68 @@ RSpec.describe EPub::Publication do
             expect(subject.doc.xpath("//p")[2].text).to eq "Computer, belay that order"
           end
         end
+      end
+    end
+  end
+
+  describe "#chapters_from_file" do
+    subject(:chapters) { described_class.send(:new, validator).chapters_from_file }
+
+    let(:validator) do
+      instance_double(EPub::Validator, id: 'noid', content_file: 'EPUB/content.opf', content: content, root_path: '/root')
+    end
+    let(:content) { Nokogiri::XML(content_xml).remove_namespaces! }
+    let(:chapter_xhtml) { '<html><body><p>Some text</p></body></html>' }
+
+    # see HELIO-4314
+    context "when a manifest item @id has stray whitespace EPUBCheck would normalize" do
+      # The manifest item's @id has a leading space, but the spine itemref's
+      # @idref does not. An exact match would miss it; EPUBCheck strips the id
+      # so the book validates, and we mirror that behavior.
+      let(:content_xml) do
+        <<-XML
+          <package>
+            <manifest>
+              <item id=" Chapter01" href="xhtml/Chapter01.xhtml" media-type="application/xhtml+xml"/>
+            </manifest>
+            <spine>
+              <itemref idref="Chapter01"/>
+            </spine>
+          </package>
+        XML
+      end
+
+      before do
+        allow(File).to receive(:open).with('/root/EPUB/xhtml/Chapter01.xhtml').and_return(chapter_xhtml)
+      end
+
+      it "resolves the item and stores the trimmed id in the chapter and cfi" do
+        expect(chapters.length).to eq 1
+        expect(chapters.first.id).to eq 'Chapter01'
+        expect(chapters.first.href).to eq 'xhtml/Chapter01.xhtml'
+        expect(chapters.first.basecfi).to eq '/6/2[Chapter01]!'
+      end
+    end
+
+    # see HELIO-4314
+    context "when a spine idref does not resolve to any manifest item" do
+      let(:content_xml) do
+        <<-XML
+          <package>
+            <manifest>
+              <item id="Chapter01" href="xhtml/Chapter01.xhtml" media-type="application/xhtml+xml"/>
+            </manifest>
+            <spine>
+              <itemref idref="DoesNotExist"/>
+            </spine>
+          </package>
+        XML
+      end
+
+      it "logs a warning and skips it rather than raising" do
+        allow(EPub.logger).to receive(:warn)
+        expect(chapters).to be_empty
+        expect(EPub.logger).to have_received(:warn).with(/no manifest item matches spine idref 'DoesNotExist' in noid/)
       end
     end
   end

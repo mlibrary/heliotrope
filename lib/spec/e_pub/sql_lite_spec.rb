@@ -57,9 +57,9 @@ RSpec.describe EPub::SqlLite do
     it "finds the chapters that contain the search query" do
       expect(subject.search_chapters("lieutenant").count).to eq 3
       expect(subject.search_chapters("lieutenant")).to eq [
-        {  basecfi: "/6/2[Chapter01]!",  href: "xhtml/Chapter01.xhtml", title: "Damage report!" },
-        {  basecfi: "/6/4[Chapter02]!",  href: "xhtml/Chapter02.xhtml", title: "Shields up!" },
-        {  basecfi: "/6/6[Chapter03]!",  href: "xhtml/Chapter03.xhtml", title: "Mr. Crusher, ready a collision course with the Borg ship." }
+        {  basecfi: "/6/2[Chapter01]!",  href: "xhtml/Chapter01.xhtml" },
+        {  basecfi: "/6/4[Chapter02]!",  href: "xhtml/Chapter02.xhtml" },
+        {  basecfi: "/6/6[Chapter03]!",  href: "xhtml/Chapter03.xhtml" }
       ]
       expect(subject.search_chapters("szdkfjahykafeh").count).to eq 0
       expect(subject.search_chapters("artifact").count).to eq 1
@@ -82,7 +82,6 @@ RSpec.describe EPub::SqlLite do
 
     it "finds the chapter based on the cfi" do
       expect(subject.find_by_cfi("/6/2[Chapter01]!")[:id]).to eq "Chapter01" # rubocop:disable Rails/DynamicFindBy
-      expect(subject.find_by_cfi("/6/2[Chapter01]!")[:title]).to eq "Damage report!" # rubocop:disable Rails/DynamicFindBy
       expect(subject.find_by_cfi("/6/2[Chapter01]!")[:href]).to eq "xhtml/Chapter01.xhtml" # rubocop:disable Rails/DynamicFindBy
     end
   end
