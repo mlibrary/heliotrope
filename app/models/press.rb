@@ -2,14 +2,14 @@
 
 class Press < ApplicationRecord
   mount_uploader :logo_path, LogoPathUploader
-  validates :name, presence: true, uniqueness: { case_sensitive: true } # rubocop:disable Rails/UniqueValidationWithoutIndex
-  validates :subdomain, presence: true, uniqueness: { case_sensitive: true }, # rubocop:disable Rails/UniqueValidationWithoutIndex
+  validates :name, presence: true, uniqueness: { case_sensitive: true }
+  validates :subdomain, presence: true, uniqueness: { case_sensitive: true },
             length: { minimum: 2, maximum: 32 },
             format: { with: /\A[-0-9a-z]+\z/, message: :format }
   validate :subdomain_hyphens
-  validates :description, presence: true, uniqueness: { case_sensitive: true } # rubocop:disable Rails/UniqueValidationWithoutIndex
+  validates :description, presence: true
   # don't want to add a gem for this right now, this will at least prevent relative links
-  validates :press_url, presence: true, uniqueness: { case_sensitive: true }, format: URI.regexp(%w[http https]) # rubocop:disable Rails/UniqueValidationWithoutIndex
+  validates :press_url, presence: true, uniqueness: { case_sensitive: true }, format: URI.regexp(%w[http https])
   validates :accessibility_webpage_url, format: URI.regexp(%w[http https]), unless: Proc.new { |p| p.accessibility_webpage_url.blank? }
   validates :accessible_copy_request_form_url, format: URI.regexp(%w[http https]), unless: Proc.new { |p| p.accessible_copy_request_form_url.blank? }
   validate :validate_doi_prefixes

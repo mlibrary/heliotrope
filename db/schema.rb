@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_09_120000) do
+ActiveRecord::Schema.define(version: 2026_07_30_000001) do
 
   create_table "api_requests", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "user_id"
@@ -179,6 +179,7 @@ ActiveRecord::Schema.define(version: 2026_07_09_120000) do
   create_table "ebook_table_of_contents_caches", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "noid"
     t.text "toc", size: :long
+    t.index ["noid"], name: "index_ebook_table_of_contents_caches_on_noid", unique: true
   end
 
   create_table "epub_search_logs", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -201,7 +202,9 @@ ActiveRecord::Schema.define(version: 2026_07_09_120000) do
     t.string "kind"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["file_set_id"], name: "index_featured_representatives_on_file_set_id", unique: true
     t.index ["work_id", "file_set_id"], name: "index_featured_representatives_on_work_id_and_file_set_id", unique: true
+    t.index ["work_id", "kind"], name: "index_featured_representatives_on_work_id_and_kind", unique: true
   end
 
   create_table "featured_works", id: :integer, charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -462,6 +465,9 @@ ActiveRecord::Schema.define(version: 2026_07_09_120000) do
     t.boolean "show_request_accessible_copy_button", default: true
     t.string "accessible_copy_request_form_url"
     t.index ["parent_id"], name: "index_presses_on_parent_id"
+    t.index ["name"], name: "index_presses_on_name", unique: true
+    t.index ["subdomain"], name: "index_presses_on_subdomain", unique: true
+    t.index ["press_url"], name: "index_presses_on_press_url", unique: true
   end
 
   create_table "products", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
