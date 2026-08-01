@@ -96,6 +96,9 @@ class FileSetIndexer < Hyrax::FileSetIndexer
   # Make sure the asset is aware of its monograph
   def index_monograph_metadata(solr_doc)
     solr_doc['monograph_id_ssim'] = @monograph.id
+    # Index the parent Monograph's subdomain so FileSets can be filtered by the
+    # "Subdomain" facet (press_sim) alongside Monographs in the admin catalog.
+    solr_doc['press_sim'] = @monograph.press
   end
 
   def index_monograph_position(solr_doc)

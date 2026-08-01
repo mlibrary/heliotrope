@@ -1,0 +1,27 @@
+<%#
+  Per-result admin toolbar rendered only in the admin catalog.
+  No permission guards needed — AdminCatalogController is restricted to
+  platform admins via PlatformAdminGate.
+
+  Monographs: edit link, show link, reader-ebook link (if one exists),
+              permission badge.
+  FileSets:   edit link, permission badge.
+%>
+<div class="col-sm-12 platform-admin">
+  <% has_model = document['has_model_ssim']&.first %>
+  <% if has_model == 'Monograph' %>
+    <a href="<%= main_app.edit_hyrax_monograph_path(document.id) %>" data-turbolinks="false">Edit</a>
+    <a href="<%= main_app.monograph_show_path(document.id) %>" data-turbolinks="false">Manage Files</a>
+    <%
+      frs = FeaturedRepresentative.where(work_id: document.id, kind: %w[epub pdf_ebook]).index_by(&:kind)
+      reader_ebook_noid = (frs['epub'] || frs['pdf_ebook'])&.file_set_id
+    %>
+    <% if reader_ebook_noid.present? %>
+      <a href="<%= main_app.epub_path(reader_ebook_noid) %>" data-turbolinks="false">Read Book</a>
+    <% end %>
+  <% elsif has_model == 'FileSet' %>
+    <a href="<%= main_app.edit_hyrax_file_set_path(document.id) %>" data-turbolinks="false">Edit</a>
+  <% end %>
+  <%= Hyrax::PermissionBadge.new(document.visibility).render %>
+</div>
+

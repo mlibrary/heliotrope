@@ -1,5 +1,10 @@
 <% # main container for facets/limits menu -%>
 <%= content_tag :div, id: @id,  class: 'facets sidenav facets-toggleable-md' do %>
+  <% if @title.present? %>
+    <div class="facets-header">
+      <%= content_tag :h2, @title, class: 'facets-heading' %>
+    </div>
+  <% end %>
   <%= content_tag :div, id: @panel_id, class: 'facets-collapse collapse' do %>
     <% ::Deprecation.silence(Blacklight::FacetsHelperBehavior) do %>
       <%= helpers.render_facet_partials @fields, response: @response %>

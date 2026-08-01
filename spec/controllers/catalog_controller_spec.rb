@@ -7,7 +7,7 @@ RSpec.describe CatalogController, type: :controller do
     subject(:blacklight_config) { described_class.blacklight_config }
 
     it 'search_builder_class' do
-      expect(blacklight_config.search_builder_class).to be ::SearchBuilder
+      expect(blacklight_config.search_builder_class).to be ::CatalogSearchBuilder
     end
 
     describe 'default_solr_params' do

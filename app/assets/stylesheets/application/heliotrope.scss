@@ -643,6 +643,69 @@ footer.press {
 
   }
 }
+
+///////////////////////////////////
+// FULL CATALOGS (PUBLIC + ADMIN)
+///////////////////////////////////
+
+.heliotrope-catalog, .heliotrope-admin-catalog {
+  #documents.documents-list .document {
+    border-bottom: none;
+    padding-top: 2em;
+
+    // Both Hyrax and Bootstrap override col-sm-3's 25% with col-4's 33.33%
+    // on .document-thumbnail, causing it to exceed 100% alongside col-md-9
+    // and wrap onto its own row. Restore the correct col-sm-3 sizing here.
+    .document-thumbnail {
+      flex: 0 0 25%;
+      max-width: 25%;
+    }
+  }
+
+  .document-thumbnail, .heliotrope-full-catalog {
+    img {
+      width: 145px;
+    }
+  }
+}
+
+// ADMIN CATALOG
+///////////////////////////////////
+
+.heliotrope-admin-catalog {
+  #documents.documents-list .document {
+    // Float the admin tools row above the thumbnail + metadata by giving it
+    // a negative flex order. The article.row is the flex container; col-sm-12
+    // ensures it spans the full width on its own line.
+    .platform-admin {
+      order: -1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: baseline;
+      padding-bottom: 1em;
+      font-size: 14px;
+
+      a {
+        color: #000;
+        padding-right: 25px;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+#sidebar {
+  .card {
+    margin-bottom: 0px;
+    border-radius: 0;
+  }
+
+  .facets-heading {
+    font-weight: 700;
+    margin: 1rem 0 0.25rem;
+    padding: 0.4rem 0.75rem 0.25rem;
+  }
+}
+
 ///////////////////////////////////
 // PRESS AND MONOGRAPH FILTERS
 ///////////////////////////////////
