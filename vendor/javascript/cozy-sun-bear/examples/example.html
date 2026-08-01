@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Navigation Example</title>
+
+    <!-- <script type="text/javascript" src="../vendor/javascripts/engines/epub.js"></script> -->
+    <!-- <script src="../dist/cozy-sun-bear.js"></script> -->
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/url-search-params/0.10.0/url-search-params.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/cozy-sun-bear.css" />
+
+    <style type="text/css">
+
+        body {
+            margin: 0;
+        }
+
+        body.reading .select-book {
+            display: none;
+        }
+
+        #select-available-books {
+            font-size: 1.1rem;
+            margin-top: 0.4rem;
+        }
+
+        #select-engine {
+            z-index: 9000;
+            opacity: 0.2;
+            position: fixed;
+            right: 0;
+        }
+
+        #select-engine:hover {
+            opacity: 1.0;
+        }
+
+        /* FOR NOW */
+        .cozy-h1 {
+            max-width: 95vw;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .u-screenreader {
+          clip: rect(1px, 1px, 1px, 1px);
+          height: 1px;
+          overflow: hidden;
+          position: absolute !important;
+          width: 1px;
+        }
+
+        .skip a {
+            position: absolute;
+            left: -10000px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+
+        .skip a:focus {
+            position: static;
+            width: auto;
+            height: auto;
+            top: 0;
+            left: 0;
+            float: left;
+            padding: .5em;
+            background: #fff;
+        }
+
+
+        .cozy-module-book[data-manager=continuous][data-layout=reflowable] .epub-container {
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem;
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+
+        .cozy-module-book[data-manager=continuous][data-layout=reflowable] .epub-view {
+            margin-bottom: 2rem;
+            box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0,0,0,0);
+            padding: 40px 0;
+            /*width: 80%;*/
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #ddd;
+        }
+
+        @media only screen and (min-device-width : 320px) and (max-device-width : 600px) {
+            .cozy-module-book {
+                width: 100vw;
+                padding: 0;
+            }
+
+            #select-available-books {
+              display: none;
+            }
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="skip"></div>
+
+    <form id="select-engine">
+        <label class="u-screenreader" for="engine">Select EPUB Engine</label>
+        <select size="1" name="engine" id="engine">
+            <option value="epub.js">epub.js/v0.3</option>
+            <option value="epub.legacy.js">epub.js/v0.3/legacy</option>
+        </select>
+    </form>
+
+    <form class="select-book">
+        <p>
+            <select size="1" name="book"></select>
+            <button class="button--sm">Read</button>
+        </p>
+    </form>
+
+    <div id="reader"></div>
+
+    <script type="text/javascript">
+
+        var COZY_EPUB_ENGINE_HREF;
+        var COZY_EPUB_ENGINE;
+
+        COZY_EPUB_ENGINE = localStorage.getItem('engine') || 'epubjs';
+        var engine_base_href = localStorage.getItem('engine_base_href') || 'epub.js';
+        // if ( 'ActiveXObject' in window ) { engine_base_href = 'epub.legacy.js'; } // force this
+        $("#select-engine select").val(engine_base_href);
+
+
+        $("#select-engine select").on('change', function() {
+            engine_base_href = $(this).val();
+            localStorage.setItem('engine_base_href', engine_base_href);
+            location.reload(true);
+        })
+
+        var $form = $("form.select-book");
+        var $select = $("select[name=book]");
+        var book_href;
+        var book_prefix = '';
+
+        var tmp = location.pathname.split("/");
+        // tmp.shift(); // leading slash
+        tmp.pop(); // example.html
+        tmp.pop(); // examples
+        tmp.pop(); // cozy-sun-bear
+        if ( tmp.length ) {
+            book_prefix = tmp.join('/');
+        }
+
+        var reader;
+        var available_books;
+
+        var params = {};
+        if ( location.search && location.search.indexOf("=") < 0 ) {
+            params = new URLSearchParams("url=" + location.search.substr(1));
+        } else {
+            params = URLSearchParams && new URLSearchParams(document.location.search.substring(1));
+        }
+
+        var update_select_panel = function(data) {
+            var $select = $("#select-available-books");
+            if ( ! $select.length ) { return ; }
+            $select.empty();
+            for(var i in data) {
+                var $option = $("<option></option>").appendTo($select);
+                var tmp = data[i].split("/"); tmp.pop();
+                var label = tmp.pop();
+                $option.text(label).attr('value', data[i]);
+                if ( data[i] == book_href ) {
+                    $option.attr('selected', 'selected');
+                }
+            }
+            $select.on('change', function() {
+                var target = $(this).val();
+                window.location.href = location.origin + location.pathname + "?" + target;
+            })
+        };
+
+        var load_books = function() {
+            var books_data_href = location.pathname.split("/");
+            books_data_href.pop();
+            books_data_href.push("books.json");
+            books_data_href = location.origin + books_data_href.join("/");
+
+            $.getJSON(books_data_href, function(data) {
+                for(var i in data) {
+                    var $option = $("<option></option>").appendTo($select);
+                    var tmp = data[i].split("/"); tmp.pop();
+                    var label = tmp.pop();
+                    $option.text(label).attr('value', data[i]);
+                    if ( data[i] == book_href ) {
+                        $option.attr('selected', 'selected');
+                    }
+                }
+                available_books = data;
+                update_select_panel(available_books);
+            })
+        }
+
+        $form.on('submit', function(e) {
+            e.preventDefault();
+            var target = $select.val();
+            window.location.href = location.origin + location.pathname + "?" + target;
+        })
+
+        if ( params.get('url') ) {
+            $("body").addClass("reading");
+
+            var engine_href = '../vendor/javascripts/engines/' + engine_base_href;
+            var cozy_href = '../dist/cozy-sun-bear.js';
+            var book_id = params.get('url');
+            if ( book_id.indexOf('?') > -1 && book_id.indexOf('/?') < 0 ) {
+                book_id = book_id.replace('?', '/?');
+            } else if ( ! book_id.match('/$') && book_id.indexOf('.epub') < 0 ) {
+                book_id += '/';
+            }
+
+            window.fitWidth = params.get('fitWidth');
+            var manager = params.get('manager');
+            if ( manager == 'prepaginated' ) {
+                window.fitWidth = true;
+            }
+            var flow = params.get('flow') || 'auto';
+
+            COZY_EPUB_ENGINE_HREF = '../vendor/javascripts/engines/' + engine_base_href;
+
+            if ( params.get('rootfilePath') ) {
+                sessionStorage.setItem('rootfilePath', params.get('rootfilePath'));
+            }
+
+            head.load(cozy_href, function() {
+                book_href = book_prefix + book_id;
+                reader = cozy.reader('reader', {
+                    href: book_href,
+                    useArchive: params.get('useArchive') || false,
+                    themes: [
+                    {   name: 'Sepia',
+                        klass: 'sepia',
+                        rules: {
+                            body: {
+                                background: '#FAF4E8',
+                                color: '#121212',
+                                margin: '0 auto',
+                                padding: '1 em'
+                            },
+                            code: {
+                                'background-color': '#FBF6ED',
+                                padding: '2px'
+                            },
+                            a: {
+                                color: '#5C4500'
+                            },
+                            'a:visited': {
+                                color: '#816A39'
+                            },
+                            'a:hover': {
+                                color: '#6E571F'
+                            },
+                            h1: { color: '#4D4D4D' },
+                            h2: { color: '#4D4D4D' },
+                            h3: { color: '#4D4D4D' },
+                            h4: { color: '#4D4D4D' },
+                            h5: { color: '#4D4D4D' },
+                            h6: { color: '#4D4D4D' },
+                            pre: {
+                                'background-color': '#FCF9F2',
+                                color: '#3D3D3D',
+                                border: '1pt solid #707070',
+                                padding: '1em'
+                            }
+                        }
+                    },
+                    {
+                        name: 'Dark',
+                        klass: 'dark',
+                        rules: {
+                            body: {
+                                background: '#121212',
+                                color: '#FFFFFF',
+                                margin: '0 auto',
+                                padding: '1 em'
+                            },
+                            'table caption': {
+                                color: '#CFCFCF'
+                            },
+                            th: {
+                                color: '#CFCFCF'
+                            },
+                            code: {
+                                'background-color': '#474C50',
+                                padding: '2px'
+                            },
+                            a: {
+                                color: '#63CAFF'
+                            },
+                            'a:visited': {
+                                color: '#C2E7FF'
+                            },
+                            'a:hover': {
+                                color: '#8ED6FF'
+                            },
+                            h1: { color: '#CFCFCF' },
+                            h2: { color: '#CFCFCF' },
+                            h3: { color: '#CFCFCF' },
+                            h4: { color: '#CFCFCF' },
+                            h5: { color: '#CFCFCF' },
+                            h6: { color: '#CFCFCF' },
+                            pre: {
+                                'background-color': '#5F6367',
+                                color: '#FFFFFF',
+                                border: '1pt solid #474C50',
+                                padding: '1em'
+                            },
+                            '.page': {
+                                color: '#CFCFCF'
+                            },
+                            img: {
+                                'background-color': '#FFFFFF'
+                            }
+                        }
+                    }
+                    ],
+                });
+
+                cozy.control.title({ region: 'top.header.left' }).addTo(reader);
+                cozy.control.contents({ region: 'top.toolbar.left', skipLink: '.skip' }).addTo(reader);
+
+                cozy.control.citation({
+                    region: 'top.toolbar.left',
+                    citations: [
+                      { format: 'MLA', text: "Mock, Alex. <em>The Mock Life</em>. University Press, 2017." },
+                      { format: 'APA', text: "Mock, A. (2017). <em>The Mock Life</em>. Ann Arbor, MI: University Press." },
+                      { format: 'Chicago', text: "Mock, Alex. <em>The Mock Life</em>. Ann Arbor, MI: University Press, 2017." }
+                    ]
+                }).addTo(reader);
+
+                cozy.control.widget.panel({
+                    region: 'top.toolbar.left',
+                    template: '<div class="permalink-label"><label class="u-screenreader" for="permalink">Permalink</label><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand(\'copy\');"></form></div>',
+                    data: { title: "https://doi.org/10.3998/fulcrum.12345" }
+                }).addTo(reader);
+
+
+                // The searchUrl goes to "moby-dick" on fulcrum in my dev space so
+                // obviously search will only work for this example if your environment is set up to handle it.
+                // if you're running ./tools/serve you can proxy to a heliotrope search with
+                // USE_EPUB_SEARCH=http://127.0.0.1:3000/epub_search/hd76s004z
+                reader.__search = cozy.control.search({
+                    region: 'top.toolbar.left',
+                    searchUrl: '/cozy-sun-bear/epub_search' + book_id + '?q='
+                }).addTo(reader);
+
+                cozy.control.widget.panel({
+                    region: 'top.toolbar.right',
+                    template: '<div class=""><select id="select-available-books"><option>SELECT TITLE</option></select></div>',
+                    data: {}
+                }).addTo(reader);
+
+                cozy.control.widget.button({
+                    className: 'cozy-container-fullscreen',
+                    region: 'top.toolbar.right',
+                    template: '<button class="button--sm" data-toggle="button" data-slot="label" aria-label="Fullscreen mode"></button>',
+                    data: { label: '<i id="fullscreen" class="icon-fullscreen-enter oi" data-glyph="fullscreen-enter" title="Fullscreen Mode" aria-hidden="true"></i>' },
+                    onClick: function() {
+                        reader.requestFullscreen();
+                    }
+                }).addTo(reader);
+
+                cozy.control.preferences({ region: 'top.toolbar.right' }).addTo(reader);
+                // cozy.control.pageFirst({ region: 'left.sidebar' }).addTo(reader);
+                cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
+                cozy.control.pageNext({ region: 'right.sidebar' }).addTo(reader);
+                cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);
+
+                // cozy.control.pageLast({ region: 'right.sidebar' }).addTo(reader);
+                // cozy.control.publicationMetadata({ region: 'bottom.footer' }).addTo(reader);
+
+                reader.start(function() {
+                    load_books();
+                });
+
+                reader.on('resized', function() {
+                    console.log("DETECTED RESIZE");
+                })
+
+                // reader.on('trackPageview', function(data) {
+                //     console.log("AHOY TRACK PAGEVIEW", data);
+                // })
+                // reader.on('trackAction', function(data) {
+                //     console.log("AHOY TRACK ACTION", data);
+                // })
+
+                // setTimeout(function() {
+                //     update_select_panel(available_books);
+                // }, 100);
+            })
+        } else {
+            load_books();
+        }
+
+    </script>
+
+</body>
+</html>

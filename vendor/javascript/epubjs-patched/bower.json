@@ -1,0 +1,37 @@
+{
+  "name": "epubjs",
+  "version": "0.3.0",
+  "authors": [
+    "Fred Chasen <fchasen@gmail.com>"
+  ],
+  "description": "Enhanced eBooks in the browser.",
+  "main": "dist/epub.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "epub"
+  ],
+  "license": "MIT",
+  "homepage": "futurepress.org",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tools",
+    "books",
+    "examples"
+  ],
+  "dependencies": {
+    "event-emitter": "^0.3.5",
+    "jszip": "^3.1.5",
+    "lodash": "^4.17.4",
+    "marks-pane": "^1.0.7",
+    "path-webpack": "0.0.3",
+    "stream-browserify": "^2.0.1",
+    "xmldom": "^0.1.27"
+  }
+}

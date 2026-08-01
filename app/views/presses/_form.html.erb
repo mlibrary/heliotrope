@@ -65,6 +65,8 @@
     <%= f.input :watermark, label: 'Apply watermark to downloaded PDFs (applies to full eBooks and chapters)?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
     <%= f.input :epub_chapter_downloads, label: 'Allow EPUB chapter download?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
     <%= f.input :pdf_chapter_downloads, label: 'Allow PDF chapter download?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false %>
+    <%= f.input :use_new_epub_reader, label: 'Use the new EPUB reader (cozy-sun-bear \'too\' style) for this press?', as: :radio_buttons, collection: [['Yes', true], ['No', false]], default: false,
+              hint: "Use the new EPUB reader (cozy-sun-bear 'too' style) for this press. Leave off to keep the current reader." %>
   </fieldset>
   <fieldset>
     <legend>Component DOI Creation for Resources</legend>

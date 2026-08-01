@@ -380,4 +380,40 @@ RSpec.describe "EPubs", type: :request do
       end
     end
   end
+
+  context 'layout selection based on use_new_epub_reader' do
+    let(:fre) { create(:featured_representative, work_id: monograph.id, file_set_id: epub.id, kind: 'epub') }
+    let(:policy) { double('policy') }
+
+    before do
+      fre
+      allow(EPubPolicy).to receive(:new).and_return(policy)
+      allow(policy).to receive(:show?).and_return(true)
+      allow(counter_service).to receive(:count).with(request: 1)
+    end
+
+    describe 'GET /epubs/:id with use_new_epub_reader: false' do
+      subject { get "/epubs/#{epub.id}" }
+
+      let(:press) { create(:press, use_new_epub_reader: false) }
+
+      it 'renders the csb_viewer layout' do
+        expect { subject }.not_to raise_error
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template('layouts/csb_viewer')
+      end
+    end
+
+    describe 'GET /epubs/:id with use_new_epub_reader: true' do
+      subject { get "/epubs/#{epub.id}" }
+
+      let(:press) { create(:press, use_new_epub_reader: true) }
+
+      it 'renders the csb_too_viewer layout' do
+        expect { subject }.not_to raise_error
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template('layouts/csb_too_viewer')
+      end
+    end
+  end
 end

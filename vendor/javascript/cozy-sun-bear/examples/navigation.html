@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+    <title>Navigation Example</title>
+    <script type="text/javascript" src="../lib/epub.js"></script>
+    <script src="../dist/cozy-src.js"></script>
+
+    <style type="text/css">
+    #reader {
+        height: 90vh;
+        width: 80vw;
+        margin-left: auto;
+        margin-right: auto;
+        background: #ddd;
+    }
+
+/*    iframe {
+        margin: 0 !important;
+    }*/
+
+    .cozy-book-cover {
+        height: 90vh;
+        border: 1px solid red;
+    }
+
+    .cozy-edge {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+    }
+
+    .cozy-edge.cozy-left {
+        left: 0;
+    }
+
+    .cozy-edge.cozy-right {
+        right: 0;
+    }
+
+    .cozy-control a {
+        z-index: 10000;
+        background: black;
+        color: yellow;
+        padding: 8px;
+    }
+
+    </style>
+
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
+</head>
+<body>
+
+    <h1>Navigation Example</h1>
+
+    <p>
+        <button onClick="reader.prev()">Previous</button>
+        <span> </span>
+        <button onClick="reader.next()">Next</button>
+    </p>
+
+    <div id="reader"></div>
+
+
+    <script type="text/javascript">
+        // var reader = cozy.reader('reader', { href: "https://s3.amazonaws.com/moby-dick/OPS/package.opf" });
+        var reader = cozy.reader('reader', { href: "http://localhost:8080/books/epub3-samples/30/accessible_epub_3/" });
+
+        reader.start();
+        // cozy.control.pagePrevious().addTo(reader);
+        // cozy.control.pageNext().addTo(reader);
+    </script>
+
+</body>
+</html>

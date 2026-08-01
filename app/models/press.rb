@@ -45,6 +45,11 @@ class Press < ApplicationRecord
     false
   end
 
+  def use_new_epub_reader?
+    return true if use_new_epub_reader == true
+    false
+  end
+
   def to_param
     subdomain
   end

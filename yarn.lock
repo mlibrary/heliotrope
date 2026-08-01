@@ -1967,13 +1967,12 @@ core-util-is@~1.0.0:
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.3.tgz#a6042d3634c2b27e9328f837b965fac83808db85"
   integrity sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==
 
-"cozy-sun-bear-too@git+https://github.com/mlibrary/cozy-sun-bear.git#too":
+"cozy-sun-bear-too@file:vendor/javascript/cozy-sun-bear-too":
   version "1.0.0"
-  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#bd8eac3c800c4be3cf14ed045560856f4633b2c5"
   dependencies:
     ajv "^6.12.6"
     core-js "^3.6.5"
-    epubjs "git+https://github.com/mlibrary/epub.js.git#patched"
+    epubjs "file:../../../.cache/yarn/v6/npm-cozy-sun-bear-too-1.0.0-b5d2f98c-8934-4e26-943a-00a347a82422-1785543112982/node_modules/epubjs-patched"
     event-emitter "^0.3.5"
     intersection-observer "^0.5.1"
     jszip "^3.7.0"
@@ -1982,13 +1981,12 @@ core-util-is@~1.0.0:
     path-webpack "0.0.3"
     portfinder "^1.0.28"
 
-"cozy-sun-bear@git+https://github.com/mlibrary/cozy-sun-bear.git":
+"cozy-sun-bear@file:vendor/javascript/cozy-sun-bear":
   version "1.0.0"
-  resolved "git+https://github.com/mlibrary/cozy-sun-bear.git#3057e4be1e8c3d02551b7a1be378f6dc4e69d972"
   dependencies:
     ajv "^8.0.0"
     core-js "^3.39.0"
-    epubjs "git+https://github.com/mlibrary/epub.js.git#cozy-sun-bear-2026"
+    epubjs "file:../../../.cache/yarn/v6/npm-cozy-sun-bear-1.0.0-e1e68042-1de9-42bf-8764-0fbd5da28f6d-1785543112972/node_modules/epubjs"
     event-emitter "^0.3.5"
     jszip "^3.10.0"
     lodash "^4.18.1"
@@ -2155,9 +2153,8 @@ envinfo@^7.7.3:
   resolved "https://registry.yarnpkg.com/envinfo/-/envinfo-7.21.0.tgz#04a251be79f92548541f37d13c8b6f22940c3bae"
   integrity sha512-Lw7I8Zp5YKHFCXL7+Dz95g4CcbMEpgvqZNNq3AmlT5XAV6CgAAk6gyAMqn2zjw08K9BHfcNuKrMiCPLByGafow==
 
-"epubjs@git+https://github.com/mlibrary/epub.js.git#cozy-sun-bear-2026":
+"epubjs@file:vendor/javascript/epubjs":
   version "0.3.88"
-  resolved "git+https://github.com/mlibrary/epub.js.git#90d69c4ed0b969a13902aa928d5a3bfdf826d9f0"
   dependencies:
     "@types/localforage" "0.0.34"
     "@xmldom/xmldom" "^0.8.13"
@@ -2169,9 +2166,8 @@ envinfo@^7.7.3:
     marks-pane "git+https://github.com/mlibrary/marks.git#patched"
     path-webpack "0.0.3"
 
-"epubjs@git+https://github.com/mlibrary/epub.js.git#patched":
+"epubjs@file:vendor/javascript/epubjs-patched":
   version "0.3.81"
-  resolved "git+https://github.com/mlibrary/epub.js.git#a062b5d803fab97945bd94a1520cfbb3e0ffdb99"
   dependencies:
     "@types/jszip" "^3.1.4"
     "@types/localforage" "0.0.34"

@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+    <title>Simple Example</title>
+    <!-- <script type="text/javascript" src="../vendor/javascripts/engines/epub.js"></script> -->
+    <script type="text/javascript" src="/epub.js-v.03/dist/epub.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+
+    <style type="text/css">
+
+       html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 100vh;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* body, iframe {
+            box-sizing: content-box;
+        } */
+
+    
+         #reader {
+            /*height: 80vh;
+            width: 90vw;
+            top: calc(100vh-50vh);*/
+            height: calc(80vh - 0vh);
+            width: 80%; /*87rem;*/ /*1400px;*/
+            margin: 10vh auto;
+            background: lemonchiffon;
+            /*box-sizing: content-box;*/
+            position: relative;
+            padding: 20px 40px;
+        }
+
+
+/*        body {
+            margin: 0;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            min-height: 100vh;
+        }
+*/
+        /*#reader {
+            width: 900px;
+              height: 600px;
+              box-shadow: 0 0 4px #ccc;
+              border-radius: 5px;
+              padding: 20px 40px;
+              position: relative;
+              margin: 10px auto;
+              background: salmon;
+              top: calc(50vh - 400px);        }
+        }*/
+
+        #header {
+            position: fixed;
+            background: black;
+            color: white;
+            opacity: 0.3;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .navigation {
+            text-align: right;
+            margin-top: -65px;
+            margin-right: 10px;
+            margin-bottom: 20px;
+        }
+
+        .navigation button {
+            font-size: 200%;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div id="header">
+        <h1>EPUBJS Example</h1>
+        <div class="navigation">
+            <button id="prevPage">◀</button>
+            <button id="nextPage">▶</button>
+        </div>
+    </div>
+    <div id="reader"></div>
+    <script type="text/javascript">
+        var href = '/epub3-local/Junichiro/';
+        var book = ePub(href);
+        var rendition;
+        book.ready.then(function() {
+            rendition = book.renderTo('reader', { height: '100%' });
+            rendition.display(0);
+        });
+
+        $("#nextPage").click(function(e) {
+            e.preventDefault();
+            rendition.next();
+        });
+
+        $("#prevPage").click(function(e) {
+            e.preventDefault();
+            rendition.prev();
+        })
+    </script>
+</body>
+</html>

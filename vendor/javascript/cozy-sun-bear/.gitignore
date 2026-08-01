@@ -1,0 +1,13 @@
+/node_modules
+/coverage
+/.bundle/
+/.yardoc
+/Gemfile.lock
+/_yardoc/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+/.idea/
+# Ignore OS X Desktop Services Store files
+.DS_Store

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_30_000001) do
+ActiveRecord::Schema.define(version: 2026_07_31_000000) do
 
   create_table "api_requests", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "user_id"
@@ -464,6 +464,7 @@ ActiveRecord::Schema.define(version: 2026_07_30_000001) do
     t.boolean "show_accessibility_metadata", default: true
     t.boolean "show_request_accessible_copy_button", default: true
     t.string "accessible_copy_request_form_url"
+    t.boolean "use_new_epub_reader", default: false, null: false
     t.index ["parent_id"], name: "index_presses_on_parent_id"
     t.index ["name"], name: "index_presses_on_name", unique: true
     t.index ["subdomain"], name: "index_presses_on_subdomain", unique: true

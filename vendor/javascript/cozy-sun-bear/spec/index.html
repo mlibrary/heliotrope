@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Cozy Spec Runner</title>
+	<link rel="stylesheet" type="text/css" href="../node_modules/mocha/mocha.css">
+	<link rel="stylesheet" type="text/css" href="../dist/cozy.css">
+</head>
+<body>
+	<div id="mocha"></div>
+	<script src="../node_modules/expect.js"></script>
+	<script src="../node_modules/mocha/mocha.js"></script>
+	<script src="../node_modules/happen/happen.js"></script>
+	<script src="../node_modules/prosthetic-hand/dist/prosthetic-hand.js"></script>
+	<script src="../node_modules/sinon/lib/sinon.js"></script>
+
+	<!-- source files -->
+	<script>
+		// Trick Cozy into believing we have a touchscreen (for Chrome)
+		if (window.Touch) { window.ontouchstart = function(){} };
+	</script>
+<!-- 	<script src="../build/deps.js"></script> -->
+
+	<!--<script src="../debug/cozy-include.js"></script>-->
+
+	<script>
+		mocha.setup({
+			ui: 'bdd',
+			ignoreLeaks: true
+		});
+	</script>
+
+	<!-- spec files -->
+	<script src="SpecHelper.js"></script>
+
+	<!-- /control -->
+	<script src="control/Control.PagingSpec.js"></script>
+	<script src="control/Control.PreferencesSpec.js"></script>
+	<script src="control/Control.PublicationMetadataSpec.js"></script>
+	<script src="control/Control.TitleSpec.js"></script>
+	<script src="control/Control.WidgetSpec.js"></script>
+	<script src="control/ControlSpec.js"></script>
+
+	<!-- /core -->
+	<script src="core/BrowserSpec.js"></script>
+	<script src="core/BusSpec.js"></script>
+	<script src="core/ClassSpec.js"></script>
+	<script src="core/EventsSpec.js"></script>
+	<script src="core/UtilSpec.js"></script>
+
+	<!-- /dom -->
+	<script src="dom/DomEvent.DoubleTapSpec.js"></script>
+	<script src="dom/DomEvent.PointerSpec.js"></script>
+	<script src="dom/DomEventSpec.js"></script>
+	<script src="dom/DomUtilSpec.js"></script>
+
+	<!-- /geometry -->
+	<script src="geometry/PointSpec.js"></script>
+
+	<!-- /reader -->
+	<script src="reader/Reader.EpubJSSpec.js"></script>
+	<script src="reader/ReaderSpec.js"></script>
+
+	<script>
+		(window.mochaPhantomJS || window.mocha).run();
+	</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+    <title>Navigation Example</title>
+    <script type="text/javascript" src="../vendor/javascripts/engines/epub.js"></script>
+    <script src="../dist/cozy-sun-bear.js"></script>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/cozy-sun-bear.css" />
+
+    <style type="text/css">
+
+        body {
+            margin: 0;
+        }
+
+        body.reading .select-book {
+            display: none;
+        }
+
+        #select-available-books {
+            font-size: 1.1rem;
+            margin-top: 0.4rem;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div id="reader"></div>
+
+    <script type="text/javascript">
+
+        var book_id = "/books/epub3-local/Buell/";
+        if ( location.search ) {
+            book_id = location.search.substr(1);
+        }
+        var book_prefix;
+
+        if ( location.hostname == 'localhost' ) {
+          // book_prefix = '/books';
+          book_prefix = '';
+        } else {
+          var tmp = location.pathname.split("/");
+          tmp.pop(); // static.html
+          tmp.pop(); // examples
+          tmp.pop(); // cozy-sun-bear
+          book_prefix = tmp.join('/') + '/';
+        }
+
+        if ( true ) {
+            $("body").addClass("reading");
+
+            var book_href = book_prefix + book_id;
+            console.log("AHOY", book_href);
+            var reader = cozy.reader('reader', {
+                href: book_href,
+                metadata: {
+                    // for the DOI widget
+                    doi: 'https://doi.org/10.3998/fulcrum.12345',
+                    // for citations
+                    citations: [
+                        { format: 'MLA', text: 'Gleick, James. <em>Chaos: Making a New Science.</em> Penguin, 1987' },
+                        { format: 'APA', text: "O'Neil, J. M. (1992). <em>Men's and women's gender role journeys: A metaphor for healing, transition, and transformation.</em> New York, NY: Springer." },
+                        { format: 'Chicago', text: 'Faulkner, William. <em>Absalom, Absalom!</em>. New York: Vintage Books, 1990.' }
+                    ]
+                },
+                download_links: [
+                    {
+                        format: 'EPUB',
+                        size: '22 MB',
+                        href: 'https://archive.org/download/greeklivesfrompl00plutuoft/greeklivesfrompl00plutuoft.epub'
+                    },
+                    {
+                        format: 'PDF',
+                        size: '12 MB',
+                        href: 'https://archive.org/download/greeklivesfrompl00plutuoft/greeklivesfrompl00plutuoft.pdf'
+                    }
+                ]
+            });
+
+            cozy.control.title({ region: 'top.header.left' }).addTo(reader);
+            cozy.control.contents({ region: 'top.toolbar.left' }).addTo(reader);
+
+
+            // there should be a way to delay the panel until the book is loaded
+            cozy.control.widget.panel({
+                region: 'top.toolbar.left',
+                template: `<div class="permalink-label"><span class="u-screenreader">Permalink</span><form><input data-slot="title" type="text" id="permalink" value="" readonly="readonly" onclick="this.select(); document.execCommand('copy');"></form></div>`,
+                data: { title: function() { return reader.metadata.doi; } }
+            }).addTo(reader);
+
+            cozy.control.citationOptions({ region: 'top.toolbar.left' }).addTo(reader);
+            cozy.control.bibliographicInformation({ region: 'top.toolbar.left' }).addTo(reader);
+            cozy.control.download({ region: 'top.toolbar.left' }).addTo(reader);
+            cozy.control.preferences({ region: 'top.toolbar.right' }).addTo(reader);
+            // cozy.control.pageFirst({ region: 'left.sidebar' }).addTo(reader);
+            cozy.control.pagePrevious({ region: 'left.sidebar' }).addTo(reader);
+            cozy.control.pageNext({ region: 'right.sidebar' }).addTo(reader);
+            // cozy.control.pageLast({ region: 'right.sidebar' }).addTo(reader);
+            cozy.control.publicationMetadata({ region: 'bottom.footer' }).addTo(reader);
+            reader.start();
+
+        }
+
+    </script>
+
+</body>
+</html>

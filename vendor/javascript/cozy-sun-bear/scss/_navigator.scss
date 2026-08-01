@@ -1,0 +1,163 @@
+// tweaks if the panel is added to the book
+.cozy-module-book .cozy-panel-navigator {
+  position: absolute;
+  bottom: 0.75em;
+  left: 0;
+  // left: 50%;
+  // width: 90%;
+  // margin-left: -45%;
+  text-align: center;
+  display: block;
+  z-index: 10;
+
+  opacity: 0.2;
+
+  &:hover {
+    opacity: 1.0;
+  }
+}
+
+.cozy-container .cozy-panel-navigator {
+
+  width: 100%;
+  margin: 0 auto;
+
+  .cozy-control {
+    display: block;
+  }
+
+  .cozy-control-navigator {
+
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.5s;
+
+    &.initialized {
+      opacity: 1.0;
+    }
+
+    &.updating {
+      .cozy-navigator-range__status {
+        & > span {
+          background: #000;
+          color: #fff;
+        }
+      }
+    }
+
+    .cozy-navigator-range__status {
+      width: 100%;
+      text-align: center;
+
+      & > span {
+        display: inline-block;
+        padding: 0 4px;
+      }
+    }
+
+    .cozy-navigator-range {
+
+      width: 90%;
+      height: auto;
+      padding: 0.5rem 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+
+      form {
+        display: flex;
+        flex-grow: 1;
+        justify-content: center;
+        align-items: center;
+        margin-top: 0.5rem;
+      }
+
+      $range-gradient-fill: #2497e3;
+      $range-gradient-empty: #fff;
+
+      .cozy-navigator-range__background {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        margin-right: 1rem;
+
+        &::after {
+          background-color: $range-gradient-empty;
+        }
+        &::before {
+          background-color: $range-gradient-fill;
+        }
+      }
+
+      input[type=range] {
+        margin: 0;
+        flex-grow: 1;
+        padding: 0;
+        height: 8px;
+        background-color: $range-gradient-empty;
+        background: linear-gradient(to right, $range-gradient-fill 0%, $range-gradient-fill 0%, $range-gradient-empty 0%, $range-gradient-empty 100%);
+        border: 1px solid #666;
+        border-radius: 4px;
+        cursor: pointer;
+        -webkit-appearance: none;
+      }
+
+      input[type=range]::-webkit-slider-runnable-track {
+          box-shadow: none;
+          border: none;
+          background: transparent;
+          // background: #ffeee3; // $hathitrust-orange-color;
+          height: 8px;
+          content: '';
+          width: 100%;
+          -webkit-appearance: none;
+      }
+
+      $thumb-size: 32px;
+      input[type=range]::-webkit-slider-thumb {
+        box-shadow: 0px 0px 0px #000000;
+        border: 1px solid #666;
+        height: $thumb-size;
+        width: $thumb-size;
+        border: 0;
+        margin-top: -12px;
+        border-radius: 25px;
+        background: #A1D0FF;
+        // background: #fff;
+        cursor: pointer;
+        -webkit-appearance: none;
+        box-shadow: 2px 2px 1px 0px rgba(0,0,0,0.4);
+        // margin-top: -7px;
+      }
+
+      input[type=range]::-moz-range-thumb {
+        box-shadow: 0px 0px 0px #000000;
+        border: 1px solid #2497E3;
+        // height: 18px;
+        // width: 18px;
+        height: $thumb-size;
+        width: $thumb-size;
+        border-radius: 25px;
+        background: #A1D0FF;
+        cursor: pointer;
+        box-shadow: 2px 2px 1px 0px rgba(0,0,0,0.4);
+      }
+
+      input[type=range]::-ms-thumb {
+        margin-top: 1px;
+        box-shadow: 0px 0px 0px #000000;
+        border: 1px solid #2497E3;
+        height: $thumb-size;
+        width: $thumb-size;
+        border-radius: 25px;
+        background: #A1D0FF;
+        cursor: pointer;
+      }
+
+    }
+
+  }
+
+}

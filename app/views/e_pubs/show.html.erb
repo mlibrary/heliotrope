@@ -188,4 +188,4 @@
   <% end %>
   <%= render 'shared/ga' %>
 <% end %>
-<%= render template: 'layouts/csb_viewer' %>
+<%= render template: @press&.use_new_epub_reader? ? 'layouts/csb_too_viewer' : 'layouts/csb_viewer' %>

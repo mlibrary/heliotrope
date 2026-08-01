@@ -267,4 +267,7 @@
   </div>
   <%= render 'shared/ga' %>
 <% end %>
+<%# Intentionally hard-coded: EpubEbooksController is a single-title special case (Princesse De Cleves).
+    The per-press use_new_epub_reader switch applies to EPubsController only.
+    Remove this comment when the follow-up cleanup PR consolidates the two controllers. %>
 <%= render template: 'layouts/csb_too_viewer' %>

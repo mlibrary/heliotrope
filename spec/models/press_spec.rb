@@ -336,4 +336,32 @@ RSpec.describe Press, type: :model do
 
     it { is_expected.to be_an_instance_of(NullPress) }
   end
+
+  describe "#use_new_epub_reader?" do
+    subject { press.use_new_epub_reader? }
+
+    context "is set to true" do
+      let(:press) { build(:press, subdomain: 'blug', use_new_epub_reader: true) }
+
+      it "returns true" do
+        expect(subject).to be true
+      end
+    end
+
+    context "when not set" do
+      let(:press) { build(:press, subdomain: 'blug') }
+
+      it "defaults to false" do
+        expect(subject).to be false
+      end
+    end
+
+    context "when set to false" do
+      let(:press) { build(:press, subdomain: 'blug', use_new_epub_reader: false) }
+
+      it "returns false" do
+        expect(subject).to be false
+      end
+    end
+  end
 end

@@ -1,0 +1,1 @@
+sass --load-path=scss scss/cozy.scss dist/cozy-sun-bear.css

@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+    <title>Navigation Example</title>
+    <script type="text/javascript" src="../lib/epub.js"></script>
+    <script src="../dist/cozy-src.js"></script>
+
+    <style type="text/css">
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    #reader {
+        height: 90vh;
+        width: 100vw;
+        background: #ddd;
+    }
+
+    .cozy-container {
+      display: flex;
+      flex-direction: column;
+
+      height: 90vh;
+      width: 100vw;
+      background: #ddd;
+
+    }
+
+    .cozy-header {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cozy-main {
+      align-self: stretch;
+      flex-grow: 1;
+      display: flex;
+    }
+
+    .cozy-book-cover {
+      flex-grow: 1;
+      background: #666;
+      position: relative;
+    }
+
+    .cozy-book {
+        margin-left: auto;
+        margin-right: auto;
+        background: green;
+        position: relative;
+        padding: 20px;
+/*        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);*/
+    }
+
+    .cozy-footer {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cozy-container div[class^='cozy-'] {
+        border: 1px solid #666;
+    }
+
+    .epub-container {
+        background: blue;
+        /* --- padding on this container messes with horizontal scrolling */
+        /*padding: 20px;*/
+
+    }
+
+    .cozy-slot-left, .cozy-slot-right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cozy-control a {
+        width: 100px;
+        display: inline-block;
+        background: black;
+        color: aliceblue;
+        text-align: center;
+        min-height: 60px;
+        padding: 10px;
+    }
+
+    iframe {
+        /*border: 8px solid black !important;*/
+        background: white;
+        /*margin: 0 !important;*/
+    }
+
+    </style>
+
+</head>
+<body>
+
+    <h1>Navigation Example</h1>
+
+    <div id="reader"></div>
+
+    <script type="text/javascript">
+        // var reader = cozy.reader('reader', { href: "https://s3.amazonaws.com/moby-dick/OPS/package.opf" });
+        // var reader = cozy.reader('reader', { href: "http://localhost:8080/books/haruko-html-jpeg/" });
+        var reader = cozy.reader('reader', { href: "http://localhost:8080/books/epub3-samples/30/linear-algebra/" });
+        cozy.control.pagePrevious({ region: 'main.toolbar.left' }).addTo(reader);
+        cozy.control.pageNext({ region: 'main.toolbar.right' }).addTo(reader);
+        reader.start();
+    </script>
+
+</body>
+</html>
