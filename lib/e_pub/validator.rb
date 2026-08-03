@@ -2,22 +2,12 @@
 
 module EPub
   class Validator
-    attr_reader :id, :container, :content_file, :content, :toc,
-                :root_path, :multi_rendition, :page_scan_content_file,
-                :ocr_content_file
+    attr_reader :id, :container, :content_file, :content, :toc, :root_path
 
     def self.from_directory(root_path)
       container = Nokogiri::XML(File.open(File.join(root_path, "META-INF/container.xml"))).remove_namespaces!
 
-      multi_rendition = container.xpath("//rootfile").length > 1 ? 'yes' : 'no'
-
-      if multi_rendition == 'yes'
-        ocr_content_file = container.xpath("//rootfiles/rootfile[@label='Text']").xpath("@full-path").text
-        page_scan_content_file = container.xpath("//rootfiles/rootfile[@label='Page Scan']").xpath("@full-path").text
-        content_file = ocr_content_file
-      else
-        content_file = container.xpath("//rootfile/@full-path").text
-      end
+      content_file = container.xpath("//rootfile/@full-path").first&.text
 
       content = Nokogiri::XML(File.open(File.join(root_path, content_file))).remove_namespaces!
       # EPUB3 *must* have an item with properties="nav" in it's manifest
@@ -30,10 +20,7 @@ module EPub
           content_file: content_file,
           content: content,
           toc: toc,
-          root_path: root_path,
-          multi_rendition: multi_rendition,
-          page_scan_content_file: page_scan_content_file,
-          ocr_content_file: ocr_content_file)
+          root_path: root_path)
     rescue Errno::ENOENT, NoMethodError => e
       ::EPub.logger.info("EPub::Validator.from_directory(#{root_path}) raised #{e}")
       ValidatorNullObject.new
@@ -56,9 +43,6 @@ module EPub
         @content      = opts[:content]
         @toc          = opts[:toc]
         @root_path    = opts[:root_path]
-        @multi_rendition = opts[:multi_rendition]
-        @page_scan_content_file = opts[:page_scan_content_file]
-        @ocr_content_file = opts[:ocr_content_file]
       end
   end
 
@@ -70,9 +54,6 @@ module EPub
       @content      = Nokogiri::XML(nil)
       @toc          = Nokogiri::XML(nil)
       @root_path    = "root_path"
-      @multi_rendition = "no"
-      @page_scan_content_file = ""
-      @ocr_content_file = ""
     end
   end
 end

@@ -23,7 +23,7 @@ module EPub
 
     def create_table
       SQLite3::Database.new @db_file do |db|
-        db.execute "CREATE VIRTUAL TABLE chapters USING FTS4(chapter_id, chapter_href, title, basecfi, text)"
+        db.execute "CREATE VIRTUAL TABLE chapters USING FTS4(chapter_id, chapter_href, basecfi, text)"
       end
     end
 
@@ -31,7 +31,7 @@ module EPub
       SQLite3::Database.new @db_file do |db|
         @epub_publication.chapters_from_file.each do |c|
           text = c.doc.search('//text()').map(&:text).delete_if { |x| x !~ /\w/ }
-          db.execute "INSERT INTO chapters VALUES (?, ?, ?, ?, ?)", c.id, c.href, c.title, c.basecfi, text.join(" ")
+          db.execute "INSERT INTO chapters VALUES (?, ?, ?, ?)", c.id, c.href, c.basecfi, text.join(" ")
         end
       end
     end
@@ -39,13 +39,13 @@ module EPub
     def search_chapters(query)
       db_results = []
       SQLite3::Database.new @db_file do |db|
-        stm = db.prepare "SELECT chapter_href, basecfi, title from chapters where chapters MATCH ?"
+        stm = db.prepare "SELECT chapter_href, basecfi from chapters where chapters MATCH ?"
         # In sqlite a - (hyphen) acts as NOT which we pretty much never want.
         # In FTS4 it's also a token, so we can just remove it without affecting results
         stm.bind_param 1, query.sub("-", " ")
         rs = stm.execute
         rs.each do |row|
-          db_results.push(href: row[0], basecfi: row[1], title: row[2])
+          db_results.push(href: row[0], basecfi: row[1])
         end
         stm.close
       end
@@ -55,12 +55,12 @@ module EPub
     def find_by_cfi(cfi)
       result = {}
       SQLite3::Database.new @db_file do |db|
-        stm = db.prepare "select chapter_id, chapter_href, title, text from chapters where basecfi = ?"
+        stm = db.prepare "select chapter_id, chapter_href, text from chapters where basecfi = ?"
         stm.bind_param 1, cfi
         rs = stm.execute
         row = rs.first
         stm.close
-        result = { id: row[0], href: row[1], basecfi: cfi, title: row[2], doc: row[3] }
+        result = { id: row[0], href: row[1], basecfi: cfi, doc: row[2] }
       end
       result
     end
@@ -68,10 +68,10 @@ module EPub
     def fetch_chapters
       results = []
       SQLite3::Database.new @db_file do |db|
-        stm = db.prepare("select chapter_id, chapter_href, title, basecfi from chapters")
+        stm = db.prepare("select chapter_id, chapter_href, basecfi from chapters")
         rs = stm.execute
         rs.each do |row|
-          results << { id: row[0], href: row[1], title: row[2], basecfi: row[3] }
+          results << { id: row[0], href: row[1], basecfi: row[2] }
         end
         stm.close
       end

@@ -87,9 +87,9 @@ module EpubChaptersService
       # Reflect what actually got written to disk. A chapter's `<index>.epub`
       # may be missing if e.g. every spine file it wanted was absent (see
       # build_chapter_epub). `downloadable?` here is analogous to the file-
-      # existence check that PDFEbook::Interval#downloadable? / EPub::Interval#downloadable?
-      # do at ToC-cache time, but computed once, up front, from the same
-      # source of truth that produced the chapter files.
+      # existence check that PDFEbook::Interval#downloadable? does at ToC-cache
+      # time, but computed once, up front, from the same source of truth that
+      # produced the chapter files.
       @chapter_ranges.each_with_index do |chapter, idx|
         chapter[:downloadable?] = File.exist?(File.join(@output_dir, "#{idx}.epub"))
       end
@@ -183,7 +183,7 @@ module EpubChaptersService
             title: a.text.strip,
             spine_href: spine_href,
             spine_index: @spine_href_to_index[spine_href],
-            # Retained so build_cfi can mirror EPub::Rendition#intervals' cfi format for CSB.
+            # Retained so build_cfi can reproduce the reader's (CSB) expected cfi format.
             href_raw: href_raw,
             href_fragment: fragment,
             # Nesting depth of this <li> in the ToC (top-level == 1). Used by
@@ -231,19 +231,17 @@ module EpubChaptersService
         end
       end
 
-      # Mirror the cfi format produced by EPub::Rendition#intervals so that
-      # cozy-sun-bear (the reader) can navigate to the same location whether
-      # the cache was built from this service or from Rendition.
+      # Produce the cfi format that cozy-sun-bear (the reader) expects so it can
+      # navigate to the location for a given ToC entry.
       def build_cfi(entry)
         if entry[:href_fragment].present?
           # Path from the epub root to the nav file's directory, e.g. "OEBPS".
-          # Matches EPub::Rendition#file_url's behavior (which prepends the nav
-          # dir and %23-escapes the fragment) — kept bug-compatible on purpose.
+          # The nav dir is prepended and the fragment %23-escaped.
           nav_dir_from_root = File.dirname(File.join(@opf_dir, @nav_href))
           "/#{nav_dir_from_root}/#{entry[:href_raw].gsub('#', '%23')}"
         else
           idref = @manifest_href_to_id[entry[:spine_href]]
-          # Rendition/Unmarshaller::Content uses a 1-based spine index for cfi;
+          # The reader uses a 1-based spine index for the cfi;
           # @spine_href_to_index here is 0-based, so bump by one for parity.
           "/6/#{(entry[:spine_index] + 1) * 2}[#{idref}]!/4/1:0"
         end

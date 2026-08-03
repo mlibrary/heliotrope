@@ -2,41 +2,29 @@
 
 class PDFEbookPresenter < ApplicationPresenter
   attr_reader :id
-  include Skylight::Helpers
 
   def initialize(id)
     @id = id
-    @cached = EbookTableOfContentsCache.find_by(noid: @id)
-    load_pdf if @cached.blank?
-  end
-
-  def load_pdf
-    # HELIO-4467
-    # Parsing the entire pdf can be very expensive so don't do it unless we need it
-    # We shouldn't ever need it in this presenter, but there are times when a pdf doesn't have a cached ToC
-    # It's really considered an error, but not really worth giving users a 500
-    Rails.logger.error("[FIXME ERROR PDFEbookPresenter: EbookTableOfContentsCache] No Cached TOC for #{@id}")
-    @pdf_ebook ||= PDFEbook::Publication.from_path_id(UnpackService.root_path_from_noid(@id, 'pdf_ebook') + ".pdf", @id)
-  end
-
-  def multi_rendition?
-    false
   end
 
   def intervals?
-    return true if @cached.present?
-    @pdf_ebook&.intervals&.count&.positive?
+    EbookTableOfContentsCache.find_by(noid: id).present?
   end
 
-  instrument_method
   def intervals
-    @intervals ||= begin
-      record = @cached
-      if record.present?
-        JSON.parse(record.toc).map { |i| EBookIntervalPresenter.new(i.symbolize_keys) }
-      else
-        @pdf_ebook.intervals.map { |interval| RemoveMeEPubIntervalPresenter.new(interval) }
-      end
-    end
+    return @intervals if defined?(@intervals)
+    record = EbookTableOfContentsCache.find_by(noid: @id)
+    @intervals = if record.present?
+                   JSON.parse(record.toc).map { |i| EBookIntervalPresenter.new(i.symbolize_keys) }
+                 else
+                   # No cached ToC. The previous fallback that parsed the entire
+                   # PDF on-the-fly (via PDFEbook::Publication) has been removed in
+                   # favor of a single source of truth (the ToC cache built by
+                   # UnpackJob#cache_pdf_toc). A missing cache is an error that
+                   # should be caught during QC before the book is published, so
+                   # we just log and return nil here.
+                   Rails.logger.error("[FIXME ERROR PDFEbookPresenter: EbookTableOfContentsCache] No Cached TOC for #{@id}")
+                   nil
+                 end
   end
 end

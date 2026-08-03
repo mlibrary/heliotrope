@@ -20,7 +20,7 @@ RSpec.describe EPub::Search do
     context 'db results empty' do
       let(:query) { 'nobody' }
 
-      it { is_expected.to match(q: query, highlight_off: "no", search_results: [], timeout: 0) }
+      it { is_expected.to match(q: query, search_results: [], timeout: 0) }
     end
 
     context 'db results non empty' do
@@ -31,11 +31,9 @@ RSpec.describe EPub::Search do
         expect(subject[:search_results].length).to eq 2
 
         expect(subject[:search_results][0][:cfi]).to eq "/6/2[Chapter01]!/4/8,/1:23,/1:32"
-        expect(subject[:search_results][0][:title]).to eq "Damage report!"
         expect(subject[:search_results][0][:snippet]).to eq "Why don't we just give everybody a promotion and call it a night - 'Commander'? Fate."
 
         expect(subject[:search_results][1][:cfi]).to eq "/6/6[Chapter03]!/4/12,/1:781,/1:790"
-        expect(subject[:search_results][1][:title]).to eq "Mr. Crusher, ready a collision course with the Borg ship."
         expect(subject[:search_results][1][:snippet]).to eq "long can two people talk about nothing? Why don't we just give everybody a promotion and call it a night - 'Commander'?"
       end
     end

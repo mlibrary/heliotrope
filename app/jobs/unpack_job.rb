@@ -107,33 +107,6 @@ class UnpackJob < ApplicationJob
       nil
     end
 
-    # DEPRECATED: predecessor of `create_epub_chapters`, which now produces
-    # actual EPUB chapter files via EpubChaptersService. This method rendered
-    # a PDF per top-level ToC entry using EPub::Marshaller::PDF and is no
-    # longer wired into `perform`. Left in place pending removal (and the
-    # removal of the associated EPub gem code paths) under a dedicated ticket.
-    def create_epub_chapters_as_pdfs(id, root_path)
-      publication = EPub::Publication.from_directory(UnpackService.root_path_from_noid(id, 'epub'))
-      epub_presenter = EPubPresenter.new(publication)
-
-      Rails.logger.error("[EPUB CHAPTER FAILURE] The pdf_ebook #{id} will not have intervals") if publication.class == "EPub::PublicationNullObject"
-      # don't create an empty directory if there are no downloadable intervals
-      return unless epub_presenter.intervals? && epub_presenter.intervals.any? { |interval| interval.downloadable? }
-
-      chapter_dir = prepare_chapter_dir(id, 'epub', root_path)
-
-      # the `toc_only_interval` and `content_interval` stuff are a little weird but stem from the way these things...
-      # evolved with epub_presenter.intervals() only needing to provide ToC link for the Monograph catalog page...
-      # but it also provides the cfi necessary for the PDF-producing Interval.from_rendition_cfi_title()
-      epub_presenter.intervals.each_with_index do |toc_only_interval, index|
-        # don't create an empty/broken file if there are no pages in this interval
-        next unless toc_only_interval.downloadable?
-
-        content_interval = EPub::Interval.from_rendition_cfi_title(publication.rendition, toc_only_interval.cfi, toc_only_interval.title)
-        pdf = EPub::Marshaller::PDF.from_publication_interval(publication, content_interval)
-        pdf.document.render_file "#{chapter_dir}/#{index}.pdf"
-      end
-    end
 
     def create_pdf_chapters(id, pdf, root_path) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       return unless system("which qpdf > /dev/null 2>&1")

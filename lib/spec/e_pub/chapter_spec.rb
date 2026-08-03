@@ -19,7 +19,6 @@ RSpec.describe EPub::Chapter do
   let(:chapter_params) do
     { id: '1',
       href: 'Chapter1.xhtml',
-      title: 'The Title',
       basecfi: "/6/4/2[Chapter1]",
       doc: Nokogiri::XML(chapter_doc),
       publication: publication }
@@ -35,50 +34,13 @@ RSpec.describe EPub::Chapter do
     subject { described_class.null_object }
 
     it { is_expected.to be_an_instance_of(EPub::ChapterNullObject) }
-
-    context "the null object" do
-      describe "#title" do
-        it { expect(subject.title).to be_empty }
-      end
-
-      describe "#downloadable" do
-        it { expect(subject.downloadable?).to be false }
-      end
-
-      describe "#files_in_chapter" do
-        it { expect(subject.files_in_chapter).to eq [] }
-      end
-
-      describe "#images_in_files" do
-        it { expect(subject.images_in_files([])).to eq [] }
-      end
-
-      describe "#pdf" do
-        it { expect(subject.pdf).to be_a Prawn::Document }
-      end
-    end
   end
 
-  describe '#title' do
-    subject { described_class.send(:new, chapter_params).title }
+  describe '#href' do
+    subject { described_class.send(:new, chapter_params).href }
 
     it 'returns a string' do
       is_expected.to be_an_instance_of(String)
-    end
-  end
-
-  context "downloadable chapters for fixed layout epubs" do
-    before do
-      @noid = '999999997'
-      @root_path = UnpackHelper.noid_to_root_path(@noid, 'epub')
-      @file = './spec/fixtures/fake_epub_multi_rendition.epub'
-      UnpackHelper.unpack_epub(@noid, @root_path, @file)
-      UnpackHelper.create_search_index(@root_path)
-      allow(EPub.logger).to receive(:info).and_return(nil)
-    end
-
-    after do
-      FileUtils.rm_rf(Dir[File.join('./tmp', 'rspec_derivatives')])
     end
   end
 end

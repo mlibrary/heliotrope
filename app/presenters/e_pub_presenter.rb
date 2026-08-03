@@ -9,9 +9,6 @@ class EPubPresenter < ApplicationPresenter
     @epub.id
   end
 
-  def multi_rendition?
-    @epub.multi_rendition?
-  end
 
   def intervals?
     EbookTableOfContentsCache.find_by(noid: id).present?

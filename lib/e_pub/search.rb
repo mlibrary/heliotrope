@@ -95,7 +95,6 @@ module EPub
       def results_from_chapters(db_results, query) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
         results = {}
         results[:q] = query
-        results[:highlight_off] = @publication.multi_rendition
         results[:search_results] = []
 
         db_results.each do |chapter|
@@ -123,7 +122,6 @@ module EPub
             empty_snippet = "" if match.snippet == matches[index - 1].snippet && matches.length > 1
 
             results[:search_results].push(cfi: "#{chapter[:basecfi]}#{match.cfi}",
-                                          title: chapter[:title],
                                           snippet: empty_snippet || match.snippet)
             # ::EPub.logger.debug("BREAK IN MATCHES:#{print_time}") if timeout?
             break if timeout?

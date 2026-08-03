@@ -168,7 +168,7 @@ gem "okcomputer", "~> 1.18.4"
 # Force epub search results to be sentences
 gem 'pragmatic_segmenter', '~> 0.3'
 
-# Turn page image epub chapters into pdfs
+# Generate PDFs (e.g. watermarking/stamping downloaded PDF ebooks)
 gem 'prawn', '~> 2.2'
 
 gem "rails_semantic_logger", '~> 4.14'

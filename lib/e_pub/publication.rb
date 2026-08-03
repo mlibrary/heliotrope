@@ -3,8 +3,7 @@
 module EPub
   class Publication
     private_class_method :new
-    attr_reader :id, :content_file, :content, :toc, :root_path,
-                :multi_rendition, :page_scan_content_file, :ocr_content_file
+    attr_reader :id, :content_file, :content, :root_path
 
     # Class Methods
 
@@ -12,7 +11,7 @@ module EPub
       return null_object unless File.exist? root_path
       valid_epub = Validator.from_directory(root_path)
       return null_object if valid_epub.is_a?(ValidatorNullObject)
-      new(valid_epub, Unmarshaller::Container.from_root_path(root_path))
+      new(valid_epub)
     rescue StandardError => e
       ::EPub.logger.info("Publication.from_directory(#{root_path}) raised #{e} #{e.backtrace}")
       null_object
@@ -23,61 +22,6 @@ module EPub
     end
 
     # Instance Methods
-
-    #
-    # Unmarshaller
-    #
-
-    def single_rendition?
-      renditions.length == 1
-    end
-
-    def multi_rendition?
-      renditions.length > 1
-    end
-
-    def labeled_rendition?(label)
-      labeled_rendition(label).instance_of?(Rendition)
-    end
-
-    def labeled_rendition(label)
-      labeled_rendition = nil
-      renditions.each do |rendition|
-        labeled_rendition = rendition if /#{label}/i.match?(rendition.label)
-      end
-      labeled_rendition || Rendition.null_object
-    end
-
-    def rendition
-      return @rendition unless @rendition.nil?
-      renditions.each do |rendition|
-        @rendition ||= rendition
-        @rendition = rendition if /text/i.match?(rendition.label)
-      end
-      @rendition
-    end
-
-    def renditions
-      return @renditions unless @renditions.nil?
-      @renditions = @unmarshaller_container.rootfiles.map { |rootfile| Rendition.from_publication_unmarshaller_container_rootfile(self, rootfile) }
-      @renditions << Rendition.null_object if @renditions.empty?
-      @renditions
-    end
-
-    def downloadable?
-      return @downloadable unless @downloadable.nil?
-      @downloadable = false
-      renditions.each do |rendition|
-        next unless /page scan/i.match?(rendition.label)
-        @downloadable = true
-        break
-      end
-      @downloadable
-    end
-
-    #
-    # Legacy
-    #
 
     def chapters
       chapters = chapters_from_database || []
@@ -92,7 +36,6 @@ module EPub
         chapters.push(Chapter.send(:new,
                                    id: result[:id],
                                    href: result[:href],
-                                   title: result[:title],
                                    basecfi: result[:basecfi],
                                    doc: Nokogiri::XML(File.open(File.join(root_path, File.dirname(content_file), result[:href]))).remove_namespaces!,
                                    publication: self))
@@ -105,15 +48,27 @@ module EPub
       i = 0
       content.xpath("//spine/itemref/@idref").each do |idref|
         i += 1
-        item = content.xpath("//manifest//item[@id='#{idref.text}']").first
-        doc = Nokogiri::XML(File.open(File.join(root_path, File.dirname(content_file), item.attributes['href'].text)))
+        # Some content has stray whitespace on a manifest item's @id (or the
+        # spine itemref's @idref). EPUBCheck normalizes these before validating,
+        # so such books pass validation, but an exact xpath match would miss the
+        # item. Normalize both sides here so the chapter still resolves (and gets
+        # indexed) the way EPUBCheck sees it. See HELIO-4314.
+        idref_value = idref.text.strip
+        item = content.xpath("//manifest//item[normalize-space(@id)='#{idref_value}']").first
+        if item.nil?
+          ::EPub.logger.warn("EPub::Publication#chapters_from_file: no manifest item matches spine idref '#{idref.text}' in #{id}")
+          next
+        end
+
+        id_value = item.attributes['id'].text.strip
+        href_value = item.attributes['href'].text
+        doc = Nokogiri::XML(File.open(File.join(root_path, File.dirname(content_file), href_value)))
         doc.remove_namespaces!
 
         chapters.push(Chapter.send(:new,
-                                   id: item.attributes['id'].text,
-                                   href: item.attributes['href'].text,
-                                   title: toc.chapter_title(item),
-                                   basecfi: "/6/#{i * 2}[#{item.attributes['id'].text}]!",
+                                   id: id_value,
+                                   href: href_value,
+                                   basecfi: "/6/#{i * 2}[#{id_value}]!",
                                    doc: doc,
                                    publication: self))
       end
@@ -147,16 +102,11 @@ module EPub
 
     private
 
-      def initialize(valid_epub, unmarshaller_container = Unmarshaller::Container.null_object)
+      def initialize(valid_epub)
         @id = valid_epub.id
         @content_file = valid_epub.content_file
         @content = valid_epub.content
-        @toc = ::EPub::Toc.new(valid_epub.toc)
         @root_path = valid_epub.root_path
-        @multi_rendition = valid_epub.multi_rendition
-        @page_scan_content_file = valid_epub.page_scan_content_file
-        @ocr_content_file = valid_epub.ocr_content_file
-        @unmarshaller_container = unmarshaller_container
       end
   end
 
@@ -184,7 +134,7 @@ module EPub
     private
 
       def initialize
-        super(Validator.null_object, Unmarshaller::Container.null_object)
+        super(Validator.null_object)
       end
   end
 end
