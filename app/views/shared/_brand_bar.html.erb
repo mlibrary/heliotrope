@@ -10,6 +10,10 @@
         <% if current_user && show_site_actions? %>
           <%= render 'shared/my_actions' %>
         <% end %>
+        <!-- search -->
+        <% if show_site_search? %>
+          <%= render 'shared/site_search' %>
+        <% end %>
       </div>
     </div>
   </div>

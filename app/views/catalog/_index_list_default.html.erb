@@ -1,0 +1,38 @@
+<%#
+  Override of Hyrax's catalog/_index_list_default.html.erb.
+  The upstream partial uses col-md-9 col-lg-6, which at lg breakpoints collapses
+  the metadata to just 50% of the main content area (itself col-md-9), making
+  dd.col-7 only ~21% of the viewport — too narrow for readable metadata values.
+  Using col-md-9 here keeps the metadata at a consistent 75% of the content area
+  at all breakpoints, letting the thumbnail (col-sm-3) fill the remaining 25%.
+  The collection-counts block is preserved unchanged for safety.
+%>
+<div class="col-md-9">
+  <div class="metadata">
+    <dl>
+    <% doc_presenter = index_presenter(document) %>
+    <% index_fields(document).each do |field_name, field| -%>
+      <% if should_render_index_field? document, field %>
+        <div class="row">
+          <dt class="col-5 text-right" data-solr-field-name="<%= field_name %>"><%= render_index_field_label document, field: field_name %></dt>
+          <dd class="col-7"><%= doc_presenter.field_value field %></dd>
+        </div>
+      <% end %>
+    <% end %>
+    </dl>
+  </div>
+</div>
+<% if document.collection? %>
+<% collection_presenter = Hyrax::CollectionPresenter.new(document, current_ability) %>
+<div class="col-md-12 col-lg-3">
+  <div class="collection-counts-wrapper">
+    <div class="collection-counts-item">
+      <span><%= collection_presenter.total_viewable_collections %></span>Collections
+    </div>
+    <div class="collection-counts-item">
+      <span><%= collection_presenter.total_viewable_works %></span>Works
+    </div>
+  </div>
+</div>
+<% end %>
+

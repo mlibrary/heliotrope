@@ -1,0 +1,69 @@
+<%#
+  Thumbnail for the list view shared by CatalogController and
+  AdminCatalogController (overrides Hyrax's catalog/_thumbnail_list_default).
+  Blacklight resolves the `thumbnail` partial for list view via the
+  `thumbnail_list_default` template pattern, which hits this file before
+  the generic catalog/_thumbnail.html.erb.
+
+  Logic (no extra Solr queries — works entirely from the current doc):
+  * Use RIIIF when thumbnail_path_ss holds a real derivative URL (not the
+    Hyrax default /assets/ fallback). The noid is the Monograph's
+    representative_id_ssim or the FileSet's own id.
+  * Fall back to a sized svgicon (based on resource_type_tesim) so items
+    without an image derivative don't render at the SVG's intrinsic size.
+  * Emit nothing if no noid is resolvable.
+
+  MonographCatalogController and PressCatalogController are unaffected:
+  MonographCatalog uses its own partials list; PressCatalog has no thumbnail
+  in its partials list.
+%>
+<%
+  has_model      = document['has_model_ssim']&.first
+  thumbnail_path = document['thumbnail_path_ss'].to_s
+  use_riiif      = thumbnail_path.present? && !thumbnail_path.start_with?('/assets/')
+
+  noid = if has_model == 'Monograph'
+           document['representative_id_ssim']&.first
+         else
+           document.id
+         end
+
+  cache_bust = document['timestamp'].present? ? Time.parse(document['timestamp']).to_i.to_s : ''
+
+  alt_text = Array(document['alt_text_tesim']).first.presence ||
+             Array(document['title_tesim']).first.to_s
+
+  resource_type = Array(document['resource_type_tesim']).first&.downcase
+  svgicon = case resource_type
+            when 'text'                             then 'svgicon/text.svg'
+            when 'image'                            then 'svgicon/image.svg'
+            when 'video'                            then 'svgicon/video.svg'
+            when 'audio'                            then 'svgicon/audio.svg'
+            when 'interactive application'          then 'svgicon/app.svg'
+            when 'map', 'interactive map'           then 'svgicon/map.svg'
+            else                                         'svgicon/default.svg'
+            end
+  svgicon_alt = case resource_type
+                when 'text'                         then 'Document File Icon'
+                when 'image'                        then 'Image File Icon'
+                when 'video'                        then 'Video File Icon'
+                when 'audio'                        then 'Audio File Icon'
+                when 'interactive application'      then 'Application File Icon'
+                when 'map', 'interactive map'       then 'Map File Icon'
+                else                                     'File Icon'
+                end
+%>
+<% if noid.present? %>
+  <div class="document-thumbnail heliotrope-full-catalog col-sm-3">
+    <%= link_to search_state.url_for_document(document), 'data-turbolinks': false do %>
+      <% if use_riiif %>
+        <%= image_tag "/image-service/#{noid}#{cache_bust}/full/145,/0/default.png",
+                      alt: alt_text, width: 145, height: 'auto' %>
+      <% else %>
+        <%= image_tag svgicon, class: 'svgicon', alt: svgicon_alt,
+                      width: '145px', height: 'auto' %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
+

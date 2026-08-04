@@ -1,0 +1,237 @@
+# frozen_string_literal: true
+
+# Shared Blacklight configuration for the two "full catalog" endpoints:
+# CatalogController (the soon-to-be public catalog) and AdminCatalogController.
+#
+# This holds only the config that both genuinely share: the CatalogSearchBuilder
+# (so default results include Monographs from all presses plus FileSets), the
+# results/index display fields and the "fielded" (advanced) search fields.
+#
+# Deliberately NOT included here:
+#   * Facet fields  - each controller declares exactly the facets it wants.
+#   * OAI config     - only the public CatalogController provides OAI.
+#   * The platform-admin gate (see PlatformAdminGate) - its lifetime differs
+#     between the two controllers, so it is included separately.
+module FullCatalogBehavior
+  extend ActiveSupport::Concern
+
+
+  included do # rubocop:disable Metrics/BlockLength
+    configure_blacklight do |config| # rubocop:disable Metrics/BlockLength
+      # Use a search builder that includes FileSets alongside Monographs from
+      # all presses in the default, unfiltered results.
+      config.search_builder_class = ::CatalogSearchBuilder
+
+      # `default_solr_params`, `index.title_field`, `index.display_type_field`,
+      # `index.thumbnail_field` and the `add_results_collection_tool` calls are
+      # configured in ApplicationCatalogController and apply to all catalog
+      # controllers.
+      # Keep the default :thumbnail partial. See app/views/catalog/_thumbnail.html.erb
+      # for the full-catalog override that renders a RIIIF thumbnail for both
+      # Monograph and FileSet results.
+      config.index.partials += [:action_menu]
+
+      # solr fields to be displayed in the index (search results) view
+      #   The ordering of the field names is the order of the display
+      config.add_index_field solr_name('tag', :stored_searchable), label: 'Tag'
+      config.add_index_field solr_name('subject', :stored_searchable), label: 'Subject'
+      config.add_index_field solr_name('creator_full_name', :stored_searchable), label: 'Creator'
+      config.add_index_field solr_name('contributor', :stored_searchable), label: 'Contributor'
+      config.add_index_field solr_name('publisher', :stored_searchable), label: 'Publisher'
+      config.add_index_field solr_name('based_near', :stored_searchable), label: 'Location'
+      config.add_index_field solr_name('language', :stored_searchable), label: 'Language'
+      config.add_index_field solr_name('date_uploaded', :stored_sortable), label: 'Date Uploaded'
+      config.add_index_field solr_name('date_modified', :stored_sortable), label: 'Date Modified'
+      config.add_index_field solr_name('date_created', :stored_searchable), label: 'Date Created'
+      config.add_index_field solr_name("rights_statement", :stored_searchable), label: 'Rights Statement'
+      config.add_index_field solr_name("license", :stored_searchable), label: 'License'
+      config.add_index_field solr_name('human_readable_type', :stored_searchable), label: 'Type'
+      config.add_index_field solr_name('format', :stored_searchable), label: 'Format'
+      config.add_index_field solr_name('identifier', :stored_searchable), label: 'Identifier'
+      # Heliotrope
+      config.add_index_field solr_name('date_published', :stored_searchable, type: :date), label: 'Date Published'
+      config.add_index_field solr_name('isbn', :stored_searchable), label: 'ISBN'
+      config.add_index_field solr_name('editor', :stored_searchable), label: 'Editor'
+      config.add_index_field solr_name('rightsholder', :stored_searchable), label: 'Rightsholder'
+      config.add_index_field solr_name('buy_url', :symbol), label: 'Buy URL'
+      config.add_index_field solr_name('caption', :stored_searchable), label: 'Caption'
+      config.add_index_field solr_name('alt_text', :stored_searchable), label: 'Alt Text'
+      config.add_index_field solr_name('content_type', :stored_searchable), label: 'Content Type'
+      config.add_index_field solr_name('keyword', :stored_searchable), label: 'Keyword'
+      config.add_index_field solr_name('section_title', :stored_searchable), label: 'Section Title'
+
+      # "fielded" search configuration. Used by pulldown among other places.
+      # For supported keys in hash, see rdoc for Blacklight::SearchFields
+      #
+      # Search fields will inherit the :qt solr request handler from
+      # config[:default_solr_parameters], OR can specify a different one
+      # with a :qt key/value. Below examples inherit, except for subject
+      # that specifies the same :qt as default for our own internal
+      # testing purposes.
+      #
+      # The :key is what will be used to identify this BL search field internally,
+      # as well as in URLs -- so changing it after deployment may break bookmarked
+      # urls.  A display label will be automatically calculated from the :key,
+      # or can be specified manually to be different.
+      #
+      # This one uses all the defaults set by the solr request handler. Which
+      # solr request handler? The one set in config[:default_solr_parameters][:qt],
+      # since we aren't specifying it otherwise.
+      config.add_search_field('all_fields', label: 'All Fields', include_in_advanced_search: false) do |field|
+        title_name = solr_name('title', :stored_searchable, type: :string)
+        label_name = solr_name('title', :stored_searchable, type: :string)
+        contributor_name = solr_name('contributor', :stored_searchable, type: :string)
+        field.solr_parameters = {
+          qf: "#{title_name} #{label_name} file_format_tesim #{contributor_name}",
+          pf: title_name.to_s
+        }
+      end
+
+      # Now we see how to over-ride Solr request handler defaults, in this
+      # case for a BL "search field", which is really a dismax aggregate
+      # of Solr search fields.
+      # creator, title, description, publisher, date_created,
+      # subject, language, resource_type, format, identifier, based_near,
+      config.add_search_field('contributor') do |field|
+        # solr_parameters hash are sent to Solr as ordinary url query params.
+
+        # :solr_local_parameters will be sent using Solr LocalParams
+        # syntax, as eg {! qf=$title_qf }. This is neccesary to use
+        # Solr parameter de-referencing like $title_qf.
+        # See: http://wiki.apache.org/solr/LocalParams
+        solr_name = solr_name('contributor', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('creator') do |field|
+        solr_name = solr_name('creator_full_name', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('title') do |field|
+        solr_name = solr_name('title', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('description') do |field|
+        field.label = 'Description'
+        solr_name = solr_name('description', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('publisher') do |field|
+        solr_name = solr_name('publisher', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('date_created') do |field|
+        solr_name = solr_name('created', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('subject') do |field|
+        solr_name = solr_name('subject', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('language') do |field|
+        solr_name = solr_name('language', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('human_readable_type') do |field|
+        solr_name = solr_name('human_readable_type', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('format') do |field|
+        field.include_in_advanced_search = false
+        solr_name = solr_name('format', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('identifier') do |field|
+        field.include_in_advanced_search = false
+        solr_name = solr_name('id', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('based_near') do |field|
+        field.label = 'Location'
+        solr_name = solr_name('based_near', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('tag') do |field|
+        solr_name = solr_name('tag', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('depositor') do |field|
+        solr_name = solr_name('depositor', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('rights_statement') do |field|
+        solr_name = solr_name("rights_statement", :stored_searchable)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      config.add_search_field('license') do |field|
+        solr_name = solr_name('license', :stored_searchable, type: :string)
+        field.solr_local_parameters = {
+          qf: solr_name,
+          pf: solr_name
+        }
+      end
+
+      # If there are more than this many search results, no spelling ("did you mean") suggestion is offered.
+      config.spell_max = 5
+    end
+  end
+end

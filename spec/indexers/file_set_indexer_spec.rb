@@ -72,6 +72,10 @@ describe FileSetIndexer do
       expect(subject['monograph_id_ssim']).to eq monograph.id
     end
 
+    it "indexes its monograph's subdomain (press) for the Subdomain facet" do
+      expect(subject['press_sim']).to eq monograph.press
+    end
+
     it "indexes its position within the monograph" do
       expect(subject['monograph_position_isi']).to eq 1
     end

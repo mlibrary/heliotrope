@@ -216,6 +216,10 @@ Rails.application.routes.draw do
     concerns :searchable
   end
 
+  resource :admin_catalog, only: [:index], as: 'admin_catalog', path: '/admin_catalog', controller: 'admin_catalog' do
+    concerns :searchable
+  end
+
   devise_for :users, path: '', controllers: { sessions: 'sessions' }
   get 'login', controller: :sessions, action: :new, as: :new_user_session
   get 'logout', controller: :sessions, action: :destroy, as: :destroy_user_session

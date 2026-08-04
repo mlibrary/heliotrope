@@ -78,7 +78,7 @@
 
   </head>
 
-  <%= tag.body class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
+  <%= tag.body class: [press_presenter.present? ? press_presenter.press_subdomains : nil, controller_body_class].compact do %>
     <%= content_for?(:body) ? yield(:body) : yield %>
 
     <%= render 'shared/blacklight_modal' %>
