@@ -110,7 +110,7 @@ module Hyrax
       # anything they're "not supposed to".
       def products_for_dropdown
         product_ids = []
-        ActiveFedora::SolrService.query("{!terms f=press_sim}#{@presses.map(&:subdomain).join(',')}", fl: ['products_lsim'], rows: 100_000).each do |doc|
+        ActiveFedora::SolrService.query("{!terms f=press_sim}#{@presses.map(&:subdomain).join(',')}", fq: '+has_model_ssim:Monograph', fl: ['products_lsim'], rows: 100_000).each do |doc|
           doc["products_lsim"].each do |pid|
             next if pid == 0
             next if pid == -1

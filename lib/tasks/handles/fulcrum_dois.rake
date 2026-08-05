@@ -52,7 +52,7 @@ namespace :heliotrope do
     subdomains = subdomains + children
     subdomains = subdomains.flatten.compact.uniq
 
-    hits = ActiveFedora::SolrService.query("{!terms f=press_sim}#{subdomains.map(&:downcase).join(',')}", rows: 100_000)
+    hits = ActiveFedora::SolrService.query("{!terms f=press_sim}#{subdomains.map(&:downcase).join(',')}", fq: '+has_model_ssim:Monograph', rows: 100_000)
 
     if hits.count.zero?
       puts "No Monographs found. Nothing to output."
