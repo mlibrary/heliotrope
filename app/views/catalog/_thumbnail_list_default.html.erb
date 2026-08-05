@@ -6,9 +6,8 @@
   the generic catalog/_thumbnail.html.erb.
 
   Logic (no extra Solr queries — works entirely from the current doc):
-  * Use RIIIF when thumbnail_path_ss holds a real derivative URL (not the
-    Hyrax default /assets/ fallback). The noid is the Monograph's
-    representative_id_ssim or the FileSet's own id.
+  * Use Hyrax thumbnail derivative when thumbnail_path_ss holds a URL (not the
+    Hyrax default /assets/ fallback).
   * Fall back to a sized svgicon (based on resource_type_tesim) so items
     without an image derivative don't render at the SVG's intrinsic size.
   * Emit nothing if no noid is resolvable.
@@ -20,15 +19,8 @@
 <%
   has_model      = document['has_model_ssim']&.first
   thumbnail_path = document['thumbnail_path_ss'].to_s
-  use_riiif      = thumbnail_path.present? && !thumbnail_path.start_with?('/assets/')
+  use_svgicon    = thumbnail_path.blank? || thumbnail_path.start_with?('/assets/')
 
-  noid = if has_model == 'Monograph'
-           document['representative_id_ssim']&.first
-         else
-           document.id
-         end
-
-  cache_bust = document['timestamp'].present? ? Time.parse(document['timestamp']).to_i.to_s : ''
 
   alt_text = Array(document['alt_text_tesim']).first.presence ||
              Array(document['title_tesim']).first.to_s
@@ -53,17 +45,15 @@
                 else                                     'File Icon'
                 end
 %>
-<% if noid.present? %>
-  <div class="document-thumbnail heliotrope-full-catalog col-sm-3">
-    <%= link_to search_state.url_for_document(document), 'data-turbolinks': false do %>
-      <% if use_riiif %>
-        <%= image_tag "/image-service/#{noid}#{cache_bust}/full/145,/0/default.png",
-                      alt: alt_text, width: 145, height: 'auto' %>
-      <% else %>
-        <%= image_tag svgicon, class: 'svgicon', alt: svgicon_alt,
-                      width: '145px', height: 'auto' %>
-      <% end %>
-    <% end %>
-  </div>
-<% end %>
 
+<div class="document-thumbnail heliotrope-full-catalog col-sm-3">
+  <%= link_to search_state.url_for_document(document), 'data-turbolinks': false do %>
+    <% if use_svgicon %>
+      <%= image_tag svgicon, class: 'svgicon', alt: svgicon_alt,
+                    width: '145px', height: 'auto' %>
+    <% else %>
+         <%= image_tag thumbnail_path,
+                    alt: alt_text, width: 145, height: 'auto' %>
+    <% end %>
+  <% end %>
+</div>
