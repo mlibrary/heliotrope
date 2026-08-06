@@ -63,7 +63,7 @@ module Sighrax
     def work_noids(recursive = false)
       subdomains = recursive ? press.children.pluck(:subdomain) : []
       subdomains = subdomains.push(subdomain).uniq
-      docs = ActiveFedora::SolrService.query("{!terms f=press_sim}#{subdomains.map(&:downcase).join(',')}", fl: ['id'], rows: 100_000)
+      docs = ActiveFedora::SolrService.query("{!terms f=press_sim}#{subdomains.map(&:downcase).join(',')}", fq: '+has_model_ssim:Monograph', fl: ['id'], rows: 100_000)
       docs.map { |doc| doc['id'] }.uniq
     end
 

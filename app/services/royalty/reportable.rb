@@ -77,7 +77,7 @@ module Royalty
     def hebids
       return @hebids if @hebids.present?
       @hebids = {}
-      docs = ActiveFedora::SolrService.query("{!terms f=press_sim}#{@subdomain}", fl: ['id', 'identifier_tesim'], rows: 100_000)
+      docs = ActiveFedora::SolrService.query("{!terms f=press_sim}#{@subdomain}", fq: '+has_model_ssim:Monograph', fl: ['id', 'identifier_tesim'], rows: 100_000)
       docs.each do |doc|
         identifier = doc['identifier_tesim']&.find { |i| i[/^heb_id:heb[0-9].*/] } || ''
         @hebids[doc["id"]] = identifier.split(":")[1]
@@ -99,7 +99,7 @@ module Royalty
     def rightsholders
       return @rightsholders if @rightsholders
       @rightsholders = {}
-      docs = ActiveFedora::SolrService.query("{!terms f=press_sim}#{@subdomain}", fl: ['id', 'rightsholder_tesim'], rows: 100_000)
+      docs = ActiveFedora::SolrService.query("{!terms f=press_sim}#{@subdomain}", fq: '+has_model_ssim:Monograph', fl: ['id', 'rightsholder_tesim'], rows: 100_000)
       docs.each do |doc|
         if doc["rightsholder_tesim"].blank? || doc["rightsholder_tesim"].first.blank?
           @rightsholders[doc["id"]] = "no rightsholder"

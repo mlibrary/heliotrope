@@ -9,6 +9,11 @@ class PressSearchBuilder < ::SearchBuilder
       :maybe_filter_draft_for_incognito
   ]
 
+  # NOTE: this only filters by `press_sim` and does *not* restrict by model, yet FileSets (which now also
+  # carry `press_sim`) are correctly excluded. That's because our base SearchBuilder includes Hyrax::SearchFilters,
+  # which adds `filter_models` to the processor chain. `filter_models` appends a `{!terms f=has_model_ssim}` fq
+  # built from `work_types` (defaulting to Hyrax.config.curation_concerns, i.e. [Monograph]), so results are
+  # already limited to Monographs. Overriding `work_types` here would change that (see MonographSearchBuilder).
   def filter_by_press(solr_parameters)
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << "{!terms f=press_sim}#{all_presses.map(&:downcase).join(',')}"

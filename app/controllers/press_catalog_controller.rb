@@ -52,7 +52,7 @@ class PressCatalogController < ApplicationCatalogController
   def has_open_access?
     children = @press.children.pluck(:subdomain)
     presses = children.push(@press.subdomain).uniq
-    @has_open_access ||= ActiveFedora::SolrService.query("+open_access_tesim:yes AND {!terms f=press_sim}#{presses.map(&:downcase).join(',')}", fl: ['id'], rows: 1).count > 0
+    @has_open_access ||= ActiveFedora::SolrService.query("+open_access_tesim:yes AND {!terms f=press_sim}#{presses.map(&:downcase).join(',')}", fq: '+has_model_ssim:Monograph', fl: ['id'], rows: 1).count > 0
   end
 
   private
