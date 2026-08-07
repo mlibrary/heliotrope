@@ -1,0 +1,11 @@
+/*
+ * Local override for resque-web assets.
+ *
+ * We avoid require_tree so we can explicitly include our
+ * bootstrap_and_overrides file, which no longer depends on
+ * twitter-bootstrap-static/bootstrap from twitter-bootstrap-rails.
+ *
+ *= require_self
+ *= require resque_web/bootstrap_and_overrides
+ */
+
