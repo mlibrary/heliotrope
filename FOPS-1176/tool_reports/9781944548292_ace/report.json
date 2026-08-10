@@ -1,0 +1,621 @@
+{
+  "@type": "earl:report",
+  "@context": "http://daisy.github.io/ace/ace-report-1.0.jsonld",
+  "dct:title": "Ace Report",
+  "dct:description": "Report on automated accessibility checks for EPUB",
+  "dct:date": "8/10/2026, 11:35:14 AM",
+  "earl:assertedBy": {
+    "@type": "earl:software",
+    "doap:name": "DAISY Ace",
+    "doap:description": "DAISY Accessibility Checker for EPUB",
+    "doap:homepage": "http://daisy.github.io/ace",
+    "doap:created": "2017-07-01",
+    "doap:release": {
+      "doap:revision": "1.4.6"
+    }
+  },
+  "outlines": {
+    "toc": "<ol xmlns=\"http://www.w3.org/1999/xhtml\">\n     <li>Cover</li>\n     <li>Title Page</li>\n     <li>Copyright</li>\n     <li>Table Of Contents</li>\n     <li>Introduction</li>\n     <li>About the Authors</li>\n     <li>What is Action Research for Classroom Teachers?</li>\n     <li>Action Research as a Process for Professional Learning and Leadership</li>\n     <li>Planning Your Research: Reviewing the Literature and Developing Questions</li>\n     <li>Preparing for Action Research in the Classroom: Practical Issues</li>\n     <li>Collecting Data in Your Classroom</li>\n     <li>Analyzing Data from Your Classroom</li>\n     <li>Let it Be Known! Sharing your Results</li>\n     <li>The Action Research Process from a High School ELA Teacher’s Perspective</li>\n     <li>References</li>\n   </ol>",
+    "headings": "<ul><li><span class=\"toc-h1\">Action Research</span><ul><li><span class=\"toc-h2\"></span><ul><li><span class=\"toc-h3\">J. Spencer Clark, Suzanne Porath, Julie Thiele, and Morgan Jobe</span><li><span class=\"toc-h3\"></span><ul><li><span class=\"toc-h4\"></span><ul><li><span class=\"toc-h5\"></span></li></ul></li></ul></li></ul></li></ul></li><li><span class=\"toc-h1\">Contents</span><ul><li><span class=\"toc-missing\">Missing heading: h2</span><ul><li><span class=\"toc-h3\">1</span></li></ul></li></ul></li><li><span class=\"toc-h1\"></span><ul><li><span class=\"toc-missing\">Missing heading: h2</span><ul><li><span class=\"toc-h3\">2</span></li></ul></li></ul></li><li><span class=\"toc-h1\">About the Authors</span><ul><li><span class=\"toc-missing\">Missing heading: h2</span><ul><li><span class=\"toc-h3\">1</span></li></ul></li><li><span class=\"toc-h2\">What is Action Research for Classroom Teachers?</span><ul><li><span class=\"toc-h3\">2</span></li></ul></li><li><span class=\"toc-h2\">Action Research as a Process for Professional Learning and Leadership</span><ul><li><span class=\"toc-h3\">3</span></li></ul></li><li><span class=\"toc-h2\">Planning Your Research: Reviewing the Literature and Developing Questions</span><ul><li><span class=\"toc-h3\">4</span></li></ul></li><li><span class=\"toc-h2\">Preparing for Action Research in the Classroom: Practical Issues</span><ul><li><span class=\"toc-h3\">5</span></li></ul></li><li><span class=\"toc-h2\">Collecting Data in Your Classroom</span><ul><li><span class=\"toc-h3\">6</span></li></ul></li><li><span class=\"toc-h2\">Analyzing Data from Your Classroom</span><ul><li><span class=\"toc-h3\">7</span></li></ul></li><li><span class=\"toc-h2\">Let it Be Known! Sharing your Results</span><ul><li><span class=\"toc-h3\">8</span></li></ul></li><li><span class=\"toc-h2\">The Action Research Process from a High School ELA Teacher’s Perspective</span><ul><li><span class=\"toc-h3\">1</span></li></ul></li></ul></li><li><span class=\"toc-h1\">References</span><li><span class=\"toc-h1\">Action Research</span></li></ul>",
+    "html": "<ol><li></li></ol>"
+  },
+  "data": {
+    "images": [
+      {
+        "src": "OEBPS/assets/cover-scaled.jpg",
+        "alt": "Action Research",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" src=\"assets/cover-scaled.jpg\" alt=\"Action Research\" />",
+        "location": "OEBPS/front-cover.html#epubcfi(/4/2%5Bcover-image%5D/2)"
+      },
+      {
+        "src": "OEBPS/assets/cc-by-nc.png",
+        "alt": "Icon for the Creative Commons Attribution-NonCommercial 4.0 International License",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" src=\"assets/cc-by-nc.png\" alt=\"Icon for the Creative Commons Attribution-NonCommercial 4.0 International License\" />",
+        "location": "OEBPS/copyright.html#epubcfi(/4/2%5Bcopyright-page%5D/2/2/2/2/2)"
+      },
+      {
+        "src": "OEBPS/assets/image-1-300x174.png",
+        "alt": "The basic process of Action Research is as follows: Plan a change; Take action to enact the change; Observe the process and consequences of the change; Reflect on the process and consequences; Act, observe, & reflect again and so on.",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" class=\"alignleft wp-image-158\" src=\"assets/image-1-300x174.png\" alt=\"The basic process of Action Research is as follows: Plan a change; Take action to enact the change; Observe the process and consequences of the change; Reflect on the process and consequences; Act, observe, &amp; reflect again and so on.\" width=\"517\" height=\"300\" />",
+        "location": "OEBPS/chapter-001-chapt1.html#epubcfi(/4/2%5Bchapt1%5D/4/2/2/32/2)"
+      },
+      {
+        "src": "OEBPS/assets/McKemmis-Taggart-300x161.png",
+        "alt": "Kemmis and McTaggart (2004) offer a slightly different process for action research: Plan; Act & Observe; Reflect; Revised Plan; Act & Observe; Reflect.",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" class=\"alignnone wp-image-69\" src=\"assets/McKemmis-Taggart-300x161.png\" alt=\"Kemmis and McTaggart (2004) offer a slightly different process for action research: Plan; Act &amp; Observe; Reflect; Revised Plan; Act &amp; Observe; Reflect.\" width=\"821\" height=\"441\" />",
+        "location": "OEBPS/chapter-001-chapt1.html#epubcfi(/4/2%5Bchapt1%5D/4/2/24/6/2)"
+      },
+      {
+        "src": "OEBPS/assets/Oleary-1-265x300.png",
+        "alt": "O'Leary (2004) offers another version of the action research process that focuses the cyclical nature of action research, with three cycles shown: Observe; Reflect; Plan; Act; And Repeat.",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" class=\"alignnone wp-image-71\" src=\"assets/Oleary-1-265x300.png\" alt=\"O'Leary (2004) offers another version of the action research process that focuses the cyclical nature of action research, with three cycles shown: Observe; Reflect; Plan; Act; And Repeat.\" width=\"734\" height=\"831\" />",
+        "location": "OEBPS/chapter-001-chapt1.html#epubcfi(/4/2%5Bchapt1%5D/4/2/24/12/2)"
+      },
+      {
+        "src": "OEBPS/assets/MacIntyre-300x258.png",
+        "alt": "Macintyre (2000) offers a much more complex process of action research that highlights multiple processes happening at the same time. It starts with: Reflection and analysis of current practice and general idea of research topic and context. Second: Narrowing down the topic, planning the action; and scanning the literature, discussing with colleagues. Third: Refined topic – selection of key texts, formulation of research question/hypothesis, organization of refined action plan in context; and tentative action plan, consideration of different research strategies. Fourth: Evaluation of entire process; and take action, monitor effects – evaluation of strategy and research question/hypothesis and final amendments. Lastly: Conclusions, claims, explanations. Recommendations for further research.",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" class=\"alignnone wp-image-72\" src=\"assets/MacIntyre-300x258.png\" alt=\"Macintyre (2000) offers a much more complex process of action research that highlights multiple processes happening at the same time. It starts with: Reflection and analysis of current practice and general idea of research topic and context. Second: Narrowing down the topic, planning the action; and scanning the literature, discussing with colleagues. Third: Refined topic – selection of key texts, formulation of research question/hypothesis, organization of refined action plan in context; and tentative action plan, consideration of different research strategies. Fourth: Evaluation of entire process; and take action, monitor effects – evaluation of strategy and research question/hypothesis and final amendments. Lastly: Conclusions, claims, explanations. Recommendations for further research.\" width=\"783\" height=\"673\" />",
+        "location": "OEBPS/chapter-001-chapt1.html#epubcfi(/4/2%5Bchapt1%5D/4/2/24/18/2)"
+      },
+      {
+        "src": "OEBPS/assets/Figure3_1-300x169.jpg",
+        "alt": "O'Leary (2004) provides a flow chart for reviewing the literature. He identifies four action categories for reviewing literature: Find it; Manage it; Use it; Review it. Finding it includes: Knowing the literature types; Using available resources; Honing your search skills. Managing it includes: Reading efficiently; Keeping track of references; Writing relevant annotations. Using it includes: Choosing your research topic; Developing your question; Arguing your rationale; Informing your study with theory; Designing method. Reviewing it includes: Understanding the lit review's purpose; Ensuring adequate coverage; Writing purposefully; Working on style and tone.",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" class=\"wp-image-36\" src=\"assets/Figure3_1-300x169.jpg\" alt=\"O'Leary (2004) provides a flow chart for reviewing the literature. He identifies four action categories for reviewing literature: Find it; Manage it; Use it; Review it. Finding it includes: Knowing the literature types; Using available resources; Honing your search skills. Managing it includes: Reading efficiently; Keeping track of references; Writing relevant annotations. Using it includes: Choosing your research topic; Developing your question; Arguing your rationale; Informing your study with theory; Designing method. Reviewing it includes: Understanding the lit review's purpose; Ensuring adequate coverage; Writing purposefully; Working on style and tone.\" width=\"892\" height=\"502\" />",
+        "location": "OEBPS/chapter-003-chapt3.html#epubcfi(/4/2%5Bchapt3%5D/4/2/106%5Battachment_36%5D/2)"
+      },
+      {
+        "src": "OEBPS/assets/Picture1-300x47.png",
+        "alt": "Cresswell (2009) provides a framework for data analysis and interpretation: Organize and prepare raw data for analysis; Read and engage with all data; Code data; Determine themes, codes, and descriptors; Interrelate themes, codes, and description; Interpret meaning.",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" class=\"alignnone wp-image-104\" src=\"assets/Picture1-300x47.png\" alt=\"Cresswell (2009) provides a framework for data analysis and interpretation: Organize and prepare raw data for analysis; Read and engage with all data; Code data; Determine themes, codes, and descriptors; Interrelate themes, codes, and description; Interpret meaning.\" width=\"811\" height=\"127\" />",
+        "location": "OEBPS/chapter-006-chap6.html#epubcfi(/4/2%5Bchap6%5D/4/2/52/2)"
+      }
+    ]
+  },
+  "properties": {
+    "hasManifestFallbacks": false,
+    "hasBindings": false,
+    "hasSVGContentDocuments": false,
+    "hasFormElements": false,
+    "hasMathML": false,
+    "hasPageBreaks": false
+  },
+  "earl:testSubject": {
+    "url": "../../../../../../tmp/fops1176/report_9781944548292.epub",
+    "metadata": {
+      "dc:title": "Action Research",
+      "dc:language": "en",
+      "dc:identifier": "978-1-944548-29-2",
+      "dc:creator": "J. Spencer Clark",
+      "dc:contributor": [
+        "J. Spencer Clark",
+        "Suzanne Porath",
+        "Julie Thiele",
+        "Morgan Jobe"
+      ],
+      "cover": "cover-image",
+      "dcterms:modified": "2026-08-10T15:35:12Z"
+    },
+    "links": {},
+    "epubVersion": "3.0"
+  },
+  "a11y-metadata": {
+    "missing": [
+      "schema:accessMode",
+      "schema:accessibilityFeature",
+      "schema:accessibilityHazard",
+      "schema:accessibilitySummary",
+      "schema:accessModeSufficient",
+      "a11y:certifiedBy",
+      "a11y:certifierCredential",
+      "a11y:certifierReport",
+      "dcterms:conformsTo"
+    ],
+    "empty": [],
+    "present": []
+  },
+  "assertions": [
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "/nav.xhtml"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "fail"
+      },
+      "assertions": [
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "The language must be specified (xml:lang in OPF package)"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "serious",
+            "dct:title": "epub-lang",
+            "dct:description": "Ensures the OPF XML language is provided",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/epub/language.html",
+              "dct:title": "Language",
+              "dct:description": "Add the missing OPF xml:lang attribute"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Publications must declare the 'schema:accessibilityFeature' metadata"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "serious",
+            "dct:title": "metadata-accessibilityfeature",
+            "dct:description": "Ensures a 'schema:accessibilityFeature' metadata is present",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html",
+              "dct:title": "Schema.org Accessibility Metadata",
+              "dct:description": "Add a 'schema:accessibilityFeature' metadata property to the Package Document"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Publications must declare the 'schema:accessibilityHazard' metadata"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "serious",
+            "dct:title": "metadata-accessibilityhazard",
+            "dct:description": "Ensures a 'schema:accessibilityHazard' metadata is present",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html",
+              "dct:title": "Schema.org Accessibility Metadata",
+              "dct:description": "Add a 'schema:accessibilityHazard' metadata property to the Package Document"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Publications should declare the 'schema:accessibilitySummary' metadata"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "moderate",
+            "dct:title": "metadata-accessibilitysummary",
+            "dct:description": "Ensures a 'schema:accessibilitySummary' metadata is present",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html",
+              "dct:title": "Schema.org Accessibility Metadata",
+              "dct:description": "Add a 'schema:accessibilitySummary' metadata property to the Package Document"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Publications must declare the 'schema:accessMode' metadata"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "serious",
+            "dct:title": "metadata-accessmode",
+            "dct:description": "Ensures a 'schema:accessMode' metadata is present",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html",
+              "dct:title": "Schema.org Accessibility Metadata",
+              "dct:description": "Add a 'schema:accessMode' metadata property to the Package Document"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Publications should declare the 'schema:accessModeSufficient' metadata"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "moderate",
+            "dct:title": "metadata-accessmodesufficient",
+            "dct:description": "Ensures a 'schema:accessModeSufficient' metadata is present",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html",
+              "dct:title": "Schema.org Accessibility Metadata",
+              "dct:description": "Add a 'schema:accessModeSufficient' metadata property to the Package Document"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        }
+      ],
+      "earl:testSubject": {
+        "url": "book.opf",
+        "dct:title": "Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/front-cover.html",
+        "dct:title": "Cover -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "fail"
+      },
+      "assertions": [
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Element does not have text that is visible to screen readers\naria-label attribute does not exist or is empty\naria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\nElement has no title attribute",
+            "earl:pointer": {
+              "cfi": [
+                "/4/2/2[title-page]/4"
+              ],
+              "css": [
+                "h2"
+              ]
+            },
+            "html": "<h2 xmlns=\"http://www.w3.org/1999/xhtml\" class=\"subtitle\"></h2>"
+          },
+          "earl:assertedBy": "aXe",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "minor",
+            "dct:title": "empty-heading",
+            "dct:description": "Ensure headings have discernible text",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/html/headings.html",
+              "dct:title": "Headings",
+              "dct:description": "Headings should not be empty"
+            },
+            "rulesetTags": [
+              "cat.name-role-value",
+              "best-practice"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Element does not have text that is visible to screen readers\naria-label attribute does not exist or is empty\naria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\nElement has no title attribute",
+            "earl:pointer": {
+              "cfi": [
+                "/4/2/2[title-page]/8"
+              ],
+              "css": [
+                "h3:nth-child(4)"
+              ]
+            },
+            "html": "<h3 xmlns=\"http://www.w3.org/1999/xhtml\" class=\"author\"></h3>"
+          },
+          "earl:assertedBy": "aXe",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "minor",
+            "dct:title": "empty-heading",
+            "dct:description": "Ensure headings have discernible text",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/html/headings.html",
+              "dct:title": "Headings",
+              "dct:description": "Headings should not be empty"
+            },
+            "rulesetTags": [
+              "cat.name-role-value",
+              "best-practice"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Element does not have text that is visible to screen readers\naria-label attribute does not exist or is empty\naria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\nElement has no title attribute",
+            "earl:pointer": {
+              "cfi": [
+                "/4/2/2[title-page]/10"
+              ],
+              "css": [
+                "h4"
+              ]
+            },
+            "html": "<h4 xmlns=\"http://www.w3.org/1999/xhtml\" class=\"publisher\"></h4>"
+          },
+          "earl:assertedBy": "aXe",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "minor",
+            "dct:title": "empty-heading",
+            "dct:description": "Ensure headings have discernible text",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/html/headings.html",
+              "dct:title": "Headings",
+              "dct:description": "Headings should not be empty"
+            },
+            "rulesetTags": [
+              "cat.name-role-value",
+              "best-practice"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Element does not have text that is visible to screen readers\naria-label attribute does not exist or is empty\naria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\nElement has no title attribute",
+            "earl:pointer": {
+              "cfi": [
+                "/4/2/2[title-page]/12"
+              ],
+              "css": [
+                "h5"
+              ]
+            },
+            "html": "<h5 xmlns=\"http://www.w3.org/1999/xhtml\" class=\"publisher-city\"></h5>"
+          },
+          "earl:assertedBy": "aXe",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "minor",
+            "dct:title": "empty-heading",
+            "dct:description": "Ensure headings have discernible text",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/html/headings.html",
+              "dct:title": "Headings",
+              "dct:description": "Headings should not be empty"
+            },
+            "rulesetTags": [
+              "cat.name-role-value",
+              "best-practice"
+            ]
+          }
+        }
+      ],
+      "earl:testSubject": {
+        "url": "OEBPS/title-page.html",
+        "dct:title": "Title Page -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/copyright.html",
+        "dct:title": "Copyright -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/table-of-contents.html",
+        "dct:title": "Table Of Contents -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "fail"
+      },
+      "assertions": [
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Element does not have text that is visible to screen readers\naria-label attribute does not exist or is empty\naria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\nElement has no title attribute",
+            "earl:pointer": {
+              "cfi": [
+                "/4/2[introduction]/2/4"
+              ],
+              "css": [
+                "h1"
+              ]
+            },
+            "html": "<h1 xmlns=\"http://www.w3.org/1999/xhtml\" class=\"front-matter-title\"></h1>"
+          },
+          "earl:assertedBy": "aXe",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "minor",
+            "dct:title": "empty-heading",
+            "dct:description": "Ensure headings have discernible text",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/html/headings.html",
+              "dct:title": "Headings",
+              "dct:description": "Headings should not be empty"
+            },
+            "rulesetTags": [
+              "cat.name-role-value",
+              "best-practice"
+            ]
+          }
+        }
+      ],
+      "earl:testSubject": {
+        "url": "OEBPS/front-matter-001-introduction.html",
+        "dct:title": "Introduction -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/front-matter-002-about-the-authors.html",
+        "dct:title": "About the Authors -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/chapter-001-chapt1.html",
+        "dct:title": "What is Action Research for Classroom Teachers? -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/chapter-002-chapt2.html",
+        "dct:title": "Action Research as a Process for Professional Learning and Leadership -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/chapter-003-chapt3.html",
+        "dct:title": "Planning Your Research: Reviewing the Literature and Developing Questions -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/chapter-004-chapt4.html",
+        "dct:title": "Preparing for Action Research in the Classroom: Practical Issues -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/chapter-005-chapt5.html",
+        "dct:title": "Collecting Data in Your Classroom -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/chapter-006-chap6.html",
+        "dct:title": "Analyzing Data from Your Classroom -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/chapter-007-chapt7.html",
+        "dct:title": "Let it Be Known! Sharing your Results -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/chapter-008-the-action-research-process-from-a-high-school-ela-teachers-perspective.html",
+        "dct:title": "The Action Research Process from a High School ELA Teacher’s Perspective -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "OEBPS/back-matter-001-references.html",
+        "dct:title": "References -- Action Research"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "nav.xhtml",
+        "dct:title": "Action Research"
+      }
+    }
+  ],
+  "earl:result": {
+    "earl:outcome": "fail"
+  }
+}

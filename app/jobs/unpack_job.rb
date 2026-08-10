@@ -41,6 +41,11 @@ class UnpackJob < ApplicationJob
     case kind
     when 'epub'
       unpack_epub(id, root_path, file)
+      # If the incoming EPUB is a 2.x publication, migrate the unpacked files
+      # in place to EPUB 3.3 before anything else runs. Everything downstream
+      # (chapter splitting, embed codes, search index) then operates on a
+      # modern, EPUBCheck-conformant EPUB. This is a no-op for EPUB 3.x input.
+      convert_epub2_to_epub3(id, root_path)
       # Create the split chapter EPUBs *before* caching the ToC: the cache is
       # built directly from EpubChaptersService's return value (single source
       # of truth), so the two can never disagree on titles/levels/indices/
@@ -88,6 +93,19 @@ class UnpackJob < ApplicationJob
       # Interval#to_h_for_toc produces for the pdf_ebook flow.
       toc = chapters.map { |c| c.slice(:title, :level, :cfi, :downloadable?) }
       EbookTableOfContentsCache.create(noid: id, toc: toc.to_json)
+    end
+
+    # Migrate an unpacked EPUB 2.x publication at `root_path` to EPUB 3.3 in
+    # place (a no-op when the EPUB is already 3.x). Modeled on
+    # create_epub_chapters: failures are logged and swallowed so a migration
+    # problem never fails the whole unpack. See EpubConversionService.
+    def convert_epub2_to_epub3(id, root_path)
+      return unless Dir.exist?(root_path)
+
+      EpubConversionService.migrate(root_path)
+    rescue StandardError => e
+      Rails.logger.error("[EPUB CONVERSION FAILURE] Could not migrate EPUB #{id} to 3.3: #{e.message}\n#{e.backtrace&.first(10)&.join("\n")}")
+      nil
     end
 
     # Produce one downloadable EPUB chapter file per top-level Table of Contents

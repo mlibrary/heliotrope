@@ -1,0 +1,6 @@
+     1  [serious] epub-lang
+     1  [serious] metadata-accessibilityfeature
+     1  [serious] metadata-accessibilityhazard
+     1  [moderate] metadata-accessibilitysummary
+     1  [serious] metadata-accessmode
+     1  [moderate] metadata-accessmodesufficient
