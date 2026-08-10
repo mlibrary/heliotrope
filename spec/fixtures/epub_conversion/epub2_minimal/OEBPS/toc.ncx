@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN" "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en-US">
+<head>
+<meta name="dtb:uid" content="9780000000009"/>
+<meta name="dtb:depth" content="1"/>
+</head>
+<docTitle><text>A Minimal Book</text></docTitle>
+<navMap>
+<navPoint id="navPoint1" playOrder="1"><navLabel><text>Chapter One</text></navLabel><content src="text/chapter1.xhtml"/>
+<navPoint id="navPoint1a" playOrder="2"><navLabel><text>A Subsection</text></navLabel><content src="text/chapter1.xhtml#sub"/></navPoint>
+</navPoint>
+<navPoint id="navPoint2" playOrder="3"><navLabel><text>Chapter &amp; Two</text></navLabel><content src="text/chapter2.xhtml"/></navPoint>
+</navMap>
+</ncx>
+

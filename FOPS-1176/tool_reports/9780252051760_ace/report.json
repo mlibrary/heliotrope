@@ -1,0 +1,550 @@
+{
+  "@type": "earl:report",
+  "@context": "http://daisy.github.io/ace/ace-report-1.0.jsonld",
+  "dct:title": "Ace Report",
+  "dct:description": "Report on automated accessibility checks for EPUB",
+  "dct:date": "8/10/2026, 11:35:05 AM",
+  "earl:assertedBy": {
+    "@type": "earl:software",
+    "doap:name": "DAISY Ace",
+    "doap:description": "DAISY Accessibility Checker for EPUB",
+    "doap:homepage": "http://daisy.github.io/ace",
+    "doap:created": "2017-07-01",
+    "doap:release": {
+      "doap:revision": "1.4.6"
+    }
+  },
+  "outlines": {
+    "toc": "<ol xmlns=\"http://www.w3.org/1999/xhtml\">\n     <li>Cover</li>\n     <li>Title</li>\n     <li>Copyright</li>\n     <li>Contents</li>\n     <li>Preface</li>\n     <li>Acknowledgements</li>\n     <li>Introduction</li>\n     <li>1. Boundaries and Flows: Music in Jamaican Pentecostal Churches at Home and Abroad</li>\n     <li>2. Perfecting Holiness: Musical Theologies of Piety and Pleasure</li>\n     <li>3. The Anointing Makes the Difference: Power, Presence, and Gendered Worship</li>\n     <li>4. The Old-Time Way: Nostalgia, Tradition, and Testimony</li>\n     <li>5. Performing Ethnicity: Style, Transcendence, and African American Gospel</li>\n     <li>Conclusion: Identity, the Holy Spirit, and the Global Community</li>\n     <li>Notes</li>\n     <li>Bibliography</li>\n     <li>Index</li>\n     <li>Back Cover</li>\n   </ol>",
+    "headings": "<ul><li><span class=\"toc-h1\">Island Gospel</span><ul><li><span class=\"toc-h2\">Island Gospel</span><li><span class=\"toc-h2\">Contents</span><li><span class=\"toc-h2\">Preface</span><li><span class=\"toc-h2\">Acknowledgments</span><li><span class=\"toc-h2\">Introduction</span><li><span class=\"toc-h2\">Gospel Music, Worship, and Flow</span><li><span class=\"toc-h2\">Historical Developments</span><li><span class=\"toc-h2\">Methodological Considerations</span><li><span class=\"toc-h2\">Synopsis of Chapters</span><li><span class=\"toc-h2\">CHAPTER 1</span><li><span class=\"toc-h2\">Boundaries and Flows</span><li><span class=\"toc-h2\">Music in Jamaican Pentecostal Churchesat Home and Abroad</span><li><span class=\"toc-h2\">Wondrous Love and Emmanuel Temple</span><li><span class=\"toc-h2\">Familiarity and Difference at Home-in-the-Field</span><li><span class=\"toc-h2\">“One God Apostolic”: Musical and Doctrinal Discourses in Liliput</span><li><span class=\"toc-h2\">Musical Transcendence and Overlap in Montego Bay</span><li><span class=\"toc-h2\">Hearing “Home”: Localness and Lines of Influence</span><li><span class=\"toc-h2\">Conclusion</span><li><span class=\"toc-h2\">CHAPTER 2</span><li><span class=\"toc-h2\">Perfecting Holiness</span><li><span class=\"toc-h2\">Musical Theologies of Piety and Pleasure</span><li><span class=\"toc-h2\">Pleasures of the World</span><li><span class=\"toc-h2\">Pastor Philips and the Call to Transformation</span><li><span class=\"toc-h2\">Gendered Discourses of Sin and Pleasure</span><li><span class=\"toc-h2\">Dancing around Dancehall</span><li><span class=\"toc-h2\">Conclusion</span><li><span class=\"toc-h2\">CHAPTER 3</span><li><span class=\"toc-h2\">The Anointing Makes the Difference</span><li><span class=\"toc-h2\">Power, Presence, and Gendered Worship</span><li><span class=\"toc-h2\">Pastor Bryan and the Touch of Transcendence</span><li><span class=\"toc-h2\">Oil, Blood, and the Role of Women</span><li><span class=\"toc-h2\">Empowerment, Blood, and Divine Protection</span><li><span class=\"toc-h2\">Ministering to Youth</span><li><span class=\"toc-h2\">“Having Church” in a Concert Frame</span><li><span class=\"toc-h2\">Conclusion</span><li><span class=\"toc-h2\">CHAPTER 4</span><li><span class=\"toc-h2\">The Old-Time Way</span><li><span class=\"toc-h2\">Nostalgia, Tradition, and Testimony</span><li><span class=\"toc-h2\">Hymns, Song Lyrics, and Meaningfulness</span><li><span class=\"toc-h2\">Change and Continuity in a Pentecostal Convention</span><li><span class=\"toc-h2\">Retellings and Rememberings</span><li><span class=\"toc-h2\">Five Testimonies of Conversion</span><li><span class=\"toc-h2\">Conclusion</span><li><span class=\"toc-h2\">CHAPTER 5</span><li><span class=\"toc-h2\">Performing Ethnicity</span><li><span class=\"toc-h2\">Style, Transcendence, and African American Gospel</span><li><span class=\"toc-h2\">(E)Racing Tradition at All Saints Apostolic</span><li><span class=\"toc-h2\">Generational Tensions among Kingston Pentecostals</span><li><span class=\"toc-h2\">Donnie McClurkin’s Caribbean Gospel Medley</span><li><span class=\"toc-h2\">Ethnic Transcendence and the Unity of Worship</span><li><span class=\"toc-h2\">Conclusion</span><li><span class=\"toc-h2\">Conclusion</span><li><span class=\"toc-h2\">Identity, the Holy Spirit, and the Global Community</span><li><span class=\"toc-h2\">Notes</span><li><span class=\"toc-h2\">Bibliography</span><li><span class=\"toc-h2\">Index</span></li></ul></li><li><span class=\"toc-h1\">Island Gospel</span></li></ul>",
+    "html": "<ol><li></li></ol>"
+  },
+  "data": {
+    "images": [
+      {
+        "src": "OEBPS/images/cover.jpg",
+        "alt": "image",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" src=\"../images/cover.jpg\" style=\"height:98%;\" alt=\"image\" />",
+        "location": "xhtml/cover.xhtml#epubcfi(/4/2/2)"
+      },
+      {
+        "src": "OEBPS/images/title_001.jpg",
+        "alt": "image",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" src=\"../images/title_001.jpg\" alt=\"image\" />",
+        "location": "xhtml/title.xhtml#epubcfi(/4/8/2)"
+      },
+      {
+        "src": "OEBPS/images/01_chapter01_001.jpg",
+        "alt": "image",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" src=\"../images/01_chapter01_001.jpg\" alt=\"image\" />",
+        "location": "xhtml/01_chapter01.xhtml#epubcfi(/4/44/2)"
+      },
+      {
+        "src": "OEBPS/images/03_chapter03_001.jpg",
+        "alt": "image",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" src=\"../images/03_chapter03_001.jpg\" alt=\"image\" />",
+        "location": "xhtml/03_chapter03.xhtml#epubcfi(/4/78/2)"
+      },
+      {
+        "src": "OEBPS/images/04_chapter04_001.jpg",
+        "alt": "image",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" src=\"../images/04_chapter04_001.jpg\" alt=\"image\" />",
+        "location": "xhtml/04_chapter04.xhtml#epubcfi(/4/50/2)"
+      },
+      {
+        "src": "OEBPS/images/04_chapter04_002.jpg",
+        "alt": "image",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" src=\"../images/04_chapter04_002.jpg\" alt=\"image\" />",
+        "location": "xhtml/04_chapter04.xhtml#epubcfi(/4/54/2)"
+      },
+      {
+        "src": "OEBPS/images/backcover.jpg",
+        "alt": "image",
+        "role": null,
+        "html": "<img xmlns=\"http://www.w3.org/1999/xhtml\" src=\"../images/backcover.jpg\" style=\"height:98%;\" alt=\"image\" />",
+        "location": "xhtml/backcover.xhtml#epubcfi(/4/2/2)"
+      }
+    ]
+  },
+  "properties": {
+    "hasManifestFallbacks": false,
+    "hasBindings": false,
+    "hasSVGContentDocuments": false,
+    "hasFormElements": false,
+    "hasMathML": false,
+    "hasPageBreaks": false
+  },
+  "earl:testSubject": {
+    "url": "../../../../../../tmp/fops1176/report_9780252051760.epub",
+    "metadata": {
+      "dc:title": "Island Gospel",
+      "dc:creator": "Melvin L. Butler",
+      "dc:identifier": "9780252051760",
+      "dc:date": "2019",
+      "dc:type": "Text",
+      "dc:language": "en-US",
+      "dc:publisher": "State University of New York Press",
+      "dc:format": "224 pages",
+      "dc:rights": "All rights reserved",
+      "cover": "My_Cover",
+      "dcterms:modified": "2026-08-10T15:35:03Z"
+    },
+    "links": {},
+    "epubVersion": "3.0"
+  },
+  "a11y-metadata": {
+    "missing": [
+      "schema:accessMode",
+      "schema:accessibilityFeature",
+      "schema:accessibilityHazard",
+      "schema:accessibilitySummary",
+      "schema:accessModeSufficient",
+      "a11y:certifiedBy",
+      "a11y:certifierCredential",
+      "a11y:certifierReport",
+      "dcterms:conformsTo"
+    ],
+    "empty": [],
+    "present": []
+  },
+  "assertions": [
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "/OEBPS/nav.xhtml"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "fail"
+      },
+      "assertions": [
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "The language must be specified (xml:lang in OPF package)"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "serious",
+            "dct:title": "epub-lang",
+            "dct:description": "Ensures the OPF XML language is provided",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/epub/language.html",
+              "dct:title": "Language",
+              "dct:description": "Add the missing OPF xml:lang attribute"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Publications must declare the 'schema:accessibilityFeature' metadata"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "serious",
+            "dct:title": "metadata-accessibilityfeature",
+            "dct:description": "Ensures a 'schema:accessibilityFeature' metadata is present",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html",
+              "dct:title": "Schema.org Accessibility Metadata",
+              "dct:description": "Add a 'schema:accessibilityFeature' metadata property to the Package Document"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Publications must declare the 'schema:accessibilityHazard' metadata"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "serious",
+            "dct:title": "metadata-accessibilityhazard",
+            "dct:description": "Ensures a 'schema:accessibilityHazard' metadata is present",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html",
+              "dct:title": "Schema.org Accessibility Metadata",
+              "dct:description": "Add a 'schema:accessibilityHazard' metadata property to the Package Document"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Publications should declare the 'schema:accessibilitySummary' metadata"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "moderate",
+            "dct:title": "metadata-accessibilitysummary",
+            "dct:description": "Ensures a 'schema:accessibilitySummary' metadata is present",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html",
+              "dct:title": "Schema.org Accessibility Metadata",
+              "dct:description": "Add a 'schema:accessibilitySummary' metadata property to the Package Document"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Publications must declare the 'schema:accessMode' metadata"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "serious",
+            "dct:title": "metadata-accessmode",
+            "dct:description": "Ensures a 'schema:accessMode' metadata is present",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html",
+              "dct:title": "Schema.org Accessibility Metadata",
+              "dct:description": "Add a 'schema:accessMode' metadata property to the Package Document"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        },
+        {
+          "@type": "earl:assertion",
+          "earl:result": {
+            "earl:outcome": "fail",
+            "dct:description": "Publications should declare the 'schema:accessModeSufficient' metadata"
+          },
+          "earl:assertedBy": "Ace",
+          "earl:mode": "automatic",
+          "earl:test": {
+            "earl:impact": "moderate",
+            "dct:title": "metadata-accessmodesufficient",
+            "dct:description": "Ensures a 'schema:accessModeSufficient' metadata is present",
+            "help": {
+              "url": "http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html",
+              "dct:title": "Schema.org Accessibility Metadata",
+              "dct:description": "Add a 'schema:accessModeSufficient' metadata property to the Package Document"
+            },
+            "rulesetTags": [
+              "EPUB"
+            ]
+          }
+        }
+      ],
+      "earl:testSubject": {
+        "url": "OEBPS/package.opf",
+        "dct:title": "Island Gospel"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/cover.xhtml",
+        "dct:title": "Cover"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/halftitle.xhtml",
+        "dct:title": "Island Gospel"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/fm01.xhtml",
+        "dct:title": "Island Gospel"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/title.xhtml",
+        "dct:title": "Island Gospel"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/copyright.xhtml",
+        "dct:title": "Copyright"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/dedication.xhtml",
+        "dct:title": "Island Gospel"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/contents.xhtml",
+        "dct:title": "Contents"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/preface.xhtml",
+        "dct:title": "Preface"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/acknowledgement.xhtml",
+        "dct:title": "Acknowledgements"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/fm02.xhtml",
+        "dct:title": "Island Gospel"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/introduction.xhtml",
+        "dct:title": "Introduction"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/01_chapter01.xhtml",
+        "dct:title": "1. Boundaries and Flows: Music in Jamaican Pentecostal Churches at Home and Abroad"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/02_chapter02.xhtml",
+        "dct:title": "2. Perfecting Holiness: Musical Theologies of Piety and Pleasure"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/03_chapter03.xhtml",
+        "dct:title": "3. The Anointing Makes the Difference: Power, Presence, and Gendered Worship"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/04_chapter04.xhtml",
+        "dct:title": "4. The Old-Time Way: Nostalgia, Tradition, and Testimony"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/05_chapter05.xhtml",
+        "dct:title": "5. Performing Ethnicity: Style, Transcendence, and African American Gospel"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/conclusion.xhtml",
+        "dct:title": "Conclusion: Identity, the Holy Spirit, and the Global Community"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/notes.xhtml",
+        "dct:title": "Notes"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/references.xhtml",
+        "dct:title": "Bibliography"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/index.xhtml",
+        "dct:title": "Index"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/back01.xhtml",
+        "dct:title": "Island Gospel"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/back02.xhtml",
+        "dct:title": "Island Gospel"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/back03.xhtml",
+        "dct:title": "Island Gospel"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "xhtml/backcover.xhtml",
+        "dct:title": "Cover"
+      }
+    },
+    {
+      "@type": "earl:assertion",
+      "earl:result": {
+        "earl:outcome": "pass"
+      },
+      "assertions": [],
+      "earl:testSubject": {
+        "url": "nav.xhtml",
+        "dct:title": "Island Gospel"
+      }
+    }
+  ],
+  "earl:result": {
+    "earl:outcome": "fail"
+  }
+}

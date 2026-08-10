@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="2.0" unique-identifier="PrimaryID">
+<metadata xmlns:opf="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<dc:title>A Minimal Book</dc:title>
+<dc:language>en-US</dc:language>
+<dc:identifier id="PrimaryID" opf:scheme="ISBN">9780000000009</dc:identifier>
+<dc:creator opf:role="aut" opf:file-as="Doe, Jane">Jane Doe</dc:creator>
+<meta name="cover" content="cover-image"/>
+</metadata>
+<manifest>
+<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+<item id="chapter1" href="text/chapter1.xhtml" media-type="application/xhtml+xml"/>
+<item id="chapter2" href="text/chapter2.xhtml" media-type="application/xhtml+xml"/>
+</manifest>
+<spine toc="ncx">
+<itemref idref="chapter1"/>
+<itemref idref="chapter2"/>
+</spine>
+</package>
+

@@ -1,0 +1,930 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <!-- https://code.jquery.com/jquery-3.2.1.slim.min.js -->
+  <script type="text/javascript" src="report-html-files/jquery-3.2.1.slim.min.js"></script>
+
+  <!-- https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js -->
+  <script type="text/javascript" src="report-html-files/popper.min.js"></script>
+
+  <!-- https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js -->
+  <script type="text/javascript" src="report-html-files/bootstrap.min.js"></script>
+
+  <!-- https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js -->
+  <script type="text/javascript" src="report-html-files/jquery.dataTables.min.js"></script>
+
+  <!-- https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js -->
+  <script type="text/javascript" src="report-html-files/dataTables.bootstrap4.min.js"></script>
+
+  <!-- https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap4.min.css -->
+  <link rel="stylesheet" type="text/css" href="report-html-files/dataTables.bootstrap4.min.css" />
+
+  <!-- https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css -->
+  <link rel="stylesheet" type="text/css" href="report-html-files/bootstrap.min.css" />
+
+  <!-- https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap4.min.css -->
+  <link rel="stylesheet" type="text/css" href="report-html-files/dataTables.bootstrap4.min.css" />
+
+  <!-- https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css -->
+  <link rel="stylesheet" type="text/css" href="report-html-files/bootstrap.min.css" />
+
+  <style>
+    /* general */
+    body {
+      margin: 3em;
+    }
+    .tab-content {
+      margin-top: 2em;
+    }
+
+    table th {
+      width: auto !important;
+    }
+    code {
+      line-height: 1.5;
+    }
+
+    .location {
+      font-size:.8em;font-family:monospace;overflow-wrap:break-word
+    }
+
+    .snippet {
+      font-size:.8em;
+    }
+    .snippet code {
+      display: block;
+      font-size:1em;
+      font-family:monospace;overflow-wrap:break-word;
+      margin-top: 1em;
+    }
+
+    .tab-pane{
+      margin-top: 1.5em;
+      margin-left: 1em;
+      margin-bottom: 2em; /* useful for javascriptless (tab-less) linear display mode */
+    }
+
+    .pagenav {
+      font-style: italic;
+      font-size: small;
+      margin-top: 1em;
+    }
+
+    .sectionnav {
+      font-style: italic;
+      font-size: small;
+      margin-top: 1em;
+      margin-bottom: 2em;
+    }
+    /* metadata */
+    #metadata-table tr td:first-child {
+      font-family: 'Courier New';
+      font-weight: bold;
+    }
+    .metadata-name {
+      font-family: 'Courier New';
+      font-weight: bold;
+    }
+    .metadata-name:after {
+      content: ", ";
+    }
+    .metadata-name:last-child::after {
+      content: "";
+    }
+    #a11y-metadata {
+      margin-top: 1em;
+    }
+    #metadata-table_wrapper {
+      padding-left: 0 !important;
+    }
+
+    /* TOC outline */
+    .toc-h1:before,.toc-h2:before,.toc-h3:before,.toc-h4:before,.toc-h5:before,.toc-h6:before,.toc-missing{
+      display:inline-block;
+      height:1.5em;
+      padding:0 .4em;
+      background-color:#449d44;
+      border-radius:4px;
+      color:#fff;
+      font-size:.8em;
+      font-family:monospace;
+      margin:0 .5em 0 0;
+    }
+
+    .toc-h1:before{content:'h1'}
+    .toc-h2:before{content:'h2'}
+    .toc-h3:before{content:'h3'}
+    .toc-h4:before{content:'h4'}
+    .toc-h5:before{content:'h5'}
+    .toc-h6:before{content:'h6'}
+    .toc-missing{font-family:inherit;background-color:#c9302c}
+
+    #toc-outline ol, #html-outline ol {
+      list-style: disc;
+    }
+
+    /* images */
+    #images td {
+      text-align: center;
+      font-family: serif;
+    }
+    #images td.image{
+      /*text-align:center;*/
+      padding:.2em;
+    }
+    #images td.missing{
+      /*text-align:center;*/
+      color:#888;
+      font-style:italic;
+    }
+    #images td.alt {border:1px solid #ddd}
+    #images td.alt.missing{background-color:#f2dede}
+    #images td.alt,td.image.presentation+td.alt.missing{background-color:#dff0d8}
+    #images img {
+      max-height: 300px;
+      max-width: 300px;
+    }
+
+    /* violations  */
+    #violations-summary-stats-table {
+      width: 30%;
+    }
+    #violations ul:not(.pagination) {
+      list-style-type: circle;
+    }
+
+    #filters select {
+      margin-left: 10px;
+      margin-right: 30px;
+    }
+
+    .filter-label {
+      text-transform: capitalize;
+    }
+
+    .engine {
+      font-style: italic;
+    }
+    .engine:before{content: '(via '}
+    .engine:after{content: ')'}
+    .css:before{content: 'CSS: '}
+    .cfi:before{content: 'CFI: '}
+
+    /* make the list and KB link the same padding */
+    td.details p{
+      padding-left: 40px;
+    }
+
+    span.critical, span.serious, span.moderate, span.minor {
+      display:inline-block;
+      height:1.5em;
+      padding: .4em;
+      border-radius:4px;
+      font-family:monospace;
+      font-weight: bold;
+    }
+
+    span.critical {
+      background-color: #9c2b2e;
+      color: #fff;
+    }
+    span.serious {
+      background-color: #ffa500;
+      color: #000;
+    }
+    span.moderate {
+      background-color: #7b5000;
+      color: #fff;
+    }
+    span.minor {
+      background-color: #ffff7f;
+      color: #000;
+    }
+    #message {
+      margin-left: 1em;
+    }
+    #violations-table_wrapper {
+      padding-left: 0 !important;
+    }
+
+
+#sponsorship {
+display: flex;
+width: 100%;
+column-gap: 1em;
+align-items: center;
+background-color: rgb(255,255,240);
+color: black;
+font-size: 90%;
+border:0;
+border-top: 0.1rem solid lightgrey;
+border-bottom: 0.1rem solid lightgrey;
+padding: 0;
+padding: 0.5em;
+margin: 0;
+margin-top: 0.5em;
+margin-bottom: 0.5em;
+}
+#sponsorship > span {
+color: black;
+}
+#sponsorship > a {
+font-weight: bold;
+}
+#sponsorship > input {
+margin-left: auto;
+border: 1px solid grey;
+border-radius: 6px;
+background-color: lightgrey;
+font-weight: bold;
+font-size: 90%;
+}
+  </style>
+
+  <title>EPUB Accessibility Report by DAISY Ace</title>
+</head>
+<body>
+
+  <header>
+    <noscript>
+      <div class="alert alert-info">Please enable javascript for best performance.</div>
+    </noscript>
+
+    <h1>EPUB Accessibility Report</h1>
+    <p class="font-italic">Generated by DAISY Ace (1.4.6) on 8/10/2026, 11:35:05 AM</p>
+    <div id="sponsorship">
+    <span>If you find DAISY Ace useful, please help us by donating to support its ongoing maintenance.</span>
+    <a target="_BLANK" href="https://daisy.org/AceCLSponsor">Support our work</a>
+    <input onclick="document.getElementById('sponsorship').remove();localStorage.setItem('DAISY-ACE-SPONSOR-HIDE', new Date().toISOString())" type="button" value="X" aria-label="Close" title="Close">
+    </div>
+    <script type="text/javascript">
+    const dateStr = localStorage.getItem('DAISY-ACE-SPONSOR-HIDE');
+    if (dateStr) {
+    if ((new Date().getTime() - new Date(dateStr).getTime()) > (24*60*60*1000)) { // 24h
+      localStorage.removeItem('DAISY-ACE-SPONSOR-HIDE');
+    } else {
+      setTimeout(()=>{document.getElementById('sponsorship').remove()}, 0);
+    }
+    }
+    </script>
+    <p><span class="font-weight-bold">Title:</span> Island Gospel</p>
+    <p>(EPUB 3.0)</p>
+  </header>
+
+  <nav>
+    <ul id="navlist" role="tablist">
+      <li class="nav-item"><a class="nav-link active" data-toggle="list" href="#violations" role="tab" aria-controls="violations" id="nav-violations">Violations</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="list" href="#metadata" role="tab" aria-controls="metadata" id="nav-metadata">Metadata</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="list" href="#outlines" role="tab" aria-controls="outlines" id="nav-outlines">Outlines</a></li>
+      <li class="nav-item"><a class="nav-link" data-toggle="list" href="#images" role="tab" aria-controls="images" id="nav-images">Images</a></li>
+    </ul>
+  </nav>
+
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+
+    <!-- VIOLATIONS TAB -->
+    <div id="violations" role="tabpanel">
+      <h2>Violations</h2>
+      <p class="sectionnav">Go to: <a href="#summary_of_violations">Summary of violations</a> | <a href="#all-violations">All violations</a> </p>
+
+      <h3 id="summary_of_violations">Summary of violations</h3>
+      <table id="violations-summary-stats-table" class="table table-striped">
+        <caption>Violation count, by ruleset and severity.</caption>
+        <thead class="thead-inverse">
+          <tr>
+            <th></th>
+            <th scope="col">Critical</th>
+            <th scope="col">Serious</th>
+            <th scope="col">Moderate</th>
+            <th scope="col">Minor</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">WCAG 2.0 A</th>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+          </tr>
+          <tr>
+            <th scope="row">WCAG 2.0 AA</th>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+          </tr>
+          <tr>
+            <th scope="row">WCAG 2.0 AAA</th>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+          </tr>
+          <tr>
+            <th scope="row">WCAG 2.1 A</th>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+          </tr>
+          <tr>
+            <th scope="row">WCAG 2.1 AA</th>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+          </tr>
+          <tr>
+            <th scope="row">WCAG 2.1 AAA</th>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+          </tr>
+          <tr>
+            <th scope="row">WCAG 2.2 A</th>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+          </tr>
+          <tr>
+            <th scope="row">WCAG 2.2 AA</th>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+          </tr>
+          <tr>
+            <th scope="row">WCAG 2.2 AAA</th>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+          </tr>
+          <tr>
+            <th scope="row">EPUB</th>
+            <td>0</td><td>4</td><td>2</td><td>0</td><td>6</td>
+          </tr>
+          <tr>
+            <th scope="row">Best Practice</th>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+          </tr>
+          <tr>
+            <th scope="row">Other</th>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+          </tr>
+          <tr>
+            <th scope="row">Total</th>
+            <td>0</td><td>4</td><td>2</td><td>0</td><td>6</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 id="all-violations">All violations</h3>
+
+      <div id="filters" class="d-none py-4">
+        <span class="filter-label">Impact</span>
+        <select name="impact" aria-label="impact">
+          <option value="all" selected>All</option>
+          <option value='serious'>Serious</option><option value='moderate'>Moderate</option>
+        </select>
+        <span class="filter-label">Ruleset</span>
+        <select name="ruleset" aria-label="ruleset">
+          <option value="all" selected>All</option>
+          <option value='EPUB'>EPUB</option>
+        </select>
+        <span class="filter-label">Rule</span>
+        <select name="rule" aria-label="rule">
+          <option value="all" selected>All</option>
+          <option value='epub-lang'>epub-lang</option><option value='metadata-accessibilityfeature'>metadata-accessibilityfeature</option><option value='metadata-accessibilityhazard'>metadata-accessibilityhazard</option><option value='metadata-accessibilitysummary'>metadata-accessibilitysummary</option><option value='metadata-accessmode'>metadata-accessmode</option><option value='metadata-accessmodesufficient'>metadata-accessmodesufficient</option>
+        </select>
+        <span class="filter-label">File</span>
+        <select name="file" aria-label="file">
+          <option value="all" selected>All</option>
+          <option value='OEBPS/package.opf'>OEBPS/package.opf</option>
+        </select>
+        <a href="#" onclick="resetFilters()" class="ml-4">Reset filters</a>
+      </div>
+
+      <table id="violations-table" class="table table-bordered">
+        <caption>Violations in the EPUB, with references to severity, guidelines and specific location of problem.</caption>
+        <thead class="thead-inverse">
+          <tr>
+            <th>Impact</th>
+            <th>Ruleset</th>
+            <th>Rule</th>
+            <th>Location</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+        <td><span class='serious'>Serious</span></td>
+        <td><span class='ruleset'>EPUB</span></td>
+        <td>epub-lang<br/><br/><span class='engine'>Ace</span></td>
+        <td><em>"Island Gospel"</em><br/><br/><code class='location'>OEBPS/package.opf</code></td><td class='details'>
+        <ul><li>The language must be specified (xml:lang in OPF package) </li><li> Ensures the OPF XML language is provided </li><li> Add the missing OPF xml:lang attribute</li></ul>
+        <p><a href='http://kb.daisy.org/publishing/docs/epub/language.html' target='_blank'>Learn more about: Language</a></p>
+        </td></tr><tr>
+        <td><span class='serious'>Serious</span></td>
+        <td><span class='ruleset'>EPUB</span></td>
+        <td>metadata-accessibilityfeature<br/><br/><span class='engine'>Ace</span></td>
+        <td><em>"Island Gospel"</em><br/><br/><code class='location'>OEBPS/package.opf</code></td><td class='details'>
+        <ul><li>Publications must declare the &#39;schema:accessibilityFeature&#39; metadata </li><li> Ensures a &#39;schema:accessibilityFeature&#39; metadata is present </li><li> Add a &#39;schema:accessibilityFeature&#39; metadata property to the Package Document</li></ul>
+        <p><a href='http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html' target='_blank'>Learn more about: Schema.org Accessibility Metadata</a></p>
+        </td></tr><tr>
+        <td><span class='serious'>Serious</span></td>
+        <td><span class='ruleset'>EPUB</span></td>
+        <td>metadata-accessibilityhazard<br/><br/><span class='engine'>Ace</span></td>
+        <td><em>"Island Gospel"</em><br/><br/><code class='location'>OEBPS/package.opf</code></td><td class='details'>
+        <ul><li>Publications must declare the &#39;schema:accessibilityHazard&#39; metadata </li><li> Ensures a &#39;schema:accessibilityHazard&#39; metadata is present </li><li> Add a &#39;schema:accessibilityHazard&#39; metadata property to the Package Document</li></ul>
+        <p><a href='http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html' target='_blank'>Learn more about: Schema.org Accessibility Metadata</a></p>
+        </td></tr><tr>
+        <td><span class='moderate'>Moderate</span></td>
+        <td><span class='ruleset'>EPUB</span></td>
+        <td>metadata-accessibilitysummary<br/><br/><span class='engine'>Ace</span></td>
+        <td><em>"Island Gospel"</em><br/><br/><code class='location'>OEBPS/package.opf</code></td><td class='details'>
+        <ul><li>Publications should declare the &#39;schema:accessibilitySummary&#39; metadata </li><li> Ensures a &#39;schema:accessibilitySummary&#39; metadata is present </li><li> Add a &#39;schema:accessibilitySummary&#39; metadata property to the Package Document</li></ul>
+        <p><a href='http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html' target='_blank'>Learn more about: Schema.org Accessibility Metadata</a></p>
+        </td></tr><tr>
+        <td><span class='serious'>Serious</span></td>
+        <td><span class='ruleset'>EPUB</span></td>
+        <td>metadata-accessmode<br/><br/><span class='engine'>Ace</span></td>
+        <td><em>"Island Gospel"</em><br/><br/><code class='location'>OEBPS/package.opf</code></td><td class='details'>
+        <ul><li>Publications must declare the &#39;schema:accessMode&#39; metadata </li><li> Ensures a &#39;schema:accessMode&#39; metadata is present </li><li> Add a &#39;schema:accessMode&#39; metadata property to the Package Document</li></ul>
+        <p><a href='http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html' target='_blank'>Learn more about: Schema.org Accessibility Metadata</a></p>
+        </td></tr><tr>
+        <td><span class='moderate'>Moderate</span></td>
+        <td><span class='ruleset'>EPUB</span></td>
+        <td>metadata-accessmodesufficient<br/><br/><span class='engine'>Ace</span></td>
+        <td><em>"Island Gospel"</em><br/><br/><code class='location'>OEBPS/package.opf</code></td><td class='details'>
+        <ul><li>Publications should declare the &#39;schema:accessModeSufficient&#39; metadata </li><li> Ensures a &#39;schema:accessModeSufficient&#39; metadata is present </li><li> Add a &#39;schema:accessModeSufficient&#39; metadata property to the Package Document</li></ul>
+        <p><a href='http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html' target='_blank'>Learn more about: Schema.org Accessibility Metadata</a></p>
+        </td></tr>
+        </tbody>
+      </table>
+
+      <p class="pagenav">Go to: <a href="#violations">Top of section</a> | <a href="#navlist">Page navigation</a></p>
+    </div>
+
+    <!-- METADATA TAB -->
+    <div id="metadata" role="tabpanel">
+      <h2>Metadata</h2>
+
+      <p class="sectionnav">Go to: <a href="#all-metadata">All Metadata</a> | <a href="#a11y-metadata">Accessibility Metadata</a> </p>
+
+      <h3 id="all-metadata">All Metadata</h3>
+      <table id="metadata-table" class="table table-bordered">
+        <caption>Publication metadata.</caption>
+        <thead class="thead-inverse">
+          <tr>
+            <th>Name</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>dc:title</td>
+            <td>Island Gospel</td>
+          </tr>
+          <tr>
+            <td>dc:creator</td>
+            <td>Melvin L. Butler</td>
+          </tr>
+          <tr>
+            <td>dc:identifier</td>
+            <td>9780252051760</td>
+          </tr>
+          <tr>
+            <td>dc:date</td>
+            <td>2019</td>
+          </tr>
+          <tr>
+            <td>dc:type</td>
+            <td>Text</td>
+          </tr>
+          <tr>
+            <td>dc:language</td>
+            <td>en-US</td>
+          </tr>
+          <tr>
+            <td>dc:publisher</td>
+            <td>State University of New York Press</td>
+          </tr>
+          <tr>
+            <td>dc:format</td>
+            <td>224 pages</td>
+          </tr>
+          <tr>
+            <td>dc:rights</td>
+            <td>All rights reserved</td>
+          </tr>
+          <tr>
+            <td>cover</td>
+            <td>My_Cover</td>
+          </tr>
+          <tr>
+            <td>dcterms:modified</td>
+            <td>2026-08-10T15:35:03Z</td>
+          </tr>
+          
+          
+          
+        </tbody>
+      </table>
+
+      <h3 id="a11y-metadata">Accessibility Metadata</h3>
+
+        <p>No accessibility metadata was found.</p>
+
+        <p>The following accessibility metadata is missing:
+          <span class="metadata-name">schema:accessMode</span>
+          <span class="metadata-name">schema:accessibilityFeature</span>
+          <span class="metadata-name">schema:accessibilityHazard</span>
+          <span class="metadata-name">schema:accessibilitySummary</span>
+          <span class="metadata-name">schema:accessModeSufficient</span>
+          <span class="metadata-name">a11y:certifiedBy</span>
+          <span class="metadata-name">a11y:certifierCredential</span>
+          <span class="metadata-name">a11y:certifierReport</span>
+          <span class="metadata-name">dcterms:conformsTo</span>
+        .
+        </p>
+      <p class="pagenav">Go to: <a href="#metadata">Top of section</a> | <a href="#navlist">Page navigation</a></p>
+    </div>
+
+    <!-- OUTLINES TAB -->
+    <div id="outlines" role="tabpanel">
+      <h2>Outlines</h2>
+      <p class="sectionnav">Go to: <a href="#toc-outline">TOC Outline</a> | <a href="#headings-outline">Headings Outline</a> </p> <!--  | <a href="#html-outline">HTML Outline</a> -->
+
+      <div class="row">
+
+        <div class="col-sm" id="toc-outline">
+          <h3>TOC Outline</h3>
+          <ol xmlns="http://www.w3.org/1999/xhtml">
+     <li>Cover</li>
+     <li>Title</li>
+     <li>Copyright</li>
+     <li>Contents</li>
+     <li>Preface</li>
+     <li>Acknowledgements</li>
+     <li>Introduction</li>
+     <li>1. Boundaries and Flows: Music in Jamaican Pentecostal Churches at Home and Abroad</li>
+     <li>2. Perfecting Holiness: Musical Theologies of Piety and Pleasure</li>
+     <li>3. The Anointing Makes the Difference: Power, Presence, and Gendered Worship</li>
+     <li>4. The Old-Time Way: Nostalgia, Tradition, and Testimony</li>
+     <li>5. Performing Ethnicity: Style, Transcendence, and African American Gospel</li>
+     <li>Conclusion: Identity, the Holy Spirit, and the Global Community</li>
+     <li>Notes</li>
+     <li>Bibliography</li>
+     <li>Index</li>
+     <li>Back Cover</li>
+   </ol>
+        </div>
+
+        <div class="col-sm" id="headings-outline">
+          <h3>Headings Outline</h3>
+          <ul><li><span class="toc-h1">Island Gospel</span><ul><li><span class="toc-h2">Island Gospel</span><li><span class="toc-h2">Contents</span><li><span class="toc-h2">Preface</span><li><span class="toc-h2">Acknowledgments</span><li><span class="toc-h2">Introduction</span><li><span class="toc-h2">Gospel Music, Worship, and Flow</span><li><span class="toc-h2">Historical Developments</span><li><span class="toc-h2">Methodological Considerations</span><li><span class="toc-h2">Synopsis of Chapters</span><li><span class="toc-h2">CHAPTER 1</span><li><span class="toc-h2">Boundaries and Flows</span><li><span class="toc-h2">Music in Jamaican Pentecostal Churchesat Home and Abroad</span><li><span class="toc-h2">Wondrous Love and Emmanuel Temple</span><li><span class="toc-h2">Familiarity and Difference at Home-in-the-Field</span><li><span class="toc-h2">“One God Apostolic”: Musical and Doctrinal Discourses in Liliput</span><li><span class="toc-h2">Musical Transcendence and Overlap in Montego Bay</span><li><span class="toc-h2">Hearing “Home”: Localness and Lines of Influence</span><li><span class="toc-h2">Conclusion</span><li><span class="toc-h2">CHAPTER 2</span><li><span class="toc-h2">Perfecting Holiness</span><li><span class="toc-h2">Musical Theologies of Piety and Pleasure</span><li><span class="toc-h2">Pleasures of the World</span><li><span class="toc-h2">Pastor Philips and the Call to Transformation</span><li><span class="toc-h2">Gendered Discourses of Sin and Pleasure</span><li><span class="toc-h2">Dancing around Dancehall</span><li><span class="toc-h2">Conclusion</span><li><span class="toc-h2">CHAPTER 3</span><li><span class="toc-h2">The Anointing Makes the Difference</span><li><span class="toc-h2">Power, Presence, and Gendered Worship</span><li><span class="toc-h2">Pastor Bryan and the Touch of Transcendence</span><li><span class="toc-h2">Oil, Blood, and the Role of Women</span><li><span class="toc-h2">Empowerment, Blood, and Divine Protection</span><li><span class="toc-h2">Ministering to Youth</span><li><span class="toc-h2">“Having Church” in a Concert Frame</span><li><span class="toc-h2">Conclusion</span><li><span class="toc-h2">CHAPTER 4</span><li><span class="toc-h2">The Old-Time Way</span><li><span class="toc-h2">Nostalgia, Tradition, and Testimony</span><li><span class="toc-h2">Hymns, Song Lyrics, and Meaningfulness</span><li><span class="toc-h2">Change and Continuity in a Pentecostal Convention</span><li><span class="toc-h2">Retellings and Rememberings</span><li><span class="toc-h2">Five Testimonies of Conversion</span><li><span class="toc-h2">Conclusion</span><li><span class="toc-h2">CHAPTER 5</span><li><span class="toc-h2">Performing Ethnicity</span><li><span class="toc-h2">Style, Transcendence, and African American Gospel</span><li><span class="toc-h2">(E)Racing Tradition at All Saints Apostolic</span><li><span class="toc-h2">Generational Tensions among Kingston Pentecostals</span><li><span class="toc-h2">Donnie McClurkin’s Caribbean Gospel Medley</span><li><span class="toc-h2">Ethnic Transcendence and the Unity of Worship</span><li><span class="toc-h2">Conclusion</span><li><span class="toc-h2">Conclusion</span><li><span class="toc-h2">Identity, the Holy Spirit, and the Global Community</span><li><span class="toc-h2">Notes</span><li><span class="toc-h2">Bibliography</span><li><span class="toc-h2">Index</span></li></ul></li><li><span class="toc-h1">Island Gospel</span></li></ul>
+        </div>
+
+        <!--  div class="col-sm" id="html-outline">
+          <h3>HTML Outline</h3>
+          <ol><li></li></ol>
+      </div -->
+    </div>
+    <p class="pagenav">Go to: <a href="#outlines">Top of section</a> | <a href="#navlist">Page navigation</a></p>
+  </div>
+
+  <!-- IMAGES TAB -->
+  <div id="images" role="tabpanel">
+      <h2>Images</h2>
+        <table  id="image-table" class="table table-striped table-bordered">
+          <caption>Images in the EPUB, with their description</caption>
+          <thead class="thead-inverse">
+             <tr>
+                <th>Image</th>
+                <th><code>alt</code>
+                </th>
+                <th><code>aria-describedby</code>
+                </th>
+                <th><code>aria-details</code>
+                </th>
+                <th><code>figcaption</code></th>
+                <th>Location</th>
+                <th>Role</th>
+             </tr>
+          </thead>
+          <tbody>
+                <tr>
+                  <td class="image">
+                    <a href="data/OEBPS/images/cover.jpg">
+                      <img src = "data/OEBPS/images/cover.jpg"/>
+                    </a>
+                  </td>
+
+                    <td>image</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                  <td class="location">xhtml/cover.xhtml#epubcfi(/4/2/2)</td>
+
+                    <td class="missing">N/A</td>
+                </tr>
+                <tr>
+                  <td class="image">
+                    <a href="data/OEBPS/images/title_001.jpg">
+                      <img src = "data/OEBPS/images/title_001.jpg"/>
+                    </a>
+                  </td>
+
+                    <td>image</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                  <td class="location">xhtml/title.xhtml#epubcfi(/4/8/2)</td>
+
+                    <td class="missing">N/A</td>
+                </tr>
+                <tr>
+                  <td class="image">
+                    <a href="data/OEBPS/images/01_chapter01_001.jpg">
+                      <img src = "data/OEBPS/images/01_chapter01_001.jpg"/>
+                    </a>
+                  </td>
+
+                    <td>image</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                  <td class="location">xhtml/01_chapter01.xhtml#epubcfi(/4/44/2)</td>
+
+                    <td class="missing">N/A</td>
+                </tr>
+                <tr>
+                  <td class="image">
+                    <a href="data/OEBPS/images/03_chapter03_001.jpg">
+                      <img src = "data/OEBPS/images/03_chapter03_001.jpg"/>
+                    </a>
+                  </td>
+
+                    <td>image</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                  <td class="location">xhtml/03_chapter03.xhtml#epubcfi(/4/78/2)</td>
+
+                    <td class="missing">N/A</td>
+                </tr>
+                <tr>
+                  <td class="image">
+                    <a href="data/OEBPS/images/04_chapter04_001.jpg">
+                      <img src = "data/OEBPS/images/04_chapter04_001.jpg"/>
+                    </a>
+                  </td>
+
+                    <td>image</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                  <td class="location">xhtml/04_chapter04.xhtml#epubcfi(/4/50/2)</td>
+
+                    <td class="missing">N/A</td>
+                </tr>
+                <tr>
+                  <td class="image">
+                    <a href="data/OEBPS/images/04_chapter04_002.jpg">
+                      <img src = "data/OEBPS/images/04_chapter04_002.jpg"/>
+                    </a>
+                  </td>
+
+                    <td>image</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                  <td class="location">xhtml/04_chapter04.xhtml#epubcfi(/4/54/2)</td>
+
+                    <td class="missing">N/A</td>
+                </tr>
+                <tr>
+                  <td class="image">
+                    <a href="data/OEBPS/images/backcover.jpg">
+                      <img src = "data/OEBPS/images/backcover.jpg"/>
+                    </a>
+                  </td>
+
+                    <td>image</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                    <td class="missing">N/A</td>
+
+                  <td class="location">xhtml/backcover.xhtml#epubcfi(/4/2/2)</td>
+
+                    <td class="missing">N/A</td>
+                </tr>
+          </tbody>
+        </table>
+      <p class="pagenav">Go to: <a href="#images">Top of section</a> | <a href="#navlist">Page navigation</a></p>
+    </div>
+
+  </div> <!-- end div for tabs' contents -->
+
+  <script type="text/javascript">
+
+    // https://datatables.net/reference/option/language
+    // https://datatables.net/examples/basic_init/language.html
+    // https://datatables.net/manual/i18n
+    const dataTableInit = {
+        "language": {
+            "decimal":        "",
+            "emptyTable":     'No data available in table',
+            "info":           'Showing: _START_ - _END_ / _TOTAL_',
+            "infoEmpty":      'Showing: 0 - 0 / 0',
+            "infoFiltered":   '(filtered from _MAX_ total entries)',
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     'Display _MENU_ records per page',
+            "loadingRecords": 'Loading...',
+            "processing":     'Processing...',
+            "search":         'Search:',
+            "zeroRecords":    'No matching records found',
+            "paginate": {
+                "first":      'First',
+                "last":       'Last',
+                "next":       'Next',
+                "previous":   'Previous'
+            },
+            "aria": {
+                "sortAscending":  ': activate to sort column ascending',
+                "sortDescending": ': activate to sort column descending'
+            }
+        }
+    };
+
+  // keep a flat list of the violations in memory for table filtering
+  var violations = [{"file":"OEBPS/package.opf","fileTitle":"Island Gospel","engine":"Ace","kburl":"http://kb.daisy.org/publishing/docs/epub/language.html","kbtitle":"Language","rule":"epub-lang","desc":"The language must be specified (xml:lang in OPF package) \n Ensures the OPF XML language is provided \n Add the missing OPF xml:lang attribute","impact":"serious","location":"OEBPS/package.opf","rulesetTags":["EPUB"],"applicableRulesetTag":"EPUB"},{"file":"OEBPS/package.opf","fileTitle":"Island Gospel","engine":"Ace","kburl":"http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html","kbtitle":"Schema.org Accessibility Metadata","rule":"metadata-accessibilityfeature","desc":"Publications must declare the &#39;schema:accessibilityFeature&#39; metadata \n Ensures a &#39;schema:accessibilityFeature&#39; metadata is present \n Add a &#39;schema:accessibilityFeature&#39; metadata property to the Package Document","impact":"serious","location":"OEBPS/package.opf","rulesetTags":["EPUB"],"applicableRulesetTag":"EPUB"},{"file":"OEBPS/package.opf","fileTitle":"Island Gospel","engine":"Ace","kburl":"http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html","kbtitle":"Schema.org Accessibility Metadata","rule":"metadata-accessibilityhazard","desc":"Publications must declare the &#39;schema:accessibilityHazard&#39; metadata \n Ensures a &#39;schema:accessibilityHazard&#39; metadata is present \n Add a &#39;schema:accessibilityHazard&#39; metadata property to the Package Document","impact":"serious","location":"OEBPS/package.opf","rulesetTags":["EPUB"],"applicableRulesetTag":"EPUB"},{"file":"OEBPS/package.opf","fileTitle":"Island Gospel","engine":"Ace","kburl":"http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html","kbtitle":"Schema.org Accessibility Metadata","rule":"metadata-accessibilitysummary","desc":"Publications should declare the &#39;schema:accessibilitySummary&#39; metadata \n Ensures a &#39;schema:accessibilitySummary&#39; metadata is present \n Add a &#39;schema:accessibilitySummary&#39; metadata property to the Package Document","impact":"moderate","location":"OEBPS/package.opf","rulesetTags":["EPUB"],"applicableRulesetTag":"EPUB"},{"file":"OEBPS/package.opf","fileTitle":"Island Gospel","engine":"Ace","kburl":"http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html","kbtitle":"Schema.org Accessibility Metadata","rule":"metadata-accessmode","desc":"Publications must declare the &#39;schema:accessMode&#39; metadata \n Ensures a &#39;schema:accessMode&#39; metadata is present \n Add a &#39;schema:accessMode&#39; metadata property to the Package Document","impact":"serious","location":"OEBPS/package.opf","rulesetTags":["EPUB"],"applicableRulesetTag":"EPUB"},{"file":"OEBPS/package.opf","fileTitle":"Island Gospel","engine":"Ace","kburl":"http://kb.daisy.org/publishing/docs/metadata/schema.org/index.html","kbtitle":"Schema.org Accessibility Metadata","rule":"metadata-accessmodesufficient","desc":"Publications should declare the &#39;schema:accessModeSufficient&#39; metadata \n Ensures a &#39;schema:accessModeSufficient&#39; metadata is present \n Add a &#39;schema:accessModeSufficient&#39; metadata property to the Package Document","impact":"moderate","location":"OEBPS/package.opf","rulesetTags":["EPUB"],"applicableRulesetTag":"EPUB"}];
+
+  // update the contents of the table to reflec the filtering
+  function updateTableContents(violationSubset) {
+    // anything else is 'other'
+    var rulesetTagLabels = {
+      'wcag2a': 'WCAG 2.0 A',
+      'wcag2aa': 'WCAG 2.0 AA',
+      'wcag2aaa': 'WCAG 2.0 AAA',
+      'wcag21a': 'WCAG 2.1 A',
+      'wcag21aa': 'WCAG 2.1 AA',
+      'wcag21aaa': 'WCAG 2.1 AAA',
+      'wcag22a': 'WCAG 2.2 A',
+      'wcag22aa': 'WCAG 2.2 AA',
+      'wcag22aaa': 'WCAG 2.2 AAA',
+      'EPUB': 'EPUB',
+      'best-practice': 'Best Practice',
+      'other': 'Other'
+    };
+
+    $('#violations-table').dataTable().fnDestroy();
+    $("#message").remove();
+    if (violationSubset.length == 0) {
+      $('<p id=\'message\'>No matching violations found.</p>').insertBefore("#violations .pagenav");
+      $("#violations-table").hide();
+      return;
+    }
+
+    $("#violations-table").show();
+    $("#filters").show();
+
+    var tablebody = $("#violations-table > tbody");
+    tablebody.empty();
+
+    violationSubset.forEach(function(violation) {
+
+      var tr = $("<tr></tr>");
+      var tdImpact = $("<td><span class='" + violation["impact"] + "'>" + violation["impact"] + "</span></td>");
+      var tdRuleset = $("<td><span class='ruleset'>" + rulesetTagLabels[violation["applicableRulesetTag"]] + "</span></td>");
+      var tdLocation = $("<td><em>\"" + violation["fileTitle"] + "\"</em><br/><br/><code class='location'>" + violation["location"] + "</code></td>");
+      if (violation.html) {
+        var tdSnippet = $('<br/><br/><div class=\'snippet\'>Snippet: <code>'+ violation.html.trim() + "</code></div>");
+        tdLocation.append(tdSnippet);
+      }
+      var tdRule = $("<td>" + violation["rule"] + "<br/><br/><span class='engine'>" + violation["engine"] + "</span></td>");
+
+      var desc = violation["desc"];
+
+      var detailsArr = desc.split("\n");
+      var tdDetails = $("<td class='details'></td>");
+
+      var ul = $("<ul></ul>");
+      tdDetails.append(ul);
+      detailsArr.forEach(function(item) {
+        if (item != "") {
+          var elm = $("<li></li>");
+          elm.text(decodeEntities(item));
+          ul.append(elm);
+        }
+      });
+      var link = $("<p><a href='"
+        + violation["kburl"]
+        + '\' target=\'_blank\'>Learn more about: ' + violation["kbtitle"] + "</a></p>");
+      tdDetails.append(link);
+
+      tr.append(tdImpact);
+      tr.append(tdRuleset);
+      tr.append(tdRule);
+      tr.append(tdLocation);
+      tr.append(tdDetails);
+      tablebody.append(tr);
+    });
+
+    $('#violations-table').DataTable(dataTableInit);
+  }
+
+  function filterSelected() {
+    var filters = [];
+    $("#filters select").each(function(idx, elm) {
+      $(elm).children("option").each(function (idx, optElm) {
+        if (optElm.selected) {
+          filters[elm.name] = optElm.value;
+        }
+      });
+    });
+    var filteredData = filterViolations(filters);
+    updateTableContents(filteredData, true);
+  }
+
+  // expects:
+  // {"rule": "all", "impact": "serious", "file": "p1.xhtml"}
+  function filterViolations(filters) {
+    var filteredList = [];
+    violations.forEach(function(item) {
+      if (
+        (filters["rule"] == "all" || item["rule"] === filters["rule"])
+        &&
+        (filters["impact"] == "all" || item["impact"] === filters["impact"])
+        &&
+        (filters["file"] == "all" || item["file"] === filters["file"])
+        &&
+        (filters["ruleset"] == "all" || item["applicableRulesetTag"] === filters["ruleset"])
+      )
+      {
+        filteredList.push(item);
+      }
+    });
+    return filteredList;
+  }
+
+  function resetFilters() {
+    $("#filters select").each(function(idx, elm) {
+      $(elm).children("option").each(function (idx, optElm) {
+        optElm.selected = optElm.value == "all";
+      });
+    });
+    filterSelected();
+  }
+
+  function decodeEntities(text) {
+    // The entities tend to appear in violation descriptions, and there are just a few named ones involved
+    var namedEntities = {
+      "&lt;": "<",
+      "&gt;": ">",
+      "&quot;": "\"",
+      "&nbsp": " "
+    };
+    // process entities
+    var str = text.replace(/&#(\d+);/g, function(match, dec) {
+      return String.fromCharCode(dec);
+		});
+
+    //process named entities
+    Object.keys(namedEntities).forEach(k => {
+      str = str.replace(new RegExp(k, 'g'), namedEntities[k]);
+    });
+    return str;
+  }
+
+  // certain classes need to be added to elements if we're using javascript in the browser
+  function prepareForJS() {
+    $('#filters').removeClass('d-none');
+    $('#navlist').addClass('nav-tabs nav');
+    $('#violations').addClass('tab-pane active');
+    $('#metadata').addClass('tab-pane');
+    $('#outlines').addClass('tab-pane');
+    $('#images').addClass('tab-pane');
+  }
+  $(document).ready(function() {
+    prepareForJS();
+    $('#metadata-table').DataTable(dataTableInit);
+    //updateTableContents(violations, false);
+    $('#violations-table').DataTable(dataTableInit);
+    $('#filters > select').change(filterSelected);
+  });
+
+  </script>
+
+
+</body>
+</html>
