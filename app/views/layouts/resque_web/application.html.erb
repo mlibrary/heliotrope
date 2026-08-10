@@ -34,29 +34,25 @@
 </head>
 <body>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <a class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </a>
-      <%= image_tag "resque_web/lifebuoy.png", class: 'logo' %>
-      <%= link_to "Resque", ResqueWeb::Engine.app.url_helpers.root_path, :class => "brand navbar-brand" %>
-      <div class="nav-collapse navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <% tabs.each do |tab_name,path| %>
-            <%= tab tab_name,path %>
-          <% end %>
-          <% if respond_to?(:main_app) %>
-            <li><%= link_to "Return to Application", main_app.root_path, :class => "nav navbar-nav" %></li>
-          <% end %>
-        </ul>
-      </div>
+<nav class="navbar navbar-dark navbar-expand-md fixed-top">
+  <div class="container">
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-collapse" data-bs-toggle="collapse" data-bs-target="#nav-collapse" aria-controls="nav-collapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <%= image_tag "resque_web/lifebuoy.png", class: 'logo' %>
+    <%= link_to "Resque", ResqueWeb::Engine.app.url_helpers.root_path, :class => "navbar-brand" %>
+    <div class="collapse navbar-collapse" id="nav-collapse">
+      <ul class="navbar-nav">
+        <% tabs.each do |tab_name,path| %>
+          <%= tab tab_name,path %>
+        <% end %>
+        <% if respond_to?(:main_app) %>
+          <li class="nav-item"><%= link_to "Return to Application", main_app.root_path, :class => "nav-link" %></li>
+        <% end %>
+      </ul>
     </div>
   </div>
-</div>
+</nav>
 
 <% unless subtabs.empty? %>
 <ul class="nav subnav">
