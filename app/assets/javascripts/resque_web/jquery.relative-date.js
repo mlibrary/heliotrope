@@ -39,7 +39,7 @@
         }
 
         return $(this).each(function(){
-            date_str = options.dateGetter(this);
+            var date_str = options.dateGetter(this);
             $(this).html(time_ago_in_words_with_parsing(date_str));
         });
     };
