@@ -49,16 +49,14 @@
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
-    "ajv": "^6.12.6",
-    "core-js": "^3.6.5",
-    "epubjs": "file:../epubjs-patched",
+    "ajv": "^8.0.0",
+    "core-js": "^3.39.0",
+    "epubjs": "file:../epubjs",
     "event-emitter": "^0.3.5",
-    "intersection-observer": "^0.5.1",
-    "jszip": "^3.7.0",
-    "lodash": "^4.17.21",
-    "mustache": "^2.3.0",
-    "path-webpack": "0.0.3",
-    "portfinder": "^1.0.28"
+    "jszip": "^3.10.0",
+    "lodash": "^4.18.1",
+    "mustache": "^4.2.0",
+    "path-webpack": "0.0.3"
   },
   "style": "dist/cozy.css"
 }

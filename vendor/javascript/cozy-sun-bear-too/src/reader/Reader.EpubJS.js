@@ -7,9 +7,6 @@ import * as Browser from '../core/Browser';
 
 import path from "path-webpack";
 
-import PrePaginatedContinuousViewManager from '../epubjs/managers/continuous/prepaginated';
-import ReusableIframeView from '../epubjs/managers/views/iframe';
-
 import ScrollingContinuousViewManager from '../epubjs/managers/continuous/scrolling';
 import StickyIframeView from '../epubjs/managers/views/sticky';
 
@@ -169,22 +166,6 @@ Reader.EpubJS = Reader.extend({
     this.settings = { flow: flow, stylesheet: this.options.injectStylesheet };
     this.settings.manager = this.options.manager || 'default';
 
-    // if ( this.settings.flow == 'auto' && this.metadata.layout == 'pre-paginated' ) {
-    //   // dumb check to see if the window is _tall_ enough to put
-    //   // two pages side by side
-    //   if ( this._container.offsetHeight <= this.options.forceScrolledDocHeight ) {
-    //     this.settings.flow = 'scrolled-doc';
-
-    //     // this.settings.manager = PrePaginatedContinuousViewManager;
-    //     // this.settings.view = ReusableIframeView;
-
-    //     this.settings.manager = ScrollingContinuousViewManager;
-    //     this.settings.view = StickyIframeView;
-    //     this.settings.width = '100%'; // 100%?
-    //     this.settings.spine = this._book.spine;
-    //   }
-    // }
-
     if ( this.settings.flow == 'auto' || this.settings.flow == 'paginated' ) {
       this._panes['epub'].style.overflow = this.metadata.layout == 'pre-paginated' ? 'auto' : 'hidden';
       this.settings.manager = 'default';
@@ -208,9 +189,6 @@ Reader.EpubJS = Reader.extend({
     self.settings['ignoreClass'] = 'annotator-hl';
 
     if ( this.metadata.layout == 'pre-paginated' && this.settings.manager == 'continuous' ) {
-        // this.settings.manager = 'prepaginated';
-        // this.settings.manager = PrePaginatedContinuousViewManager;
-        // this.settings.view = ReusableIframeView;
         this.settings.manager = ScrollingContinuousViewManager;
         this.settings.view = StickyIframeView;
         this.settings.spread = 'none';
