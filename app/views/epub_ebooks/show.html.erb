@@ -100,6 +100,7 @@
         var reader = cozy.reader('reader', {
           href: "<%= "#{main_app.epub_ebook_url.gsub!(/\?.*/, '')}/" %>",
           skipLink: '.skip',
+          features: <%= @cozy_features.to_json.html_safe %>,
           download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
           loader_template: '<div class="fulcrum-loading"><div class="rect rect1"></div><div class="circle circ1"></div><div class="rect rect2"></div><div class="circle circ2"></div></div>',
           <% if %w[leverpress michigan mps uncpress].include? @subdomain %>
@@ -267,7 +268,4 @@
   </div>
   <%= render 'shared/ga' %>
 <% end %>
-<%# Intentionally hard-coded: EpubEbooksController is a single-title special case (Princesse De Cleves).
-    The per-press use_new_epub_reader switch applies to EPubsController only.
-    Remove this comment when the follow-up cleanup PR consolidates the two controllers. %>
-<%= render template: 'layouts/csb_too_viewer' %>
+<%= render template: 'layouts/csb_viewer' %>

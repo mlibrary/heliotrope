@@ -84,6 +84,14 @@ export var Reader = Evented.extend({
 
     options = Util.setOptions(this, options);
 
+    // Feature flags: passed in from the host page (e.g. Rails via data-cozy-features).
+    // Defaults represent the "fully rolled-out" production state.
+    this.features = Object.assign({
+      restyledControls: true,   // too-style UI; true = new look, false = classic look
+      maps: false,              // pass-through: interactive map button in host view
+      notes: false,             // pass-through: notes panel button in host view
+    }, (options && options.features) || {});
+
     this._checkFeatureCompatibility();
 
     this.metadata = this.options.metadata; // initial seed
@@ -163,17 +171,12 @@ export var Reader = Evented.extend({
       delete saved_options.flow;
       flow = this.metadata.flow || 'paginated';
     }
+    // key += '/' + flow;
 
-    // Create layout-specific settings object if any saveable options exist
-    if (saved_options.font || saved_options.text_size || saved_options.scale ||
-      saved_options.word_spacing || saved_options.letter_spacing ||
-      saved_options.line_height || saved_options.margins || saved_options.paragraph_spacing) {
+    // var key = `${this.flow}/${this.metadata.layout}`;
+    // var key = this.metadata.layout;
+    if ( saved_options.text_size || saved_options.scale ) {
       saved_options[key] = {};
-
-      if ( saved_options.font ) {
-        saved_options[key].font = saved_options.font;
-        delete saved_options.font;
-      }
       if ( saved_options.text_size ) {
         saved_options[key].text_size = saved_options.text_size;
         delete saved_options.text_size;
@@ -186,30 +189,11 @@ export var Reader = Evented.extend({
         saved_options[key].flow = saved_options.flow;
         delete saved_options.flow;
       }
-
-      // Save the 5 new text options
-      if ( saved_options.word_spacing ) {
-        saved_options[key].word_spacing = saved_options.word_spacing;
-        delete saved_options.word_spacing;
-      }
-      if ( saved_options.letter_spacing ) {
-        saved_options[key].letter_spacing = saved_options.letter_spacing;
-        delete saved_options.letter_spacing;
-      }
-      if ( saved_options.line_height ) {
-        saved_options[key].line_height = saved_options.line_height;
-        delete saved_options.line_height;
-      }
-      if ( saved_options.margins ) {
-        saved_options[key].margins = saved_options.margins;
-        delete saved_options.margins;
-      }
-      if ( saved_options.paragraph_spacing ) {
-        saved_options[key].paragraph_spacing = saved_options.paragraph_spacing;
-        delete saved_options.paragraph_spacing;
-      }
     }
 
+    // saved_options[this.flow] = {}
+    // if ( saved_options.text_size ) {
+    // }
     localStorage.setItem('cozy.options', JSON.stringify(saved_options));
     this._cozyOptions = saved_options;
   },
@@ -286,7 +270,8 @@ export var Reader = Evented.extend({
       (Browser.safari ? ' cozy-safari' : '') +
       (this._fadeAnimated ? ' cozy-fade-anim' : '') +
       ' cozy-engine-' + this.options.engine +
-      ' cozy-theme-' + this.options.theme);
+      ' cozy-theme-' + this.options.theme +
+      (this.features.restyledControls ? '' : ' cozy-classic'));
 
     var position = DomUtil.getStyle(container, 'position');
 
@@ -310,7 +295,6 @@ export var Reader = Evented.extend({
     DomUtil.addClass(container, 'cozy-container');
     panes['live-status'] = DomUtil.create('div', prefix + 'live-status u-screenreader', container);
     panes['live-status'].setAttribute('aria-live', 'polite');
-    panes['live-status'].setAttribute('role', 'status'); // possibily redundant with 'aria-live' already there
     panes['top'] = DomUtil.create('div', prefix + 'top', container);
     panes['main'] = DomUtil.create('div', prefix + 'main', container);
     panes['bottom'] = DomUtil.create('div', prefix + 'bottom', container);
@@ -647,10 +631,6 @@ export var Reader = Evented.extend({
     }
     self._loader_timeout = setTimeout(function() {
       self._panes['loader'].style.display = 'block';
-      // CSB-279 broadcast "Loading..." during the spinner for screenreaders.
-      // When locations start coming in for the bottom drag navigation they
-      // will override our message.
-      self.updateLiveStatus("Loading...");
     }, delay);
   },
 
@@ -741,30 +721,11 @@ Object.defineProperty(Reader.prototype, 'flowOptions', {
     if ( ! this.options.flowOptions[flow] ) {
       this.options.flowOptions[flow] = {};
     }
-    if ( ! this.options.flowOptions[flow].font ) {
-      this.options.flowOptions[flow].font = this.options.font;
-    }
     if ( ! this.options.flowOptions[flow].text_size ) {
       this.options.flowOptions[flow].text_size = this.options.text_size;
     }
     if ( ! this.options.flowOptions[flow].scale ) {
       this.options.flowOptions[flow].scale = this.options.scale;
-    }
-    // Add the 5 new text options
-    if ( ! this.options.flowOptions[flow].word_spacing ) {
-      this.options.flowOptions[flow].word_spacing = this.options.word_spacing || 'auto';
-    }
-    if ( ! this.options.flowOptions[flow].letter_spacing ) {
-      this.options.flowOptions[flow].letter_spacing = this.options.letter_spacing || 'auto';
-    }
-    if ( ! this.options.flowOptions[flow].line_height ) {
-      this.options.flowOptions[flow].line_height = this.options.line_height || 'auto';
-    }
-    if ( ! this.options.flowOptions[flow].margins ) {
-      this.options.flowOptions[flow].margins = this.options.margins || 'auto';
-    }
-    if ( ! this.options.flowOptions[flow].paragraph_spacing ) {
-      this.options.flowOptions[flow].paragraph_spacing = this.options.paragraph_spacing || 'auto';
     }
 
     return this.options.flowOptions[flow]

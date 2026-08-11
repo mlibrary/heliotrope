@@ -12,7 +12,7 @@ export var BibliographicInformation = Control.extend({
     html: '<span class="oi" data-glyph="info">Info</span>'
   },
 
-  defaultTemplate: `<button class="button--sm cozy-bib-info oi" data-glyph="info" data-toggle="open" aria-label="Bibliographic Information"> Info</button>`,
+  defaultTemplate: `<button class="button--sm" data-toggle="open" aria-label="Bibliographic Information"><i class="icon-info oi" data-glyph="info" title="Book Information" aria-hidden="true"></i></button>`,
 
   onAdd: function(reader) {
     var self = this;
@@ -39,7 +39,9 @@ export var BibliographicInformation = Control.extend({
     });
 
 
-    this._control = container.querySelector("[data-toggle=open]");
+    this._control = container.closest("[data-toggle=open]") || container.querySelector('[data-toggle="open"]');
+    this._control.setAttribute('id', 'action-' + this._id);
+    container.style.position = 'relative';
     DomEvent.on(this._control, 'click', function(event) {
       event.preventDefault();
       self._modal.activate();
@@ -58,7 +60,8 @@ export var BibliographicInformation = Control.extend({
       template: template,
       title: 'Info',
       region: 'left',
-      fraction: 1.0
+      fraction: 1.0,
+      className: 'cozy-modal-contents',
     });
 
     var dl = this._modal._container.querySelector('dl');

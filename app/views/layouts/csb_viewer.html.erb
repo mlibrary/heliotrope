@@ -31,6 +31,11 @@
     <%= javascript_include_tag 'application' %>
     <%= javascript_pack_tag 'application', 'cozy-sun-bear/cozy-sun-bear', 'data-turbolinks-track': 'reload', defer: false %>
 
+    <!-- Additional JS libraries used by the epub-ebooks (Princesse De Cleves) reader -->
+    <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js' %>
+    <%= javascript_include_tag 'https://code.jquery.com/jquery-2.2.4.min.js' %>
+    <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/url-search-params/0.10.0/url-search-params.js' %>
+
     <!-- Cookie Consent for Google, Hotjar, etc -->
     <%= render 'shared/cookie_consent' %>
 
@@ -68,6 +73,22 @@
   <% if content_for?(:head) %>
     <%= yield(:head) %>
   <% end %>
+
+  <!-- CSS grid layout for the epub-ebooks (Princesse De Cleves) reader container.
+       Harmless for other readers since #epub only exists in epub_ebooks/show.html.erb -->
+  <style>
+    #epub {
+      display: grid;
+      grid-template-rows: 1fr;
+      grid-template-columns: min-content min-content 1fr;
+      grid-gap: 0;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+  </style>
 
   <!-- This seemingly causes Turbolinks issues when compiled with the rest of the JS, set it here for reuse -->
   <script>

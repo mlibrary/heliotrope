@@ -1,9 +1,7 @@
-@use "sass:math";
-
 $spinner-color: #222;
 $spinner-size: 100px;
 $spinner-thickness: 8px;
-$spinner-speed: math.div(1.5s, 4);
+$spinner-speed: 1.5s / 4;
 
 $bigger-spinner-size: $spinner-size * 2.5;
 $bigger-spinner-thickness: $spinner-thickness * 2;
@@ -16,7 +14,7 @@ $bigger-spinner-thickness: $spinner-thickness * 2;
   width: $spinner-size;
   top: 50%;
   left: 50%;
-  margin: (-(math.div($spinner-size, 2))) 0 0 (-(math.div($spinner-size, 2)));
+  margin: (-( ( $spinner-size ) / 2 )) 0 0 (-( ( $spinner-size ) / 2 ));
 }
 
 .cozy-module-book-loading {
@@ -72,7 +70,7 @@ $bigger-spinner-thickness: $spinner-thickness * 2;
   @for $i from 0 through 3 {
     .spinner-quarter--#{$i + 1} {
       transform: rotate($i * 90deg);
-      animation-delay: math.div($spinner-speed * $i, 4);
+      animation-delay: $spinner-speed * $i / 4;
     }
   }
 
@@ -80,7 +78,7 @@ $bigger-spinner-thickness: $spinner-thickness * 2;
     .spinner-backdrop--#{$i + 1} {
       transform: rotate($i * 90deg);
       border-top-color: rgba($spinner-color, 0.10);
-      // animation-delay: math.div($spinner-speed * $i, 4);
+      // animation-delay: $spinner-speed * $i / 4;
     }
   }
 }

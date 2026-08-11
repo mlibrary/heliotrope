@@ -9,17 +9,13 @@ export var Search = Control.extend({
     html: '<span>Search</span>'
   },
 
-  defaultTemplate: `<form class="search">
-    <label class="u-screenreader" for="cozy-search-string">Search in this text</label>
-    <input id="cozy-search-string" name="search" type="text" placeholder="Search in this text..." />
-    <button class="button--sm" data-toggle="open" aria-label="Search"><i class="icon-magnifying-glass oi" data-glyph="magnifying-glass" title="Search" aria-hidden="true"></i></button>
-  </form>`,
+  defaultTemplate: `<button class="button--sm" data-toggle="open" aria-label="Search"><i class="icon-magnifying-glass oi" data-glyph="magnifying-glass" title="Search" aria-hidden="true"></i></button>`,
 
   onAdd: function(reader) {
     var self = this;
     var container = this._container;
     if ( container ) {
-      this._control = container.querySelector("[data-target=" + this.options.direction + "]");
+      //this._control = container.querySelector("[data-target=" + this.options.direction + "]");
     } else {
 
       var className = this._className(),
@@ -35,62 +31,70 @@ export var Search = Control.extend({
       }
     }
 
-    this._control = container.querySelector("[data-toggle=open]");
+    this._reader.on('updateContents', function(data) {
+      self._createPanel();
+    });
+
+    this._control = container.closest("[data-toggle=open]") || container.querySelector('[data-toggle="open"]');
+    this._control.setAttribute('id', 'action-' + this._id);
+    this._control.setAttribute("data-modal-open", "");
     container.style.position = 'relative';
-
-    this._data = null;
-    this._canceled = false;
-    this._processing = false;
-    this._addLocation = false;
-
-    this._reader.on('ready', function() {
-
-      this._modal = this._reader.modal({
-        template: '<article></article>',
-        title: 'Search Results',
-        className: { container: 'cozy-modal-search' },
-        region: 'left',
-      });
-
-      this._modal.callbacks.onClose = function() {
-        if ( self._processing ) {
-          self._canceled = true;
-        }
-      };
-
-      this._article = this._modal._container.querySelector('article');
-
-      this._modal.on('click', 'a[class="search-result"]', function(modal, target) {
-        target = target.getAttribute('href');
-        this._reader.tracking.action('search/go/link');
-        this._reader.display(target, function() {
-          // return focus to epub iframe, CSB-259
-          document.getElementsByTagName("iframe")[0].focus();
-        });
-        return true;
-      }.bind(this));
-
-      this._modal.on('click', 'a[class="feedback-link"]', function(modal, target) {
-        window.open(target.href, '_blank');
-      }.bind(this));
-
-      this._modal.on('closed', function() {
-        this._reader.tracking.action('contents/close');
-      }.bind(this))
-
-    }.bind(this));
-
-    // only add locations when they've been processed
-    this._reader.on('updateLocations', function() {
-      this._addLocation = true;
-    }.bind(this));
-
     DomEvent.on(this._control, 'click', function(event) {
       event.preventDefault();
+      // HELIO-4287 "action" modal-opening buttons should both open *and* close their associated modal, and close others when opening.
+      // use `aria-hidden` state to check open/close status of this modal. Seems weird but I think it's used this way elsewhere also.
+      if (self._modal.modal.getAttribute('aria-hidden') == 'false') {
+        // if it's visible, close it and return
+        this._modal.deactivate();
+        return;
+      } else {
+        // we're going to open this modal. Look for any currently-open modals to close first.
+        var open_modals_close_buttons = self._modal.container.ownerDocument.querySelectorAll('.cozy-modal[aria-hidden="false"] button[data-modal-close]');
+          // console.log(open_modals_close_buttons);
+          open_modals_close_buttons.forEach((button) => {
+            button.click();
+          });
+      }
+      
+      self._modal.activate();
+    }, this)
 
-      var searchString = this._container.querySelector("#cozy-search-string").value;
+    return container;
+  },
+
+  _createPanel: function() {
+    var self = this;
+
+    this._modal = this._reader.modal({
+      template: `
+  <div class="cozy-search">
+    <form class="search">
+      <label class="u-screenreader" for="cozy-search-string">Search in this text</label>
+      <input id="cozy-search-string" name="search" type="text" placeholder="Search in this text..." />
+      <button class="button--sm" data-toggle="open" aria-label="Search" type="submit"><i class="icon-magnifying-glass oi" data-glyph="magnifying-glass" title="Search" aria-hidden="true"></i></button>
+    </form>
+  </div>
+<article></article>`,
+      title: 'Search',
+      className: { container: 'cozy-modal-search' },
+      region: 'left',
+      modalContainer: self.options.modalContainer,
+      seriously: 'wtf'
+    });
+
+    this._modal.callbacks.onClose = function() {
+      if ( self._processing ) {
+        self._canceled = true;
+      }
+    };
+
+    this._article = this._modal._container.querySelector('article');
+
+    this._modal.on('click', '.cozy-search form button', function(modal, target) {
+
+      var form = target.parentNode;
+      var searchString = form.querySelector('input[type="text"]').value;
       searchString = searchString.replace(/^\s*/, '').replace(/\s*$/, '');
-
       if ( ! searchString ) {
         // just punt
         return;
@@ -102,11 +106,51 @@ export var Search = Control.extend({
       } else {
         this.searchString = searchString;
         self.openModalWaiting();
-        self.submitQuery();
+        self.submitQuery(searchString);
       }
-    }, this);
+    }.bind(this));
+    
+    this._modal.on('click', 'a[class="search-result"]', function(modal, target) {
+      target = target.getAttribute('href');
+      this._reader.tracking.action('search/go/link');
+      this._reader.display(target, function() {
+        // return focus to epub iframe, CSB-259
+        document.getElementsByTagName("iframe")[0].focus();
+      });
+      if ( this.options.closePanel === false ) {
+        return false;
+      }
+      return true;
+    }.bind(this));
 
-    return container;
+    this._modal.on('click', 'a[class="feedback-link"]', function(modal, target) {
+      window.open(target.href, '_blank');
+    }.bind(this));
+
+    this._modal.on('closed', function() {
+      this._reader.tracking.action('contents/close');
+    }.bind(this))
+
+    // only add locations when they've been processed
+    this._reader.on('updateLocations', function() {
+      this._addLocation = true;
+    }.bind(this));
+
+    window.addEventListener('keydown', function(evt) {
+      let cmd = (evt.ctrlKey ? 1 : 0) |
+                (evt.altKey ? 2 : 0) |
+                (evt.shiftKey ? 4 : 0) |
+                (evt.metaKey ? 8 : 0);
+
+      if (cmd === 1 || cmd === 8 || cmd === 5 || cmd === 12) {
+        if ( evt.keyCode == '70' ) {
+          // command/control-F
+          evt.preventDefault();
+          this._container.querySelector("#cozy-search-string").focus();
+        }
+      }
+    }.bind(this));
+
   },
 
   openModalWaiting: function() {
@@ -114,7 +158,7 @@ export var Search = Control.extend({
     this._emptyArticle();
     var value = this.searchString;
     this._article.innerHTML = '<p>Submitting query for <em>' + value + '</em>...</p>' + this._reader.loaderTemplate();
-    this._modal.activate();
+    //this._modal.activate();
   },
 
   openModalResults: function() {
@@ -123,7 +167,7 @@ export var Search = Control.extend({
       return;
     }
     this._buildResults();
-    this._modal.activate();
+    //this._modal.activate();
     this._reader.tracking.action("search/open");
   },
 
@@ -139,7 +183,6 @@ export var Search = Control.extend({
       if (this.status >= 200 && this.status < 400) {
         // Success!
         var data = JSON.parse(this.response);
-        console.log("SEARCH DATA", data);
 
         self._data = data;
 
@@ -147,7 +190,6 @@ export var Search = Control.extend({
         // We reached our target server, but it returned an error
 
         self._data = null;
-        console.log(this.response);
       }
 
       self._reader.tracking.action("search/submitQuery");

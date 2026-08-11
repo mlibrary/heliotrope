@@ -19,6 +19,12 @@ class EpubEbooksController < CheckpointController
     map_file_doc = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND +monograph_id_ssim:#{@parent_presenter.id} AND +resource_type_tesim:interactive+map", rows: 1)&.first
     @map_file_presenter = map_file_doc.present? ? Hyrax::FileSetPresenter.new(map_file_doc, current_ability).embed_link : nil
 
+    @cozy_features = {
+      restyledControls: true,
+      maps: @map_file_presenter.present?,
+      notes: true  # TODO: replace with a per-book flag once metadata schema supports it
+    }
+
     CounterService.from(self, @presenter).count(request: 1)
     render layout: false
   end

@@ -18,11 +18,14 @@ export var Preferences = Control.extend({
 
   defaultTemplate: `<button class="button--sm cozy-preferences oi" data-toggle="open" data-glyph="cog" aria-label="Preferences and Settings"></button>`,
 
+  restyledTemplate: `<button class="button--sm cozy-preferences" data-toggle="open" aria-label="Text display preferences and settings">Aa</button>`,
+
   onAdd: function(reader) {
     var self = this;
+    var restyledControls = this._reader.features.restyledControls;
     var className = this._className();
     var container = DomUtil.create('div', className);
-    var template = this.options.template || this.defaultTemplate;
+    var template = this.options.template || (restyledControls ? this.restyledTemplate : this.defaultTemplate);
     var body = new DOMParser().parseFromString(template, "text/html").body;
     while ( body.children.length ) {
       container.appendChild(body.children[0]);
@@ -44,8 +47,8 @@ export var Preferences = Control.extend({
       }
     ];
 
-    // For now at least, we only want the overarching "Set Defaults" button for reflowable layouts
-    if (this._reader.metadata.layout != 'pdf' && this._reader.metadata.layout != 'pre-paginated') {
+    // "Set Defaults" button is only present in the classic (pre-restyle) UI
+    if (!restyledControls && this._reader.metadata.layout != 'pdf' && this._reader.metadata.layout != 'pre-paginated') {
       actions.push({
         label: 'Set Defaults',
         callback: function(event) {
@@ -56,7 +59,7 @@ export var Preferences = Control.extend({
 
     this._modal = this._reader.modal({
       title: 'Preferences',
-      className: this._reader.metadata.layout == 'reflowable' ? 'cozy-modal-preferences' : 'cozy-modal-preferences',
+      className: 'cozy-modal-preferences',
       actions: actions,
       region: 'right'
     });
@@ -75,12 +78,17 @@ export var Preferences = Control.extend({
     if ( this._modal._container.querySelector('form') ) { return; }
 
     var template = '';
+    var restyledControls = this._reader.features.restyledControls;
 
     var possible_fieldsets = [];
     if ( this._reader.metadata.layout == 'pre-paginated' ) {
       // different panel
       possible_fieldsets.push('Scale');
+    } else if ( restyledControls ) {
+      // Restyled UI: simple text-size control only
+      possible_fieldsets.push('TextSize');
     } else {
+      // Classic UI: full font + spacing controls
       possible_fieldsets.push('Font');
       possible_fieldsets.push('Spacing');
     }
@@ -282,6 +290,66 @@ var Fieldset = Class.extend({
 
 });
 
+// Restyled (restyledControls: true) — simple text-size only
+Preferences.fieldset.TextSize = Fieldset.extend({
+
+  initializeForm: function(form) {
+    if ( ! this._input ) {
+      this._input = form.querySelector(`#x${this._id}-input`);
+      this._output = form.querySelector(`#x${this._id}-output`);
+      this._preview = form.querySelector(`#x${this._id}-preview`);
+      this._actionReset = form.querySelector(`#x${this._id}-reset`);
+
+      this._input.addEventListener('input', this._updatePreview.bind(this));
+      this._input.addEventListener('change', this._updatePreview.bind(this));
+
+      this._actionReset.addEventListener('click', function(event) {
+        event.preventDefault();
+        this._input.value = 100;
+        this._updatePreview();
+      }.bind(this));
+    }
+
+    var text_size = this._control._reader.options.text_size || 100;
+    if ( text_size == 'auto' ) { text_size = 100; }
+    this._current.text_size = text_size;
+    this._input.value = text_size;
+    this._updatePreview();
+  },
+
+  updateForm: function(form, options, saveable) {
+    options.text_size = saveable.text_size = this._input.value;
+  },
+
+  template: function() {
+    return `<fieldset class="cozy-fieldset-text_size">
+        <legend>Text Size</legend>
+        <div class="preview--text_size" id="x${this._id}-preview">
+          'Yes, that&#x27;s it,' said the Hatter with a sigh: 'it&#x27;s always tea-time, and we&#x27;ve no time to wash the things between whiles.'
+        </div>
+        <p style="white-space: nowrap">
+          <span>T-</span>
+          <input name="text_size" type="range" id="x${this._id}-input" value="100" min="50" max="400" step="10" aria-valuemin="50" aria-valuemax="400" style="width: 75%; display: inline-block" />
+          <span>T+</span>
+        </p>
+        <p>
+          <span>Text Size: </span>
+          <span id="x${this._id}-output">100</span>
+          <button id="x${this._id}-reset" class="reset button--lg" style="margin-left: 8px">Reset to 100%</button>
+        </p>
+      </fieldset>`;
+  },
+
+  _updatePreview: function() {
+    this._preview.style.fontSize = `${( parseInt(this._input.value, 10) / 100 )}em`;
+    this._output.innerHTML = `${this._input.value}%`;
+  },
+
+  EOT: true
+});
+
+
+// Classic (restyledControls: false) — full font + spacing controls
 Preferences.fieldset.Font = Fieldset.extend({
 
   initializeForm: function(form) {

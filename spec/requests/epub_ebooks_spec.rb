@@ -78,7 +78,7 @@ RSpec.describe "Epub Ebooks", type: :request do
             expect(counter_service).to have_received(:count).with(request: 1)
             expect(response).to have_http_status(:ok)
             expect(response).to render_template(:show)
-            expect(response).to render_template('layouts/csb_too_viewer')
+            expect(response).to render_template('layouts/csb_viewer')
             expect(response).to render_template('epub_ebooks/show')
             expect(response).to render_template('epub_ebooks/_cozy_controls_top')
             expect(response).to render_template('epub_ebooks/_cozy_controls_bottom')

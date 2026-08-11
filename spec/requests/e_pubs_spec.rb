@@ -409,10 +409,10 @@ RSpec.describe "EPubs", type: :request do
 
       let(:press) { create(:press, use_new_epub_reader: true) }
 
-      it 'renders the csb_too_viewer layout' do
+      it 'renders the csb_viewer layout (single layout for all presses)' do
         expect { subject }.not_to raise_error
         expect(response).to have_http_status(:ok)
-        expect(response).to render_template('layouts/csb_too_viewer')
+        expect(response).to render_template('layouts/csb_viewer')
       end
     end
   end

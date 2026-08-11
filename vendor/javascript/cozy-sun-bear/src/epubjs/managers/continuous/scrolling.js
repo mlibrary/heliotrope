@@ -48,6 +48,9 @@ class ScrollingContinuousViewManager {
     this.rendered = false;
     this.settings.scale = this.settings.scale || 1.0;
     this.settings.xscale = this.settings.scale;
+
+    this.fraction = 0.8;
+    // this.settings.maxWidth = 1024;
   }
 
   render(element, size){
@@ -84,7 +87,7 @@ class ScrollingContinuousViewManager {
     this.container = this.stage.getContainer();
 
     // Views array methods
-    this.views = new Views(this.container);
+    this.views = new Views(this.container, this.layout.name == 'pre-paginated');
 
     // Calculate Stage Size
     this._bounds = this.bounds();
@@ -273,8 +276,28 @@ class ScrollingContinuousViewManager {
 
    this.settings.spine.each(function (section) {
 
+      // if ( this.layout.name == 'pre-paginated' ) {
+      //   // do something
+      //   // viewSettings.layout.height = h;
+      //   // viewSettings.layout.columnWidth = w;
+
+      //   var r = this.layout.height / this.layout.columnWidth;
+
+      //   viewSettings.layout.columnWidth = this.layout.columnWidth * 0.8;
+      //   viewSettings.layout.height = this.layout.height * ( this.layout.columnWidth)
+
+      // }
       var viewSettings = Object.assign({}, this.viewSettings);
       viewSettings.layout = Object.assign( Object.create( Object.getPrototypeOf(this.viewSettings.layout)), this.viewSettings.layout);
+      if ( this.layout.name == 'pre-paginated' ) {
+        viewSettings.layout.columnWidth = this.calculateWidth(viewSettings.layout.columnWidth); // *= ( this.fraction * this.settings.xscale );
+        viewSettings.layout.width = this.calculateWidth(viewSettings.layout.width); // *= ( this.fraction * this.settings.xscale );
+        viewSettings.minHeight *= this.settings.xscale;
+        viewSettings.maxHeight = viewSettings.height * this.settings.xscale;
+        viewSettings.height = viewSettings.height * this.settings.xscale;
+        viewSettings.layout.height = viewSettings.height;
+        // console.log("AHOY new view", section.index, viewSettings.height);
+      }
 
       var view = new this.View(section, viewSettings);
       view.onDisplayed = this.afterDisplayed.bind(this);
@@ -582,6 +605,14 @@ class ScrollingContinuousViewManager {
      this.views._views.forEach(function(view) {
         var viewSettings = Object.assign({}, this.viewSettings);
         viewSettings.layout = Object.assign( Object.create( Object.getPrototypeOf(this.viewSettings.layout)), this.viewSettings.layout);
+        if ( this.layout.name == 'pre-paginated' ) {
+          viewSettings.layout.columnWidth = this.calculateWidth(viewSettings.layout.columnWidth); // *= ( this.fraction * this.settings.xscale );
+          viewSettings.layout.width = this.calculateWidth(viewSettings.layout.width); // *= ( this.fraction * this.settings.xscale );
+          viewSettings.minHeight *= this.settings.xscale;
+          viewSettings.maxHeight = viewSettings.height * this.settings.xscale;
+          viewSettings.height = viewSettings.height * this.settings.xscale;
+          viewSettings.layout.height = viewSettings.height;
+        }
 
         view.size(viewSettings.layout.width, viewSettings.layout.height);
         view.reframe(viewSettings.layout.width, viewSettings.layout.height);
@@ -786,8 +817,17 @@ class ScrollingContinuousViewManager {
     });
   }
 
+  calculateWidth(width) {
+    var retval = width * this.fraction * this.settings.xscale;
+    // if ( retval > this.settings.maxWidth * this.settings.xscale ) {
+    //   retval = this.settings.maxWidth * this.settings.xscale;
+    // }
+    return retval;
+  }
+
   calculateHeight(height) {
-    return height > this.settings.minHeight ? this.layout.height : this.settings.minHeight;
+    var minHeight = this.layout.name == 'pre-paginated' ? 0 : this.settings.minHeight;
+    return height > minHeight ? this.layout.height : this.settings.minHeight;
   }
 
 }

@@ -1,19 +1,14 @@
 ///////////////////////////////////
 // imports
 ///////////////////////////////////
-//
-// This include of OpenDyslexic is for the preferences dialog *only*. For the EPUB iframe itself it needs to be...
-// injected, which right now is done from heliotrope via `injectStylesheet: '/assets/css/fulcrum_enhanced_display.css'`
-// Note that using a CDN seems to work better with browsers' font-fingerprinting blocking than serving from the app.
-
-// Note: @use must come before any other rules
-@use 'open-iconic';
-@use 'modals';
-@use 'loader';
-@use 'navigator';
-
-@import url('https://fonts.cdnfonts.com/css/opendyslexic');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600|Scope+One');
+// OpenDyslexic is used by the Preferences dialog font selector for presses that support it.
+// Using a CDN works better with browsers' font-fingerprinting blocking than serving from the app.
+@import url('https://fonts.cdnfonts.com/css/opendyslexic');
+@import 'open-iconic';
+@import 'modals';
+@import 'loader';
+@import 'navigator';
 
 ///////////////////////////////////
 // variables
@@ -116,18 +111,24 @@ $grid-padding:       1rem;
   ///////////////////////////////////
   // icons
   ///////////////////////////////////
-  i[class^='icon-'] {
-    font-size: 2em;
+  
+  .icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  i[class^='icon-'] { 
+    font-size: 1.2em;
   }
 
   i[class^='icon-chevron-'] {
-    color: $gray-3;
-    font-size: 2.5rem;
+    color: $dark-2;
+    font-size: 2rem;
     transition: 0.2s ease-in;
   }
 
   i[class^='icon-chevron-']:hover {
-    color: $brand-color;
+    color: #8A96A1;
     transition: 0.2s ease-in;
   }
 
@@ -192,20 +193,20 @@ $grid-padding:       1rem;
     display: inline-block;
     border-bottom: none;
     border-radius: $radius;
-    color: $white;
-    background: $accent-color;
-    background-image: linear-gradient(to right, $brand-color 50%, $accent-color 50%);
-    background-position: -100%;
-    background-size: 201%;
-    background-repeat: no-repeat;
-    text-shadow: none;
+    color: $dark-2;
+    background: transparent;
+    /* background-image: linear-gradient(to right, $brand-color 50%, $accent-color 50%); */
+    /* background-position: -100%; */
+    /* background-size: 201%; */
+    /* background-repeat: no-repeat; */
+    /* text-shadow: none; */
     text-decoration: none;
     transition: 0.2s ease-in;
     line-height: normal;
 
     &:hover, &:active {
-      color: $white;
-      background-position: 0;
+      color: $dark-1;
+      /* background-position: 0; */
       transition: 0.2s ease-in;
     }
 
@@ -290,6 +291,8 @@ $grid-padding:       1rem;
       box-shadow: 0 0 0 6px rgba($brand-color, .75);
     }
   }
+
+
 
   ///////////////////////////////////
   // fields
@@ -487,11 +490,11 @@ $grid-padding:       1rem;
 
   .epub-view {
       margin-bottom: 2rem;
-      box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0,0,0,0);
+      /* box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0,0,0,0); */
       padding: 0;
       margin-left: auto;
       margin-right: auto;
-      border: 1px solid #ddd;
+      /* border: 1px solid #ddd; */
 
       &.epub-view---loading::before {
         display: block;
@@ -544,9 +547,11 @@ div[class^='cozy-panel-'] {
 
 .cozy-panel-sidebar {
   display: flex;
-  justify-content: center;
   align-items: center;
+  flex-direction: column;
   height: 100%;
+  border-right: 1px solid $gray-2;
+  background-color: $gray-1;
 }
 
 div.cozy-panel-footer {
@@ -586,8 +591,8 @@ div.cozy-panel-footer {
     flex: 1 1 auto;
     // height: 100%;
     border-radius: 0;
-    padding: .5em 1em;
-    text-transform: uppercase;
+    padding: 10px;
+    // text-transform: uppercase;
 
     i {
       display: flex;
@@ -610,7 +615,7 @@ div.cozy-panel-footer {
   float: right;
 }
 
-// previous, next buttons
+// previous, next buttons (old)
 .cozy-panel-sidebar .cozy-control a {
   width: auto;
   display: inline-block;
@@ -685,7 +690,7 @@ div.cozy-panel-footer {
 }
 
 .cozy-control button.button--sm.cozy-citation.citation::after {
-  content: 'Get Citation';
+  content: 'Cite';
 }
 
 // search widget
@@ -740,6 +745,20 @@ div.cozy-panel-footer {
   }
 }
 
+// bottom right panel
+.cozy-panel-navigator {
+  .cozy-panel-right {
+    padding-top: 9px;
+    padding-right: 10px;
+  }
+}
+
+// next previous
+.cozy-control-next,
+.cozy-control-previous {
+  padding-right: 10px;
+}
+
 // preferences button
 .cozy-control-preferences {
   button {
@@ -747,162 +766,19 @@ div.cozy-panel-footer {
   }
 }
 
-#change-font{
-  margin-right: 10px;
-}
-
-.cozy-modal-preferences {
-  main {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    //overflow: hidden;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    //overflow: hidden;
-  }
-}
-
-#text-preview {
-  position: relative;
-  border: none;
-  padding: 0;
-  margin: 0;
-  z-index: 1000;
-  background: #e0e0e0;
-  flex-shrink: 0;
-  max-height: 200px;
-  overflow: hidden;
-
-  .preview-heading {
-    padding: 0.5rem 1rem;
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
-  }
-}
-
-#text-preferences-scrolling-area {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.cozy-modal fieldset.cozy-fieldset-text_options {
-  margin: 1rem;
-  border: 1px solid $brand-color;
-  padding-bottom: 15px;
-}
-
-.cozy-modal fieldset.cozy-fieldset-text_options p {
+.cozy-modal fieldset.cozy-fieldset-text_size p {
   width: 90%;
   margin: 0 auto;
   text-align: center;
 }
 
-.preview--text_preferences {
-  width: 100%;
-  height: 12rem;
-  padding: 1rem;
-  overflow: hidden;
-  margin: 0;
-}
-
 .preview--text_size {
   width: 90%;
-  height: 12rem;
+  height: 8rem;
+  margin: 1rem auto;
+  border: 1px dotted #666;
   padding: 1rem;
-  overflow: hidden
-}
-
-.cozy-modal-preferences button.reset-text-options,
-.cozy-modal-preferences button.spinner-button {
-  padding: 2px 4px;
-  font-size: 0.8em;
-}
-
-
-// Slider option container
-.slider-option {
-  margin: 1rem 0;
-}
-
-// Label row with label on left and value on right
-.slider-label-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-
-  label {
-    margin: 0;
-    font-weight: 500;
-  }
-
-  .slider-value {
-    font-family: monospace;
-    font-size: 0.9em;
-    color: #333;
-    min-width: 60px;
-    text-align: right;
-  }
-}
-
-// Control row with reset button and slider controls
-.slider-control-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-// Slider control styles
-.slider-control {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-
-  input[type="range"] {
-    flex: 1;
-    min-width: 100px;
-  }
-
-  .slider-button {
-    width: 30px;
-    height: 30px;
-    padding: 4px;
-    font-size: 1em;
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #999;
-    background-color: #f5f5f5;
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-
-    &:hover {
-      background-color: #e0e0e0;
-      border-color: #666;
-    }
-
-    &:active {
-      background-color: #d0d0d0;
-    }
-
-    &:focus {
-      outline: 2px solid #0066cc;
-      outline-offset: 2px;
-    }
-
-    i {
-      font-size: 0.9em;
-    }
-  }
+  overflow: hidden;
 }
 
 // modal contents styles
@@ -919,6 +795,316 @@ div.cozy-panel-footer {
     margin: 1em 0;
   }
 
+}
+
+// no-modal panel and button styles - HELIO-4803
+.nm--toolbar {
+  background: #f1f1f1;
+  border-right: 1px solid $gray-2;
+  min-height: 0;
+  min-width: 0;
+  display: grid;
+  /* flex-direction: column; */
+  gap: 1rem;
+  grid-template-rows: min-content min-content min-content min-content min-content min-content min-content;
+
+  .cozy-control {
+    display: initial;
+  }
+
+  #action-help,
+  #action-close,
+  #action-resources,
+  #action-map
+  {
+    justify-self: center;
+  }
+
+  #action-help {
+    align-self: end;
+    padding-bottom: 1em;
+  }
+
+  #action-map, #action-resources  {
+    padding-bottom: 16px;
+  }
+
+
+  button, a {
+    cursor: pointer;
+    position: relative;
+    border: none;
+    background: transparent;
+    padding-bottom: 1em; 
+    font-size: 1em;
+    justify-self: center;
+    
+    i {
+      padding: 8px;
+      color: $dark-2;
+    }
+  
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline: none;
+  }
+
+  button:active,
+  button:hover,
+  button[data-modal-closed],
+  a:active,
+  a:hover,
+  a:focus {
+    cursor: pointer;
+
+    i {
+      background-color: white;
+      transition: 0.2s ease-in;
+      outline: 0;
+      box-shadow: 0 0 0 6px rgba($brand-color, .25);
+    }
+  }
+
+  button:focus,
+  a:focus {
+
+    i {
+      transition: 0.2s ease-in;
+      outline: 0;
+      box-shadow: 0 0 0 6px rgba($brand-color, .25);
+    }
+    
+  }
+
+
+  button:active,
+  a:active {
+    border: none;
+
+    i {
+      box-shadow: inset 0 1px 12px $shadow;
+    }
+  }
+
+  #action-close {
+    padding: 14px;
+    width: 100%;
+    text-align: center;
+    background-color: $dark-2;
+    cursor: pointer;
+  
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: #637381;
+      transition: 0.2s ease-in;
+      outline: 0;
+      box-shadow: 0 0 0 6px rgba($brand-color, .25);
+    }
+
+    a {
+      padding: 0;
+      cursor: pointer;
+      &:hover,
+      &:active,
+      &:focus {
+        transition: none;
+        outline: 0;
+        box-shadow: none;
+      }
+    }
+
+    a i {
+      color: $gray-1;
+      padding: 0;
+      &:hover,
+      &:active,
+      &:focus {
+        transition: none;
+        outline: 0;
+        box-shadow: none;
+      }
+
+    
+  }
+
+  
+
+  a:active,
+  a:hover,
+  a:focus {
+    i {
+      background-color: #637381;
+    }
+  }
+
+  }
+
+
+}
+
+.nm--reader {
+  /* background: #666; */
+  min-height: 0;
+  min-width: 0;
+}
+
+.nm--panels {
+  background: #f1f1f1;
+  min-height: 0;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  width: 25vw;
+}
+
+.nm--actions {
+  position: fixed;
+  bottom: 1rem;
+  right: 0;
+  background: rgba(0,0,0,0.25);
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+
+  z-index: 500;
+}
+
+.nm--panels[data-modal-activated="false"] {
+  width: 0;
+}
+
+.nm--panels .cozy-modal {
+  min-height: 0;
+  grid-row: 1/2;
+  /* padding: 1rem; */
+}
+
+.nm--panels .cozy-modal[aria-hidden="true"] {
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  overflow: hidden;
+  position: absolute !important;
+  width: 1px;
+  display: none;;
+}
+
+.nm--panels .modal__overlay {
+    position: static;
+}
+
+.nm--panels .modal__container {
+    width: 100%;
+}
+
+.nm--panels .modal-slide.left[aria-hidden="false"] .modal__container {
+  animation: none;
+}
+
+.cozy-container {
+  width: 100%;
+}
+
+.nm--panels .modal__container div[role="document"] {
+  height: 100%;
+}
+
+.nm--panels .modal__content {
+  height: 88% !important;
+}
+
+// text tools
+.cozy-text-tools {
+  display: flex;
+  border-bottom: 1px solid $gray-2;
+  background-color: #E5E9ED;
+  font-size: 12px;
+  justify-content: space-between;
+
+  .versions, .tools {
+    
+    div {
+      padding-right: 10px;
+    }
+
+    fieldset.text-tools {
+      display: flex;
+      border: none;
+    
+      label {
+        font-size: 10px;
+      
+        &:before {
+          content: "";
+          display: inline-block;
+          vertical-align: text-bottom;
+          width: 14px;
+          height: 14px;
+          border: 2px solid #c5c5c5;
+          margin-right: 0px;
+        }
+      }
+    
+    }
+
+    .checkbox--svg input:checked + .svg {
+      &:before {
+          background: #637381;
+          border-color: #637381;
+      }
+  
+      .path {
+          stroke: #fff;
+          stroke-dashoffset: 0;
+      }
+    }
+  
+    .svg {
+      padding-left: 10px;
+  
+      &:before {
+          position: relative;
+          left: 0;
+          top: -1px;
+          width: 14px;
+          height: 14px;
+          transition: all 0.35s ease-out;
+      }
+  
+      svg {
+          position: relative;
+          left: -13px;
+          top: 1.5px;
+          width: 12px;
+          height: 12px;
+      }
+  
+      .path {
+          stroke-dashoffset: 111.46px;
+          stroke-dasharray: 111.46px;
+          stroke: #637381;
+          transition: all 0.35s ease-out;
+      }
+    }
+  
+  }
+
+
+}
+
+// hide element visually
+.sr-only {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
 }
 
 // engine-specific
@@ -1030,11 +1216,11 @@ div.cozy-panel-footer {
   }
 
   .cozy-container i[class^="icon-"] {
-    font-size: 1.5em;
+    font-size: 1.2em;
   }
 
   .cozy-container i[class^="icon-chevron-"] {
-    font-size: 1.7rem;
+    font-size: 1.5rem;
   }
 
   .cozy-control-preferences button {

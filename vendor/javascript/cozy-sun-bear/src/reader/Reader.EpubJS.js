@@ -4,10 +4,8 @@ import ePub from 'epubjs';
 window.ePub = ePub;
 import * as DomUtil from '../dom/DomUtil';
 import * as Browser from '../core/Browser';
-import { PreferencesConfig, sanitizePreference, sanitizePreferences } from '../config/PreferencesConfig';
 
 import path from "path-webpack";
-
 
 import ScrollingContinuousViewManager from '../epubjs/managers/continuous/scrolling';
 import StickyIframeView from '../epubjs/managers/views/sticky';
@@ -62,7 +60,29 @@ Reader.EpubJS = Reader.extend({
 
       self.draw(target, callback);
 
-      if ( self._book.pageList && self._book.pageList.pageList.length && ! self._book.pageList.locations.length ) {
+      if ( self.metadata.layout == 'pre-paginated' ) {
+        // fake it with the spine
+        var locations = [];
+        self._book.spine.each(function(item) {
+          locations.push(`epubcfi(${item.cfiBase}!/4/2)`);
+          self.locations._locations.push(`epubcfi(${item.cfiBase}!/4/2)`);
+        });
+        self.locations.total = locations.length;
+        var t;
+        var f = function() {
+          if ( self._rendition && self._rendition.manager && self._rendition.manager.stage ) {
+            var location = self._rendition.currentLocation();
+            if ( location && location.start) {
+              self.fire('updateLocations', locations);
+              clearTimeout(t);
+              return;
+            }
+          }
+          t = setTimeout(f, 100);
+        }
+
+        t = setTimeout(f, 100);
+      } else if ( self._book.pageList && self._book.pageList.pageList.length && ! self._book.pageList.locations.length ) {
         self._book.locations.generateFromPageList(self._book.pageList).then(function(locations) {
           self.fire('updateLocations', locations);
         })
@@ -112,7 +132,7 @@ Reader.EpubJS = Reader.extend({
     var key = self.metadata.layout || 'reflowable';
     var flow = this.options.flow;
     if ( self._cozyOptions[key] && self._cozyOptions[key].flow ) {
-      flow = sanitizePreference('flow', self._cozyOptions[key].flow);
+      flow = self._cozyOptions[key].flow;
       this.options.flow = flow; // restore from stored preferences
     }
 
@@ -127,38 +147,19 @@ Reader.EpubJS = Reader.extend({
       }
     }
 
+    // if ( flow == 'auto' && this.metadata.layout == 'pre-paginated' ) {
+    //   if ( this._container.offsetHeight <= this.options.forceScrolledDocHeight ){
+    //     flow = 'scrolled-doc';
+    //   }
+    // }
 
     // var key = `${flow}/${self.metadata.layout}`;
     if ( self._cozyOptions[key] ) {
-      // useful dev output if you're adding/changing saved preferences
-      // console.log('self._cozyOptions[key]: ' + JSON.stringify(self._cozyOptions[key], null, 4));
-
-      // Sanitize stored preferences before applying them
-      var sanitized = sanitizePreferences(self._cozyOptions[key]);
-
-      if ( sanitized.font ) {
-        self.options.font = sanitized.font;
+      if ( self._cozyOptions[key].text_size ) {
+        self.options.text_size = self._cozyOptions[key].text_size;
       }
-      if ( sanitized.text_size ) {
-        self.options.text_size = sanitized.text_size;
-      }
-      if ( sanitized.scale ) {
-        self.options.scale = sanitized.scale;
-      }
-      if ( sanitized.word_spacing ) {
-        self.options.word_spacing = sanitized.word_spacing;
-      }
-      if ( sanitized.letter_spacing ) {
-        self.options.letter_spacing = sanitized.letter_spacing;
-      }
-      if ( sanitized.line_height ) {
-        self.options.line_height = sanitized.line_height;
-      }
-      if ( sanitized.margins ) {
-        self.options.margins = sanitized.margins;
-      }
-      if ( sanitized.paragraph_spacing ) {
-        self.options.paragraph_spacing = sanitized.paragraph_spacing;
+      if ( self._cozyOptions[key].scale ) {
+        self.options.scale = self._cozyOptions[key].scale;
       }
     }
 
@@ -171,21 +172,11 @@ Reader.EpubJS = Reader.extend({
     } else {
       this._panes['epub'].style.overflow = 'auto';
       if ( this.settings.manager == 'default' ) {
-        if ( this.metadata.layout == 'pre-paginated' ) {
-          // fixed-layout scroll uses epub.js's native continuous manager
-          this.settings.manager = 'continuous';
-        } else {
-          // CSB-272, CSB-277 - continuous scroll "exclude list" by ISBN (Gabii 2, Mittell...)
-          const no_continuous_scroll_isbns = ['9780472999064', '9781643150611'];
-          if ( no_continuous_scroll_isbns.includes(this.metadata.identifier) ) {
-            this.settings.manager = 'default';
-          } else {
-            this.settings.manager = ScrollingContinuousViewManager;
-            this.settings.view = StickyIframeView;
-          }
-          this.settings.width = '100%'; // 100%?
-          this.settings.spine = this._book.spine;
-        }
+        // this.settings.manager = 'continuous';
+        this.settings.manager = ScrollingContinuousViewManager;
+        this.settings.view = StickyIframeView;
+        this.settings.width = '100%'; // 100%?
+        this.settings.spine = this._book.spine;
       }
     }
 
@@ -197,11 +188,19 @@ Reader.EpubJS = Reader.extend({
     self.settings.width = '100%';
     self.settings['ignoreClass'] = 'annotator-hl';
 
+    if ( this.metadata.layout == 'pre-paginated' && this.settings.manager == 'continuous' ) {
+        this.settings.manager = ScrollingContinuousViewManager;
+        this.settings.view = StickyIframeView;
+        this.settings.spread = 'none';
+    }
+
     if ( this.settings.manager == ScrollingContinuousViewManager ) {
-      if ( ! this.options.minHeight ) {
+      if ( this.metadata.layout != 'pre-paginated' && ! this.options.minHeight ) {
         this.options.minHeight = this._panes['book'].offsetHeight * 0.75;
       }
-      this.settings.minHeight = this.options.minHeight;
+      if ( this.options.minHeight ) {
+        this.settings.minHeight = this.options.minHeight;
+      }
     }
 
     if ( self.options.scale != '100' ) {
@@ -224,8 +223,7 @@ Reader.EpubJS = Reader.extend({
     this._rendition.settings.prehooks = {};
     this._rendition.settings.prehooks.head = new Hook(this);
 
-    self._updateTheme();
-    self._selectTheme(true);
+    self._updateFontSize();
     self._rendition.attachTo(self._panes['epub']);
 
     self._bindEvents();
@@ -442,17 +440,13 @@ Reader.EpubJS = Reader.extend({
 
     var doUpdate = false;
     if ( options === true ) { doUpdate = true; options = {}; }
-
-    // Sanitize incoming options before processing
-    var sanitizedOptions = sanitizePreferences(options);
-
     var changed = {};
-    Object.keys(sanitizedOptions).forEach(function(key) {
-      if ( sanitizedOptions[key] != this.options[key] ) {
+    Object.keys(options).forEach(function(key) {
+      if ( options[key] != this.options[key] ) {
         doUpdate = true;
         changed[key] = true;
       }
-      // doUpdate = doUpdate || ( sanitizedOptions[key] != this.options[key] );
+      // doUpdate = doUpdate || ( options[key] != this.options[key] );
     }.bind(this));
 
     if ( ! doUpdate ) {
@@ -461,19 +455,19 @@ Reader.EpubJS = Reader.extend({
 
     // performance hack
     if ( Object.keys(changed).length == 1 && changed.scale ) {
-      this.options.scale = sanitizedOptions.scale;
+      this.options.scale = options.scale;
       this._updateScale();
       return;
     }
 
-    if ( sanitizedOptions.rootfilePath && sanitizedOptions.rootfilePath != this.options.rootfilePath ) {
+    if ( options.rootfilePath && options.rootfilePath != this.options.rootfilePath ) {
       // we need to REOPEN THE DANG BOOK
-      sessionStorage.setItem('rootfilePath', sanitizedOptions.rootfilePath);
+      sessionStorage.setItem('rootfilePath', options.rootfilePath);
       location.reload();
       return;
     }
 
-    Util.extend(this.options, sanitizedOptions);
+    Util.extend(this.options, options);
 
     this.draw(target, function() {
       // this._updateFontSize();
@@ -501,75 +495,17 @@ Reader.EpubJS = Reader.extend({
       add_max_img_styles = true;
     }
 
+    var custom_stylesheet_rules = [];
+
+    // force 90% height instead of default 60%
     if ( this.metadata.layout != 'pre-paginated' ) {
-      // these prehooks are a hack to avoid the contents hooks applying _after_
-      // the view has been displayed
-      this._rendition.settings.prehooks.head.register(function(buffer) {
-        var layout = this.layout;
-
-        // Build text spacing and font styles to inject - when done in the prehooks it works for both scroll and page-by-page modes
-        var fontAndSpacingCSS = '';
-
-        // Use the config sanitizer as the single source of truth for all preference values
-        var sanitizedPreferences = sanitizePreferences(self.options || {});
-        var word_spacing = sanitizedPreferences.word_spacing || 'auto';
-        var letter_spacing = sanitizedPreferences.letter_spacing || 'auto';
-        var line_height = sanitizedPreferences.line_height || 'auto';
-        var text_size = sanitizedPreferences.text_size || 100;
-
-        var textElements = 'body, table, td, th, h1, h2, h3, h4, h5, h6, p, li, span, b, i, strong, em, a, div, blockquote, figure, figcaption';
-        var textRules = [];
-
-        var font = sanitizedPreferences.font || 'default';
-
-        // Add font family if not default
-        if ( font !== 'default' ) {
-          textRules.push(`font-family: ${font} !important`);
-        }
-        
-        // Add spacing rules
-        if ( word_spacing !== 'auto' ) {
-          textRules.push(`word-spacing: ${word_spacing} !important`);
-        }
-        if ( letter_spacing !== 'auto' ) {
-          textRules.push(`letter-spacing: ${letter_spacing} !important`);
-        }
-        if ( line_height !== 'auto' ) {
-          textRules.push(`line-height: ${line_height} !important`);
-        }
-        
-        // Build CSS for text elements (font-family and spacing)
-        if ( textRules.length > 0 ) {
-          fontAndSpacingCSS = `${textElements} { ${textRules.join('; ')}; }`;
-        }
-        
-        // Font size should only be applied to html element to avoid compounding on nested elements
-        var fontSizeCSS = '';
-        if ( text_size != 100 ) {
-          fontSizeCSS = `html { font-size: ${text_size}% !important; }`;
-        }
-
-        // Build paragraph styles
-        var paragraphStylesCSS = '';
-        var margins = sanitizedPreferences.margins || 'auto';
-        var paragraph_spacing = sanitizedPreferences.paragraph_spacing || 'auto';
-
-        if ( margins !== 'auto' || paragraph_spacing !== 'auto' ) {
-          var paragraphRules = [];
-          if ( margins !== 'auto' ) {
-            paragraphRules.push(`margin-left: ${margins} !important`);
-            paragraphRules.push(`margin-right: ${margins} !important`);
-          }
-          if ( paragraph_spacing !== 'auto' ) {
-            paragraphRules.push(`margin-bottom: ${paragraph_spacing} !important`);
-            paragraphRules.push(`margin-top: 0 !important`);
-          }
-          paragraphStylesCSS = `p { ${paragraphRules.join('; ')}; }`;
-        }
-
-        var scrollModeStyles = '';
-        if ( self.options.flow == 'scrolled-doc' ) {
-          scrollModeStyles = `
+      if ( this.options.flow == 'scrolled-doc' ) {
+        // these prehooks are a hack to avoid the contents hooks applying _after_
+        // the view has been displayed
+        this._rendition.settings.prehooks.head.register(function(buffer) {
+          var layout = this.layout;
+          var retval = `
+<style>
 img {
   max-width: ${layout.columnWidth ? layout.columnWidth + "px" : "100%"} !important;
   max-height: ${(layout.height ? (layout.height * 0.9) + "px" : "90%")} !important;
@@ -584,21 +520,33 @@ svg {
 body {
   overflow: hidden;
   column-rule: 1px solid #ddd;
-}`;
-        }
-
-        var retval = `
-<style>
-${scrollModeStyles}
-${fontSizeCSS}
-${fontAndSpacingCSS}
-${paragraphStylesCSS}
+}
 </style>
-        `
-        buffer.push(retval);
-      }.bind(this._rendition));
+          ` 
+          buffer.push(retval);
+        }.bind(this._rendition));
+      }
+      // --- KEEP THIS IN CASE WE HAVE TO REVERT THE PREHOOKS
+      // this._rendition.hooks.content.register(function(contents) {
+      //   contents.addStylesheetRules({
+      //     "img" : {
+      //       "max-width": (this._layout.columnWidth ? this._layout.columnWidth + "px" : "100%") + "!important",
+      //       "max-height": (this._layout.height ? (this._layout.height * 0.9) + "px" : "90%") + "!important",
+      //       "object-fit": "contain",
+      //       "page-break-inside": "avoid"
+      //     },
+      //     "svg" : {
+      //       "max-width": (this._layout.columnWidth ? this._layout.columnWidth + "px" : "100%") + "!important",
+      //       "max-height": (this._layout.height ? (this._layout.height * 0.9) + "px" : "90%") + "!important",
+      //       "page-break-inside": "avoid"
+      //     },
+      //     "body": {
+      //       "overflow": "hidden",
+      //       "column-rule": "1px solid #ddd"
+      //     }
+      //   });
+      // }.bind(this._rendition))
     } else {
-      // Pre-paginated layout
       this._rendition.hooks.content.register(function(contents) {
         contents.addStylesheetRules({
           "img" : {
@@ -615,6 +563,14 @@ ${paragraphStylesCSS}
           }
         });
       }.bind(this._rendition));
+    }
+
+    this._updateFontSize();
+
+    if ( custom_stylesheet_rules.length ) {
+      this._rendition.hooks.content.register(function(view) {
+        view.addStylesheetRules(custom_stylesheet_rules);
+      })
     }
 
     this._rendition.on('resized', function(box) {
@@ -677,7 +633,6 @@ ${paragraphStylesCSS}
 
     this._rendition.on("rendered", function(section, view) {
       self._updateFrameTitle(section, view);
-      // Font, font size, text spacing, and paragraph styles are all handled via prehook
     });
 
     this._rendition.on("rendered", function(section, view) {
@@ -709,22 +664,6 @@ ${paragraphStylesCSS}
     this._rendition.themes.select(theme);
   },
 
-  _updateFont: function() {
-    if ( this.metadata.layout == 'pre-paginated') {
-      // we're not doing font changes for pre-paginated
-      return;
-    }
-
-    var font = this.options.font || 'default';
-    if ( font == 'default' ) {
-      // do not add an unncessary override
-      if ( ! this._rendition.themes._overrides['font'] ) {
-        return;
-      }
-    }
-    this._rendition.themes.font(`${font}`);
-  },
-
   _updateFontSize: function() {
     if ( this.metadata.layout == 'pre-paginated') {
       // we're not doing font changes for pre-paginated
@@ -748,9 +687,6 @@ ${paragraphStylesCSS}
     // })
   },
 
-
-
-
   _updateScale: function() {
     if ( this.metadata.layout != 'pre-paginated') {
       // we're not scaling for reflowable
@@ -759,9 +695,7 @@ ${paragraphStylesCSS}
     // var scale = this.options.modes[this.flow].scale;
     var scale = this.options.scale;
     if ( scale ) {
-      // Sanitize scale value using the centralized sanitizer
-      var scaleNum = sanitizePreferences({ scale: scale }).scale || PreferencesConfig.scale.default;
-      this.settings.scale = scaleNum / 100.0;
+      this.settings.scale = parseInt(scale, 10) / 100.0;
       this._queueScale();
     }
   },

@@ -6,7 +6,7 @@ import * as DomEvent from '../dom/DomEvent';
 
 export var Contents = Control.extend({
 
-  defaultTemplate: `<button class="button--sm" data-toggle="open" aria-label="Table of Contents"><i class="icon-menu oi" data-glyph="menu" title="Table of Contents" aria-hidden="true"></i></button>`,
+  defaultTemplate: `<button class="button--sm" data-toggle="open" aria-label="Table of Contents"><i class="icon-align-left oi" data-glyph="align-left" title="Table of Contents" aria-hidden="true"></i></button>`,
 
   onAdd: function(reader) {
     var self = this;
@@ -16,7 +16,7 @@ export var Contents = Control.extend({
     } else {
 
       var className = this._className(),
-        options = this.options;
+          options = this.options;
 
       container = DomUtil.create('div', className);
 
@@ -28,8 +28,9 @@ export var Contents = Control.extend({
       }
     }
 
-    this._control = container.querySelector("[data-toggle=open]");
+    this._control = container.closest("[data-toggle=open]") || container.querySelector('[data-toggle="open"]');
     this._control.setAttribute('id', 'action-' + this._id);
+    this._control.setAttribute("data-modal-open", "");
     container.style.position = 'relative';
 
     this._bindEvents();
@@ -39,11 +40,25 @@ export var Contents = Control.extend({
 
   _bindEvents() {
     var self = this;
-
+    
     this._reader.on('updateContents', function(data) {
 
       DomEvent.on(this._control, 'click', function(event) {
         event.preventDefault();
+        // HELIO-4287 "action" modal-opening buttons should both open *and* close their associated modal, and close others when opening.
+        // use `aria-hidden` state to check open/close status of this modal. Seems weird but I think it's used this way elsewhere also.
+        if (self._modal.modal.getAttribute('aria-hidden') == 'false') {
+          // if it's visible, close it and return
+          this._modal.deactivate();
+          return;
+        } else {
+          // we're going to open this modal. Look for any currently-open modals to close first.
+          var open_modals_close_buttons = self._modal.container.ownerDocument.querySelectorAll('.cozy-modal[aria-hidden="false"] button[data-modal-close]');
+          // console.log(open_modals_close_buttons);
+          open_modals_close_buttons.forEach((button) => {
+            button.click();
+          });
+        }
         self._goto_interval = false;
         self._reader.tracking.action('contents/open');
         self._modal.activate();
@@ -52,8 +67,8 @@ export var Contents = Control.extend({
       this._modal = this._reader.modal({
         template: `
 <div class="cozy-contents-toolbar button-group" aria-hidden="true">
-  <button class="cozy-control button--lg toggled" data-toggle="contentlist">Table of Contents</button>
-  <button class="cozy-control button--lg" data-toggle="pagelist">Page List</button>
+  <button class="cozy-control button toggled" data-toggle="contentlist">Table of Contents</button>
+  <button class="cozy-control button" data-toggle="pagelist">Page List</button>
 </div>
 <div class="cozy-contents-main">
   <div class="cozy-contents-contentlist">
@@ -79,8 +94,11 @@ export var Contents = Control.extend({
               self._reader.rendition.manager.container.setAttribute("tabindex", 0);
               self._reader.rendition.manager.container.focus();
             }
-          }
-        }});
+          },
+        },
+        modalContainer: self.options.modalContainer,
+        seriously: 'wtf'
+      });
 
       this._display = {};
       this._display.contentlist = this._modal._container.querySelector('.cozy-contents-contentlist');
@@ -121,14 +139,17 @@ export var Contents = Control.extend({
             var p2 = pageList.lastPageLabel;
             p.innerHTML = `Please enter a page number between <strong>${p1}-${p2}</strong>.`;
           }
-        }
+        }        
       }.bind(this));
 
       this._modal.on('click', 'a[href]', function(modal, target) {
         target = target.getAttribute('data-href');
         this._goto_interval = true;
-        this._reader.tracking.action('contents/go/link');
+        //this._reader.tracking.action('contents/go/link');
         this._reader.display(target);
+        if ( this.options.closePanel === false) {
+          return false;
+        }
         return true;
       }.bind(this));
 
@@ -165,7 +186,7 @@ export var Contents = Control.extend({
           var pg = self._reader.pageList.pages[i];
           var info = self._reader.pageList.pageList[i];
           var cfi = self._reader.pageList.locations[i];
-          var item = {
+          var item = { 
             label: ( info.pageLabel || info.page ),
             href: cfi
           };
@@ -178,7 +199,7 @@ export var Contents = Control.extend({
   _createOption(chapter, tabindex, parent) {
 
     function pad(value, length) {
-      return (value.toString().length < length) ? pad("-"+value, length):value;
+        return (value.toString().length < length) ? pad("-"+value, length):value;
     }
     var option = DomUtil.create('li');
     if ( chapter.href ) {
@@ -212,7 +233,7 @@ export var Contents = Control.extend({
 
   _setupSkipLink: function() {
     if ( ! this.options.skipLink ) { return; }
-
+      
     var target = document.querySelector(this.options.skipLink);
     if ( ! target ) { return; }
 

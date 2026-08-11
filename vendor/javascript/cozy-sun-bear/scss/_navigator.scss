@@ -57,7 +57,7 @@
 
     .cozy-navigator-range {
 
-      width: 90%;
+      width: 80%;
       height: auto;
       padding: 0.5rem 0;
       position: relative;
@@ -74,7 +74,7 @@
         margin-top: 0.5rem;
       }
 
-      $range-gradient-fill: #2497e3;
+      $range-gradient-fill: #31343b;
       $range-gradient-empty: #fff;
 
       .cozy-navigator-range__background {
@@ -115,7 +115,7 @@
           -webkit-appearance: none;
       }
 
-      $thumb-size: 32px;
+      $thumb-size: 24px;
       input[type=range]::-webkit-slider-thumb {
         box-shadow: 0px 0px 0px #000000;
         border: 1px solid #666;
@@ -134,13 +134,13 @@
 
       input[type=range]::-moz-range-thumb {
         box-shadow: 0px 0px 0px #000000;
-        border: 1px solid #2497E3;
+        border: 1px solid #31343b;
         // height: 18px;
         // width: 18px;
         height: $thumb-size;
         width: $thumb-size;
         border-radius: 25px;
-        background: #A1D0FF;
+        background: #A0A5B0;
         cursor: pointer;
         box-shadow: 2px 2px 1px 0px rgba(0,0,0,0.4);
       }
@@ -148,11 +148,11 @@
       input[type=range]::-ms-thumb {
         margin-top: 1px;
         box-shadow: 0px 0px 0px #000000;
-        border: 1px solid #2497E3;
+        border: 1px solid #31343b;
         height: $thumb-size;
         width: $thumb-size;
         border-radius: 25px;
-        background: #A1D0FF;
+        background: #A0A5B0;
         cursor: pointer;
       }
 

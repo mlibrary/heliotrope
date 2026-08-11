@@ -25,19 +25,15 @@ var TableUpdater = class extends BaseUpdater {
 
   constructor(options={}) {
     super(options);
-    this.selector = 'table';
+    this.selector = 'table:not([data-fulcrum-table="false"])';
   }
 
   test(element) {
-    // this data attribute enables us to force these dynamic tables on or off in the EPUB markup
-    var force_table_modal_to = element.getAttribute('data-fulcrum-table');
     // clipping is buggy in IE
     return ( 
       super.test(element) && 
-      ! ( Browser.ie || Browser.edge ) &&
-      ( force_table_modal_to == 'true' ||
-        ( force_table_modal_to != 'false' && ( element.offsetHeight >= ( this.layout.height * 0.75 ) ) )
-      )
+      ! ( Browser.ie || Browser.edge ) && 
+      element.offsetHeight >= ( this.layout.height * 0.75 ) 
     );
   }
 

@@ -26,6 +26,28 @@ webpackConfig.module.rules.push({
   ]
 })
 
+// Add SCSS handling rule — compiles SCSS then extracts to CSS files
+webpackConfig.module.rules.push({
+  test: /\.scss$/i,
+  use: [
+    MiniCssExtractPlugin.loader,
+    {
+      loader: 'css-loader',
+      options: {
+        importLoaders: 1,
+        modules: false
+      }
+    },
+    {
+      loader: 'sass-loader',
+      options: {
+        // Use legacy @import API (cozy-sun-bear SCSS uses @import, not @use)
+        api: 'legacy'
+      }
+    }
+  ]
+})
+
 // Remove any existing MiniCssExtractPlugin instances and add our configured one
 webpackConfig.plugins = webpackConfig.plugins.filter(
   plugin => !(plugin instanceof MiniCssExtractPlugin)

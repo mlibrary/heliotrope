@@ -29,6 +29,12 @@ class EPubsController < CheckpointController
     @press = Press.where(subdomain: @subdomain).first
     @component = component
 
+    @cozy_features = {
+      restyledControls: @press&.use_new_epub_reader? || false,
+      maps: false,
+      notes: false
+    }
+
     CounterService.from(self, @presenter).count(request: 1)
 
     log_share_link_use
