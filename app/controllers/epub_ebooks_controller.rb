@@ -87,7 +87,9 @@ class EpubEbooksController < CheckpointController
         @noid = params[:id]
         raise(PageNotFoundError, "Princesse de Cleves NOID not valid!") unless ValidationService.valid_noid?(@noid)
         @presenter = Hyrax::PresenterFactory.build_for(ids: [@noid], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
-        raise(PageNotFoundError, "Princesse de Cleves ISBN not valid!") unless @presenter.parent.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }
+        # we're moving towards using the "new" reader, a.k.a. cozy-sun-bear-too, a.k.a. the "Princesse de Cleves" reader/uplift in places other than just...
+        # that book, but I'll leave this here, commented-out, for now.
+        # raise(PageNotFoundError, "Princesse de Cleves ISBN not valid!") unless @presenter.parent.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }
         @epub_ebook = Sighrax.from_presenter(@presenter)
         raise(NotAuthorizedError, "Non Electronic Publication") unless @epub_ebook.is_a?(Sighrax::EpubEbook)
       end
