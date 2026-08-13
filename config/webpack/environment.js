@@ -1,60 +1,9 @@
 const { generateWebpackConfig } = require('shakapacker')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-// Generate base config
-const webpackConfig = generateWebpackConfig()
-
-// Find and remove any existing CSS rules to avoid conflicts
-webpackConfig.module.rules = webpackConfig.module.rules.filter(rule => {
-  // Remove any rule whose test regex matches a plain .css file
-  if (rule.test instanceof RegExp && rule.test.test('test.css')) return false
-  return true
-})
-
-// Add our CSS handling rule — always extract to files so stylesheet_pack_tag works in all environments
-webpackConfig.module.rules.push({
-  test: /\.css$/i,
-  use: [
-    MiniCssExtractPlugin.loader,
-    {
-      loader: 'css-loader',
-      options: {
-        importLoaders: 0,
-        modules: false
-      }
-    }
-  ]
-})
-
-// Add SCSS handling rule — compiles SCSS then extracts to CSS files
-webpackConfig.module.rules.push({
-  test: /\.scss$/i,
-  use: [
-    MiniCssExtractPlugin.loader,
-    {
-      loader: 'css-loader',
-      options: {
-        importLoaders: 1,
-        modules: false
-      }
-    },
-    {
-      loader: 'sass-loader',
-      options: {
-        // Use legacy @import API (cozy-sun-bear SCSS uses @import, not @use)
-        api: 'legacy'
-      }
-    }
-  ]
-})
-
-// Remove any existing MiniCssExtractPlugin instances and add our configured one
-webpackConfig.plugins = webpackConfig.plugins.filter(
-  plugin => !(plugin instanceof MiniCssExtractPlugin)
-)
-webpackConfig.plugins.push(new MiniCssExtractPlugin({
-  filename: 'css/[name]-[contenthash:8].css',
-  chunkFilename: 'css/[name]-[contenthash:8].chunk.css'
-}))
-
-module.exports = webpackConfig
+// Shakapacker 9.x auto-wires the CSS and SCSS rules (css-loader + sass-loader +
+// mini-css-extract-plugin's loader) whenever css-loader/sass-loader are present,
+// and registers MiniCssExtractPlugin so stylesheet_pack_tag resolves the extracted
+// CSS. We rely on that built-in behavior rather than hand-rolling our own style
+// rules: the previous custom rules double-processed SCSS (a second scss rule ran
+// alongside Shakapacker's) and dropped the extracted CSS entry from the manifest.
+module.exports = generateWebpackConfig()

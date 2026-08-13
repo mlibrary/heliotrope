@@ -163,6 +163,11 @@ namespace :heliotrope do
 
       # ensure we're looking for the correct Press value in Fulcrum by editing the row before lookup
       row['Press'] = press
+
+      if row['DOI'] == 'https://doi.org/10.3998/mpub.13107428'
+        row['Author Bio'] = '<strong>Wanjirũ G. Mbure</strong> is Associate Professor of English and Film & Media Studies and Senior Associate Dean for Academic Culture & Faculty Development at William & Mary.'
+      end
+
       # A Monograph's press cannot technically be *changed* by this script as the lookup here will filter ISBN by...
       # press when a value is available in the Press column, which it always should be. In other words, changing a...
       # Monograph's press in TMM will cause a new Monograph to be created on Fulcrum. Handles and DOIs may need to...

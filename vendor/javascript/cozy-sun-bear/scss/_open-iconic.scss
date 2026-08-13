@@ -1,9 +1,13 @@
-$iconic-font-path: 'fonts/' !default;
+$iconic-font-path: './fonts/' !default;
 
+// Font URLs are written relative to this SCSS file (note the leading `./`) so
+// webpack's css-loader resolves them against scss/fonts/ and emits them as
+// hashed static assets. A bare `fonts/…` request would be treated as a module
+// specifier and fail with "Cannot find module 'fonts/open-iconic.eot'".
 @font-face {
   font-family: 'Icons';
-  src: url('fonts/open-iconic.eot');
-  src: url('fonts/open-iconic.eot?#iconic-sm') format('embedded-opentype'), url('fonts/open-iconic.woff') format('woff'), url('fonts/open-iconic.ttf') format('truetype'), url('fonts/open-iconic.otf') format('opentype'), url('fonts/open-iconic.svg#iconic-sm') format('svg');
+  src: url('./fonts/open-iconic.eot');
+  src: url('./fonts/open-iconic.eot?#iconic-sm') format('embedded-opentype'), url('./fonts/open-iconic.woff') format('woff'), url('./fonts/open-iconic.ttf') format('truetype'), url('./fonts/open-iconic.otf') format('opentype'), url('./fonts/open-iconic.svg#iconic-sm') format('svg');
   font-weight: normal;
   font-style: normal;
 }
