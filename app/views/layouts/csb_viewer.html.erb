@@ -75,9 +75,12 @@
   <% end %>
 
   <!-- CSS grid layout for the epub-ebooks (Princesse De Cleves) reader container.
-       Harmless for other readers since #epub only exists in epub_ebooks/show.html.erb -->
+       Scoped to #epub.too so it only targets the PdC reader. The standard reader in
+       e_pubs/show.html.erb also has an #epub element (without the "too" class), and
+       applying the grid there pushed its sole #reader child into a min-content column,
+       stopping it from filling 100% of #epub's width. -->
   <style>
-    #epub {
+    #epub.too {
       display: grid;
       grid-template-rows: 1fr;
       grid-template-columns: min-content min-content 1fr;

@@ -484,7 +484,7 @@
         });
 
         notesPanel.setAttribute("aria-hidden", "false");
-        notesPanel.parentElement.setAttribute("data-modal-actived", "true");
+        notesPanel.parentElement.setAttribute("data-modal-activated", "true");
         notesButton.classList.add('panel-open');
         notesButton.classList.remove('panel-closed');
         // resize EPUB
@@ -499,7 +499,7 @@
       const notesPanel = document.querySelector('#modal-notes');
       const notesButton = document.querySelector('#action-notes');
         notesPanel.setAttribute("aria-hidden", "true");
-        notesPanel.parentElement.setAttribute("data-modal-actived", "false");
+        notesPanel.parentElement.setAttribute("data-modal-activated", "false");
         notesButton.classList.add('panel-closed');
         notesButton.classList.remove('panel-open');
         // resize EPUB

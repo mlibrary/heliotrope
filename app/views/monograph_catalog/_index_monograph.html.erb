@@ -1,5 +1,5 @@
 <%# a slow-n-steady way to move towards using the "princess_de_cleves" reader elsewhere %>
-<% princess_de_cleves = @press.use_new_epub_reader || (@monograph_presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }) %>
+<% princess_de_cleves = @press&.use_new_epub_reader || (@monograph_presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }) %>
 <!-- ADMIN TOOLS (in spite of the CSS class name, these are necessary, not only for platform admins, but also for Press admins, editors and analysts) -->
 <div class="row platform-admin">
   <%# The outer conditional is to catch all roles... from Press analyst on up. Dunno if there's a better way. This seems to work (see view spec). %>
