@@ -161,6 +161,11 @@ namespace :heliotrope do
         end.join(';')
       end
 
+      # HELIO-5104 - temporary clean-up of an embarrasing author bio value (bad diacritic in CSV)
+      if row['DOI'] == 'https://doi.org/10.3998/mpub.13107428'
+        row['Author Bio'] = '<strong>Wanjirũ G. Mbure</strong> is Associate Professor of English and Film & Media Studies and Senior Associate Dean for Academic Culture & Faculty Development at William & Mary.'
+      end
+
       # ensure we're looking for the correct Press value in Fulcrum by editing the row before lookup
       row['Press'] = press
       # A Monograph's press cannot technically be *changed* by this script as the lookup here will filter ISBN by...
