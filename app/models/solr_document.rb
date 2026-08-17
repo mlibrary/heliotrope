@@ -29,19 +29,19 @@ class SolrDocument
     contributor:  ['contributor_tesim'],
     coverage:     ['location_tesim'],
     creator:      ['creator_tesim'],
-    date:         'date_created_tesim',
+    date:         'oai_date',
     description:  ['oai_description'],
     # format:       ['file_extent_tesim', 'file_format_tesim'],
     # See HELIO-4143 for definitions of identifiers and relations for IRUS
     identifier:   ['oai_handle', 'oai_doi', 'oai_preferred_isbn', 'identifier_ssim'],
-    relation:     ['oai_other_isbns'],
+    relation:     ['oai_relations'],
     # language:     'language_label_tesim',
     publisher:    'publisher_tesim', # or press here maybe?
-    # rights:       'oai_rights',
+    rights:       'oai_rights',
     # source:       ['source_tesim', 'isBasedOnUrl_tesim'],
     subject:      ['subject_tesim', 'keyword_tesim'],
     title:        'title_tesim',
-    type:         'resource_type_tesim'
+    type:         'oai_type'
   )
 
   def sets
@@ -55,7 +55,11 @@ class SolrDocument
                          'oai_doi',
                          'oai_preferred_isbn',
                          'oai_other_isbns',
-                         'oai_description'].include?(key)
+                         'oai_description',
+                         'oai_rights',
+                         'oai_relations',
+                         'oai_date',
+                         'oai_type'].include?(key)
     super
   end
 
@@ -85,6 +89,31 @@ class SolrDocument
     MarkdownService.markdown_as_text(self["description_tesim"].first) if self["description_tesim"].present?
   end
 
+  def oai_rights
+    rights = []
+    rights << if oai_open_access?
+                'info:eu-repo/semantics/openAccess'
+              else
+                'info:eu-repo/semantics/restrictedAccess'
+              end
+    rights << oai_cc_license if oai_open_access? && oai_cc_license.present?
+    rights.uniq
+  end
+
+  def oai_relations
+    (Array(oai_other_isbns) + oai_alt_identifier_relations).map(&:to_s).map(&:strip).reject(&:blank?).uniq
+  end
+
+  def oai_date
+    oai_normalized_date(Array(self['date_published_dtsim']).first).presence ||
+      Array(self['date_created_tesim']).first.to_s.strip.presence ||
+      oai_normalized_date(Array(self['date_uploaded_dtsi']).first).presence
+  end
+
+  def oai_type
+    (['info:eu-repo/semantics/book'] + Array(self['resource_type_tesim'])).map(&:to_s).map(&:strip).reject(&:blank?).uniq
+  end
+
   # Do content negotiation for AF models.
   use_extension(Hydra::ContentNegotiation)
 
@@ -93,4 +122,44 @@ class SolrDocument
     return 'http://schema.org/CreativeWork' if resource_type.blank?
     Hyrax::ResourceTypesService.microdata_type(resource_type.first)
   end
+
+  private
+
+    def oai_open_access?
+      open_access&.casecmp('yes')&.zero? || false
+    end
+
+    def oai_cc_license
+      Array(self['license_tesim']).first.to_s.strip.presence
+    end
+
+    def oai_alt_identifier_relations
+      relations = []
+
+      handle = oai_identifier_without_url_prefix(oai_handle, %r{\Ahttps?://hdl\.handle\.net/}i)
+      relations << "info:eu-repo/semantics/altIdentifier/hdl/#{handle}" if handle.present?
+
+      doi = oai_identifier_without_url_prefix(oai_doi, %r{\Ahttps?://doi\.org/}i)
+      relations << "info:eu-repo/semantics/altIdentifier/doi/#{doi}" if doi.present?
+
+      oai_isbn_identifiers.each do |isbn|
+        relations << "info:eu-repo/semantics/altIdentifier/isbn/#{isbn}"
+      end
+
+      relations
+    end
+
+    def oai_isbn_identifiers
+      ([oai_preferred_isbn] + Array(oai_other_isbns)).map { |isbn| isbn.to_s.gsub(/\s+/, '') }.reject(&:blank?).uniq
+    end
+
+    def oai_identifier_without_url_prefix(value, prefix_pattern)
+      value.to_s.sub(prefix_pattern, '').strip.presence
+    end
+
+    def oai_normalized_date(value)
+      return if value.blank?
+      return value.to_date.to_s if value.respond_to?(:to_date)
+      Time.zone.parse(value.to_s)&.to_date&.to_s
+    end
 end

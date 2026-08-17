@@ -9,9 +9,23 @@
 # contain Monographs (from all presses) *and* FileSets, so we override #models
 # to add FileSet and drop collections.
 class CatalogSearchBuilder < ::SearchBuilder
+  self.default_processor_chain += [
+    :filter_published_monographs_for_oai
+  ]
+
   # Include FileSets alongside the registered work types (Monograph), and omit
   # collection classes.
   def models
     work_classes + [::FileSet]
+  end
+
+  def filter_published_monographs_for_oai(solr_parameters)
+    oai_verbs = %w[ListRecords ListIdentifiers]
+    return unless oai_verbs.include?(blacklight_params[:verb].to_s)
+
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << '{!terms f=has_model_ssim}Monograph'
+    solr_parameters[:fq] << 'visibility_ssi:open'
+    solr_parameters[:fq] << '-suppressed_bsi:true'
   end
 end
