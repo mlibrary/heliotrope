@@ -1680,9 +1680,50 @@ footer.press {
   }
 
   // Leaflet images
+
+  /* Standard Layout Configurations */
   #image {
     height: 540px;
     width: 100% !important;
+
+    /* Target internal graphics frames for smooth hardware-accelerated transitions */
+    .leaflet-tile-pane,
+    .leaflet-overlay-pane {
+      transition: transform 0.25s ease-in-out, transform-origin 0.25s ease-in-out !important;
+    }
+  }
+
+  /* Custom control button UI formatting */
+  .leaflet-control-zoom a.leaflet-control-rotate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #444;
+  }
+
+  .leaflet-control-rotate {
+    background-image: url('leaflet-rotate.png');
+  }
+
+  .leaflet-control-rotate:hover {
+    background-color: #f4f4f4;
+    color: #000;
+  }
+
+  /* Explicitly hide the rotate button when fullscreen-hidden class is present */
+  .leaflet-control-zoom a.leaflet-control-rotate.fullscreen-hidden {
+    display: none !important;
+  }
+
+  /* Prevent browser-level pseudo scaling container elements */
+  #image.leaflet-pseudo-fullscreen,
+  #image:fullscreen,
+  #image:-webkit-full-screen,
+  #image:-moz-full-screen,
+  #image:-ms-fullscreen {
+    width: 100% !important;
+    height: 100% !important;
   }
 
   // non-Leaflet Resource page image (PDF thumbnails etc)

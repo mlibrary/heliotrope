@@ -1,44 +1,120 @@
 <%# https://github.com/mlibrary/heliotrope/issues/1127 %>
 <% content_for :head do %>
-    <meta name="turbolinks-cache-control" content="no-cache">
+  <meta name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
 <% riiif_url = "/image-service/#{file_set.id}#{file_set.browser_cache_breaker}/info.json" %>
 <div id="image" class="no-context-menu-or-drag"></div>
 <script>
-    $().ready(function() {
-        var map, layer;
-        map = L.map('image', {
-            center: [0, 0],
-            crs: L.CRS.Simple,
-            zoom: 0,
-            scrollWheelZoom: false,
-<% if file_set.allow_high_res_display? %>
-            fullscreenControl: true,
-            fullscreenControlOptions: { // optional
-                title:"View in fullscreen mode",
-                titleCancel:"Exit fullscreen mode"
-            }
-<% end %>
-        });
-        layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true } );
-        layer.addTo(map);
-        L.control.pan({ panOffset: 150 }).addTo(map);
-        // Detect fullscreen toggling
-        // Doesn't zoom in/out unless the browser has had a chance
-        // to enter fullscreen, hence the timeout.
-        // "TypeError: The expression cannot be converted to return the specified type."
-        // that prevents fullscreen toggle predates the code below,
-        // I suspect a bug in vendor/leaflet.fullscreen-1.5.1/Control.FullScreen.js
-        map.on('enterFullscreen', function() {
-          setTimeout(function() {
-            try { layer._fitBounds(); } catch (err) {}
-            }, 1000);
-        });
-        map.on('exitFullscreen', function() {
-          setTimeout(function() {
-            try { layer._fitBounds(); } catch (err) {}
-            }, 1000);
-        });
+  $().ready(function() {
+    var map, layer;
+    var currentAngle = 0; // Growth-based tracker for endless clockwise rotation
+    var rotateBtn;        // Scoped globally so handlers can toggle visibility overrides
+
+    map = L.map('image', {
+      center: [0,0],
+      crs: L.CRS.Simple,
+      zoom: 0,
+      scrollWheelZoom: false,
+      <% if file_set.allow_high_res_display? %>
+      fullscreenControl: true,
+      fullscreenControlOptions: {
+        title: "View in fullscreen mode",
+        titleCancel: "Exit fullscreen mode"
+      }
+      <% end %>
     });
+    layer = L.tileLayer.iiif("<%= riiif_url %>", { bestFit: true } );
+    layer.addTo(map);
+    L.control.pan({ panOffset: 150 }).addTo(map);
+
+    // Advanced precision pivot rotation applicator
+    function applyRotation(angle) {
+      var mapDiv = document.getElementById('image');
+      if (!mapDiv || !map) return;
+
+      var tilePane = mapDiv.querySelector('.leaflet-tile-pane');
+      var overlayPane = mapDiv.querySelector('.leaflet-overlay-pane');
+      var visuallyNormalizedAngle = angle % 360;
+
+      // Find the absolute geometric center point of the physical screen viewport frame
+      var viewCenterWidth = mapDiv.offsetWidth / 2;
+      var viewCenterHeight = mapDiv.offsetHeight / 2;
+
+      // Extract Leaflet's internal dragging/panning pixel offset translations
+      var paneOffset = typeof map._getMapPanePos === 'function' ? map._getMapPanePos() : { x: 0, y: 0 };
+
+      // Calculate the exact pivot vector point relative to the shifting pane coordinates
+      var pivotX = viewCenterWidth - paneOffset.x;
+      var pivotY = viewCenterHeight - paneOffset.y;
+
+      [tilePane, overlayPane].forEach(function(pane) {
+        if (pane) {
+          if (visuallyNormalizedAngle === 0) {
+            pane.style.transform = 'none';
+            pane.style.transformOrigin = 'center center';
+          } else {
+            // Force the transformation origin pivot to latch exactly onto the viewport center coordinates
+            pane.style.transformOrigin = pivotX + 'px ' + pivotY + 'px';
+            pane.style.transform = 'rotate(' + visuallyNormalizedAngle + 'deg)';
+          }
+        }
+      });
+
+      // Force layout recalculation
+      setTimeout(function() {
+        map.invalidateSize();
+      }, 100);
+    }
+
+    // Initialize custom button inside zoom control panel
+    setTimeout(function() {
+      var controlBar = document.querySelector('.leaflet-control-zoom');
+
+      if (controlBar) {
+        rotateBtn = L.DomUtil.create('a', 'leaflet-control-rotate', controlBar);
+        rotateBtn.href = '#';
+        rotateBtn.title = 'Rotate 90° Clockwise';
+        rotateBtn.setAttribute('role', 'button');
+        rotateBtn.setAttribute('aria-label', 'Rotate 90 degrees clockwise');
+
+        L.DomEvent.disableClickPropagation(rotateBtn);
+
+        L.DomEvent.on(rotateBtn, 'click', function (e) {
+          L.DomEvent.stop(e);
+          currentAngle += 90; // Increment seamlessly to bypass 270->0 spring snaps
+          applyRotation(currentAngle);
+        });
+      }
+    }, 200);
+
+    // Keep the pivot center perfectly synchronized whenever the user pans or zooms the map image
+    map.on('moveend zoomend', function() {
+      if (currentAngle !== 0) {
+        applyRotation(currentAngle);
+      }
+    });
+
+    // Reset rotation state entirely when entering fullscreen to prevent canvas breakage
+    map.on('enterFullscreen', function() {
+      if (rotateBtn) {
+        rotateBtn.classList.add('fullscreen-hidden');
+      }
+      applyRotation(0);
+      setTimeout(function() {
+        try { layer._fitBounds(); } catch (err) {}
+      }, 250);
+    });
+
+    // Re-apply standard view rotation state upon exit
+    map.on('exitFullscreen', function() {
+      if (rotateBtn) {
+        rotateBtn.classList.remove('fullscreen-hidden');
+      }
+      setTimeout(function() {
+        try { layer._fitBounds(); } catch (err) {}
+        applyRotation(currentAngle);
+      }, 250);
+    });
+  });
 </script>
