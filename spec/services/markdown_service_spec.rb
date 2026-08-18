@@ -8,10 +8,31 @@ RSpec.describe MarkdownService do
     let(:rvalue) { described_class.markdown(html) }
 
     it "renders html from markdown" do
-      expect(rvalue).to eq("This is <em>italics</em> and this is</p>\n\n<p>a paragraph</p>\n\n<p><strong>bold</strong> a line<br>\nbreak and this is <del>strikethrough</del>")
+      # note the newline at the end is something Redcarpet always adds after its closing block tags
+      expect(rvalue).to eq("<p>This is <em>italics</em> and this is</p>\n\n<p>a paragraph</p>\n\n<p><strong>bold</strong> a line<br>\nbreak and this is <del>strikethrough</del></p>\n")
     end
 
-    it 'link internal in same tab, with an added `fulcrum-markdown-link` class for `text-decoration` purposes' do
+    it 'does not alter the content of block tags (paragraph), but we strip the paragraph tags here' do
+      expect(described_class.markdown("<p>Jimmy Doe is _Professor_ of English n Drama at NYU</p>"))
+        .to eq('Jimmy Doe is _Professor_ of English n Drama at NYU')
+    end
+
+    it 'does not alter the content of block tags (div)' do
+      expect(described_class.markdown("<div>Jimmy Doe is _Professor_ of English n Drama at NYU</div>"))
+        .to eq("<div>Jimmy Doe is _Professor_ of English n Drama at NYU</div>\n")
+    end
+
+    it 'does not alter the same content when block tags are omitted (note we strip the p tags Redcarpet would normally add to the output here' do
+      expect(described_class.markdown("Jimmy Doe is _Professor_ of English n Drama at NYU"))
+        .to eq('Jimmy Doe is <em>Professor</em> of English n Drama at NYU')
+    end
+
+    it 'does not strip outer p tags when they were in the input' do
+      expect(described_class.markdown("<p>\n\n\n<strong>Jimmy Doe</strong> is Professor of English n Drama at NYU.\n\n\n</p>\n\n\n\n<p><strong>Timmy McGinty </strong>is a performance playwright artiste as well as Professor of Designs at the University of Narnia.\n\n\n</p>"))
+        .to eq("<p>\n\n\n<strong>Jimmy Doe</strong> is Professor of English n Drama at NYU.\n\n\n</p>\n\n<p><strong>Timmy McGinty </strong>is a performance playwright artiste as well as Professor of Designs at the University of Narnia.\n\n\n</p>\n")
+    end
+
+    it 'link internal in same tab, with an added `fulcrum-markdown-link` class for `text-decoration` purposes, and no wrapping p tag' do
       expect(described_class.markdown('www.fulcrum.org')).to eq('<a href="http://www.fulcrum.org" class="fulcrum-markdown-link">www.fulcrum.org</a>')
     end
 
