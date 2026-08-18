@@ -176,6 +176,15 @@ RSpec.describe "Utilities", type: :request do
           expect(response.body).to include("Sample Solr Query Time")
           expect(response.body).to include("Status Page benchmark elapsed real time")
         end
+
+        it 'shows the status page when the sample Solr query fails' do
+          allow(ActiveFedora::SolrService).to receive(:query).and_raise(StandardError, 'Solr unavailable')
+
+          get status_utility_path
+
+          expect(response).to have_http_status(:success)
+          expect(response.body).to include('Sample Solr Query Time (in seconds): DOWN')
+        end
       end
     end
 
