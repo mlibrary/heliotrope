@@ -189,3 +189,45 @@ figure:hover #fulcrum-embed-link, figure:active #fulcrum-embed-link {
 .embed-static-image {
   height: 100%;
 }
+
+
+// Leaflet image rotation stuff
+
+.leaflet-control-rotate {
+  background-image: url('leaflet-rotate.png');;
+}
+
+/* Embedded Tile Pane Transformation Parameters */
+#image {
+  .leaflet-tile-pane,
+  .leaflet-overlay-pane {
+    /* Maintain crisp transition acceleration paths */
+    transition: transform 0.25s ease-in-out, transform-origin 0.25s ease-in-out !important;
+  }
+}
+
+/* Custom button alignment styles */
+.leaflet-control-zoom a.leaflet-control-rotate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #444;
+
+  .oi {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 26px;
+    vertical-align: middle;
+  }
+}
+
+.leaflet-control-rotate:hover {
+  background-color: #f4f4f4;
+  color: #000;
+}
+
+/* Forced visibility drop inside iframe fullscreen frames */
+.leaflet-control-zoom a.leaflet-control-rotate.fullscreen-hidden {
+  display: none !important;
+}
