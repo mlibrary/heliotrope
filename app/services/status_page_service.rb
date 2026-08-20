@@ -104,6 +104,9 @@ module StatusPageService
       ActiveFedora::SolrService.query("Brushed in Light Calligraphy in East Asian Cinema", df: 'title_tesim', rows: 1)
     end
     time.real
+  rescue StandardError => e
+    Rails.logger.error("[StatusPageService Solr Sample Query Error] #{e}")
+    'DOWN'
   end
 
   instrument_method
