@@ -124,4 +124,81 @@ describe SolrDocument do
       it { is_expected.to eq nil }
     end
   end
+
+  describe '#oai_rights' do
+    subject { instance.oai_rights }
+
+    context 'with open access and a license' do
+      let(:attributes) { { 'open_access_tesim' => ['yes'], 'license_tesim' => ['https://creativecommons.org/licenses/by-nc/4.0/'] } }
+
+      it 'returns eu-repo open access and the license value' do
+        expect(subject).to eq(
+          ['info:eu-repo/semantics/openAccess', 'https://creativecommons.org/licenses/by-nc/4.0/']
+        )
+      end
+    end
+
+    context 'without open access' do
+      let(:attributes) { { 'open_access_tesim' => ['no'], 'license_tesim' => ['https://creativecommons.org/licenses/by-nc/4.0/'] } }
+
+      it { is_expected.to eq(['info:eu-repo/semantics/restrictedAccess']) }
+    end
+  end
+
+  describe '#oai_relations' do
+    subject { instance.oai_relations }
+
+    let(:attributes) { { 'id' => '999999999' } }
+
+    before do
+      allow(instance).to receive(:oai_handle).and_return('https://hdl.handle.net/2027/fulcrum.999999999')
+      allow(instance).to receive(:oai_doi).and_return('https://doi.org/10.3998/fulcrum.999999999')
+      allow(instance).to receive(:oai_preferred_isbn).and_return('9780472078189')
+      allow(instance).to receive(:oai_other_isbns).and_return([' 9780472058181 '])
+    end
+
+    it 'includes existing relations and typed altIdentifier relations' do
+      expect(subject).to eq(
+        [
+          '9780472058181',
+          'info:eu-repo/semantics/altIdentifier/hdl/2027/fulcrum.999999999',
+          'info:eu-repo/semantics/altIdentifier/doi/10.3998/fulcrum.999999999',
+          'info:eu-repo/semantics/altIdentifier/isbn/9780472078189',
+          'info:eu-repo/semantics/altIdentifier/isbn/9780472058181'
+        ]
+      )
+    end
+  end
+
+  describe '#oai_date' do
+    subject { instance.oai_date }
+
+    context 'with date_published present' do
+      let(:attributes) { { 'date_published_dtsim' => ['2020-06-30T15:00:00Z'], 'date_created_tesim' => ['2019'], 'date_uploaded_dtsi' => ['2021-01-01T00:00:00Z'] } }
+
+      it { is_expected.to eq('2020-06-30') }
+    end
+
+    context 'without date_published and with date_created present' do
+      let(:attributes) { { 'date_created_tesim' => ['2019'], 'date_uploaded_dtsi' => ['2021-01-01T00:00:00Z'] } }
+
+      it { is_expected.to eq('2019') }
+    end
+
+    context 'with only date_uploaded present' do
+      let(:attributes) { { 'date_uploaded_dtsi' => ['2021-01-01T00:00:00Z'] } }
+
+      it { is_expected.to eq('2021-01-01') }
+    end
+  end
+
+  describe '#oai_type' do
+    subject { instance.oai_type }
+
+    let(:attributes) { { 'resource_type_tesim' => ['Text'] } }
+
+    it 'puts the eu-repo type first' do
+      expect(subject).to eq(['info:eu-repo/semantics/book', 'Text'])
+    end
+  end
 end
