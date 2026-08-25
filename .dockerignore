@@ -1,0 +1,5 @@
+/log/*
+/tmp/*
+.git
+public/packs
+node_modules

@@ -165,8 +165,14 @@ gem "nokogiri", ">= 1.13.6"
 
 gem "okcomputer", "~> 1.18.4"
 
+# This is needed in Hyrax 4, but doesn't work on Debian Trixie so we'll point
+# it at this commit branch in someone's fork. Yikes. Hopefully this dependancy is gone in
+# Hyrax 5.
+# https://github.com/rtomayko/posix-spawn/pull/93
+gem "posix-spawn", git: "https://github.com/casperisfine/posix-spawn", ref: "0fce38ed5458b638eda5f3bb711903424a4366db"
+
 # Force epub search results to be sentences
-gem 'pragmatic_segmenter', '~> 0.3'
+gem 'pragmatic_segmenter', '~> 0.3.24'
 
 # Generate PDFs (e.g. watermarking/stamping downloaded PDF ebooks)
 gem 'prawn', '~> 2.2'
@@ -201,7 +207,7 @@ gem 'sinatra', '>= 0.9.2'
 gem 'sprockets', '3.7.2'
 
 # sqlite for epub indexing
-gem 'sqlite3', '1.4.2'
+gem 'sqlite3', '~> 2.9.5'
 
 # SwaggerClient - the Ruby gem for the COUNTER_SUSHI5_0 API
 gem 'swagger_client', git: 'https://github.com/mlibrary/swagger_client', branch: 'master'

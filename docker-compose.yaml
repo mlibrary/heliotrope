@@ -1,36 +1,241 @@
-version: '3.3'
-
 services:
-
   db:
-    image: mysql:5.7
+    image: mariadb:10.11
+    ports:
+      - "3306:3306"
     volumes:
-    - db_data:/var/lib/mysql
+      - db-data:/var/lib/mysql
+      - ./docker/mysql-init:/docker-entrypoint-initdb.d:ro
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: helio-admin
       MYSQL_USER: helio
       MYSQL_PASSWORD: helio
-      MYSQL_DATABASE: helio
+      MYSQL_DATABASE: heliotrope_development
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    networks:
+      - heliotrope
 
-  web:
-    depends_on:
-    - db
-    build: .
+  solr:
+    image: solr:6-slim
     ports:
-    - "3000:3000"
+      - "8983:8983"
+    environment:
+      - SOLR_JAVA_MEM=-Xms1024m -Xmx1024m
+      - SOLR_HEAP=1024m
+    command: solr-precreate heliotrope-development /opt/solr-config/heliotrope
     volumes:
-    - .:/app
-    - gem_cache:/gems
-    - node_modules:/app/node_modules
+      - ./solr/config:/opt/solr-config/heliotrope:ro
+      - solr-data:/var/solr
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1:8983/solr/admin/info/system >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+    networks:
+      - heliotrope
+
+  fcrepo:
+    # image: ghcr.io/samvera/fcrepo4:4.7.5
+    image: ghcr.io/samvera/fcrepo4:4.7.5@sha256:83fbdb371402e9fcd1e8a055ea1d61a5e84ae6c3c229fccb0965ad6f434d94d2
+    volumes:
+      - fcrepo-data:/data
+    ports:
+      - 8080:8080
+    networks:
+      - heliotrope
+
+  redis:
+    image: redis:6-buster
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+    networks:
+      - heliotrope
+
+  resque:
+    depends_on:
+      app:
+        condition: service_started
+      db:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      fcrepo:
+        condition: service_started
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MYSQL_USER: helio
+      MYSQL_PASSWORD: helio
+      MYSQL_DATABASE: heliotrope_development
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      RAILS_ENV: development
+      SOLR_URL: http://solr:8983/solr/heliotrope-development
+      FEDORA_URL: http://fcrepo:8080/rest
+      CHECKPOINT_DATABASE_URL: 'sqlite://db/checkpoint-development.sqlite3'
+      KEYCARD_DATABASE_URL: 'sqlite://db/keycard-development.sqlite3'
+    volumes:
+      - .:/app
+      - gem_cache:/gems
+      - node_modules:/app/node_modules
+    entrypoint: ["/bin/sh", "/app/docker/entrypoints/docker-resque.sh"]
+    healthcheck:
+      disable: true
+    stop_signal: SIGQUIT
+    command: bundle exec rake resque:pool
+    networks:
+      - heliotrope
+
+  app:
+    depends_on:
+      db:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      fcrepo:
+        condition: service_started
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - gem_cache:/gems
+      - node_modules:/app/node_modules
     restart: always
     environment:
+      MYSQL_USER: helio
+      MYSQL_PASSWORD: helio
+      MYSQL_DATABASE: heliotrope_development
+      MYSQL_ROOT_PASSWORD: helio-admin
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
       RAILS_ENV: development
-      DATABASE_URL: 'mysql2://helio:helio@db:3306/helio'
-      # CHECKPOINT_DATABASE_URL: 'mysql2://helio:helio@db:3306/checkpoint'
       CHECKPOINT_DATABASE_URL: 'sqlite://db/checkpoint-development.sqlite3'
+      KEYCARD_DATABASE_URL: 'sqlite://db/keycard-development.sqlite3'
+      SOLR_URL: http://solr:8983/solr/heliotrope-development
+      FEDORA_URL: http://fcrepo:8080/rest
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    command:
+      - bin/rails
+      - s
+      - -b
+      - 0.0.0.0
+    entrypoint: ["/bin/sh", "/app/docker/entrypoints/docker-app.sh"]
+    networks:
+      - heliotrope
+
+  # ── Test profile services ──────────────────────────────────────────────────
+  # Start infra:  bin/compose --profile test up -d
+  # Run all specs: bin/compose --profile test run --rm test
+  # Run one spec:  bin/compose --profile test run --rm test bundle exec rspec spec/path/to_spec.rb
+
+  solr-test:
+    profiles: [test]
+    image: solr:6-slim
+    ports:
+      - "8985:8983"
+    environment:
+      - SOLR_JAVA_MEM=-Xms512m -Xmx512m
+      - SOLR_HEAP=512m
+    command: solr-precreate hydra-test /opt/solr-config/heliotrope
+    volumes:
+      - ./solr/config:/opt/solr-config/heliotrope:ro
+      - solr-test-data:/var/solr
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1:8983/solr/admin/info/system >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+    networks:
+      - heliotrope
+
+  fcrepo-test:
+    profiles: [test]
+    image: ghcr.io/samvera/fcrepo4:4.7.5@sha256:83fbdb371402e9fcd1e8a055ea1d61a5e84ae6c3c229fccb0965ad6f434d94d2
+    volumes:
+      - fcrepo-test-data:/data
+    ports:
+      - 8986:8080
+    networks:
+      - heliotrope
+
+  test:
+    profiles: [test]
+    depends_on:
+      db:
+        condition: service_healthy
+      solr-test:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      fcrepo-test:
+        condition: service_started
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      RAILS_ENV: test
+      MYSQL_USER: helio
+      MYSQL_PASSWORD: helio
+      MYSQL_DATABASE: heliotrope_test
+      MYSQL_ROOT_PASSWORD: helio-admin
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      SOLR_URL: http://solr-test:8983/solr/hydra-test
+      FEDORA_URL: http://fcrepo-test:8080/rest
+      CHECKPOINT_DATABASE_URL: 'sqlite://db/checkpoint-test.sqlite3'
+      KEYCARD_DATABASE_URL: 'sqlite://db/keycard-test.sqlite3'
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    volumes:
+      - .:/app
+      - gem_cache:/gems
+      - node_modules:/app/node_modules
+    entrypoint: ["/bin/sh", "/app/docker/entrypoints/docker-test.sh"]
+    command: bundle exec rspec
+    networks:
+      - heliotrope
+
+
 volumes:
   gem_cache:
   node_modules:
-  db_data:
+  db-data:
     driver: local
+  fcrepo-data:
+  solr-data:
+  redis-data:
+  solr-test-data:
+  fcrepo-test-data:
+
+networks:
+  heliotrope:
+    driver: bridge
