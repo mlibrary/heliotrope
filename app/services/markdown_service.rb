@@ -56,8 +56,14 @@ class MarkdownService
 
   def self.markdown(value)
     rendered_html = md.render(value)
-    outer_p_tags_removed = Regexp.new(/\A<p>(.*)<\/p>\Z/m).match(rendered_html)
-    rendered_html = outer_p_tags_removed.nil? ? rendered_html : outer_p_tags_removed[1]
+
+    # Strip outer p tags only, which Redcarpet always adds unless the input contains block-level structures
+    # we don't want p tags wrapping single lines of plain text or inline links.
+    # This is the problem with us leaning on Markdown rendering for simple text formatting and auto-linking
+    if rendered_html.scan(/<p>/).size == 1
+      rendered_html.sub!(/\A<p>(.*)<\/p>\n?\z/m, '\1')
+    end
+
     # redcarpet's hard_wrap causes unwanted line breaks, the first gsub seems to be the most targeted way to remove them
     # with the second gsub allowing us to unescape non-breaking spaces to format certain fields per authors' requests
     rendered_html.gsub(/<\/th><br>/, '</th>').gsub(/&amp;nbsp;/, '&nbsp;').html_safe # rubocop:disable Rails/OutputSafety
