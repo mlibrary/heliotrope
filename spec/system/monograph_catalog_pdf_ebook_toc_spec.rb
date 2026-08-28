@@ -44,8 +44,7 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
       end
 
       context 'restricted' do
-        let(:parent) { Sighrax.from_noid(monograph.id) }
-        before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+        before { restrict_monograph!(monograph.id) }
 
         it 'has links but no buttons' do
           visit monograph_catalog_path(monograph)
@@ -73,8 +72,7 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
       end
 
       context 'restricted' do
-        let(:parent) { Sighrax.from_noid(monograph.id) }
-        before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+        before { restrict_monograph!(monograph.id) }
 
         it 'has no links and no buttons' do
           visit monograph_catalog_path(monograph)
@@ -106,8 +104,7 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
       end
 
       context 'restricted' do
-        let(:parent) { Sighrax.from_noid(monograph.id) }
-        before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+        before { restrict_monograph!(monograph.id) }
 
         it 'has links and buttons (buttons because OA takes precedence over restricted)' do
           visit monograph_catalog_path(monograph)
@@ -135,8 +132,7 @@ RSpec.describe "Monograph Catalog pdf_ebook TOC", type: :system, browser: true d
       end
 
       context 'restricted' do
-        let(:parent) { Sighrax.from_noid(monograph.id) }
-        before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+        before { restrict_monograph!(monograph.id) }
 
         it 'has no links and no buttons' do
           visit monograph_catalog_path(monograph)

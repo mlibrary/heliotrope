@@ -48,8 +48,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         end
 
         context 'restricted' do
-          let(:parent) { Sighrax.from_noid(monograph.id) }
-          before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+          before { restrict_monograph!(monograph.id) }
 
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
@@ -81,8 +80,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         end
 
         context 'restricted' do
-          let(:parent) { Sighrax.from_noid(monograph.id) }
-          before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+          before { restrict_monograph!(monograph.id) }
 
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
@@ -97,6 +95,8 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
       end
     end
 
+    # Since HELIO/UnpackJob started producing EPUB chapters for free flow (reflowable) EPUBs too,
+    # these get chapter download buttons just like the page image EPUBs below.
     context 'Press epub_chapter_downloads set to true' do
       let(:epub_chapter_downloads) { true }
 
@@ -104,30 +104,25 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         let(:open_access) { 'yes' }
 
         context 'not restricted' do
-          it 'has links but no buttons' do
+          it 'has links and buttons' do
             visit monograph_catalog_path(monograph)
             click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
-              expect(page).not_to have_xpath(".//span[@title='Read section']")
-              # expect(page).not_to have_xpath(".//i[@title='Download section']")
-              expect(page).not_to have_content("Download")
+              expect(page).to have_content("Download")
             end
           end
         end
 
         context 'restricted' do
-          let(:parent) { Sighrax.from_noid(monograph.id) }
-          before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+          before { restrict_monograph!(monograph.id) }
 
-          it 'has links but no buttons' do
+          it 'has links and buttons (buttons because OA takes precedence over restricted)' do
             visit monograph_catalog_path(monograph)
             click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
-              expect(page).not_to have_xpath(".//span[@title='Read section']")
-              # expect(page).not_to have_xpath(".//i[@title='Download section']")
-              expect(page).not_to have_content("Download")
+              expect(page).to have_content("Download")
             end
           end
         end
@@ -137,27 +132,24 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         let(:open_access) { nil }
 
         context 'not restricted' do
-          it 'has links but no buttons' do
+          it 'has links and buttons' do
             visit monograph_catalog_path(monograph)
             click_on("Contents")
             within("#toc") do
               expect(page).to have_xpath(".//a[@class='toc-link']")
-              expect(page).not_to have_xpath(".//span[@title='Read section']")
-              expect(page).not_to have_content("Download")
+              expect(page).to have_content("Download")
             end
           end
         end
 
         context 'restricted' do
-          let(:parent) { Sighrax.from_noid(monograph.id) }
-          before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+          before { restrict_monograph!(monograph.id) }
 
-          it 'has links but no buttons' do
+          it 'has no links and no buttons' do
             visit monograph_catalog_path(monograph)
             click_on("Contents")
             within("#toc") do
               expect(page).not_to have_xpath(".//a[@class='toc-link']")
-              expect(page).not_to have_xpath(".//span[@title='Read section']")
               expect(page).not_to have_content("Download")
             end
           end
@@ -188,8 +180,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         end
 
         context 'restricted' do
-          let(:parent) { Sighrax.from_noid(monograph.id) }
-          before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+          before { restrict_monograph!(monograph.id) }
 
           it 'has links and no buttons' do
             visit monograph_catalog_path(monograph)
@@ -219,8 +210,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         end
 
         context 'restricted' do
-          let(:parent) { Sighrax.from_noid(monograph.id) }
-          before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+          before { restrict_monograph!(monograph.id) }
 
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
@@ -253,8 +243,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         end
 
         context 'restricted' do
-          let(:parent) { Sighrax.from_noid(monograph.id) }
-          before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+          before { restrict_monograph!(monograph.id) }
 
           it 'has links and buttons (buttons because OA takes precedence over restricted)' do
             visit monograph_catalog_path(monograph)
@@ -282,8 +271,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
         end
 
         context 'restricted' do
-          let(:parent) { Sighrax.from_noid(monograph.id) }
-          before { Greensub::Component.create!(identifier: parent.resource_token, name: parent.title, noid: parent.noid) }
+          before { restrict_monograph!(monograph.id) }
 
           it 'has links but no buttons' do
             visit monograph_catalog_path(monograph)
