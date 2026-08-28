@@ -74,11 +74,13 @@ end
 ENV['RAILS_SYSTEM_TESTING_SCREENSHOT'] = "simple"
 
 require 'capybara/rspec'
-require 'webdrivers'
 require 'selenium-webdriver'
 
-# Needed for session/cookies, in version 4 we won't need this anymore
-Webdrivers.cache_time = 86_400
+# Chromium and chromedriver are installed together via apt in the Docker image
+# (see Dockerfile), so they are always version-matched and available on PATH.
+# We deliberately don't use the `webdrivers` gem to manage/download a
+# chromedriver binary, since that would require network access and could pull
+# a driver version that doesn't match the pinned system Chromium.
 
 # We need a large screen size for CozySunBear system specs in order to get 2-up
 # pages and other things
@@ -88,11 +90,28 @@ Capybara.register_driver :headless_chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   [
     "headless",
-    "window-size=1280x1280",
-    "disable-gpu" # https://developers.google.com/web/updates/2017/04/headless-chrome
+    "window-size=1400x1400",
+    "disable-gpu", # https://developers.google.com/web/updates/2017/04/headless-chrome
+    "no-sandbox", # required to run Chrome as a container process without a user namespace/seccomp sandbox
+    "disable-dev-shm-usage", # avoid crashes from Docker's small default /dev/shm size
+    # Our pages embed third-party content (YouTube/Vimeo iframes, Google Tag Manager, fonts etc).
+    # Chrome will not fire the page load event until those have loaded or failed, and Selenium's
+    # `Navigate`/`click` commands block until the page load completes. Where the network is slow or
+    # firewalled that means a Net::ReadTimeout instead of a test result, and where it *is* available
+    # it makes system specs slow and non-deterministic. Resolving everything but the Capybara server
+    # to NOTFOUND makes those requests fail instantly.
+    "host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost",
+    "disable-background-networking", # no component/variations/safe-browsing chatter
+    "disable-search-engine-choice-screen",
+    "no-first-run",
+    "no-default-browser-check"
   ].each { |arg| options.add_argument(arg) }
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
 
 Capybara.javascript_driver = :headless_chrome
+
+# The default of 2 seconds is not enough for this app's heavier, JS-driven pages (Blacklight facets,
+# tabs, CozySunBear), where finders regularly run while a page/AJAX response is still in flight.
+Capybara.default_max_wait_time = 10

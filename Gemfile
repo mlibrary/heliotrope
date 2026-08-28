@@ -51,7 +51,7 @@ group :development, :test do
   # Adds support for Capybara system testing and selenium driver
   # This is picky, fiddly stuff requiring rails/capybara/etc versions to be in sync
   gem 'capybara', '~> 3.29'
-  gem 'webdrivers', '~> 5.0'
+  gem 'selenium-webdriver', '~> 4.9'
 end
 
 group :development do
@@ -193,7 +193,7 @@ gem 'riiif', '2.8.1'
 gem 'rsolr', '>= 1.1.2', '< 3'
 
 # Use Zip to extract EPubs
-gem "rubyzip", ">= 1.3.0"
+gem "rubyzip", ">= 1.3.0", "< 3.0" # 3.x changes Entry#extract behavior in ways incompatible with UnpackJob
 
 # to connect to Fulcrum and Firebrand's SFTP servers
 gem 'net-sftp', '~> 4.0'
@@ -252,7 +252,6 @@ group :development, :test do
   # rspec. Specifically used with circleci so we can get timings for parallelism
   gem 'rspec_junit_formatter'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rspec-repeat', '~> 1.0.2'
   gem 'rubocop', '1.22'
   gem 'rubocop-rails', '2.12.2'
   gem 'rubocop-rails_config', '1.7.3'
