@@ -28,10 +28,15 @@ class WebglsController < ApplicationController
   end
 
   def file
-    webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(params[:id], 'webgl'))
+    return head :no_content, status: :not_found unless authorize_file_access?
 
-    file = webgl.file(params[:file] + "." + params[:format])
-    file = Rails.root + file if webgl.root_path.blank?
+    filepath = UnpackService.root_path_from_noid(params[:id], 'webgl')
+    webgl = Webgl::Unity.from_directory(filepath)
+    base_dir = webgl.root_path.presence || filepath
+    base_dir = Rails.root.to_s if webgl.root_path.blank? && !Dir.exist?(filepath)
+
+    file = UnpackService.safe_path(base_dir, "#{params[:file]}.#{params[:format]}")
+    return head :no_content, status: :not_found if file.blank?
 
     # Need to match apache's XSendFilePath configuration
     file = file.to_s.sub(/releases\/\d+/, "current")
@@ -46,4 +51,20 @@ class WebglsController < ApplicationController
     Rails.logger.info("WebglsController.file(#{params[:file] + '.' + params[:format]}) raised #{e} #{e.backtrace.join("\n")}")
     head :no_content, status: :not_found
   end
+
+  private
+
+    def authorize_file_access?
+      return false unless ValidationService.valid_noid?(params[:id])
+
+      entity = Sighrax.from_noid(params[:id])
+      return true unless entity.valid?
+      return false if entity.tombstone?
+
+      return true if entity.published? || entity.parent.published?
+      return true if current_ability.can?(:read, params[:id])
+      return true if FeaturedRepresentative.where(file_set_id: params[:id]).any?
+
+      false
+    end
 end
