@@ -48,11 +48,11 @@
        poster="<%= hyrax.download_path(file_set.id, file: 'jpeg') %>"
        <%= raw file_set.closed_captions.present? ? 'data-transcript-div="video-hidden-transcript-container" data-lyrics-mode' : 'data-include-transcript="false"' %>>
   <source src="<%= hyrax.download_path(file_set, file: 'mp4') %>" type="video/mp4" />
-  <% if file_set.closed_captions.present? %><%# kind="subtitles" not "captions" due to https://github.com/mlibrary/heliotrope/issues/1234 %>
-    <track kind="subtitles" src="<%= hyrax.download_path(file_set.id, file: 'captions_vtt') %>" srclang="en" label="English"  />
+  <% file_set.closed_caption_tracks.each do |track| %><%# kind="subtitles" not "captions" due to https://github.com/mlibrary/heliotrope/issues/1234 %>
+    <track kind="subtitles" src="<%= hyrax.download_path(file_set.id, file: 'captions_vtt', lang: track[:language_tag]) %>" srclang="<%= track[:language_tag] %>" label="<%= track[:label] %>" />
   <% end %>
-  <% if file_set.visual_descriptions.present? %>
-    <track kind="descriptions" src="<%= hyrax.download_path(file_set, file: 'descriptions_vtt') %>" srclang="en" label="English"  />
+  <% file_set.visual_description_tracks.each do |track| %>
+    <track kind="descriptions" src="<%= hyrax.download_path(file_set, file: 'descriptions_vtt', lang: track[:language_tag]) %>" srclang="<%= track[:language_tag] %>" label="<%= track[:label] %>" />
   <% end %>
   Your browser does not support the video tag.
 </video>

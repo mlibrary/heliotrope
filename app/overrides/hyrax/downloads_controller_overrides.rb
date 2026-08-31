@@ -7,9 +7,9 @@ Hyrax::DownloadsController.class_eval do # rubocop:disable Metrics/BlockLength
 
     def show # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       if closed_captions?
-        render plain: presenter.closed_captions
+        render plain: CaptionService.for_language(presenter.closed_captions, params[:lang])
       elsif visual_descriptions?
-        render plain: presenter.visual_descriptions
+        render plain: CaptionService.for_language(presenter.visual_descriptions, params[:lang])
       elsif embed_css?
         # try to prevent browsers caching these tiny CSS files, so that any changes will be picked up immediately
         response.set_header('Last-Modified', Time.now.httpdate)

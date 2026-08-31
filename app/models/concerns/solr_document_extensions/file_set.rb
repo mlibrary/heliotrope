@@ -53,7 +53,8 @@ module SolrDocumentExtensions
     end
 
     def closed_captions
-      Array(self['closed_captions_tesim']).first
+      # NB: this is a multi-value field (one WebVTT "file" per language). See CaptionService.
+      Array(self['closed_captions_tesim'])
     end
 
     def content_type
@@ -117,7 +118,8 @@ module SolrDocumentExtensions
     end
 
     def visual_descriptions
-      Array(self['visual_descriptions_tesim']).first
+      # NB: this is a multi-value field (one WebVTT "file" per language). See CaptionService.
+      Array(self['visual_descriptions_tesim'])
     end
   end
 end

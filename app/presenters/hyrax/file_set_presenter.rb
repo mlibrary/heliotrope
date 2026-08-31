@@ -53,6 +53,16 @@ module Hyrax
     # HELIO-4634
     delegate :member_of_collection_ids, to: :parent
 
+    # Parsed, per-language WebVTT "tracks" used to write <track> elements in the media partials.
+    # See CaptionService and app/overrides/hyrax/downloads_controller_overrides.rb
+    def closed_caption_tracks
+      CaptionService.parse(closed_captions)
+    end
+
+    def visual_description_tracks
+      CaptionService.parse(visual_descriptions)
+    end
+
     def monograph_id
       Array(solr_document['monograph_id_ssim']).first
     end
