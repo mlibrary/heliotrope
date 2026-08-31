@@ -59,8 +59,6 @@ RSpec.describe EmbedController, type: :controller do
         expect(response).not_to have_http_status(:unauthorized)
         expect(response).to be_successful
         expect(response.headers.key?("X-Frame-Options")).to be false
-        expect(response.headers.key?("Content-Security-Policy")).to be true
-        expect(response.headers["Content-Security-Policy"]).to eq "frame-ancestors 'self' *"
       end
     end
 

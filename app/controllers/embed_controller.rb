@@ -4,13 +4,16 @@ class EmbedController < ApplicationController
   delegate :noid, to: :class
 
   def show
+    # Removing any X-Frame-Options header here, to allow embedding in third-party sites, used to work before we started
+    # using Cloudflare (to tame the deluge of badly-behaved bots) in Dec 2024. Cloudflare adds this header back in,
+    # though, so removing it *in Cloudflare* with a "Response Header Transform Rule" is the best way to go, rather than
+    # adding a "Content Security Policy" header here to override it, which kind of makes things worse, and more confusing.
+    # Said rule is in place now, and only kicks in when "URI path starts with /embed", so security on other pages is
+    # unaffected. For historical context see HELIO-730, HELIO-4792, HELIO-5122.
+    # I'll leave the original header-removal line in place below so that heliotrope instances not using Cloudflare
+    # will work as they did pre-2024/12.
     response.headers.except! 'X-Frame-Options'
-    # See HELIO-4792
-    # By default, Cloudflare is adding "X-Frame-Options: SAMEORIGIN" to all responses regardless of that
-    # header's removal above. We want anyone to be able to embed in an iframe, but we'd like to keep the Cloudflare default
-    # for the rest of Fulcrum so adding an explicit Content-Security-Policy header for only the /embed route which
-    # should take precident over any X-Frame-Options
-    response.set_header("Content-Security-Policy", "frame-ancestors 'self' *")
+
     @presenter = Hyrax::PresenterFactory.build_for(ids: [self.noid(params[:hdl] || "")], presenter_class: Hyrax::FileSetPresenter, presenter_args: nil).first
     if @presenter.nil?
       render 'hyrax/base/unauthorized', status: :unauthorized
