@@ -8,8 +8,9 @@ module Import
   class RowData
     attr_reader :row, :attrs, :reuse_noids
 
-    def initialize(reuse_noids = false)
+    def initialize(reuse_noids = false, root_dir = nil)
       @reuse_noids = reuse_noids
+      @root_dir = root_dir
     end
 
     def field_values(object, row, attrs, errors = {}, row_num = 0) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
@@ -65,9 +66,25 @@ module Import
           sheet_value.split(';').map!(&:strip).reject(&:empty?)
         elsif is_multivalued == :yes_multiline
           Array(sheet_value.split(';').map!(&:strip).reject(&:empty?).join("\n"))
+        elsif is_multivalued == :yes_file
+          file_contents(sheet_value)
         else
           # force array for uniformity, ease of iteration in subsequent methods
           Array.wrap(sheet_value.strip)
+        end
+      end
+
+      def file_contents(sheet_value)
+        filenames = sheet_value.split(/[;\r\n]+/).map(&:strip).reject(&:empty?)
+        return filenames if @root_dir.blank?
+
+        filenames.map do |filename|
+          matches = Dir.glob(File.join(@root_dir, '**', filename))
+          next filename if matches.empty?
+          next "More than one file found with name: '#{filename}'" if matches.count > 1
+          next nil if File.zero?(matches.first)
+
+          File.read(matches.first)
         end
       end
 
