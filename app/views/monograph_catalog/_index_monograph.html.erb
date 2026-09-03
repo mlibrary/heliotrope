@@ -1,4 +1,3 @@
-<% princess_de_cleves = @monograph_presenter.subdomain == 'leverpress' && (@monograph_presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }) %>
 <!-- ADMIN TOOLS (in spite of the CSS class name, these are necessary, not only for platform admins, but also for Press admins, editors and analysts) -->
 <div class="row platform-admin">
   <%# The outer conditional is to catch all roles... from Press analyst on up. Dunno if there's a better way. This seems to work (see view spec). %>
@@ -8,7 +7,7 @@
       <a href="<%= main_app.monograph_show_path(@monograph_presenter.id) %>" title="<%= t('monograph_catalog.index.show_page_button') %>" data-turbolinks="false"><%= t('monograph_catalog.index.show_page_button') %></a>
     <% end %>
     <% if @monograph_presenter.reader_ebook? %>
-      <a href="<%= princess_de_cleves ? epub_ebook_path(@monograph_presenter.reader_ebook) : epub_path(@monograph_presenter.reader_ebook) %>" title="<%= t('monograph_catalog.index.read_book') %>" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
+      <a href="<%= epub_path(@monograph_presenter.reader_ebook) %>" title="<%= t('monograph_catalog.index.read_book') %>" data-turbolinks="false"><%= t('monograph_catalog.index.read_book') %></a>
     <% end %>
     <%= @monograph_presenter.permission_badge %>
   <% end %>
@@ -65,7 +64,7 @@
       <% if @monograph_presenter.registration_required_to_read? %>
         <%= render 'read_download_buy_registration_required' %>
       <% else %>
-        <%= render "read_download_buy", princess_de_cleves: princess_de_cleves %>
+        <%= render "read_download_buy" %>
       <% end %>
       <% if @monograph_presenter.content_warning.present? %>
         <% content_warning_information = @monograph_presenter.content_warning_information || press_presenter.content_warning_information %>
@@ -183,7 +182,7 @@
         <% if @monograph_presenter.toc? %>
           <section id="toc" class="tab-pane fade toc row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-toc" tabindex="0">
             <div class="col-sm-12">
-              <%= render 'index_epub_toc', princess_de_cleves: princess_de_cleves %>
+              <%= render 'index_epub_toc' %>
             </div>
           </section>
         <% end %>

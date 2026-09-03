@@ -45,6 +45,7 @@ class Press < ApplicationRecord
     false
   end
 
+
   def to_param
     subdomain
   end

@@ -38,7 +38,7 @@
     <% end %>
     <div class="section-container">
       <% if @reader_links_display == :linked %>
-        <a class="toc-link" href="<%= (princess_de_cleves ? epub_ebook_path(@presenter.reader_ebook) : epub_path(id: ebook_presenter.id)) + '#' + interval.cfi  %>" data-turbolinks="false"><%= interval.title %></a>
+        <a class="toc-link" href="<%= epub_path(id: ebook_presenter.id) + '#' + interval.cfi  %>" data-turbolinks="false"><%= interval.title %></a>
         <% if interval.downloadable? && permit_download_buttons %>
           <div class="btn-group download" role="group" aria-label="Download Section">
             <a class="btn btn-default btn-sm toc-download-link" href="<%= epub_download_interval_path(id: ebook_presenter.id, chapter_index: index) %>" data-turbolinks="false">

@@ -16,7 +16,6 @@
 //require twitter/typeahead -- This is supposed to be here for hyrax4 but we don't use it and it causes an error, so left "commented" out (no =)
 //= require bootstrap
 //= require jquery.dataTables
-// require jquery-ui/widgets/datepicker  -- Does heliotrope need this? Is it an old hyrax thing? I don't know
 //= require dataTables.bootstrap4
 // note: blacklight/blacklight must always be included after turbolinks
 //= require blacklight/blacklight

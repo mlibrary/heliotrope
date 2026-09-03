@@ -2095,36 +2095,113 @@ footer.press {
   }
 }
 
-/* CSB v2 - PdeC EReader */
-.too {
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+.old-reader {
+  .cozy-panel-sidebar {
+    background-color: #fff;
+    border: none;
 
-  .cozy-modal-search {
-    .cozy-search {
-      padding: 1em 0;
-    
-      form input {
+    .cozy-control-previous, .cozy-control-next {
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+  }
+
+  // Keep icon controls in the old reader's toolbar from collapsing below the
+  // production control width after the reader styles are vendored. This is
+  // intentionally scoped away from the new nm-reader toolbar.
+  .cozy-panel-toolbar {
+    .cozy-panel-left,
+    .cozy-panel-right {
+      > .cozy-control {
+        > button.button--sm {
+          // Put the production minimum on the visible button, rather than its
+          // wrapper, so the hidden mobile close control reserves no space.
+          min-width: 52px;
+          align-items: center;
+          justify-content: center;
+
+          > i {
+            flex: 0 0 auto;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Search modal (input + magnifying-glass button) styling, shared by the old
+// reader and the new "too" reader (formerly only for Princesse de Cleves).
+// Both readers use the same cozy-sun-bear Control.Search.js markup, so this is
+// intentionally NOT scoped to `.too` -- keeping the sizing/layout consistent
+// between them (input and button side-by-side, instead of the input at its
+// default 100% width with the button wrapping underneath it).
+.cozy-modal-search {
+  .cozy-search {
+    padding: 1em 0;
+
+    form {
+      display: flex;
+      align-items: stretch;
+
+      input {
+        flex: 1 1 auto;
+        width: auto;
         padding: 10px;
         border-radius: 0;
         border: 1px solid #31343b;
       }
 
-      form button {
+      button {
+        flex: 0 0 auto;
         padding: 10px;
         border-radius: 0;
         margin-left: -4px;
         border: 1px solid #31343b;
       }
-
-      article ol {
-        list-style: none;
-      }
-    
     }
+
+    article ol {
+      list-style: none;
+    }
+  }
+}
+
+/* CSB v2 - new EReader */
+.too {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: min-content 0 minmax(0, 1fr);
+  grid-gap: 0;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+
+  &.panels-open {
+    grid-template-columns: min-content 25vw minmax(0, 1fr);
+  }
+
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  // A legacy/Bootstrap `dropdown-toggle` can add a caret after the share icon,
+  // leaving an apparent gap in the otherwise icon-only control.
+  #shareMenuButton::after {
+    display: none;
   }
 
   .nm--toolbar button:focus {
     outline: none;
+  }
+
+  .nm--toolbar .cozy-panel-feedback {
+    position: absolute;
+    bottom: 25px;
+    left: 0;
+
+    a {
+      text-decoration: none;
+    }
   }
 
   .cozy-text-tools {

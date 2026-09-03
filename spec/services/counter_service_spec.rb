@@ -84,8 +84,7 @@ RSpec.describe CounterService do
                                                          "Hyrax::DownloadsController",
                                                          "MonographCatalogController",
                                                          "EmbedController",
-                                                         "EbooksController",
-                                                         "EpubEbooksController"]
+                                                         "EbooksController"]
     end
   end
 
