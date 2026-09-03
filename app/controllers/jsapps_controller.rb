@@ -9,6 +9,7 @@ class JsappsController < ApplicationController
     filepath = UnpackService.root_path_from_noid(params[:id], 'interactive_application')
     filename = UnpackService.safe_path(filepath, "#{params[:file]}.#{params[:format]}")
     return head :no_content if filename.blank?
+    return head :no_content unless filename.start_with?(File.realpath(filepath) + File::SEPARATOR)
 
     filename = filename.to_s.sub(/releases\/\d+/, "current")
     response.headers['X-Sendfile'] = filename

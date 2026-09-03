@@ -36,6 +36,7 @@ class WebglsController < ApplicationController
 
     file = UnpackService.safe_path(base_dir, "#{params[:file]}.#{params[:format]}")
     return head :no_content, status: :not_found if file.blank?
+    return head :no_content, status: :not_found unless file.start_with?(File.realpath(base_dir) + File::SEPARATOR)
 
     # Need to match apache's XSendFilePath configuration
     file = file.to_s.sub(/releases\/\d+/, "current")
