@@ -33,7 +33,6 @@ class WebglsController < ApplicationController
     filepath = UnpackService.root_path_from_noid(params[:id], 'webgl')
     webgl = Webgl::Unity.from_directory(filepath)
     base_dir = webgl.root_path.presence || filepath
-    base_dir = Rails.root.to_s if webgl.root_path.blank? && !Dir.exist?(filepath)
 
     file = UnpackService.safe_path(base_dir, "#{params[:file]}.#{params[:format]}")
     return head :no_content, status: :not_found if file.blank?
@@ -58,7 +57,7 @@ class WebglsController < ApplicationController
       return false unless ValidationService.valid_noid?(params[:id])
 
       entity = Sighrax.from_noid(params[:id])
-      return true unless entity.valid?
+      return false unless entity.valid?
       return false if entity.tombstone?
 
       return true if entity.published? || entity.parent.published?

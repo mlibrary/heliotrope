@@ -5,8 +5,16 @@ require 'rails_helper'
 RSpec.describe "Maps", type: :request do
   context 'anonymous' do
     describe "GET /maps/#:id/file*" do
-      let(:noid) { 'validnoid' }
+      let(:monograph) { create(:public_monograph) }
+      let(:file_set) { create(:file_set) }
+      let(:noid) { file_set.id }
       let(:filename) { 'file.txt' }
+
+      before do
+        monograph.ordered_members << file_set
+        monograph.save!
+        file_set.save!
+      end
 
       it do
         get map_file_path(noid, filename)
@@ -32,6 +40,27 @@ RSpec.describe "Maps", type: :request do
         it 'prevents path traversal outside derivative directory' do
           get "/maps/#{noid}/../../../../config/database.yml"
           expect(response).to have_http_status(:no_content)
+        end
+      end
+
+      context 'draft file set with a valid share link' do
+        let(:monograph) { create(:monograph) }
+        let(:valid_share_token) do
+          JsonWebToken.encode(data: monograph.id, exp: Time.now.to_i + 28 * 24 * 3600)
+        end
+        let(:filepath) { UnpackService.root_path_from_noid(noid, 'interactive_map') }
+
+        before do
+          FileUtils.mkdir_p(filepath)
+          File.write(File.join(filepath, filename), 'maps')
+        end
+
+        after { FileUtils.rm_rf(filepath) }
+
+        it 'returns the file' do
+          get map_file_path(noid, filename), params: { share: valid_share_token }
+          expect(response).to have_http_status(:ok)
+          expect(response.body).to eq('maps')
         end
       end
     end

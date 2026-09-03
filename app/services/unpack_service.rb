@@ -17,12 +17,14 @@ class UnpackService
   def self.safe_path(root_dir, relative_path)
     return nil if root_dir.blank? || relative_path.blank?
 
-    expanded_root = File.expand_path(root_dir)
+    expanded_root = File.realpath(root_dir)
     target_root = expanded_root.end_with?(File::SEPARATOR) ? expanded_root : expanded_root + File::SEPARATOR
-    expanded_path = File.expand_path(relative_path, expanded_root)
+    expanded_path = File.realpath(relative_path, expanded_root)
 
-    return expanded_path if expanded_path.start_with?(target_root) && File.exist?(expanded_path)
+    return expanded_path if expanded_path.start_with?(target_root)
 
+    nil
+  rescue SystemCallError, ArgumentError
     nil
   end
 end
