@@ -151,6 +151,7 @@ RSpec.describe "Monograph Catalog EPUB TOC", type: :system, browser: true do
             within("#toc") do
               expect(page).not_to have_xpath(".//a[@class='toc-link']")
               expect(page).not_to have_content("Download")
+              expect(page).not_to have_xpath(".//span[@title='Read section']")
             end
           end
         end
