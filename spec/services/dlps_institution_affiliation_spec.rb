@@ -70,4 +70,54 @@ describe DlpsInstitutionAffiliation do
       end
     end
   end
+
+  describe 'error handling' do
+    subject(:service) { described_class.new }
+
+    let(:request_attributes) { { dlpsInstitutionId: ['1'] } }
+    let(:error) { Sequel::DatabaseDisconnectError.new("Mysql2::Error: Commands out of sync; you can't run this command now") }
+
+    before do
+      allow(service).to receive(:sleep)
+      allow(Rails.logger).to receive(:error)
+      allow(service).to receive(:shib_institution_affiliations).and_return([])
+    end
+
+    context 'when an attempt fails and a later one succeeds' do
+      let(:institution) { create(:institution) }
+      let(:affiliation) { create(:institution_affiliation, institution_id: institution.id, dlps_institution_id: institution.identifier, affiliation: 'member') }
+
+      before do
+        call = 0
+        allow(service).to receive(:ip_based_institution_affiliations) do
+          call += 1
+          raise error if call == 1
+
+          [affiliation]
+        end
+      end
+
+      it 'retries and returns the result' do
+        expect(service.find(request_attributes)).to eq [affiliation]
+      end
+    end
+
+    context 'when every attempt fails' do
+      before { allow(service).to receive(:ip_based_institution_affiliations).and_raise(error) }
+
+      it 'raises rather than silently returning nil' do
+        expect { service.find(request_attributes) }.to raise_error(Sequel::DatabaseDisconnectError)
+      end
+
+      it 'gives up after MAX_ATTEMPTS' do
+        expect { service.find(request_attributes) }.to raise_error(Sequel::DatabaseDisconnectError)
+        expect(service).to have_received(:ip_based_institution_affiliations).exactly(described_class::MAX_ATTEMPTS).times
+      end
+
+      it 'backs off between attempts' do
+        expect { service.find(request_attributes) }.to raise_error(Sequel::DatabaseDisconnectError)
+        expect(service).to have_received(:sleep).exactly(described_class::MAX_ATTEMPTS - 1).times
+      end
+    end
+  end
 end

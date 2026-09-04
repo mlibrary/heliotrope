@@ -149,6 +149,9 @@ gem 'keycard', '~> 0.4.0'
 gem "kramdown", ">= 2.3.0"
 gem "kramdown-parser-gfm"
 
+# HELIO-4633 In-process TTL cache for Keycard institution lookups
+gem 'lru_redux', '~> 1.1'
+
 # HELIO-4567, HELIO-4697
 gem 'marc', '~> 1.0'
 

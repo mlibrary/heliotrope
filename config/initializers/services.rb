@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+# HELIO-4633 Keycard overrides. Required rather than autoloaded: they reopen the
+# gem's namespace, and the institution finder holds a cache that should survive
+# development's code reloading rather than be thrown away between requests.
+require Rails.root.join("lib", "keycard", "cached_institution_finder").to_s
+require Rails.root.join("lib", "keycard", "request", "memoizing_attributes_factory").to_s
+
 # PRESENTERS = {
 #     Listing => [ListingPresenter, ListingPolicy],
 #     User    => [UserPresenter, Vizier::ReadOnlyPolicy],
@@ -40,6 +46,26 @@ Keycard::DB.initialize!
 Keycard::DB.db.sql_log_level = :debug
 Checkpoint::DB.db.sql_log_level = :debug
 
+# HELIO-4633 Guard against stale connections coming back out of the Sequel pool.
+#
+# Both of these databases are reached through a proxy, so a pooled connection
+# can be closed underneath us -- by the proxy, or by MariaDB hitting
+# wait_timeout -- while Sequel still believes it is usable. Handing one of those
+# out produces errors that look nothing like a disconnect, most often
+# "Mysql2::Error: Commands out of sync; you can't run this command now".
+#
+# The connection_validator extension pings a connection that has been idle
+# longer than the timeout below and transparently replaces it if the ping fails.
+# Only applied to mysql2, both to keep the cost where the problem is and to
+# leave the sqlite databases used in development and test alone.
+[Checkpoint::DB.db, Keycard::DB.db].each do |db|
+  next unless db.adapter_scheme == :mysql2
+
+  db.extension(:connection_validator)
+  # Seconds a connection may sit idle before it is pinged on checkout.
+  db.pool.connection_validation_timeout = 30
+end
+
 Services = Canister.new
 
 # Services.register(:presenters) {
@@ -60,7 +86,17 @@ Services.register(:checkpoint) do
   )
 end
 
-Services.register(:request_attributes) { Keycard::Request::AttributesFactory.new }
+Services.register(:institution_finder) do
+  # HELIO-4874 Replaces Keycard::InstitutionFinder. See the class for why.
+  Keycard::CachedInstitutionFinder.new(
+    cache_size: Settings.keycard&.institution_cache&.size || Keycard::CachedInstitutionFinder::DEFAULT_CACHE_SIZE,
+    cache_ttl: Settings.keycard&.institution_cache&.ttl || Keycard::CachedInstitutionFinder::DEFAULT_CACHE_TTL
+  )
+end
+
+Services.register(:request_attributes) do
+  Keycard::Request::MemoizingAttributesFactory.new(finders: [Services.institution_finder])
+end
 
 Services.register(:dlps_institution) { DlpsInstitution.new }
 
