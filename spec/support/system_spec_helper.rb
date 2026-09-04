@@ -21,6 +21,17 @@ module SystemSpecHelper
     SQL
   end
 
+  # Creating a Greensub::Component for a Monograph is not, on its own, enough to restrict it. The
+  # Component has to belong to a Greensub::Product that the current actor has no license for.
+  # MonographIndexer indexes a Component with no Products as `products_lsim: [0]`, i.e. "unrestricted".
+  # Pushing a Product onto the Component also reindexes the Monograph so that `products_lsim` is correct.
+  def restrict_monograph!(noid)
+    entity = Sighrax.from_noid(noid)
+    component = Greensub::Component.create!(identifier: entity.resource_token, name: entity.title, noid: entity.noid)
+    component.products << FactoryBot.create(:product)
+    component
+  end
+
   def teardown_current_institution
     db = Keycard::DB.initialize!
     db.execute "delete from aa_network"

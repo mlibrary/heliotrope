@@ -33,7 +33,6 @@ if coverage_needed?
 end
 
 require 'active_fedora/cleaner'
-require 'rspec/repeat'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -45,18 +44,16 @@ RSpec.configure do |config|
 
   # System specs (new in rails 5.1) use headless chrome and Capybara
   config.before(:each, type: :system) do
-    driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
+    driven_by :headless_chrome
     # If you actually want to watch these happen in the browser (and have chrome installed)
     # driven_by :selenium_chrome, screen_size: [1200, 1200]
   end
-  # exclude system specs on Travis (timing issues etc), see HELIO-3046 and HELIO-3271
-  config.filter_run_excluding browser: :true if ENV['TRAVIS']
-  # When not in travis, repeat system specs if they fail
-  # This seems to help. Sort of. Sometimes...  See HELIO-2302
-  config.include RSpec::Repeat
-  config.around :each, type: :system do |example|
-    repeat example, 3.times
-  end
+  # NOTE: system specs used to be wrapped in `rspec-repeat` (retried up to 3 times, see HELIO-2302).
+  # That was a workaround for genuine flakiness, most of which came from the browser blocking on
+  # third-party page assets (see the `host-resolver-rules` Chrome flag in spec/rails_helper.rb) and
+  # from too-short Capybara waits. Retrying hid real, reproducible failures behind an intermittent
+  # green, and tripled the time taken by any spec that actually failed, so it has been removed.
+  # If a system spec is flaky, please fix the spec rather than reinstating blanket retries.
 
   config.after(:all) do
     if Rails.env.test? || Rails.env.cucumber?
