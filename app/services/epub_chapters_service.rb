@@ -260,6 +260,7 @@ module EpubChaptersService
 
       def build_chapter_epub(chapter, index) # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/BlockLength
+
         Dir.mktmpdir("epub-chapter-#{index}-") do |tmpdir| # rubocop:disable Metrics/BlockLength
           FileUtils.mkdir_p(File.join(tmpdir, 'META-INF'))
           opf_dir_tmp = File.join(tmpdir, @opf_dir)
@@ -327,6 +328,9 @@ module EpubChaptersService
           FileUtils.rm_f(out_file)
           zip_epub(tmpdir, out_file)
         end
+      rescue StandardError => e
+        Rails.logger.warn("[EpubChaptersService] Dir.mktmpdir raised #{e}") if defined?(Rails)
+
         # rubocop:enable Metrics/BlockLength
       end
 

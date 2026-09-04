@@ -68,6 +68,18 @@ RSpec.describe EpubChaptersService do
         expect(files.first).to end_with('/0.epub')
       end
 
+      it 'continues when Dir.mktmpdir raises while cleaning up a chapter' do
+        allow(Dir).to receive(:mktmpdir).and_wrap_original do |original, *args, &block|
+          original.call(*args, &block)
+          raise StandardError, 'Directory not empty'
+        end
+
+        expect { @chapters = described_class.create_chapters(epub_root, output_dir) }.not_to raise_error
+        expect(File).to exist(File.join(output_dir, '0.epub'))
+        expect(@chapters.first[:downloadable?]).to be(true)
+        expect(@chapters.length).to be > 1
+      end
+
       it 'produces valid EPUB archives with mimetype as the first (STORED) entry' do
         described_class.create_chapters(epub_root, output_dir)
         first_chapter = File.join(output_dir, '0.epub')
