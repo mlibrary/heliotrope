@@ -173,12 +173,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :epub_ebooks, only: %i[show] do
-    member do
-      get :search
-      get '*file', action: :file, as: :file
-    end
-  end
+  get 'epub_ebooks(/*path)', to: redirect { |_params, request|
+    request.fullpath.sub(%r{\A/epub_ebooks}, '/epubs')
+  }, as: :epub_ebooks_redirect
 
   get 'epubs/:id', controller: :e_pubs, action: :show, as: :epub
   get 'epubs/:id/*file', controller: :e_pubs, action: :file, as: :epub_file

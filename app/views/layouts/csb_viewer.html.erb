@@ -31,6 +31,12 @@
     <%= javascript_include_tag 'application' %>
     <%= javascript_pack_tag 'application', 'cozy-sun-bear/cozy-sun-bear', 'data-turbolinks-track': 'reload', defer: false %>
 
+    <% if @princesse_de_cleves %>
+      <!-- Additional JS libraries used by the Princesse De Cleves reader -->
+      <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/headjs/1.0.3/head.min.js' %>
+      <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/url-search-params/0.10.0/url-search-params.js' %>
+    <% end %>
+
     <!-- Cookie Consent for Google, Hotjar, etc -->
     <%= render 'shared/cookie_consent' %>
 
@@ -69,6 +75,7 @@
     <%= yield(:head) %>
   <% end %>
 
+
   <!-- This seemingly causes Turbolinks issues when compiled with the rest of the JS, set it here for reuse -->
   <script>
     var heliotropeIncompatibleWebGlUser = false;
@@ -79,7 +86,7 @@
 
   </head>
 
-  <%= tag.body class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
+  <%= tag.body class: (@old_reader && press_presenter.present?) ? press_presenter.press_subdomains : '' do %>
     <%= content_for?(:body) ? yield(:body) : yield %>
 
     <%= render 'shared/blacklight_modal' %>

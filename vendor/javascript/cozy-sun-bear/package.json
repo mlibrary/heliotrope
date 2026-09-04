@@ -1,0 +1,20 @@
+{
+  "name": "cozy-sun-bear",
+  "version": "1.0.0",
+  "description": "Vendored, in-repo copy of the cozy-sun-bear EPUB reader. Consumed directly by app/javascript/packs/cozy-sun-bear/cozy-sun-bear.js via 'cozy-sun-bear': 'link:vendor/javascript/cozy-sun-bear' in the root package.json. There is no standalone build/test pipeline here anymore (no webpack.config.js, no karma test suite) -- coverage for reader behavior lives in heliotrope's own RSpec system specs.",
+  "main": "src/cozy.js",
+  "module": "src/cozy.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^8.0.0",
+    "core-js": "^3.39.0",
+    "epubjs": "link:../epubjs",
+    "event-emitter": "^0.3.5",
+    "jszip": "^3.10.0",
+    "lodash": "^4.18.1",
+    "mustache": "^4.2.0",
+    "path-webpack": "0.0.3"
+  }
+}

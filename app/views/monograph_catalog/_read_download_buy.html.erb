@@ -12,7 +12,7 @@
       </a>
     <% elsif @reader_links_display == :linked %>
       <a id="monograph-read-btn"
-         href="<%= princess_de_cleves ? epub_ebook_path(@monograph_presenter.reader_ebook) : epub_path(@monograph_presenter.reader_ebook) %>"
+         href="<%= epub_path(@monograph_presenter.reader_ebook) %>"
          class="btn btn-default"
          data-turbolinks="false">
         <%= t('monograph_catalog.index.read_book') %>

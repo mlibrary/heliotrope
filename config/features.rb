@@ -15,4 +15,7 @@ Flipflop.configure do
   feature :use_shib_security_domain_logic,
           default: false,
           description: "Use security_domain logic for Shibboleth institution matching (HELIO-4961)"
+  feature :use_new_reader_style_wherever_possible,
+          default: false,
+          description: "Use new reader style wherever possible"
 end

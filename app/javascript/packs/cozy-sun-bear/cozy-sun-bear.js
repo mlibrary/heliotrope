@@ -1,3 +1,9 @@
 import cozy from "cozy-sun-bear";
-require("cozy-sun-bear/dist/cozy-sun-bear.css");
+import "cozy-sun-bear/scss/cozy.scss";
+import "cozy-sun-bear/scss/fonts/open-iconic.eot";
+import "cozy-sun-bear/scss/fonts/open-iconic.otf";
+import "cozy-sun-bear/scss/fonts/open-iconic.svg";
+import "cozy-sun-bear/scss/fonts/open-iconic.ttf";
+import "cozy-sun-bear/scss/fonts/open-iconic.woff";
+
 window.cozy = cozy;

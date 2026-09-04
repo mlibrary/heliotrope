@@ -26,6 +26,15 @@ class EPubsController < CheckpointController
 
     @search_url = main_app.epub_search_url(@noid, q: '').gsub!(/locale=en&/, '') if @entity.is_a?(Sighrax::EpubEbook)
 
+    @princesse_de_cleves = @parent_presenter.isbn.any? { |isbn| isbn.delete("^0-9") == '9781643150383' }
+
+    @map_file_presenter = if @princesse_de_cleves
+                            map_file_doc = ActiveFedora::SolrService.query("+has_model_ssim:FileSet AND +monograph_id_ssim:#{@parent_presenter.id} AND +resource_type_tesim:interactive+map", rows: 1)&.first
+                            map_file_doc.present? ? Hyrax::FileSetPresenter.new(map_file_doc, current_ability).embed_link : nil
+                          else
+                            nil
+                          end
+
     @press = Press.where(subdomain: @subdomain).first
     @component = component
 
@@ -33,12 +42,34 @@ class EPubsController < CheckpointController
 
     log_share_link_use
 
-    if @entity.is_a?(Sighrax::EpubEbook)
-      render layout: false
-    elsif @entity.is_a?(Sighrax::PdfEbook)
-      render 'e_pubs/show_pdf', layout: false
+    # When we "trust" the new reader outside of Princesse de Cleves we can throw out this Flipflop and the else branch
+    if Flipflop.use_new_reader_style_wherever_possible?
+      if @entity.is_a?(Sighrax::EpubEbook)
+        if @parent_presenter.webgl?
+          # Gabii needs work before we can use the new reader for it, such as adding "WebGL" and "Database" icons
+          @old_reader = true
+          render 'e_pubs/old_reader/show', layout: false
+        else
+          render 'e_pubs/show', layout: false
+        end
+      elsif @entity.is_a?(Sighrax::PdfEbook)
+        # PDFs use the old reader for now, but we'll eventually want to use the new reader for PDFs too
+        # HELIO-4670 needs to be merged first
+        render 'e_pubs/old_reader/show_pdf', layout: false
+      else
+        head :not_found
+      end
     else
-      head :not_found
+      if @princesse_de_cleves
+        render 'e_pubs/show', layout: false
+      elsif @entity.is_a?(Sighrax::EpubEbook)
+        @old_reader = true
+        render 'e_pubs/old_reader/show', layout: false
+      elsif @entity.is_a?(Sighrax::PdfEbook)
+        render 'e_pubs/old_reader/show_pdf', layout: false
+      else
+        head :not_found
+      end
     end
   end
 

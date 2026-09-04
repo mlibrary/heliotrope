@@ -2,58 +2,41 @@
 <%# https://github.com/mlibrary/heliotrope/issues/1228 %>
 <% content_for :head do %>
   <meta name="turbolinks-cache-control" content="no-cache">
-  <%# Altmetric badge JS %>
-  <script type="text/javascript" src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
-  <% if @parent_presenter.doi.present? %>
-    <%# Dimensions badge JS %>
-    <script async src="https://badge.dimensions.ai/badge.js" charset="utf-8"></script>
-  <% end %>
-  <% if defined? @subdomain %>
-    <% if @parent_presenter.use_hypothesis? %>
-      <!-- hypothes.is -->
-      <script type="text/javascript">
-        window.hypothesisConfig = function () {
-          return {
-            openSidebar: false,
-            theme: 'clean', // "clean" or "classic"
-            enableMultiFrameSupport: true,
-            onLayoutChange: function(state) {
-              var $frame = $('.annotator-frame');
-              var $reader = $("#reader");
-            },
-            enableExperimentalNewNoteButton: true
-          };
+
+  <% if !@princesse_de_cleves && @parent_presenter.use_hypothesis? %>
+    <script type="text/javascript">
+      window.hypothesisConfig = function () {
+        return {
+          openSidebar: false,
+          theme: 'clean', // "clean" or "classic"
+          enableMultiFrameSupport: true,
+          onLayoutChange: function(state) {
+            var $frame = $('.annotator-frame');
+            var $reader = $("#reader");
+          },
+          enableExperimentalNewNoteButton: true
         };
-      </script>
-      <script src="https://cdn.hypothes.is/hypothesis"></script>
-    <% end %>
-  <% end %>
-  <% if @parent_presenter.webgl? %>
-    <% # load what we need to show the webgl/3-d model if needed %>
-    <% webgl = Webgl::Unity.from_directory(UnpackService.root_path_from_noid(@parent_presenter.webgl_id, 'webgl')) %>
-    <link rel="stylesheet" href="/webgl/<%= @parent_presenter.webgl_id %>/TemplateData/style.css">
-    <script src="/webgl/<%= webgl.unity_loader %>"></script>
-    <script>
-      var config = {
-        dataUrl: "/webgl/<%= webgl.unity_data %>",
-        frameworkUrl: "/webgl/<%= webgl.unity_framework %>",
-        codeUrl: "/webgl/<%= webgl.unity_code %>",
-        streamingAssetsUrl: "StreamingAssets",
       };
+    </script>
+    <script src="https://cdn.hypothes.is/hypothesis"></script>
+  <% end %>
 
-      var container = document.querySelector("#unity-container");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+  <%# This is a Princesse de Cleves EPUB thing %>
+  <% if @map_file_presenter.present? %>
+    <script type="text/javascript">
+        var map_modal;
 
-      webgl_epub_noid_position = -1;
-      webgl_epub_noid = <%= "\"#{@presenter.id}\"".html_safe %>;
-      webgl_epub_noids_a11y_on = localStorage.getItem("webgl_epub_noids_a11y_on");
-      if(webgl_epub_noids_a11y_on !== null) {
-        webgl_epub_noids_a11y_on = JSON.parse(webgl_epub_noids_a11y_on);
-        webgl_epub_noid_position = webgl_epub_noids_a11y_on.indexOf(webgl_epub_noid);
-      }
-      var webgl_a11y_on_stored = webgl_epub_noid_position !== -1;
+        var close_map = function() {
+            if (map_modal) {
+              map_modal.deactivate();
+            }
+        }
+
+        var open_map = function() {
+            if (map_modal) {
+              map_modal.activate();
+            }
+        }
     </script>
   <% end %>
 <% end %>
@@ -62,130 +45,339 @@
   <% if defined? @presenter.file_set_coins_title %>
     <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
   <% end %>
-
-  <%= render partial: "survey_oa" %>
-
   <div class="skip"></div>
-  <%= tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
-    <div id="reader"></div>
+  <%# tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
+  <div class="too" id="epub">
+
+    <div class="nm--toolbar">
+      <div id="action-close" class="cozy-control">
+        <a class="cozy-close cozy-control" href="<%= @parent_presenter.catalog_url %>" title="Close reader and return to previous page" aria-label="Close reader">
+          <i class="icon-x oi" data-glyph="x" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <button id="action-contents" data-toggle="open" class="button--sm" aria-label="Contents">
+          <i class="icon-align-left oi" data-glyph="align-left" title="Table of Contents" aria-hidden="true"></i>
+      </button>
+
+      <button id="action-search" class="button--sm" data-toggle="open" aria-label="Search">
+          <i class="icon-magnifying-glass oi" data-glyph="magnifying-glass" title="Search" aria-hidden="true"></i>
+      </button>
+
+    <% if @princesse_de_cleves %>
+      <button id="action-notes" class="button--sm panel-closed" data-toggle="open" aria-label="Notes">
+          <i class="icon-document oi" data-glyph="document" title="Notes and Definitions" aria-hidden="true"></i>
+      </button>
+    <% end %>
+
+      <%# Right now this is a Princesse de Cleves thing, it won't be true except for PdC *plus* an interactive map %>
+      <% if @map_file_presenter.present? %>
+        <button id="action-map" class="cozy-control cozy-panel-map" onclick="open_map(); return false;" aria-label="Interactive Map">
+          <i class="icon-map oi" data-glyph="map" aria-hidden="true" title="Accompanying Interactive Map"></i>
+        </button>
+      <% end%>
+
+      <div id="action-resources" class="cozy-control cozy-panel-resources">
+        <a class="cozy-control" href="<%= @parent_presenter.catalog_url + '#resources' %>" target="_blank" aria-label="Resources">
+            <i class="icon-folder oi" data-glyph="folder" aria-hidden="true" title="Go to Resources page for this book (opens new window)"></i>
+        </a>
+      </div>
+
+      <button id="action-info" class="button--sm" data-toggle="open" aria-label="Info">
+        <i class="icon-info oi" data-glyph="info" title="Book Information" aria-hidden="true"></i>
+      </button>
+
+      <button id="action-tts-help" class="button--sm" data-toggle="open" aria-label="Open Text-to-Speech Information">
+        <i class="oi" data-glyph="volume-high" title="Open Text-to-Speech Information" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <%# This is a Princesse de Cleves EPUB thing, obvs %>
+    <div class="nm--panels" data-modal-activated="false">
+      <%= render "e_pubs/cozy_pdec_notes", presenter: @presenter, parent_presenter: @parent_presenter if @princesse_de_cleves %>
+    </div>
+
+    <div class="nm--reader" id="reader">
+    </div>
 
     <script type="text/javascript">
-      if ( true ) {
-
-        <% if @parent_presenter.use_hypothesis? %>
-          // Create custom annotator button that is aware of its state
-          AnnotationTool = cozy.Control.Widget.Toggle.extend({
-            defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
+        <% if !@princesse_de_cleves && @parent_presenter.use_hypothesis? %>
+        // hypothes.is integration
+        AnnotationTool = cozy.Control.Widget.Toggle.extend({
+          defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
 
 
-            initialize: function(options) {
+          initialize: function(options) {
 
-              cozy.Control.Widget.Toggle.prototype.initialize.apply(this, arguments);
+            cozy.Control.Widget.Toggle.prototype.initialize.apply(this, arguments);
 
-              this.options.states = [{
-                stateName: 'close-annotator',
-                onClick: this.openAnnotator.bind(this)
-              },
+            this.options.states = [{
+              stateName: 'close-annotator',
+              onClick: this.openAnnotator.bind(this)
+            },
               {
                 stateName: 'open-annotator',
                 onClick: this.closeAnnotator.bind(this)
               }];
-            },
+          },
 
-            _onAddExtra: function(container) {
-              // super._onAddExtra(container);
-              cozy.Control.Widget.Toggle.prototype._onAddExtra.apply(this, arguments);
-              this.setupHook();
-              return container;
-            },
+          _onAddExtra: function(container) {
+            // super._onAddExtra(container);
+            cozy.Control.Widget.Toggle.prototype._onAddExtra.apply(this, arguments);
+            this.setupHook();
+            return container;
+          },
 
-            openAnnotator: function(self, reader) {
-              this.options.$panel.removeClass("annotator-collapsed");
-              self.state('open-annotator');
-            },
+          openAnnotator: function(self, reader) {
+            this.options.$panel.removeClass("annotator-collapsed");
+            self.state('open-annotator');
+          },
 
-            closeAnnotator: function(self, reader) {
-              this.options.$panel.addClass("annotator-collapsed");
-              self.state('close-annotator');
-            },
+          closeAnnotator: function(self, reader) {
+            this.options.$panel.addClass("annotator-collapsed");
+            self.state('close-annotator');
+          },
 
-            setupHook: function() {
-              var reader = this._reader;
-              reader.rendition.hooks.content.register(function(contents, view) {
-                contents.window.addEventListener('scrolltorange', function (e) {
-                  var range = e.detail;
-                  var cfi = new reader.CFI(range, contents.cfiBase).toString();
-                  if (cfi) {
-                    reader.gotoPage(cfi);
-                  }
-                  e.preventDefault();
-                });
-              })
-            }
-          })
+          setupHook: function() {
+            var reader = this._reader;
+            reader.rendition.hooks.content.register(function(contents, view) {
+              contents.window.addEventListener('scrolltorange', function (e) {
+                var range = e.detail;
+                var cfi = new reader.CFI(range, contents.cfiBase).toString();
+                if (cfi) {
+                  reader.gotoPage(cfi);
+                }
+                e.preventDefault();
+              });
+            })
+          }
+        });
         <% end %>
-
         // Configure and initiate reader
         var reader = cozy.reader('reader', {
           href: "<%= "#{main_app.epub_url.gsub!(/\?.*/, '')}/" %>",
           skipLink: '.skip',
           download_links: <%= @ebook_download_presenter.csb_download_links.to_json.html_safe %>,
           loader_template: '<div class="fulcrum-loading"><div class="rect rect1"></div><div class="circle circ1"></div><div class="rect rect2"></div><div class="circle circ2"></div></div>',
-          injectStylesheet: '/assets/css/fulcrum_enhanced_display.css',          
+          <% if %w[leverpress michigan mps uncpress].include? @subdomain %>
+          injectStylesheet: '/assets/css/fulcrum_enhanced_display.css',
+          <% end %>
           metadata: {
             doi: '<%= @citable_link %>',
-            location: 'Ann Arbor, MI',
-            press_subdomain: '<%= @subdomain %>',
-            noid: '<%= @noid %>',
+            location: 'Ann Arbor, MI'
+          }
+        });
+        <% if @map_file_presenter.present? %>
+        map_modal = reader.modal({
+          region: 'full',
+          title: 'Accompanying Interactive Map for <i>La Princesse de Clèves</i>',
+          fraction: 1.0,
+          template: '<div style="height: 100%; width: 100%"><iframe title="Accompanying Interactive Map for La Princesse de Cleves" style="width: 100%; height: 100%;" src="<%= @map_file_presenter %>"></iframe></div>'
+        });
+        <% end %>
+        var controls = {};
+        var moveControlToToolbar = function(control) {
+          document.querySelector('.nm--toolbar').appendChild(control.getContainer());
+          return control;
+        };
+
+        <%= render partial: "e_pubs/cozy_controls_top", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
+
+        <%= render partial: "e_pubs/cozy_controls_bottom", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
+
+        <% if !@princesse_de_cleves && @parent_presenter.use_hypothesis? %>
+          function addAnnotationTool() {
+            var annotation_tool = new AnnotationTool({
+              region: 'top.toolbar.left',
+              $panel: $('.annotator-frame')
+            });
+            annotation_tool.addTo(reader);
+            moveControlToToolbar(annotation_tool);
+          }
+
+          function checkForAnnotator() {
+            if (reader.rendition) {
+              addAnnotationTool();
+            } else {
+              setTimeout(checkForAnnotator, 100);
+            }
+          }
+
+          checkForAnnotator();
+        <% end %>
+
+      <% if @princesse_de_cleves %>
+        <%= render partial: "e_pubs/cozy_controls_notes", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
+
+        <%= render partial: "e_pubs/cozy_controls_tools", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
+
+        function runFrenchCheckbox(frenchCheckbox, frenchTexts) {
+          console.log("-- runFrenchCheckbox");
+          if (frenchCheckbox !== null && frenchCheckbox.checked) {
+            if (frenchTexts !== null) {
+              for(var i =0, n = frenchTexts.length; i < n; i++) {
+                var frenchText = frenchTexts[i];
+                frenchText.classList.remove('hide');
+                frenchText.classList.add('display');
+              }
+            }
+          } else {
+            if (frenchTexts !== null) {
+              for(var i =0, n = frenchTexts.length; i < n; i++) {
+                var frenchText = frenchTexts[i];
+                frenchText.classList.remove('display');
+                frenchText.classList.add('hide');
+              }
+            }
+          }
+        }
+
+        function runEnglishCheckbox(englishCheckbox, englishTexts) {
+          console.log("-- runEnglishCheckbox");
+          if (englishCheckbox && englishCheckbox.checked) {
+            if (englishTexts !== null) {
+              for(var i =0, n = englishTexts.length; i < n; i++) {
+                var englishText = englishTexts[i];
+                englishText.classList.remove('hide');
+                englishText.classList.add('display');
+              }
+            }
+          } else {
+            if (englishTexts !== null) {
+              for(var i =0, n = englishTexts.length; i < n; i++) {
+                var englishText = englishTexts[i];
+                englishText.classList.remove('display');
+                englishText.classList.add('hide');
+              }
+            }
+          }
+        }
+
+        function runTermsCheckbox(termsCheckbox, terms) {
+          console.log("-- runTermsCheckbox");
+          if (termsCheckbox && termsCheckbox.checked) {
+            if (terms !== null) {
+              for (let i =0, n = terms.length; i < n; i++) {
+                let term = terms[i];
+                term.classList.add('highlight');
+              }
+            }
+          } else {
+            if (terms !== null) {
+              for (let i =0, n = terms.length; i < n; i++) {
+                let term = terms[i];
+                term.classList.remove('highlight');
+              }
+            }
+          }
+        }
+
+        function runKeywordsCheckbox(keywordsCheckbox, keywords) {
+          console.log("-- runKeywordsCheckbox");
+          if (keywordsCheckbox && keywordsCheckbox.checked) {
+            if (keywords !== null) {
+              for (var i =0, n = keywords.length; i < n; i++) {
+                var keyword = keywords[i];
+                keyword.classList.add('highlight');
+              }
+            }
+          } else {
+            if (keywords !== null) {
+              for (var i =0, n = keywords.length; i < n; i++) {
+                var keyword = keywords[i];
+                keyword.classList.remove('highlight');
+              }
+            }
+          }
+        }
+
+        reader.on('ready:contents', function(contents) {
+          console.log('-- ready:contents');
+          // find note links in EPUB
+          var note_links = contents.content.querySelectorAll("a[data-note-ref]");
+            for(let i =0, n = note_links.length; i < n; i++) {
+              let note_link = note_links[i];
+              note_link.addEventListener('click', click_handler);                
+            }
+          // find map links in EPUB
+          var map_links = contents.content.querySelectorAll(".pdec_location");
+            for(let i =0, n = map_links.length; i < n; i++) {
+              let map_link = map_links[i];
+              map_link.addEventListener('click', mapClick_handler);                
+            }
+          // french / english version display 
+          var frenchTexts =  contents.document.querySelectorAll(".french");
+          var frenchCheckbox = document.querySelector('#french');
+
+          runFrenchCheckbox(frenchCheckbox, frenchTexts);
+          if (frenchCheckbox) {
+            frenchCheckbox.addEventListener('change', () => {
+              runFrenchCheckbox(frenchCheckbox, frenchTexts);
+            });
+          }
+
+          var englishTexts =  contents.document.querySelectorAll(".english");
+          var englishCheckbox = document.querySelector('#english');
+
+          runEnglishCheckbox(englishCheckbox, englishTexts);
+          if (englishCheckbox) {
+            englishCheckbox.addEventListener('change', () => {
+              runEnglishCheckbox(englishCheckbox, englishTexts);
+            });
+          }
+          // text tools
+          var terms = contents.document.querySelectorAll(".FrequentlyUsedTerm", ".FrequentlyUsedTermTermwDefinition"); 
+          var termsCheckbox = document.querySelector('#terms');
+
+          runTermsCheckbox(termsCheckbox, terms);
+          if (termsCheckbox) {
+            termsCheckbox.addEventListener('change', () => {
+              runTermsCheckbox(termsCheckbox, terms);
+            });
+          }
+
+          var keywords = contents.document.querySelectorAll(".LexicalDossierLink");
+          var keywordsCheckbox = document.querySelector('#keywords');
+
+          runKeywordsCheckbox(keywordsCheckbox, keywords);
+          if (keywordsCheckbox) {
+            keywordsCheckbox.addEventListener('change', () => {
+              runKeywordsCheckbox(keywordsCheckbox, keywords);
+            });
           }
         });
 
-        <%= render partial: "cozy_controls_top", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
 
-        <%= render partial: "cozy_controls_bottom", formats: [:js], presenter: @presenter, parent_presenter: @parent_presenter %>
+      <% end %> <%# if @princesse_de_cleves %>
 
-        // Annotation widget checks and initialization
-        <% if @parent_presenter.use_hypothesis? %>
-          var tm;
-          function checkForAnnotator(cb, w) {
-            if (!w) {
-              w = window;
-            }
-            tm = setTimeout(function () {
-              if (w && w.annotator) {
-                clearTimeout(tm);
-                cb();
-              } else {
-                checkForAnnotator(cb, w);
-              }
-            }, 100);
-          }
 
-          var $panel = $('.annotator-frame');
-
-          // pass the reference to the panel
-          var annotation_tool = new AnnotationTool({
-            region: 'top.toolbar.left',
-            $panel: $panel
-          })
-          annotation_tool.addTo(reader);
-
-        <% end %>
-
-        <% if @parent_presenter.webgl? %>
-          if(!webgl_a11y_on_stored)
-            open_panel();
-        <% end %>
+        moveControlToToolbar(cozy.control.widget.button({
+          region: 'bottom.navigator.right',
+          className: 'cozy-panel-feedback',
+          template: '<button class="button--sm" id="action-help"><a href="https://umich.qualtrics.com/jfe/form/SV_3KSLynPij0fqrD7?publisher=&url=" target="_blank" title="Report a problem or share feedback"><i class="icon-question-mark oi" data-glyph="question-mark" aria-hidden="true"></i></a></button>',
+        }).addTo(reader));
 
         // Initiate EPUB Reader
-        reader.start(function() {
-          <% if @parent_presenter.webgl? %>
-            fetch_poi();
-          <% end %>
+        reader.start(function () {
+          console.log('-- started');
+        <% if @princesse_de_cleves %>
+          tools_panel();
+          formatSections();
+          formatNotes();
+          formatDefinitions();
+          formatCharacters();
+        <% end %>
+
+});
+
+
+        reader.on('resized', function () {
+          console.log(":: resize detected");
         });
-      }
+
     </script>
-  <% end %>
+  <%# end %>
+  </div>
   <%= render 'shared/ga' %>
 <% end %>
 <%= render template: 'layouts/csb_viewer' %>
