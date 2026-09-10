@@ -75,11 +75,13 @@ RSpec.describe "Monograph Bootstrap tabs", type: :system, browser: true do
     it 'has Blacklight resources searching that opens the resources tab' do
       visit monograph_catalog_path(monograph)
 
-      fill_in("Search resources", with: "shipwreck")
+      # note that "single" here comes from the FileSet's `keyword`. Searching on something like the
+      # file name ("shipwreck") won't work, as `original_name_tesim` is not in the catalog's `qf`
+      fill_in("Search resources", with: "single")
       find("#resources-search-submit").click
 
       # clear last search
-      find("a.btn.btn-default.btn-sm.remove").click
+      find("a.remove").click
 
       # test facet search
       # open the facet panel
