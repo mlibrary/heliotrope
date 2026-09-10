@@ -19,11 +19,16 @@ module SystemSpecHelper
       values
         ("#{institution.identifier}", 'Local Host', '0', 'root', 'f')
     SQL
+
+    # HELIO-4633 The institution finder caches IP lookups, so the rows just
+    # written would otherwise be invisible to anything already warmed up.
+    Services.institution_finder.clear_cache
   end
 
   def teardown_current_institution
     db = Keycard::DB.initialize!
     db.execute "delete from aa_network"
     db.execute "delete from aa_inst"
+    Services.institution_finder.clear_cache
   end
 end

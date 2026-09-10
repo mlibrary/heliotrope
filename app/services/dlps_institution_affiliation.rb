@@ -3,14 +3,25 @@
 class DlpsInstitutionAffiliation
   include Skylight::Helpers
 
+  MAX_ATTEMPTS = 3
+  RETRY_DELAY = 0.1
+
   instrument_method
   def find(request_attributes)
-    retries ||= 0
-    (ip_based_institution_affiliations(request_attributes) + shib_institution_affiliations(request_attributes)).uniq
-  rescue  StandardError => e
-    Rails.logger.error(%Q|DlpsInstitutionAffiliation RETRY #{retries}: #{e} #{e.backtrace.join("\n")}|)
-    retries += 1
-    retry if retries < 3
+    attempts = 0
+    begin
+      attempts += 1
+      (ip_based_institution_affiliations(request_attributes) + shib_institution_affiliations(request_attributes)).uniq
+    rescue StandardError => e
+      Rails.logger.error(%Q|DlpsInstitutionAffiliation attempt #{attempts} of #{MAX_ATTEMPTS} failed: #{e} #{e.backtrace.join("\n")}|)
+      # Falling out of the rescue used to return nil, which downstream callers
+      # such as Actorable#licenses immediately blew up on. Raise the real error
+      # instead so the cause is visible.
+      raise if attempts >= MAX_ATTEMPTS
+
+      sleep(RETRY_DELAY * attempts)
+      retry
+    end
   end
 
   private
