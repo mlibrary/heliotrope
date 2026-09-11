@@ -1,0 +1,239 @@
+/*
+ * HELIOTROPE: cozy-iframe-overrides.css
+ *
+ * Loaded inside the pdf.js 6.1.200 iframe via viewer.html <link> (after viewer.css).
+ * Two purposes:
+ *   1. Hide the stock pdf.js chrome — cozy-sun-bear provides all controls on the parent page.
+ *   2. Apply heliotrope's pdf.js-internal styles (textLayer, annotationLayer, page layout)
+ *      that must live inside the iframe document now that the viewer runs in an iframe.
+ *
+ * CSP check (pdf.js 6.1.200 viewer.html):
+ *   style-src 'self'  (style-src-elem was dropped upstream in 6.1.200)
+ *   A same-origin <link rel="stylesheet"> is permitted by style-src 'self'. ✓
+ *
+ * NAMING NOTE: The parent layout uses <body id="outerContainer"> and this document also has
+ * <div id="outerContainer">. To avoid ambiguity, rules here scope off #outerContainer only
+ * inside the iframe (this file is never loaded in the parent).
+ */
+
+/* ── 1. HIDE STOCK CHROME ─────────────────────────────────────────────────── */
+
+/*
+ * pdf.js 6.1.200 viewer.html structure (verified against vendored source):
+ *   #outerContainer > #mainContainer > .toolbar > #toolbarContainer
+ *   The sidebar panel is now #viewsManager (inside the toolbar), replacing 5.x #sidebarContainer.
+ *   NAMING COLLISION note: #outerContainer rules here only affect the iframe document.
+ */
+
+/* Main toolbar bar */
+#outerContainer .toolbar {
+  display: none !important;
+}
+
+/* 5.x sidebarContainer (kept for safety; gone in 6.x but harmless) */
+#sidebarContainer,
+#sidebarResizer {
+  display: none !important;
+}
+
+/* 6.x sidebar panel and resizer (replaces sidebarContainer) */
+#viewsManager,
+#viewsManagerResizer {
+  display: none !important;
+}
+
+/* Secondary toolbar (hamburger menu) */
+#secondaryToolbar {
+  display: none !important;
+}
+
+/* Editor mode buttons (highlight, freetext, ink, stamp, signature) */
+#editorModeButtons,
+#editorSignature,
+#editorHighlight,
+#editorFreeText,
+#editorInk,
+#editorStamp,
+#editorCommentsSidebar,
+.editorParamsToolbar {
+  display: none !important;
+}
+
+/* Loading bar (hidden; parent page has its own #pdfLoadingProgressBar aria-live announcer) */
+#loadingBar {
+  display: none !important;
+}
+
+/* Undo bar */
+#editorUndoBar {
+  display: none !important;
+}
+
+/* Reclaim toolbar space so PDF pages fill the iframe from the top */
+#mainContainer {
+  top: 0 !important;
+  padding-top: 0 !important;
+}
+
+#viewerContainer {
+  top: 0 !important;
+  inset-block-start: 0 !important;
+}
+
+/* pdf.js 6.1.200 viewer.css sets `body { background-color: var(--body-bg-color); }`
+   which resolves via light-dark() to a light-gray in light mode. Force white
+   here so the iframe's page gutter matches Fulcrum's reader chrome.
+   Also override the CSS variable itself in case any other rule references it. */
+:root {
+  --body-bg-color: white !important;
+}
+
+body {
+  background-color: #ffffff !important;
+}
+
+/* Force single-column (non-spread) layout regardless of the viewer's spread/scroll
+   mode or viewport width. pdf.js sets width/height inline on .page elements but a
+   viewer.css rule combined with .pdfViewer being inline-block can let multiple
+   pages flow onto one row at wide widths. These ID-prefixed selectors beat
+   `.pdfViewer .page` and keep pages stacked in a single centred column.
+   Previously injected via a <style> tag from show_pdf.html.erb's iframe load
+   handler; moved here to satisfy the iframe CSP (style-src 'self', no inline). */
+#viewer.pdfViewer > .page,
+#viewer.pdfViewer > .dummyPage,
+#viewer.pdfViewer .spread > .page,
+#viewer.pdfViewer .spread > .dummyPage {
+  display: block !important;
+  vertical-align: initial !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+#viewer.pdfViewer .spread {
+  display: block !important;
+  white-space: normal !important;
+  text-align: center !important;
+  width: auto !important;
+}
+
+/* Keep functional dialogs (password, find) reachable even though triggers are hidden */
+#passwordDialog,
+#printServiceDialog {
+  /* These must remain visible when triggered programmatically */
+}
+
+
+/* ── 2. PDF.JS-INTERNAL LAYOUT & TEXT LAYER ──────────────────────────────── */
+/*
+ * These rules were previously in cozy-honey-bear-reader.css (parent stylesheet)
+ * but must live inside the iframe now that the pdf.js content document is separate.
+ */
+
+/* Loading icon per page */
+.pdfViewer .page .loadingIcon {
+  position: absolute;
+  display: block;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/mozilla-pdf-viewer/web/images/loading-icon.gif') center no-repeat;
+}
+
+/* Page layout */
+.pdfViewer .canvasWrapper {
+  overflow: hidden;
+}
+
+.pdfViewer .page {
+  direction: ltr;
+  width: 816px;
+  height: 1056px;
+  margin: 1rem auto 2rem auto;
+  position: relative;
+  overflow: visible;
+  background-clip: content-box;
+  background-color: white;
+  box-sizing: content-box;
+  box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0,0,0,0);
+}
+
+.pdfViewer.removePageBorders .page {
+  margin: 0px auto 10px auto;
+  border: none;
+}
+
+.pdfViewer .page canvas {
+  margin: 0;
+  display: block;
+}
+
+.pdfViewer .page canvas[hidden] {
+  display: none;
+}
+
+/* Centering fix
+ *
+ * Strategy: make #viewerContainer a text-align:center scroll box.
+ * pdf.js sets an inline pixel width on #viewer on every zoom change, so we
+ * cannot rely on width:100%. Instead we render #viewer as inline-block so
+ * text-align:center on the parent always centres it — even after pdf.js
+ * widens/narrows it. The JS scalechanging listener in show_pdf.html.erb
+ * resets scrollLeft so the view snaps back to centre on zoom-out. */
+#viewerContainer {
+  overflow: auto !important;
+  width: 100% !important;
+  display: block !important;
+  text-align: center !important;
+}
+
+/* #viewer (id="viewer") is the direct child; inline-block lets the parent's
+ * text-align:center keep it horizontally centred at every zoom level. */
+#viewer.pdfViewer,
+.pdfViewer {
+  display: inline-block !important;
+  text-align: left !important; /* pages inside keep their own centering */
+}
+
+.pdfViewer .page {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.pdfViewer.scrollVertical {
+  text-align: left !important;
+}
+
+.pdfViewer.scrollVertical .page {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Presentation mode */
+.pdfPresentationMode .pdfViewer {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.pdfPresentationMode .pdfViewer .page,
+.pdfPresentationMode .pdfViewer .spread {
+  display: block;
+}
+
+.pdfPresentationMode .pdfViewer .page,
+.pdfPresentationMode .pdfViewer.removePageBorders .page {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.pdfPresentationMode:fullscreen .pdfViewer .page {
+  margin-bottom: 100%;
+  border: 0;
+}
+
+.pdfPresentationMode:-webkit-full-screen .pdfViewer .page {
+  margin-bottom: 100%;
+  border: 0;
+}
