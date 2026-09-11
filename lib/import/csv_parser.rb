@@ -26,7 +26,7 @@ module Import
                puts "Parsing file: #{file}"
                CSV.read(file, headers: true, skip_blanks: true).delete_if { |row| row.to_hash.values.all?(&:blank?) }
              end
-      row_data = RowData.new(@reuse_noids)
+      row_data = RowData.new(@reuse_noids, file && File.dirname(file))
 
       # look for unexpected column names which will be ignored. note: 'File Name' is not in METADATA_FIELDS.
       unexpecteds = rows[0].to_h.keys.map { |k| k&.strip } - (METADATA_FIELDS.pluck :field_name) - ['File Name']

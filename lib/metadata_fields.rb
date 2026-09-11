@@ -6,6 +6,7 @@ I18n.load_path += Dir[Rails.root.join("config", "locales", "heliotrope.en.yml").
 # something to note is that the multivalued :yes/:no values mirror the model, such that assignment will work properly as a scalar or array...
 # :yes_split means that this is a field we actually want to *use* as multivalued, and so will split the CSV field on semicolons to do so
 # :yes_multiline means we only want to use <fieldname>.first of a multi-valued field to store all our values, which will be separated with a new line within that string
+# :yes_file means the CSV value contains one or more filenames whose contents should be stored as metadata
 
 # ActiveFedora fields not really 'settable' by users, needed in the import-export-edit-import cycle
 ADMIN_METADATA_FIELDS ||=
@@ -70,8 +71,8 @@ METADATA_FIELDS ||=
     { object: :file_set, field_name: 'Translation', metadata_name: 'translation', required: false, multivalued: :yes, description: I18n.t('csv.descriptions.translation') },
     { object: :universal, field_name: 'DOI', metadata_name: 'doi', required: false, multivalued: :no, description: I18n.t('csv.descriptions.doi') },
     { object: :universal, field_name: 'Handle', metadata_name: 'hdl', required: false, multivalued: :no, description: I18n.t('csv.descriptions.hdl') },
-    { object: :file_set, field_name: 'Closed Captions', metadata_name: 'closed_captions', required: false, multivalued: :yes, description: I18n.t('csv.descriptions.closed_captions') },
-    { object: :file_set, field_name: 'Visual Descriptions', metadata_name: 'visual_descriptions', required: false, multivalued: :yes, description: I18n.t('csv.descriptions.visual_descriptions') },
+    { object: :file_set, field_name: 'Closed Captions', metadata_name: 'closed_captions', required: false, multivalued: :yes_file, description: I18n.t('csv.descriptions.closed_captions') },
+    { object: :file_set, field_name: 'Visual Descriptions', metadata_name: 'visual_descriptions', required: false, multivalued: :yes_file, description: I18n.t('csv.descriptions.visual_descriptions') },
     { object: :universal, field_name: 'Tombstone?', metadata_name: 'tombstone', required: false, multivalued: :no, description: I18n.t('csv.descriptions.tombstone') },
     { object: :universal, field_name: 'Tombstone Message', metadata_name: 'tombstone_message', required: false, multivalued: :no, description: I18n.t('csv.descriptions.tombstone_message') },
     { object: :monograph, field_name: 'Volume', metadata_name: 'volume', required: false, multivalued: :no, description: I18n.t('csv.descriptions.volume') },

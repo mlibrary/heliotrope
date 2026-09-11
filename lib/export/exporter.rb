@@ -197,6 +197,8 @@ module Export
           # note: this is a multi-valued field but we're only using the first one to hold a string containing...
           #       ordered, newline-separated values. Need such to be semi-colon-separated in a cell once again
           value.first.split(/\r\n?|\n/).reject(&:blank?).join('; ')
+        elsif multivalued == :yes_file
+          WebvttService.export_filenames(item.id, metadata_name, value.to_a).join('; ')
         else
           # https://tools.lib.umich.edu/jira/browse/HELIO-2321
           metadata_name == 'doi' ? 'https://doi.org/' + value : value

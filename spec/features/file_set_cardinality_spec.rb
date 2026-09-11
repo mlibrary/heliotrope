@@ -86,8 +86,11 @@ describe 'FileSet Cardinality' do
       expect(find('#file_set_caption')[:class]).not_to include 'multi-text-field'
 
       expect(cover.closed_captions).to match_array(['This is a closed caption'])
-      expect(doc.closed_captions).to eql 'This is a closed caption'
-      expect(find('#file_set_closed_captions')[:class]).not_to include 'multi-text-field'
+      expect(doc.closed_captions).to eql ['This is a closed caption']
+      # note our home-spun MultiValueTextareaInput from app/inputs/multi_value_textarea_input.rb actually assigns...
+      # unique ids (with index suffixed) to each textarea, unlike the default Hyrax::MultiValueTextInput which...
+      # assigns an id only to the first textarea and then gives up on the rest.
+      expect(find('#file_set_closed_captions_0')[:class]).to include 'multi-text-field'
 
       expect(cover.content_type).to match_array(['drawing', 'illustration'])
       expect(doc.content_type).to match_array(['drawing', 'illustration'])
@@ -178,8 +181,11 @@ describe 'FileSet Cardinality' do
       expect(find('#file_set_translation')[:class]).not_to include 'multi-text-field'
 
       expect(cover.visual_descriptions).to match_array(['This is a visual description'])
-      expect(doc.visual_descriptions).to eql 'This is a visual description'
-      expect(find('#file_set_visual_descriptions')[:class]).not_to include 'multi-text-field'
+      expect(doc.visual_descriptions).to eql ['This is a visual description']
+      # note our home-spun MultiValueTextareaInput from app/inputs/multi_value_textarea_input.rb actually assigns...
+      # unique ids (with index suffixed) to each textarea, unlike the default Hyrax::MultiValueTextInput which...
+      # assigns an id only to the first textarea and then gives up on the rest.
+      expect(find('#file_set_visual_descriptions_0')[:class]).to include 'multi-text-field'
     end
   end
 end
