@@ -168,7 +168,7 @@ en:
     index:
       buy: "Buy Book: Order a print copy of %{title}"
       buy_hardcover: "Order Hardcover"
-      buy_hardcover_button_title: "Buy a hardcover copy of %{title}"
+      buy_hardcover_button_title: "Order hardcover copy of %{title}"
       buy_book: "Buy Book"
       catalog: "Books"
       download_book: "Download"
