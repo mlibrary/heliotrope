@@ -494,6 +494,10 @@ footer.press {
 
   }
 
+  a {
+    text-decoration: underline;
+  }
+
 }
 .press {
 
@@ -1133,6 +1137,10 @@ footer.press {
       width: 95%;
       padding-bottom: 2em;
       font-size: 16px;
+
+      a {
+        text-decoration: underline;
+      }
     }
 
     .access {
