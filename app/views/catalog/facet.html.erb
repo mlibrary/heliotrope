@@ -7,7 +7,7 @@
   <div class="facet_pagination top">
     <%= render partial: 'facet_pagination' %>
   </div>
-  <div aria-label="<%= facet_field_label(@facet.key) %>">
+  <div>
     <div class="modal-header">
       <h3 class="modal-title"><%= facet_field_label(@facet.key) %></h3>
       <%= render partial: 'facet_index_navigation' if @facet.index_range && @display_facet.index? %>

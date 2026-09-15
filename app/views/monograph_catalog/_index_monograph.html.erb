@@ -44,12 +44,12 @@
       <div class="edition-links">
       <% if @monograph_presenter.previous_edition_url.present? %>
         <div class="edition-link">
-          <a href="<%= @monograph_presenter.previous_edition_url %>" title="<%= t('monograph_catalog.index.previous_edition', title: @monograph_presenter.title) %>" aria-label="<%= t('monograph_catalog.index.previous_edition', title: @monograph_presenter.title) %>" data-turbolinks="false"><%= t('monograph_catalog.index.previous_edition_html', title: @monograph_presenter.title) %></a>
+          <a href="<%= @monograph_presenter.previous_edition_url %>" title="<%= t('monograph_catalog.index.previous_edition', title: @monograph_presenter.title) %>" data-turbolinks="false"><%= t('monograph_catalog.index.previous_edition_html', title: @monograph_presenter.title) %></a>
         </div>
       <% end %>
       <% if @monograph_presenter.next_edition_url.present? %>
         <div class="edition-link">
-          <a href="<%= @monograph_presenter.next_edition_url %>" title="<%= t('monograph_catalog.index.next_edition', title: @monograph_presenter.title) %>" aria-label="<%= t('monograph_catalog.index.next_edition', title: @monograph_presenter.title) %>" data-turbolinks="false"><%= t('monograph_catalog.index.next_edition_html', title: @monograph_presenter.title) %></a>
+          <a href="<%= @monograph_presenter.next_edition_url %>" title="<%= t('monograph_catalog.index.next_edition', title: @monograph_presenter.title) %>" data-turbolinks="false"><%= t('monograph_catalog.index.next_edition_html', title: @monograph_presenter.title) %></a>
         </div>
       <% end %>
       </div>
@@ -68,7 +68,7 @@
       <% end %>
       <% if @monograph_presenter.content_warning.present? %>
         <% content_warning_information = @monograph_presenter.content_warning_information || press_presenter.content_warning_information %>
-        <div id="content-warning-ebook" aria-label="Ebook Content Warning">
+        <div id="content-warning-ebook" role="alert">
           <div id="content-warning-icon">
             <%= image_tag "exclamation-triangle-fill.svg", alt: "Warning Icon", 'aria-hidden': "true" %>
           </div>
@@ -197,7 +197,7 @@
         <% if @monograph_presenter.funder_display? %>
           <section id="funder" class="tab-pane fade funder row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-funder" tabindex="0">
             <div class="col-sm-12">
-              <div aria-label="funder display" class="funder_display"><%= @monograph_presenter.funder_display %></div>
+              <div class="funder_display"><%= @monograph_presenter.funder_display %></div>
             </div>
           </section>
         <% end %>
@@ -214,7 +214,7 @@
         <% if @monograph_presenter.awards.present? %>
           <section id="award" class="tab-pane fade award row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-funder" tabindex="0">
             <div class="col-sm-12">
-              <div aria-label="award" class="award"><%= render_markdown @monograph_presenter.awards %></div>
+              <div class="award"><%= render_markdown @monograph_presenter.awards %></div>
             </div>
           </section>
         <% end %>
@@ -223,8 +223,8 @@
           <section id="author-bio" class="tab-pane fade author-bio row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-author-bio" tabindex="0">
             <div class="col-sm-12">
               <% @monograph_presenter.author_bio.each_with_index do |bio, index| %>
-                <% if index > 0 %><hr aria-label="Next author bio" class="author-bio-separator" /><% end %>
-                <section aria-label="author bio" class="author_bio"><%= render_markdown bio %></section>
+                <% if index > 0 %><hr class="author-bio-separator" /><% end %>
+                <section class="author_bio"><%= render_markdown bio %></section>
               <% end %>
             </div>
           </section>
@@ -303,7 +303,7 @@
             <span class="meta-label" id="citable_link"><%= t('citable_link') %></span>
             <form>
               <label for="permalink" style="display: none;"><%= t('citable_link') %></label>
-              <input aria-labelledby="citable_link" type="text" class="form-control" id="permalink" aria-label="Citable link for <%= @monograph_presenter.title %>" value="<%= @monograph_presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
+              <input aria-labelledby="citable_link" type="text" class="form-control" id="permalink" value="<%= @monograph_presenter.citable_link %>" readonly="readonly" onclick="this.select(); document.execCommand('copy');" />
             </form>
           </div>
       <% end %>
@@ -328,7 +328,7 @@
       <!-- LICENSE -->
       <% if @monograph_presenter.license? %>
       <div class="license">
-        <span class="meta-label">License:</span> <a aria-label="<%= @monograph_presenter.license_alt_text %>" rel="license" href="<%= @monograph_presenter.license.first %>" target="_blank"><%= @monograph_presenter.license_link_content %></a></span>
+        <span class="meta-label">License:</span> <a rel="license" href="<%= @monograph_presenter.license.first %>" target="_blank"><%= @monograph_presenter.license_link_content %></a></span>
       </div>
       <% end %>
       <!-- LANGUAGE -->
