@@ -476,6 +476,24 @@
         }
 
         var pdfDocument = app.pdfDocument;
+        // pdf.js loads embedded fonts into the document that owns its PDF
+        // rendering context. The PDF is loaded in the iframe, so rendering on
+        // a parent-page canvas makes those fonts unavailable and produces
+        // squares for glyphs in vector PDFs (see pdf.js#16861).
+        var iframeDoc;
+        try {
+          iframeDoc = self._reader._iframe.contentDocument || self._reader._iframe.contentWindow.document;
+        } catch (e) {
+          iframeDoc = null;
+        }
+        if (!iframeDoc) {
+          setTimeout(function() {
+            self._thumbnailsRendered = false;
+            self._renderThumbnailsDirect(thumbnailView);
+          }, 300);
+          return;
+        }
+
         var totalPages = app.pagesCount;
         var THUMB_WIDTH = 126; // matches THUMBNAIL_WIDTH in pdf.js
 
@@ -520,7 +538,10 @@
             var scale = (THUMB_WIDTH * 2) / viewport.width;
             var scaledViewport = pdfPage.getViewport({ scale: scale });
 
-            var canvas = document.createElement('canvas');
+            // Keep the temporary canvas in the iframe document so pdf.js can
+            // resolve the fonts it loaded there. The data URL can safely be
+            // assigned to an image in the same-origin parent document.
+            var canvas = iframeDoc.createElement('canvas');
             canvas.width = Math.floor(scaledViewport.width);
             canvas.height = Math.floor(scaledViewport.height);
 
