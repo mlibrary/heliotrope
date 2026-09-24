@@ -70,6 +70,21 @@ RSpec.describe WebglsController, type: :controller do
         expect(response.body.empty?).to be false
       end
 
+      it "preserves the symlink path for X-Sendfile" do
+        real_root = UnpackService.root_path_from_noid(file_set.id, 'webgl')
+        symlink_root = Rails.root.join('tmp', 'rspec_webgl_current')
+        FileUtils.rm_rf(symlink_root)
+        FileUtils.ln_s(real_root, symlink_root)
+        allow(UnpackService).to receive(:root_path_from_noid).with(file_set.id, 'webgl').and_return(symlink_root.to_s)
+
+        get :file, params: { id: file_set.id, file: 'Build/blah.loader', format: 'js' }
+
+        expect(response).to have_http_status(:success)
+        expect(response.headers['X-Sendfile']).to eq(File.join(symlink_root, 'Build/blah.loader.js'))
+      ensure
+        FileUtils.rm_rf(symlink_root)
+      end
+
       it "returns the data file" do
         get :file, params: { id: file_set.id, file: 'Build/blah', format: 'data' }
         expect(response).to have_http_status(:success)

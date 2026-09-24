@@ -11,10 +11,15 @@ class JsappsController < ApplicationController
     return head :no_content if filename.blank?
     return head :no_content unless filename.start_with?(File.realpath(filepath) + File::SEPARATOR)
 
-    filename = filename.to_s.sub(/releases\/\d+/, "current")
-    response.headers['X-Sendfile'] = filename
+    # Validate the real path, but preserve the symlink path Apache expects for X-Sendfile.
+    relative_file = Pathname(filename).relative_path_from(Pathname(File.realpath(filepath)))
+    file = File.join(filepath.to_s, relative_file.to_s)
+
+    # Need to match apache's XSendFilePath configuration
+    file = file.to_s.sub(/releases\/\d+/, "current")
+    response.headers['X-Sendfile'] = file
     response.headers.except! 'X-Frame-Options'
-    send_file filename, disposition: 'inline'
+    send_file file, disposition: 'inline'
   rescue StandardError => e
     Rails.logger.info("JsappsController.file raised #{e}")
     head :no_content

@@ -37,6 +37,20 @@ RSpec.describe "Jsapps", type: :request do
           expect(response.body).to eq('jsapps')
         end
 
+        it 'preserves the symlink path for X-Sendfile' do
+          symlink_root = Rails.root.join('tmp', 'rspec_jsapps_current')
+          FileUtils.rm_rf(symlink_root)
+          FileUtils.ln_s(filepath, symlink_root)
+          allow(UnpackService).to receive(:root_path_from_noid).with(noid, 'interactive_application').and_return(symlink_root.to_s)
+
+          get jsapp_file_path(noid, filename)
+
+          expect(response).to have_http_status(:ok)
+          expect(response.headers['X-Sendfile']).to eq(File.join(symlink_root, filename))
+        ensure
+          FileUtils.rm_rf(symlink_root)
+        end
+
         it 'prevents path traversal outside derivative directory' do
           get "/jsapps/#{noid}/../../../../config/database.yml"
           expect(response).to have_http_status(:no_content)
