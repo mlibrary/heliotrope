@@ -25,6 +25,7 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   default-mysql-client \
   shared-mime-info \
   imagemagick \
+  libvips42 \
   ghostscript \
   netpbm \
   qpdf \
