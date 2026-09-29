@@ -53,9 +53,7 @@ class EPubsController < CheckpointController
           render 'e_pubs/show', layout: false
         end
       elsif @entity.is_a?(Sighrax::PdfEbook)
-        # PDFs use the old reader for now, but we'll eventually want to use the new reader for PDFs too
-        # HELIO-4670 needs to be merged first
-        render 'e_pubs/old_reader/show_pdf', layout: false
+        render 'e_pubs/show_pdf', layout: false
       else
         head :not_found
       end

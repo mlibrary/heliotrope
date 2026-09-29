@@ -32,7 +32,7 @@ export var PageList = Control.extend({
     }.bind(this));
 
     this._reader.on('updateLocations', function() {
-      if (!this._reader.pageList) {
+      if (!this._reader.pageList && !this._pdfPageCount()) {
         this._input.disabled = true;
         this._button.disabled = true;
         return;
@@ -45,12 +45,30 @@ export var PageList = Control.extend({
     }.bind(this));
   },
 
+  _pdfPageCount: function() {
+    var locations = this._reader.locations;
+    return locations && Number.isInteger(locations.total) && locations.total > 0 ? locations.total : false;
+  },
+
   _goToPage: function() {
+    var value = this._input.value.trim();
+
     if (!this._reader.pageList) {
-      return false;
+      var totalPages = this._pdfPageCount();
+      var pageNumber = Number(value);
+      var validPage = /^\d+$/.test(value) && pageNumber >= 1 && pageNumber <= totalPages;
+
+      if (!validPage) {
+        var pdfMessage = `Please enter a page number between 1-${totalPages}.`;
+        window.alert(pdfMessage);
+        this._reader.updateLiveStatus(pdfMessage);
+        return false;
+      }
+
+      this._reader.gotoPage(pageNumber);
+      return true;
     }
 
-    var value = this._input.value.trim();
     var page = value && this._reader.pageList.pageList.find(function(item) {
       return item.pageLabel == value;
     });

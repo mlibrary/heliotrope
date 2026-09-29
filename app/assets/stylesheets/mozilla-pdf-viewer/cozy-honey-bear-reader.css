@@ -61,6 +61,12 @@ html, body {
   height: 38px;
 }
 
+.cozy-panel-right {
+  #pageRotateCw{
+    margin: 0 1em;
+  }
+}
+
 .cozy-control button.button--sm.cozy-close.mobile {
   display: none;
 }
@@ -127,12 +133,19 @@ html, body {
   overflow: auto;
 }
 
-.cozy-modal-contents-container .modal__container {
-  width: 40%;
-}
+/* Contents/Search modals live in .nm--panels, whose width (25vw when open, set in
+   heliotrope.scss via .too.panels-open and cozy.scss) drives the layout. Do not set
+   widths on the modal container here. */
 
-.cozy-modal-contents {
-  width: 40%;
+/* The Preferences modal (region: right) is appended inside .nm--reader, off-screen
+   via translateX. When it opens, cozy focuses an element inside it; the browser then
+   scrolls the nearest overflow container (even overflow:hidden ones) to reveal it,
+   which made the PDF iframe appear to slide in from the left. `clip` forbids any
+   scrolling, programmatic or otherwise. */
+.nm--reader,
+.nm--reader > .cozy-container,
+#mainContainer {
+  overflow: clip;
 }
 
 .modal__container div[role="document"] {

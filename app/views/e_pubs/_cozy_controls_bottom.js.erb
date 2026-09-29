@@ -1,18 +1,25 @@
         // Navigator - [Slider]
         cozy.control.navigator({ region: 'bottom.navigator' }).addTo(reader);
 
-
-        // Paging [< >]
+        // page list form with "Go" button
         cozy.control.pageList({ region: 'bottom.navigator.right' }).addTo(reader);
-        <% if @parent_presenter.pdf_ebook? %>
+
+        // Rotate Clockwise button for PDFs (at some point we'll add better methods to detect what ebook format is in use)
+        <% unless @parent_presenter.epub? %>
+        cozy.control.widget.button({
+          region: 'bottom.navigator.right',
+          template: '<button class="button--sm" data-toggle="button" data-slot="label" aria-label="Rotate Clockwise" id="pageRotateCw" title="Rotate Clockwise"><i class="icon-reload oi" data-glyph="reload" aria-hidden="true"></i></button>',
+          onClick: function() {
+            reader.rotateCW();
+          }
+        }).addTo(reader);
+        <% end %>
+
+        // [< >] pagination buttons
         var action = cozy.control.pagePrevious({ region: 'bottom.navigator.right' }).addTo(reader);
         action._control.setAttribute('id', 'previous');
         action = cozy.control.pageNext({ region: 'bottom.navigator.right' }).addTo(reader);
         action._control.setAttribute('id', 'next');
-        <% else %>
-        cozy.control.pagePrevious({ region: 'bottom.navigator.right' }).addTo(reader);
-        cozy.control.pageNext({ region: 'bottom.navigator.right' }).addTo(reader);
-        <% end %>
 
         // Reader Preferences [Aa]
         cozy.control.preferences({

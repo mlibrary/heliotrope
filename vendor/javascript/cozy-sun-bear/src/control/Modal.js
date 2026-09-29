@@ -251,7 +251,7 @@ export var Modal = Class.extend({
   setFocusToFirstNode: function() {
     var focusableNodes = this.getFocusableNodes();
     if ( focusableNodes.length ) {
-      focusableNodes[0].focus();
+      focusableNodes[0].focus({ preventScroll: true });
       this._lastFocusedIndex = 0;
     } else {
       var fallbackContainer = this._container;
