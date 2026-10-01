@@ -34,9 +34,13 @@ class WebglsController < ApplicationController
     webgl = Webgl::Unity.from_directory(filepath)
     base_dir = webgl.root_path.presence || filepath
 
-    file = UnpackService.safe_path(base_dir, "#{params[:file]}.#{params[:format]}")
-    return head :no_content, status: :not_found if file.blank?
-    return head :no_content, status: :not_found unless file.start_with?(File.realpath(base_dir) + File::SEPARATOR)
+    validated_file = UnpackService.safe_path(base_dir, "#{params[:file]}.#{params[:format]}")
+    return head :no_content, status: :not_found if validated_file.blank?
+    return head :no_content, status: :not_found unless validated_file.start_with?(File.realpath(base_dir) + File::SEPARATOR)
+
+    # Validate the real path, but preserve the symlink path Apache expects for X-Sendfile.
+    relative_file = Pathname(validated_file).relative_path_from(Pathname(File.realpath(base_dir)))
+    file = File.join(base_dir.to_s, relative_file.to_s)
 
     # Need to match apache's XSendFilePath configuration
     file = file.to_s.sub(/releases\/\d+/, "current")
