@@ -35,6 +35,12 @@
     <script src="/webgl/<%= webgl.unity_loader %>"></script>
     <script>
       var config = {
+        // UnityCache/IndexedDB is only activated when both values are supplied. The Unity builds
+        // Fulcrum currently serves (as of 2026-10) have no fallback when either value is absent.
+        // A shared product name is safe because each game's file URL is also part of the cache key.
+        // In short, these values are essential for large data files to use the browser-side cache.
+        companyName: "Fulcrum",
+        productName: "WebGL",
         dataUrl: "/webgl/<%= webgl.unity_data %>",
         frameworkUrl: "/webgl/<%= webgl.unity_framework %>",
         codeUrl: "/webgl/<%= webgl.unity_code %>",
