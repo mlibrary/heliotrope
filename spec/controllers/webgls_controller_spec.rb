@@ -89,6 +89,10 @@ RSpec.describe WebglsController, type: :controller do
         get :file, params: { id: file_set.id, file: 'Build/blah', format: 'data' }
         expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be false
+        expect(response.headers['Cache-Control']).to eq('public, max-age=0, must-revalidate')
+        expect(response.headers['Accept-Ranges']).to eq('bytes')
+        expect(response.headers['Last-Modified']).to be_present
+        expect(response.headers['ETag']).to match(/^W\/"\d+-\d+\.\d+"$/)
       end
 
       it "returns the framework file" do
