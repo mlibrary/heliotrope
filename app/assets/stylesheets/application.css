@@ -15,6 +15,5 @@
  *= require_tree ./common
  *= require dataTables.bootstrap4
  *= require jquery-ui
- *= require idpselect
  */
  
