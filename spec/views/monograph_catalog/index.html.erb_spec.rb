@@ -398,7 +398,7 @@ RSpec.describe "monograph_catalog/index.html.erb" do
 
         before do
           allow(monograph_presenter).to receive(:author_bio?).and_return(true)
-          allow(monograph_presenter).to receive(:author_bio).and_return(['A bio.'])
+          allow(monograph_presenter).to receive(:author_bio).and_return('A bio.')
           allow(view).to receive(:press_presenter).and_return(press_presenter)
           render
         end

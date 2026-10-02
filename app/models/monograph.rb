@@ -84,7 +84,18 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :author_bio, predicate: ::RDF::URI.new('http://fulcrum.org/ns#AuthorBio') do |index|
+  # This field _is_ multivalued in the sense that it can have the bio of multiple authors, but the data that flows...
+  # from TMM in the nightly CSV feed is a mixed bag in terms of origin:
+  # - Sometimes it's pulling from a single text field where multiple author bios may already be present.
+  # - Sometimes it's concatenating multiple fields together where each field is a single author's bio.
+  # Coupled with the facts that:
+  # - we don't have a good way to associate a bio with a specific author
+  # - the data itself has plenty of semi-colons in it, so we can't use that as our delimiter for multiple values
+  # ...It seems best to treat this as a single text field, much like creator_display or description.
+  # Where the input is pulling from multiple fields, Firebrand will merge them with a <hr> separator, which is fine...
+  # for Fulcrum's display purposes.
+  # See FULCRUMOPS-1203 and HELIO-5141.
+  property :author_bio, predicate: ::RDF::URI.new('http://fulcrum.org/ns#AuthorBio'), multiple: false do |index|
     index.as :stored_searchable
   end
 
