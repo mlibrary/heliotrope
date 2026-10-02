@@ -104,6 +104,25 @@ RSpec.describe "monograph_catalog/index.html.erb" do
   describe 'index_monograph' do
     before { allow(monograph_presenter).to receive(:epub?).and_return(false) }
 
+    context 'enlarged cover' do
+      let(:poster_url) { '/image-service/cover/full/full/0/default.png' }
+
+      it 'defers the full-size image without changing the thumbnail' do
+        allow(monograph_presenter).to receive(:representative_id).and_return('cover')
+        allow(monograph_presenter).to receive(:thumbnail_tag).with(286, anything).and_return('<img src="/small-cover.png">'.html_safe)
+        allow(monograph_presenter).to receive(:poster_url).and_return(poster_url)
+        render
+
+        document = Nokogiri::HTML.fragment(rendered)
+        image = document.at_css('#modalImage img')
+        expect(image['data-cover-src']).to eq poster_url
+        expect(image['src']).to be_nil
+        expect(image['hidden']).not_to be_nil
+        expect(document.at_css('.monograph-cover button img')['src']).to eq '/small-cover.png'
+        expect(document.at_css('#modalImage [role="status"]')['data-error-message']).to be_present
+      end
+    end
+
     context 'partial' do
       subject { response.body }
 

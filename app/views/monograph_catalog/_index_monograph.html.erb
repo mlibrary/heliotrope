@@ -273,16 +273,10 @@
         <!-- Modal image -->
         <div class="modal" id="modalImage" tabindex="-1" role="dialog" aria-label="Select the escape key to close the modal window">
           <button type="button" class="close btn btn-default" id="modalClose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <%= @monograph_presenter.poster_tag(tabindex: "-1", alt: '') %>
+          <p class="cover-image-status" role="status" aria-live="polite" data-loading-message="<%= t('monograph_cover.loading') %>" data-error-message="<%= t('monograph_cover.error') %>" hidden></p>
+          <%# Keep the enlarged cover out of the initial load; monograph_cover.js supplies src afterwards. %>
+          <%= tag.img tabindex: "-1", alt: '', hidden: true, data: { cover_src: @monograph_presenter.poster_url } %>
         </div>
-
-        <script type="text/javascript">
-          $(document).on('turbolinks:load', function() {
-            $('#modalImage').on('shown.bs.modal', function () {
-              $('#modalClose').focus();
-            });
-          });
-        </script>
       </div>
       <% else %>
       <div class="monograph-cover">

@@ -30,6 +30,9 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  monograph_cover:
+    loading: "Loading enlarged cover..."
+    error: "The enlarged cover could not be loaded. Please close this window and try again."
   csv:
     descriptions:
       id: |
