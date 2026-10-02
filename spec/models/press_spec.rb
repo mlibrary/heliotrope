@@ -336,4 +336,59 @@ RSpec.describe Press, type: :model do
 
     it { is_expected.to be_an_instance_of(NullPress) }
   end
+
+  describe "metadata change lifecycle callbacks" do
+    let(:press) { create(:press, name: "Original Name", subdomain: "orig-sub") }
+
+    before do
+      ActiveJob::Base.queue_adapter = :test
+    end
+
+    context "when neither name nor subdomain changes" do
+      it "does not enqueue a metadata update job" do
+        expect {
+          press.update!(description: "Just updating the description text.")
+        }.not_to have_enqueued_job(UpdatePressMetadataJob)
+      end
+    end
+
+    context "when only the press name changes" do
+      it "enqueues the job with name_changed: true and subdomain_changed: false" do
+        expect {
+          press.update!(name: "Brand New Shiny Name")
+        }.to have_enqueued_job(UpdatePressMetadataJob).with(
+          subdomain: "orig-sub",
+          old_subdomain: nil,
+          subdomain_changed: false,
+          name_changed: true
+        )
+      end
+    end
+
+    context "when only the subdomain changes" do
+      it "enqueues the job tracking the old subdomain for lookup" do
+        expect {
+          press.update!(subdomain: "new-sub")
+        }.to have_enqueued_job(UpdatePressMetadataJob).with(
+          subdomain: "new-sub",
+          old_subdomain: "orig-sub",
+          subdomain_changed: true,
+          name_changed: false
+        )
+      end
+    end
+
+    context "when both name and subdomain change simultaneously" do
+      it "enqueues a single combined mutation job prioritized to subdomain changes" do
+        expect {
+          press.update!(name: "Brand New Shiny Name", subdomain: "new-sub")
+        }.to have_enqueued_job(UpdatePressMetadataJob).with(
+          subdomain: "new-sub",
+          old_subdomain: "orig-sub",
+          subdomain_changed: true,
+          name_changed: true
+        )
+      end
+    end
+  end
 end
