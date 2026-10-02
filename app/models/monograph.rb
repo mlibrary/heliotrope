@@ -84,7 +84,7 @@ class Monograph < ActiveFedora::Base
     index.as :stored_searchable
   end
 
-  property :author_bio, predicate: ::RDF::URI.new('http://fulcrum.org/ns#AuthorBio') do |index|
+  property :author_bio, predicate: ::RDF::URI.new('http://fulcrum.org/ns#AuthorBio'), multiple: false do |index|
     index.as :stored_searchable
   end
 

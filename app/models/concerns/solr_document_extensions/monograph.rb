@@ -9,7 +9,7 @@ module SolrDocumentExtensions
     end
 
     def author_bio
-      vector('author_bio_tesim')
+      scalar('author_bio_tesim')
     end
 
     def author_place_of_origin
