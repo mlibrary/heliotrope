@@ -2187,7 +2187,8 @@ footer.press {
     display: none;
   }
 
-  .nm--toolbar button:focus {
+  .nm--toolbar button:focus,
+  .nm--toolbar a:focus {
     outline: none;
   }
 

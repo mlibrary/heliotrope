@@ -75,14 +75,15 @@
         <button id="action-map" class="cozy-control cozy-panel-map" onclick="open_map(); return false;" aria-label="Interactive Map">
           <i class="icon-map oi" data-glyph="map" aria-hidden="true" title="Accompanying Interactive Map"></i>
         </button>
-      <% end%>
+      <% end %>
 
+    <% if @monograph_assets_present %>
       <div id="action-resources" class="cozy-control cozy-panel-resources">
         <a class="cozy-control" href="<%= @parent_presenter.catalog_url + '#resources' %>" target="_blank" aria-label="Resources">
             <i class="icon-folder oi" data-glyph="folder" aria-hidden="true" title="Go to Resources page for this book (opens new window)"></i>
         </a>
       </div>
-
+    <% end %>
       <button id="action-info" class="button--sm" data-toggle="open" aria-label="Info">
         <i class="icon-info oi" data-glyph="info" title="Book Information" aria-hidden="true"></i>
       </button>

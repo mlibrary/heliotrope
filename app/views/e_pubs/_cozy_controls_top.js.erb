@@ -6,7 +6,11 @@
         var $panels = document.querySelector('.nm--panels');
 
         // Table of contents [Outline Icon]
+        <% if @parent_presenter.epub? %>
         controls.contents = cozy.control.contents({
+        <% else %>
+        controls.contents = new PDFContents({
+        <% end %>
           container: actions.contents,
           modalContainer: $panels,
           closePanel: false,
@@ -15,7 +19,11 @@
         }).addTo(reader);
 
         // Search [Magnifying Glass Icon]
+        <% if @parent_presenter.epub? %>
         controls.search = cozy.control.search({
+        <% else %>
+        controls.search = new PDFSearch({
+        <% end %>
           container: actions.search,
           searchUrl: "<%= @search_url %>",
           modalContainer: $panels,
