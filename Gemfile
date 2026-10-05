@@ -196,7 +196,7 @@ gem 'riiif', '2.8.1'
 gem 'rsolr', '>= 1.1.2', '< 3'
 
 # Use Zip to extract EPubs
-gem "rubyzip", ">= 1.3.0", "< 3.0" # 3.x changes Entry#extract behavior in ways incompatible with UnpackJob
+gem "rubyzip", "3.4.0"
 
 # to connect to Fulcrum and Firebrand's SFTP servers
 gem 'net-sftp', '~> 4.0'

@@ -17,7 +17,7 @@ class ExtractIngestJob < ApplicationJob
     begin
       Zip::File.open(extract_file) do |zipfile|
         zipfile.each do |entry|
-          entry.extract(File.join(extract_dir, entry.name))
+          entry.extract(destination_directory: extract_dir)
         end
       end
     rescue StandardError => e

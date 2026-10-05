@@ -67,7 +67,7 @@ class EmailCounterReportJob < ApplicationJob
     report_name = email_subject.gsub(/[^0-9A-z.\-]/, '_') + ".csv"
 
     Zip::OutputStream.open(tmp_zip) { |zos| }
-    Zip::File.open(tmp_zip.path, Zip::File::CREATE) do |zip|
+    Zip::File.open(tmp_zip.path, create: true) do |zip|
       zip.add(report_name, tmp_report.path)
     end
 

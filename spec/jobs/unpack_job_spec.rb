@@ -3,6 +3,41 @@
 require 'rails_helper'
 
 RSpec.describe UnpackJob, type: :job do
+  describe 'archive extraction' do
+    around do |example|
+      Dir.mktmpdir('unpack-', Rails.root.join('tmp')) do |directory|
+        @extraction_directory = directory
+        example.run
+      end
+    end
+
+    %w[absolute relative].each do |path_type|
+      context "with a #{path_type} destination path" do
+        let(:root_path) do
+          path = File.join(@extraction_directory, 'unpacked')
+          path_type == 'absolute' ? path : Pathname.new(path).relative_path_from(Pathname.pwd).to_s
+        end
+
+        it 'extracts EPUB files into the destination directory' do
+          File.open(File.join(fixture_path, 'fake_epub01.epub')) do |file|
+            described_class.new.send(:unpack_epub, '123456789', root_path, file)
+          end
+
+          expect(File.read(File.join(root_path, 'mimetype'))).to eq 'application/epub+zip'
+          expect(File).to exist(File.join(root_path, 'META-INF', 'container.xml'))
+        end
+
+        it 'extracts JavaScript applications without their top-level directory' do
+          File.open(File.join(fixture_path, 'fake-game.zip')) do |file|
+            described_class.new.send(:unpack_zipped_js_app, '123456789', 'webgl', root_path, file)
+          end
+
+          expect(File).to exist(File.join(root_path, 'Build', 'blah.loader.js'))
+        end
+      end
+    end
+  end
+
   describe 'perform' do
     context 'with a missing original_file' do
       let(:no_file_file_set) { create(:file_set) }
