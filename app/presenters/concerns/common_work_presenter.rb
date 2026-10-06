@@ -16,10 +16,14 @@ module CommonWorkPresenter
 
   def poster_tag(options = {})
     options['style'] = "filter: grayscale(1)" if respond_to?(:tombstone?) && tombstone?
+    ActionController::Base.helpers.image_tag(poster_url, options)
+  end
+
+  def poster_url
     if representative_id.present?
-      ActionController::Base.helpers.image_tag(Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, :full, :full, 0, format: "png"), options)
+      Riiif::Engine.routes.url_helpers.image_path(cache_buster_id, :full, :full, 0, format: "png")
     else
-      ActionController::Base.helpers.image_tag(thumbnail_path || '', options)
+      thumbnail_path || ''
     end
   end
 

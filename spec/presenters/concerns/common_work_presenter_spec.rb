@@ -82,6 +82,10 @@ RSpec.describe CommonWorkPresenter do
         is_expected.to be thumbnail_image_tag
         expect(ActionController::Base.helpers).to have_received(:image_tag).with(presenter.thumbnail_path, options)
       }
+
+      it 'exposes the fallback poster URL' do
+        expect(presenter.poster_url).to eq presenter.thumbnail_path
+      end
     end
 
     context 'representative_id set, uses image-service' do
@@ -100,6 +104,11 @@ RSpec.describe CommonWorkPresenter do
         expect(presenter).to have_received(:cache_buster_id)
         expect(ActionController::Base.helpers).to have_received(:image_tag).with(riiif_image_path, options)
       }
+
+      it 'exposes the full-size poster URL without rendering an image' do
+        expect(presenter.poster_url).to eq riiif_image_path
+        expect(ActionController::Base.helpers).not_to have_received(:image_tag)
+      end
     end
   end
 

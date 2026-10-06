@@ -31,6 +31,16 @@ RSpec.describe "Monograph Catalog TOC", type: :system, browser: true do
       find("button[data-target='#modalImage'").click
       expect(page).to have_css("body.#{press.subdomain}.modal-open")
       expect(page).to have_css("div#modalImage", visible: true)
+      expect(page).to have_css('#modalImage img[data-cover-src][src]:not([hidden])')
+      expect(page.evaluate_script("document.querySelector('#modalImage img').naturalWidth")).to be > 0
+      timing = page.evaluate_script(<<~JS)
+        (function() {
+          var imageUrl = document.querySelector('#modalImage img').src;
+          var resource = performance.getEntriesByName(imageUrl)[0];
+          return [resource.startTime, performance.getEntriesByType('navigation')[0].loadEventEnd];
+        })()
+      JS
+      expect(timing.first).to be >= timing.last
 
       # For fun, we'll hit 'Escape' to close the modal (there is a hard-to-see 'x' button also)
       input = find("div#modalImage").native
@@ -38,6 +48,92 @@ RSpec.describe "Monograph Catalog TOC", type: :system, browser: true do
       expect(page).to have_css("body.#{press.subdomain}")
       expect(page).not_to have_css("body.#{press.subdomain}.modal-open")
       expect(page).to have_css("div#modalImage", visible: false)
+    end
+
+    context 'deferred loading lifecycle' do
+      before do
+        visit monograph_catalog_path(monograph)
+        page.execute_script(<<~JS)
+          $(document).trigger('turbolinks:before-cache');
+          var cover = document.querySelector('#modalImage img');
+          cover.removeAttribute('src');
+          cover.hidden = true;
+          window.coverIdleCallback = null;
+          window.coverIdleCancelled = false;
+          window.requestIdleCallback = function(callback) {
+            window.coverIdleCallback = callback;
+            return 1;
+          };
+          window.cancelIdleCallback = function() {
+            window.coverIdleCancelled = true;
+            window.coverIdleCallback = null;
+          };
+          Object.defineProperty(document, 'readyState', { configurable: true, get: function() { return 'loading'; } });
+          $(document).trigger('turbolinks:load');
+        JS
+      end
+
+      it 'waits for page load and an idle callback before requesting the enlarged cover' do
+        expect(page.evaluate_script("document.querySelector('#modalImage img').hasAttribute('src')")).to be false
+        expect(page.evaluate_script('window.coverIdleCallback')).to be_nil
+        page.execute_script("window.dispatchEvent(new Event('load'));")
+        expect(page.evaluate_script("document.querySelector('#modalImage img').hasAttribute('src')")).to be false
+        expect(page.evaluate_script("typeof window.coverIdleCallback")).to eq 'function'
+        page.execute_script('window.coverIdleCallback();')
+        expect(page).to have_css('#modalImage img[src]:not([hidden])', visible: false)
+      end
+
+      it 'loads immediately on opening and cancels pending background work' do
+        page.execute_script("window.dispatchEvent(new Event('load'));")
+        find("button[data-target='#modalImage']").click
+        expect(page.evaluate_script('window.coverIdleCancelled')).to be true
+        expect(page).to have_css('#modalImage img[src]:not([hidden])')
+        expect(page.evaluate_script('document.activeElement.id')).to eq 'modalClose'
+      end
+
+      it 'cancels background loading when navigating away' do
+        page.execute_script("window.dispatchEvent(new Event('load')); $(document).trigger('turbolinks:before-visit');")
+        expect(page.evaluate_script('window.coverIdleCancelled')).to be true
+        expect(page.evaluate_script("document.querySelector('#modalImage img').hasAttribute('src')")).to be false
+      end
+
+      it 'uses a post-load timer when idle callbacks are unavailable' do
+        page.execute_script(<<~JS)
+          window.requestIdleCallback = undefined;
+          window.dispatchEvent(new Event('load'));
+        JS
+        expect(page).to have_css('#modalImage img[src]:not([hidden])', visible: false)
+      end
+
+      it 'reinitializes a restored page without adding duplicate modal handlers' do
+        page.execute_script(<<~JS)
+          $(document).trigger('turbolinks:before-cache');
+          delete document.readyState;
+          $(document).trigger('turbolinks:load');
+          $(document).trigger('turbolinks:load');
+        JS
+        expect(page.evaluate_script('typeof window.coverIdleCallback')).to eq 'function'
+        find("button[data-target='#modalImage']").click
+        expect(page).to have_css('#modalImage img[src]:not([hidden])')
+        handlers = page.evaluate_script(<<~JS)
+          $._data(document.getElementById('modalImage'), 'events').show.filter(function(handler) {
+            return handler.namespace.indexOf('fulcrumCover') !== -1;
+          }).length;
+        JS
+        expect(handlers).to eq 1
+      end
+
+      it 'reports a load failure and retries on the next opening' do
+        find("button[data-target='#modalImage']").click
+        expect(page).to have_css('#modalImage img[src]:not([hidden])')
+        page.execute_script("document.querySelector('#modalImage img').dispatchEvent(new Event('error'));")
+        expect(page).to have_css('#modalImage [role="status"]', text: I18n.t('monograph_cover.error'))
+        page.execute_script("$('#modalImage').modal('hide');")
+        expect(page).not_to have_css("body.modal-open")
+        find("button[data-target='#modalImage']").click
+        expect(page).to have_css('#modalImage img[src]:not([hidden])')
+        expect(page).not_to have_css('#modalImage [role="status"]', text: I18n.t('monograph_cover.error'))
+      end
     end
   end
 
