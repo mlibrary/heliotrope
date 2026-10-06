@@ -85,4 +85,28 @@ class Press < ApplicationRecord
       end
     end
   end
+
+  around_update :handle_monograph_metadata_changes
+
+  private
+
+    def handle_monograph_metadata_changes
+      subdomain_changed = will_save_change_to_subdomain?
+      name_changed = will_save_change_to_name?
+
+      # Capture the old value for lookup before database write
+      old_subdomain = subdomain_was if subdomain_changed
+
+      yield # Database save occurs here
+
+      # Enqueue a single job if either (or both) attributes change
+      if subdomain_changed || name_changed
+        UpdatePressMetadataJob.perform_later(
+          subdomain: subdomain,
+          old_subdomain: old_subdomain,
+          subdomain_changed: subdomain_changed,
+          name_changed: name_changed
+        )
+      end
+    end
 end
