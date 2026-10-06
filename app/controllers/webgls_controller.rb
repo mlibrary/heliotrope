@@ -42,6 +42,8 @@ class WebglsController < ApplicationController
     relative_file = Pathname(validated_file).relative_path_from(Pathname(File.realpath(base_dir)))
     file = File.join(base_dir.to_s, relative_file.to_s)
 
+    file_stat = File.stat(file)
+
     # Need to match apache's XSendFilePath configuration
     file = file.to_s.sub(/releases\/\d+/, "current")
     response.headers['X-Sendfile'] = file
@@ -51,6 +53,12 @@ class WebglsController < ApplicationController
     else
       send_file file
     end
+
+    # Keep the origin response immediately revalidatable. The Cloudflare /webgl cache rule can override this for clients
+    response.headers['Cache-Control'] = 'public, max-age=0, must-revalidate'
+    response.headers['Accept-Ranges'] = 'bytes'
+    response.headers['Last-Modified'] = file_stat.mtime.httpdate
+    response.headers['ETag'] = %(W/"#{file_stat.size}-#{file_stat.mtime.to_f}")
   rescue StandardError => e
     Rails.logger.info("WebglsController.file(#{params[:file] + '.' + params[:format]}) raised #{e} #{e.backtrace.join("\n")}")
     head :no_content, status: :not_found
