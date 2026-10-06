@@ -222,10 +222,7 @@
         <% if @monograph_presenter.author_bio? && press_presenter.show_author_bios? %>
           <section id="author-bio" class="tab-pane fade author-bio row" role="tabpanel" aria-hidden="true" aria-labelledby="tab-author-bio" tabindex="0">
             <div class="col-sm-12">
-              <% @monograph_presenter.author_bio.each_with_index do |bio, index| %>
-                <% if index > 0 %><hr class="author-bio-separator" /><% end %>
-                <section class="author_bio"><%= render_markdown bio %></section>
-              <% end %>
+              <div class="author-bio"><%= render_markdown @monograph_presenter.author_bio %></div>
             </div>
           </section>
         <% end %>

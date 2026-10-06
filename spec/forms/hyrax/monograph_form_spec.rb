@@ -132,6 +132,12 @@ describe Hyrax::MonographForm do
     it { is_expected.to eq %i[title press creator publisher date_created location] }
   end
 
+  describe '.multiple?' do
+    it 'treats author bio as a single-valued field' do
+      expect(described_class.multiple?(:author_bio)).to be false
+    end
+  end
+
   describe 'select_press' do
     subject { form.select_press }
 

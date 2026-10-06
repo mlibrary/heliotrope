@@ -66,8 +66,8 @@ describe 'Create a monograph' do
       # 'Authors' is ambiguous
       fill_in 'monograph[creator]', with: "Johns, Jimmy\nWay, Sub (editor)"
       fill_in 'Contributor(s)', with: 'Shoppe, Sandwich (another unused role)'
-      expect(page).to have_css('textarea.monograph_author_bio', count: 1)
-      fill_in 'monograph_author_bio_0', with: 'Timmy McGinty was born in a very small town in the northwest of the United States.'
+      expect(page).to have_field('Author Bio', count: 1)
+      fill_in 'Author Bio', with: 'Timmy McGinty was born in a very small town in the northwest of the United States.'
       expect(page).to have_css('input.monograph_author_place_of_origin', count: 1)
       fill_in 'Author Place of Origin', with: 'Smalltown, USA'
 
@@ -148,8 +148,8 @@ describe 'Create a monograph' do
 
       # add creator_display to test authorship override
       fill_in 'Authorship Display (free-form text)', with: 'Fancy Authorship Name Stuff That Takes Precedence'
-      expect(page).to have_css('textarea.monograph_author_bio', count: 2)
-      page.all(:fillable_field, 'monograph[author_bio][]').last.set('Frank Writers is a city slicker, through and through.')
+      expect(page).to have_field('Author Bio', count: 1)
+      fill_in 'Author Bio', with: 'Frank Writers is a city slicker, through and through.'
       expect(page).to have_css('input.monograph_author_place_of_origin', count: 2)
       page.all(:fillable_field, 'monograph[author_place_of_origin][]').last.set('The Big Shmoke')
       expect(page).to have_css('input.monograph_author_place_of_origin', count: 2)
@@ -179,7 +179,6 @@ describe 'Create a monograph' do
       expect(page).to have_content "Fancy Authorship Name Stuff That Takes Precedence"
       expect(page).not_to have_content "Jimmy Johns, Sub Way and Shoppe Sandwich"
 
-      expect(page).to have_content 'Timmy McGinty was born in a very small town in the northwest of the United States.'
       expect(page).to have_content 'Frank Writers is a city slicker, through and through.'
       # author_place_of_origin is not displayed on the Monograph catalog page
       expect(page).not_to have_content 'Smalltown, USA'
