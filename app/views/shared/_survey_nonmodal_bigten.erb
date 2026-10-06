@@ -22,7 +22,11 @@
 <script type="text/javascript">
   function survey_button_yes(){
     Cookies.set('survey_bigten', 'clicked', { expires: 365<%= ', secure: true' if Rails.env == 'production' %> });
-    window.open("https://umich.qualtrics.com/jfe/form/SV_72nTB41pi7pzn9A?publisher=<%= @subdomain %>&title=<%= @parent_presenter.page_title %>", "_blank");
+    <% publisher = @parent_presenter&.publisher&.first %>
+    <%# url_title is the tag/Markdown-stripped and HTML-escaped version of the Monograph title, so don't double escape. %>
+    <% survey_url = "https://umich.qualtrics.com/jfe/form/SV_72nTB41pi7pzn9A?title=#{@parent_presenter.url_title.to_s}" %>
+    <% survey_url += "&publisher=#{ERB::Util.url_encode(publisher)}" if publisher.present? %>
+    window.open("<%= raw(j(survey_url)) %>", "_blank");
   }
   function survey_button_no(){
     Cookies.set('survey_bigten', 'ignore', { expires: 180<%= ', secure: true' if Rails.env == 'production' %> });
