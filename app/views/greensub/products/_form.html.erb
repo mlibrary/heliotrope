@@ -2,7 +2,7 @@
   <%= f.error_notification %>
 
   <div class="form-inputs">
-    <%= f.input :identifier %>
+    <%= f.input :identifier, hint: 'A unique ID identifying the product' %>
   </div>
 
   <div class="form-inputs">
@@ -10,7 +10,7 @@
   </div>
 
   <div class="form-inputs">
-    <%= f.input :purchase %>
+    <%= f.input :purchase, label: 'Purchase URL' %>
   </div>
 
   <div class="form-inputs">
