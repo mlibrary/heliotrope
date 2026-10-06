@@ -229,7 +229,7 @@ class UnpackJob < ApplicationJob
       Zip::File.open(file.path) do |zip_file|
         zip_file.each do |entry|
           make_path_entry(root_path, entry.name)
-          entry.extract(File.join(root_path, entry.name))
+          entry.extract(destination_directory: root_path)
         end
       end
     rescue Zip::Error
@@ -242,8 +242,9 @@ class UnpackJob < ApplicationJob
           # We don't want to include the root directory, it could be named anything.
           parts = entry.name.split(File::SEPARATOR)
           without_parent = parts.slice(1, parts.length).join(File::SEPARATOR)
+          next if without_parent.empty?
           make_path_entry(root_path, without_parent)
-          entry.extract(File.join(root_path, without_parent))
+          entry.extract(without_parent, destination_directory: root_path)
         end
       end
     rescue Zip::Error

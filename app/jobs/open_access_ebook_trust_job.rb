@@ -91,7 +91,7 @@ class OpenAccessEbookTrustJob < ApplicationJob
     tmp_files = []
 
     Zip::OutputStream.open(zipfile) { |zos| }
-    Zip::File.open(zipfile.path, Zip::File::CREATE) do |zip|
+    Zip::File.open(zipfile.path, create: true) do |zip|
       reports.each do |name, data|
         tmp_report = Tempfile.new
         tmp_files << tmp_report

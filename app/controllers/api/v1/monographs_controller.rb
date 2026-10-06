@@ -79,7 +79,7 @@ module API
         Export::Exporter.new(noid).extract(extract_dir, true)
         extract_zip = File.join(extract_path, "#{noid}.zip")
         FileUtils.rm_rf(extract_zip) if File.exist?(extract_zip)
-        Zip::File.open(extract_zip, Zip::File::CREATE) do |zipfile|
+        Zip::File.open(extract_zip, create: true) do |zipfile|
           dir = Dir.new(extract_dir)
           dir.each do |entry|
             next if ['.', '..'].include?(entry)

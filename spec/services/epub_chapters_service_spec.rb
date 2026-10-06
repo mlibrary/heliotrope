@@ -29,7 +29,7 @@ RSpec.describe EpubChaptersService do
       zip_file.each do |entry|
         out_path = File.join(dest, entry.name)
         FileUtils.mkdir_p(File.dirname(out_path))
-        entry.extract(out_path) { true }
+        entry.extract(destination_directory: dest) { true }
       end
     end
     dest
