@@ -2,15 +2,21 @@
 // HELIOTROPE EMBEDDED CONTENT STYLESHEET
 ///////////////////////////////////////////
 
-html, body, figure, #image {
+html, body, figure, .fulcrum-media-wrapper, #image {
   margin: 0px;
   padding: 0px;
   border: 0px;
   width: 100%;
 }
 
-html.full-height-embed, body.full-height-embed {
+.full-height-embed {
   height: 100%;
+
+  figure,
+  .fulcrum-media-wrapper,
+  #image {
+    height: 100%;
+  }
 }
 
 html {

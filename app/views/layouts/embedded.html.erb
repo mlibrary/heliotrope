@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html <%= 'class="full-height-embed"'.html_safe if @presenter.image? || @presenter.interactive_application? || @presenter.interactive_map? %> lang="en">
+<html lang="en" class="<%= 'full-height-embed' if @presenter.image? || @presenter.interactive_application? || @presenter.interactive_map? %>">
   <head>
     <title><%= content_for?(:page_title) ? yield(:page_title) : yield %></title>
     <!-- Ensure all links open outside the iframe, in a new tab -->
@@ -20,7 +20,7 @@
       <%= yield(:head) %>
     <% end %>
   </head>
-  <body <%= 'class="full-height-embed"'.html_safe if @presenter.image? || @presenter.interactive_application? || @presenter.interactive_map? %>>
+  <body class="<%= 'full-height-embed' if @presenter.image? || @presenter.interactive_application? || @presenter.interactive_map? %>">
     <%= content_for?(:body) ? yield(:body) : yield %>
   </body>
 </html>
