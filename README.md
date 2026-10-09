@@ -118,7 +118,7 @@ $ bundle exec rails hyrax:default_admin_set:create
 ## Docker Setup for Development
 
 Instead of running locally with solr_wrapper and fcrepo_wrapper, everything can be run with docker compose. The Docker setup uses entrypoints under `docker/entrypoints/`.
-On startup, the app container will wait for dependencies and then run setup tasks (including `db:setup`/`db:migrate`, `checkpoint:migrate`, and `system_user`) automatically.
+On startup, the app container will wait for dependencies, load the schema and seeds only if the development database is completely empty, and otherwise run `db:migrate`. It also runs `checkpoint:migrate`, `system_user`, and `jekyll:deploy` automatically. Initial setup does not reload the test database.
 
 Use `bin/compose` for Docker Compose commands in this repo on both macOS and Linux.
 - `bin/compose` automatically sets `DOCKER_DEFAULT_PLATFORM=linux/amd64` on macOS Apple Silicon unless you already set it.
@@ -167,6 +167,18 @@ bin/compose exec app bundle exec rails hyrax:default_admin_set:create
 ```
 bin/compose down
 ```
+
+### Recovering from database startup failures
+
+Stop the app and workers while investigating:
+```
+bin/compose stop app resque
+bin/compose logs --tail=100 app
+```
+
+Older entrypoints ran `db:setup` on every start. That task replaces tables; a foreign-key error during schema loading can leave a partially rebuilt database and indexes whose migrations are still pending. The entrypoint now avoids reloading existing tables, and the uniqueness-index migration can resume when some of its unique indexes already exist.
+
+After updating, retry startup with `bin/compose up -d --build`. If migrations still fail, inspect the actual SQL error rather than rerunning `db:setup` or disabling foreign-key checks. Back up the database before any manual repair. Tables replaced by an earlier schema load may already have lost data and foreign-key constraints; successful startup does not repair those losses, so restore a known-good backup if needed. Do not commit a schema dump generated from a partially rebuilt database. Do not use `bin/compose down -v` as a repair step: it deletes the stack's persistent volumes.
 
 
 # Debugging
