@@ -5,6 +5,28 @@ var gameReady = false;
 // device or browser (heliotropeIncompatibleWebGlUser === true)
 var firstLaunchWebGlEpub = false;
 
+// Release Unity's keyboard capture when interaction moves back to the reader
+// or another control. Unity can retain its internal focus even after the
+// browser focuses an HTML element outside the game container.
+var release_webgl_keyboard_focus = function() {
+  FocusCanvas("0");
+
+  var unityContainer = document.getElementById('unity-container');
+  if (unityContainer && unityContainer.contains(document.activeElement)) {
+    document.activeElement.blur();
+  }
+};
+
+// A pointer down outside the game is the earliest reliable indication that
+// the user is returning to the reader or another control. Use capture so the
+// release happens before the clicked control's handler runs.
+document.addEventListener('pointerdown', function(event) {
+  var unityContainer = document.getElementById('unity-container');
+  if (unityContainer && !unityContainer.contains(event.target)) {
+    release_webgl_keyboard_focus();
+  }
+}, true);
+
 // load the game on launch of e-reader
 reader.on('ready', function() {
   // the a11y state disables the "3D MODEL" button and hides the WebGL panel. These are things we want for...
@@ -170,6 +192,7 @@ var open_panel = function() {
 var close_panel = function() {
   var $panel = $('.special-panel');
   if ($panel.length) {
+    release_webgl_keyboard_focus();
     $('.special-panel').hide();
     $('body').removeClass('panel-open');
     $('body').removeClass('panel-right');
