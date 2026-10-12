@@ -112,3 +112,4 @@ solr/config/core.properties
 solr/config/data/
 .config/
 .webdrivers
+.env
