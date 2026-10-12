@@ -2198,8 +2198,10 @@ footer.press {
 
   .nm--toolbar .cozy-panel-feedback {
     position: absolute;
-    bottom: 25px;
+    bottom: 5px;
     left: 0;
+    right: 0;
+    text-align: center;
 
     a {
       text-decoration: none;
