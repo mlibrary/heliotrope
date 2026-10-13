@@ -65,6 +65,10 @@
     <meta name="citation_hdl" content="<%= @presenter.handle_path %>">
   <% end %>
 
+  <script type="application/ld+json">
+    <%= raw(json_escape(@presenter.schema_org_json_ld.to_json)) %>
+  </script>
+
 <% elsif controller_name == "e_pubs"%>
   <%# for epubs we really want the epub's monograph's info since it's a "representative" of the monograph %>
   <%# This is basically a cut-and-paste of the monographs controller, but with a different presenter %>

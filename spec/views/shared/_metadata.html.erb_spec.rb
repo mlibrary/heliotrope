@@ -176,8 +176,35 @@ describe 'shared/_metadata.html.erb' do
       @presenter = Hyrax::FileSetPresenter.new(solr_document, nil)
       allow(controller).to receive(:controller_name).and_return("file_sets")
       render
-      expect(rendered).to match '10.3998/fulcrum.001'
-      expect(rendered).not_to match HandleNet::DOI_ORG_PREFIX
+      expect(rendered).to match('<meta name="citation_doi" content="10.3998/fulcrum.001">')
+      expect(rendered).not_to match(/<meta name="citation_doi" content="#{Regexp.escape(HandleNet::DOI_ORG_PREFIX)}/)
+    end
+
+    it 'includes schema.org JSON-LD structured data' do
+      @presenter = Hyrax::FileSetPresenter.new(solr_document, nil)
+      allow(controller).to receive(:controller_name).and_return("file_sets")
+      render
+      expect(rendered).to include '<script type="application/ld+json">'
+      expect(rendered).to match '"@context":"https://schema.org"'
+      expect(rendered).to match '"name":"Bark Bark Boop"'
+      expect(rendered).to match '"url":"https://doi.org/10.3998/fulcrum.001"'
+    end
+
+    it 'preserves HTML-sensitive characters in JSON-LD values' do
+      special_chars_document = SolrDocument.new(
+        id: '001',
+        has_model_ssim: ['FileSet'],
+        title_tesim: ['Fish & Chips > 3'],
+        keyword_tesim: ['<script>alert("x")</script>', 'Fish & Chips']
+      )
+      @presenter = Hyrax::FileSetPresenter.new(special_chars_document, nil)
+      allow(controller).to receive(:controller_name).and_return("file_sets")
+      render
+
+      json_ld = rendered.match(%r{<script type="application/ld\+json">\s*(.*?)\s*</script>}m)[1]
+      parsed_json_ld = JSON.parse(json_ld)
+      expect(parsed_json_ld['name']).to eq 'Fish & Chips > 3'
+      expect(parsed_json_ld['keywords']).to eq ['<script>alert("x")</script>', 'Fish & Chips']
     end
   end
 
