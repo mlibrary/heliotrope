@@ -163,7 +163,19 @@ bin/compose exec app bundle exec rails admin
 bin/compose exec app bundle exec rails hyrax:default_admin_set:create
 ```
 
-### 5. Stop services
+### 5. Running command line scripts on the host (optional)
+
+If you need to run CLI scripts on your host machine (such as `script/import`, `script/export`, etc.) while your services run in Docker Compose, copy the sample environment file:
+```
+cp .env.example .env
+```
+This configures the host scripts to connect to the published ports and services (MariaDB, Solr, Fedora, Redis) exposed by Docker Compose. You can export these environment variables before running scripts:
+```
+set -a && source .env && set +a
+script/import -d /path/to/assets -p press_subdomain -q
+```
+
+### 6. Stop services
 ```
 bin/compose down
 ```

@@ -49,5 +49,8 @@ bundle exec rails checkpoint:migrate
 bundle exec rails system_user
 bundle exec rails jekyll:deploy
 
+# For restarts, delete the server PID file if it exists
+rm -f /app/tmp/pids/server.pid
+
 echo "Entrypoint tasks complete."
 exec "$@"
