@@ -45,6 +45,9 @@
   <% if defined? @presenter.file_set_coins_title %>
     <span class="Z3988" title="<%= @presenter.file_set_coins_title %>" aria-hidden="true"></span>
   <% end %>
+
+  <%= render partial: "e_pubs/survey_oa" %>
+
   <div class="skip"></div>
   <%# tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
   <div class="too" id="epub">
