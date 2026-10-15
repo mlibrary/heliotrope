@@ -430,5 +430,64 @@ module Hyrax
     def youtube_captions_present?
       solr_document['youtube_video_captions_on_yt_bsi'] == true
     end
+
+    # HELIO-5167: Provide structured schema.org JSON-LD metadata for the file set
+    def schema_org_json_ld
+      data = {
+        '@context' => 'https://schema.org',
+        '@type' => schema_org_type,
+        'name' => page_title,
+        'description' => schema_org_description,
+        'url' => citable_link
+      }
+
+      data['identifier'] = citable_link if citable_link.present?
+      data['license'] = license.first if license.present?
+      data['keywords'] = keyword if keyword.present?
+
+      creators = schema_org_creators
+      data['creator'] = creators if creators.present?
+
+      data.compact
+    end
+
+    def schema_org_type
+      resource_type_value = Array(resource_type).first.to_s
+      res_type = resource_type_value.downcase
+      return 'Dataset' if res_type == 'dataset'
+      return 'ImageObject' if res_type == 'image' || probable_image?
+      return 'AudioObject' if res_type == 'audio' || audio?
+      return 'VideoObject' if res_type == 'video' || video?
+      return 'Map' if ['map', 'interactive map'].include?(res_type)
+      return 'DigitalDocument' if res_type == 'text' || pdf? || office_document?
+
+      mapped_type = Hyrax::ResourceTypesService.microdata_type(resource_type_value)
+      return mapped_type if mapped_type.present?
+
+      'CreativeWork'
+    end
+
+    private
+
+      def schema_org_description
+        raw_description = description&.first.presence || caption&.first.presence || alt_text&.first.presence || page_title
+        MarkdownService.markdown_as_text(raw_description).strip
+      end
+
+      def schema_org_creators
+        author_names = if article_resource? && article_creator.present?
+                         Array(article_creator).first.to_s.split(/\r\n?|\n/)
+                       else
+                         Array(creator)
+                       end
+
+        author_names.map(&:strip).reject(&:blank?).map do |name|
+          unreversed = unreverse_name(name)
+          {
+            '@type' => 'Person',
+            'name' => unreversed
+          }
+        end
+      end
   end
 end

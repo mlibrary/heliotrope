@@ -980,4 +980,136 @@ RSpec.describe Hyrax::FileSetPresenter do
       it { is_expected.to eq "2022" }
     end
   end
+
+  describe '#schema_org_json_ld' do
+    subject(:json_ld) { presenter.schema_org_json_ld }
+
+    context 'with a dataset' do
+      let(:fileset_doc) do
+        SolrDocument.new(
+          id: 'ds123',
+          has_model_ssim: ['FileSet'],
+          title_tesim: ['Uxul Household Walking Times'],
+          description_tesim: ['This is a dataset containing walking times between classic Maya households.'],
+          resource_type_tesim: ['Dataset'],
+          creator_tesim: ['Barnard, Els', 'Doe, Jane'],
+          keyword_tesim: ['Maya', 'Uxul', 'GIS'],
+          license_tesim: ['https://creativecommons.org/publicdomain/zero/1.0/'],
+          doi_ssim: ['10.3998/fulcrum.ds123']
+        )
+      end
+
+      it 'returns dataset structured data' do
+        expect(json_ld['@context']).to eq 'https://schema.org'
+        expect(json_ld['@type']).to eq 'Dataset'
+        expect(json_ld['name']).to eq 'Uxul Household Walking Times'
+        expect(json_ld['description']).to eq 'This is a dataset containing walking times between classic Maya households.'
+        expect(json_ld['url']).to eq 'https://doi.org/10.3998/fulcrum.ds123'
+        expect(json_ld['license']).to eq 'https://creativecommons.org/publicdomain/zero/1.0/'
+        expect(json_ld['keywords']).to eq ['Maya', 'Uxul', 'GIS']
+        expect(json_ld['creator']).to eq [
+          { '@type' => 'Person', 'name' => 'Els Barnard' },
+          { '@type' => 'Person', 'name' => 'Jane Doe' }
+        ]
+      end
+    end
+
+    context 'when description is missing but caption exists' do
+      let(:fileset_doc) do
+        SolrDocument.new(
+          id: 'ds456',
+          has_model_ssim: ['FileSet'],
+          title_tesim: ['Resource Title'],
+          caption_tesim: ['_Caption_ describing the file.'],
+          resource_type_tesim: ['Dataset']
+        )
+      end
+
+      it 'falls back to stripped caption text' do
+        expect(json_ld['description']).to eq 'Caption describing the file.'
+      end
+    end
+
+    context 'with an image' do
+      let(:fileset_doc) do
+        SolrDocument.new(
+          id: 'img123',
+          has_model_ssim: ['FileSet'],
+          title_tesim: ['Uxul Map Photo'],
+          mime_type_ssi: 'image/tiff',
+          resource_type_tesim: ['Image']
+        )
+      end
+
+      it 'returns ImageObject type' do
+        expect(json_ld['@type']).to eq 'ImageObject'
+      end
+    end
+
+    context 'with an audio file' do
+      let(:fileset_doc) do
+        SolrDocument.new(
+          id: 'aud123',
+          has_model_ssim: ['FileSet'],
+          title_tesim: ['Audio Recording'],
+          resource_type_tesim: ['Audio']
+        )
+      end
+
+      it 'returns AudioObject type' do
+        expect(json_ld['@type']).to eq 'AudioObject'
+      end
+    end
+
+    context 'with an article resource' do
+      let(:fileset_doc) do
+        SolrDocument.new(
+          id: 'art123',
+          has_model_ssim: ['FileSet'],
+          title_tesim: ['Chart 1'],
+          article_title_tesim: ['Some Journal Article'],
+          article_creator_tesim: ['Smith, John']
+        )
+      end
+
+      it 'uses article_creator for creator' do
+        expect(json_ld['creator']).to eq [{ '@type' => 'Person', 'name' => 'John Smith' }]
+      end
+    end
+
+    context 'with other configured resource types' do
+      let(:fileset_doc) { SolrDocument.new(id: 'resource', has_model_ssim: ['FileSet']) }
+
+      it 'uses their configured schema.org types' do
+        {
+          'Article' => 'http://schema.org/Article',
+          'Conference Proceeding' => 'http://schema.org/ScholarlyArticle',
+          'Research Paper' => 'http://schema.org/ScholarlyArticle',
+          'Software or Program Code' => 'http://schema.org/Code',
+          'Map or Cartographic Material' => 'http://schema.org/Map'
+        }.each do |resource_type, schema_type|
+          allow(presenter).to receive(:resource_type).and_return(resource_type)
+          expect(presenter.schema_org_type).to eq schema_type
+        end
+      end
+    end
+
+    context 'with newline-delimited article creators' do
+      let(:fileset_doc) do
+        SolrDocument.new(
+          id: 'article',
+          has_model_ssim: ['FileSet'],
+          article_title_tesim: ['Some Journal Article'],
+          article_creator_tesim: ["Smith, John\n\nDoe, Jane\n "]
+        )
+      end
+
+      it 'splits authors and omits blank names' do
+        expect(json_ld['creator']).to eq [
+          { '@type' => 'Person', 'name' => 'John Smith' },
+          { '@type' => 'Person', 'name' => 'Jane Doe' }
+        ]
+      end
+    end
+  end
 end
