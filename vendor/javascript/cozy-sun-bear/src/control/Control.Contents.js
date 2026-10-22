@@ -46,7 +46,7 @@ export var Contents = Control.extend({
         event.preventDefault();
         self._goto_interval = false;
         self._reader.tracking.action('contents/open');
-        self._modal.activate();
+        self._modal.activate(self._control);
       }, this);
 
       this._modal = this._reader.modal({

@@ -126,25 +126,35 @@ export var Modal = Class.extend({
     }
   },
 
-  deactivate: function() {
-    this.closeModal();
+  deactivate: function(restoreFocus) {
+    this.closeModal(restoreFocus);
   },
 
-  closeModal: function() {
+  closeModal: function(restoreFocus) {
+    if ( restoreFocus === undefined ) { restoreFocus = true; }
     this.modal.setAttribute('aria-hidden', 'true');
     this._setPanelState(false);
     this.removeEventListeners();
+    if ( this.activeElement && this.activeElement.classList ) {
+      this.activeElement.classList.remove('reader-panel-active');
+    }
     if (activeModal === this) {
       activeModal = undefined;
     }
-    if ( this.activeElement ) {
+    if ( restoreFocus && this.activeElement ) {
       this.activeElement.focus();
     }
     this.callbacks.onClose(this.modal);
   },
 
-  showModal: function() {
-    this.activeElement = document.activeElement
+  showModal: function(triggeringElement) {
+    if ( triggeringElement && triggeringElement.focus ) {
+      triggeringElement.focus();
+    }
+    this.activeElement = triggeringElement || document.activeElement
+    if ( this.activeElement && this.activeElement.classList && this.activeElement.matches('button, a') ) {
+      this.activeElement.classList.add('reader-panel-active');
+    }
     this._resize();
     this.modal.setAttribute('aria-hidden', 'false')
     this._setPanelState(true);
@@ -153,26 +163,19 @@ export var Modal = Class.extend({
     this.callbacks.onShow(this.modal)
   },
 
-  activate: function() {
+  activate: function(triggeringElement) {
     if (activeModal === this) {
       return this.deactivate();
     }
 
-    var openModalCloseButtons = document.querySelectorAll('.cozy-modal[aria-hidden="false"] button[data-modal-close]');
-    openModalCloseButtons.forEach(function(button) {
-      if (!this.modal.contains(button)) {
-        button.click();
-      }
-    }.bind(this));
-
     modals.forEach(function(modal) {
       if (modal !== this && modal.modal && modal.modal.getAttribute('aria-hidden') === 'false') {
-        modal.deactivate();
+        modal.deactivate(false);
       }
     }.bind(this));
 
     activeModal = this;
-    return this.showModal();
+    return this.showModal(triggeringElement);
   },
 
   _setPanelState: function(open) {

@@ -195,7 +195,11 @@ Reader.EpubJS = Reader.extend({
 
     self.settings.height = '100%';
     self.settings.width = '100%';
-    self.settings['ignoreClass'] = 'annotator-hl';
+    // Hypothesis wraps annotated text in <hypothesis-highlight> elements, which splits
+    // text nodes. CFIs computed against the original chapter (search results, saved
+    // locations) must treat those wrappers as transparent or they point past the end
+    // of a node.
+    self.settings['ignoreClass'] = 'hypothesis-highlight';
 
     if ( this.settings.manager == ScrollingContinuousViewManager ) {
       if ( ! this.options.minHeight ) {
