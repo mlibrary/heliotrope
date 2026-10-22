@@ -2183,6 +2183,39 @@ footer.press {
     grid-template-columns: min-content 25vw minmax(0, 1fr);
   }
 
+  .hypothesis-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+
+    .modal__header {
+      // Keep the reader-owned header fixed while Hypothesis fills the remaining space with its iframe.
+      flex: 0 0 auto;
+      padding: .75rem 1rem;
+      background: #8A96A1;
+    }
+
+    .modal__close {
+      color: #31343b;
+      cursor: pointer;
+      padding: .25rem;
+    }
+
+    iframe {
+      display: block;
+      flex: 1 1 auto;
+      // min-height: 0 lets the iframe shrink within the panel instead of forcing overflow.
+      min-height: 0;
+      width: 100%;
+      height: auto;
+      border: 0;
+    }
+  }
+
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   // A legacy/Bootstrap `dropdown-toggle` can add a caret after the share icon,
@@ -2194,6 +2227,39 @@ footer.press {
   .nm--toolbar button:focus,
   .nm--toolbar a:focus {
     outline: none;
+  }
+
+  .nm--toolbar button:focus,
+  .nm--toolbar a:focus,
+  .cozy-panel-toolbar button:focus,
+  .cozy-panel-toolbar a:focus {
+    box-shadow: none;
+  }
+
+  .nm--toolbar button:focus > i,
+  .nm--toolbar a:focus > i,
+  .cozy-panel-toolbar button:focus > i,
+  .cozy-panel-toolbar a:focus > i {
+    box-shadow: none;
+  }
+
+  .nm--toolbar button:focus-visible > i,
+  .nm--toolbar a:focus-visible > i,
+  .cozy-panel-toolbar button:focus-visible > i,
+  .cozy-panel-toolbar a:focus-visible > i {
+    box-shadow: 0 0 0 6px rgba(0, 44, 99, 0.25);
+  }
+
+  .nm--toolbar button.reader-panel-active > i,
+  .nm--toolbar button.panel-open > i,
+  .nm--toolbar .reader-panel-active button > i,
+  .cozy-panel-toolbar button.reader-panel-active > i,
+  .cozy-panel-toolbar button.panel-open > i,
+  .cozy-panel-toolbar .reader-panel-active button > i {
+    background-color: white;
+    transition: 0.2s ease-in;
+    outline: 0;
+    box-shadow: 0 0 0 6px rgba(0, 44, 99, 0.25);
   }
 
   .nm--toolbar .cozy-panel-feedback {
@@ -2474,6 +2540,23 @@ footer.press {
   border-radius: 50%;
   display: block;
   font-size: .7rem;
+}
+
+.nm--toolbar .annotation-count {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  color: #31343b;
+  background-color: transparent;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .7rem;
+  line-height: 1;
+  pointer-events: none;
 }
 
 .cozy-container input[type="radio"] {

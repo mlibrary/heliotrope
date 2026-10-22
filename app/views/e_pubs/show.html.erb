@@ -10,9 +10,17 @@
           openSidebar: false,
           theme: 'clean', // "clean" or "classic"
           enableMultiFrameSupport: true,
+          externalContainerSelector: '#hypothesis-panel',
           onLayoutChange: function(state) {
-            var $frame = $('.annotator-frame');
-            var $reader = $("#reader");
+            // Selection/context-menu actions open Hypothesis without going through
+            // the Cozy toolbar. Only mirror the open notification: Hypothesis also
+            // emits expanded=false when an ordinary ebook click dismisses its
+            // overlay, but the shared reader panel should remain open then.
+            if (window.hypothesisBridge && state && state.expanded &&
+                window.hypothesisBridge.hasTextSelection()) {
+              window.hypothesisBridge.closeOtherModals();
+              window.hypothesisBridge.setPanelState(true);
+            }
           },
           enableExperimentalNewNoteButton: true
         };
@@ -49,6 +57,18 @@
   <%= render partial: "e_pubs/survey_oa" %>
 
   <div class="skip"></div>
+  <% if !@princesse_de_cleves && @parent_presenter.use_hypothesis? %>
+    <button id="hypothesisProxyTrigger"
+            data-hypothesis-trigger
+            type="button"
+            aria-hidden="true"
+            tabindex="-1"
+            style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;"></button>
+    <span id="hypothesisAnnotationCount"
+          data-hypothesis-annotation-count
+          aria-hidden="true"
+          style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;"></span>
+  <% end %>
   <%# tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
   <div class="too" id="epub">
 
@@ -98,6 +118,19 @@
 
     <%# This is a Princesse de Cleves EPUB thing, obvs %>
     <div class="nm--panels" data-modal-activated="false">
+      <% if !@princesse_de_cleves && @parent_presenter.use_hypothesis? %>
+        <%# Hypothesis appends its sidebar iframe to this host; the header stays outside the iframe so the reader owns its title and close control. %>
+        <div id="hypothesis-panel" class="hypothesis-panel" role="region" aria-labelledby="hypothesis-panel-title" aria-hidden="true">
+          <header class="modal__header">
+            <h3 id="hypothesis-panel-title" class="modal__title">Notes</h3>
+            <button type="button"
+                    class="modal__close"
+                    aria-label="Close Notes"
+                    aria-controls="hypothesis-panel"
+                    onclick="window.hypothesisBridge.close(); return false;"></button>
+          </header>
+        </div>
+      <% end %>
       <%= render "e_pubs/cozy_pdec_notes", presenter: @presenter, parent_presenter: @parent_presenter if @princesse_de_cleves %>
     </div>
 
@@ -106,9 +139,145 @@
 
     <script type="text/javascript">
         <% if !@princesse_de_cleves && @parent_presenter.use_hypothesis? %>
+        // Hypothesis sidebar bridge. The public host API is feature-detected so this
+        // remains compatible with the current proxy-trigger integration.
+        var hypothesisBridge = window.hypothesisBridge = {
+          annotationTool: null,
+          layoutState: false,
+          focusRequest: 0,
+          hypothesisBootstrapped: false,
+
+          closeOtherModals: function() {
+            // Use each modal's close button so its normal cleanup and focus handling run.
+            document.querySelectorAll('.cozy-modal[aria-hidden="false"] button[data-modal-close]').forEach(function(button) {
+              button.click();
+            });
+          },
+
+          installPanelOrchestrator: function() {
+            var observerRoot = document.body;
+            if (!observerRoot || typeof MutationObserver === 'undefined') {
+              return;
+            }
+            // Cozy modals and the Hypothesis panel share one reader column; keep them mutually exclusive.
+            this.modalObserver = new MutationObserver(function() {
+              var hypothesisPanel = document.querySelector('#hypothesis-panel');
+              var hypothesisOpen = this.layoutState || (hypothesisPanel && hypothesisPanel.getAttribute('aria-hidden') === 'false');
+              if (hypothesisOpen && document.querySelector('.cozy-modal[aria-hidden="false"]')) {
+                this.close();
+              }
+            }.bind(this));
+            this.modalObserver.observe(observerRoot, {
+              subtree: true,
+              attributes: true,
+              attributeFilter: ['aria-hidden']
+            });
+          },
+
+          annotationButton: function() {
+            if (!this.annotationTool || !this.annotationTool.getContainer()) {
+              return null;
+            }
+            return this.annotationTool.getContainer().querySelector('button');
+          },
+
+          annotationCount: function() {
+            if (!this.annotationTool || !this.annotationTool.getContainer()) {
+              return null;
+            }
+            return this.annotationTool.getContainer().querySelector('[data-hypothesis-annotation-count]');
+          },
+
+          hasTextSelection: function() {
+            var hasSelection = function(currentWindow) {
+              try {
+                var selection = currentWindow.getSelection();
+                if (selection && !selection.isCollapsed && selection.toString().trim()) {
+                  return true;
+                }
+                // EPUB content and the PDF viewer live in iframes, so inspect their selections too.
+                return Array.prototype.some.call(
+                  currentWindow.document.querySelectorAll('iframe'),
+                  function(frame) {
+                    return frame.contentWindow && hasSelection(frame.contentWindow);
+                  }
+                );
+              } catch (error) {
+                return false;
+              }
+            };
+            return hasSelection(window);
+          },
+
+          attachAnnotationTool: function(annotationTool) {
+            this.annotationTool = annotationTool;
+            annotationTool.state(this.layoutState ? 'open-annotator' : 'close-annotator');
+            var toolbarCount = this.annotationCount();
+            var initialCount = document.getElementById('hypothesisAnnotationCount');
+            if (toolbarCount && initialCount) {
+              toolbarCount.textContent = initialCount.textContent;
+            }
+          },
+
+          setPanelState: function(open) {
+            var hypothesisPanel = document.querySelector('#hypothesis-panel');
+            var panels = document.querySelector('.nm--panels');
+            var readerContainer = document.querySelector('#epub.too');
+            var otherModalOpen = panels && panels.querySelector('.cozy-modal[aria-hidden="false"]');
+            if (!hypothesisPanel) {
+              return false;
+            }
+
+            var changed = this.layoutState !== open;
+            this.layoutState = open;
+            hypothesisPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+            if (panels && (open || !otherModalOpen)) {
+              panels.setAttribute('data-modal-activated', open ? 'true' : 'false');
+              if (readerContainer) {
+                readerContainer.classList.toggle('panels-open', open);
+              }
+            }
+            if (changed && this.annotationTool) {
+              this.annotationTool.state(open ? 'open-annotator' : 'close-annotator');
+            }
+            if (open) {
+              // Ignore a queued focus callback from an earlier open/close transition.
+              var focusRequest = ++this.focusRequest;
+              var button = this.annotationButton();
+              if (button) {
+                requestAnimationFrame(function() {
+                  if (focusRequest === this.focusRequest && this.layoutState && button.isConnected) {
+                    button.focus();
+                  }
+                }.bind(this));
+              }
+            } else {
+              this.focusRequest++;
+            }
+            return true;
+          },
+
+          open: function() {
+            this.closeOtherModals();
+            this.setPanelState(true);
+            if (!this.hypothesisBootstrapped) {
+              var proxy = document.getElementById('hypothesisProxyTrigger');
+              if (proxy) {
+                this.hypothesisBootstrapped = true;
+                proxy.click();
+              }
+            }
+            return true;
+          },
+
+          close: function() {
+            return this.setPanelState(false);
+          }
+        };
+
         // hypothes.is integration
         var AnnotationTool = cozy.Control.Widget.Toggle.extend({
-          defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
+          defaultTemplate: '<button class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i><span class="annotation-count" data-hypothesis-annotation-count></span></button>',
 
 
           initialize: function(options) {
@@ -121,6 +290,7 @@
             },
               {
                 stateName: 'open-annotator',
+                className: 'reader-panel-active',
                 onClick: this.closeAnnotator.bind(this)
               }];
           },
@@ -133,12 +303,12 @@
           },
 
           openAnnotator: function(self, reader) {
-            this.options.$panel.removeClass("annotator-collapsed");
+            hypothesisBridge.open();
             self.state('open-annotator');
           },
 
           closeAnnotator: function(self, reader) {
-            this.options.$panel.addClass("annotator-collapsed");
+            hypothesisBridge.close();
             self.state('close-annotator');
           },
 
@@ -197,6 +367,7 @@
             });
             annotation_tool.addTo(reader);
             moveControlToToolbar(annotation_tool);
+            hypothesisBridge.attachAnnotationTool(annotation_tool);
           }
 
           function checkForAnnotator() {
@@ -208,6 +379,7 @@
           }
 
           checkForAnnotator();
+          hypothesisBridge.installPanelOrchestrator();
         <% end %>
 
       <% if @princesse_de_cleves %>
