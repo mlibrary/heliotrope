@@ -2183,6 +2183,39 @@ footer.press {
     grid-template-columns: min-content 25vw minmax(0, 1fr);
   }
 
+  .hypothesis-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+
+    .modal__header {
+      // Keep the reader-owned header fixed while Hypothesis fills the remaining space with its iframe.
+      flex: 0 0 auto;
+      padding: .75rem 1rem;
+      background: #8A96A1;
+    }
+
+    .modal__close {
+      color: #31343b;
+      cursor: pointer;
+      padding: .25rem;
+    }
+
+    iframe {
+      display: block;
+      flex: 1 1 auto;
+      // min-height: 0 lets the iframe shrink within the panel instead of forcing overflow.
+      min-height: 0;
+      width: 100%;
+      height: auto;
+      border: 0;
+    }
+  }
+
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   // A legacy/Bootstrap `dropdown-toggle` can add a caret after the share icon,
@@ -2194,6 +2227,39 @@ footer.press {
   .nm--toolbar button:focus,
   .nm--toolbar a:focus {
     outline: none;
+  }
+
+  .nm--toolbar button:focus,
+  .nm--toolbar a:focus,
+  .cozy-panel-toolbar button:focus,
+  .cozy-panel-toolbar a:focus {
+    box-shadow: none;
+  }
+
+  .nm--toolbar button:focus > i,
+  .nm--toolbar a:focus > i,
+  .cozy-panel-toolbar button:focus > i,
+  .cozy-panel-toolbar a:focus > i {
+    box-shadow: none;
+  }
+
+  .nm--toolbar button:focus-visible > i,
+  .nm--toolbar a:focus-visible > i,
+  .cozy-panel-toolbar button:focus-visible > i,
+  .cozy-panel-toolbar a:focus-visible > i {
+    box-shadow: 0 0 0 6px rgba(0, 44, 99, 0.25);
+  }
+
+  .nm--toolbar button.reader-panel-active > i,
+  .nm--toolbar button.panel-open > i,
+  .nm--toolbar .reader-panel-active button > i,
+  .cozy-panel-toolbar button.reader-panel-active > i,
+  .cozy-panel-toolbar button.panel-open > i,
+  .cozy-panel-toolbar .reader-panel-active button > i {
+    background-color: white;
+    transition: 0.2s ease-in;
+    outline: 0;
+    box-shadow: 0 0 0 6px rgba(0, 44, 99, 0.25);
   }
 
   .nm--toolbar .cozy-panel-feedback {
@@ -2474,6 +2540,23 @@ footer.press {
   border-radius: 50%;
   display: block;
   font-size: .7rem;
+}
+
+.nm--toolbar .annotation-count {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  color: #31343b;
+  background-color: transparent;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .7rem;
+  line-height: 1;
+  pointer-events: none;
 }
 
 .cozy-container input[type="radio"] {
@@ -2889,4 +2972,45 @@ iframe#irus_stats {
 
 body.dashboard {
   padding-top: 0 !important;
+}
+
+// Balloon shown beside the reader's Notes button when text is selected while the
+// Notes panel is closed (the selection menu is hidden then). See
+// hypothesisBridge.showNotesHint in e_pubs/show.html.erb and show_pdf.html.erb.
+.hypothesis-notes-hint {
+  position: fixed;
+  z-index: 10000;
+  max-width: 14rem;
+  padding: .5rem .75rem;
+  border-radius: 6px;
+  background: #31343b;
+  color: #fff;
+  font-size: .875rem;
+  line-height: 1.3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+  transform: translateY(-50%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  // Arrow pointing back at the button.
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -6px;
+    margin-top: -6px;
+    border-style: solid;
+    border-width: 6px 6px 6px 0;
+    border-color: transparent #31343b transparent transparent;
+  }
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: opacity .2s ease-in, visibility .2s;
+  }
 }

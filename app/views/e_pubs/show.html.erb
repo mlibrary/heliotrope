@@ -10,9 +10,13 @@
           openSidebar: false,
           theme: 'clean', // "clean" or "classic"
           enableMultiFrameSupport: true,
+          externalContainerSelector: '#hypothesis-panel',
+          // The reader owns panel visibility. Hypothesis' open reports are only honoured
+          // right after a click in the content (see hypothesisBridge.hypothesisLayoutChanged).
           onLayoutChange: function(state) {
-            var $frame = $('.annotator-frame');
-            var $reader = $("#reader");
+            if (window.hypothesisBridge) {
+              window.hypothesisBridge.hypothesisLayoutChanged(state);
+            }
           },
           enableExperimentalNewNoteButton: true
         };
@@ -49,6 +53,18 @@
   <%= render partial: "e_pubs/survey_oa" %>
 
   <div class="skip"></div>
+  <% if !@princesse_de_cleves && @parent_presenter.use_hypothesis? %>
+    <button id="hypothesisProxyTrigger"
+            data-hypothesis-trigger
+            type="button"
+            aria-hidden="true"
+            tabindex="-1"
+            style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;"></button>
+    <span id="hypothesisAnnotationCount"
+          data-hypothesis-annotation-count
+          aria-hidden="true"
+          style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;"></span>
+  <% end %>
   <%# tag.div id: 'epub', class: press_presenter.present? ? press_presenter.press_subdomains : '' do %>
   <div class="too" id="epub">
 
@@ -98,6 +114,19 @@
 
     <%# This is a Princesse de Cleves EPUB thing, obvs %>
     <div class="nm--panels" data-modal-activated="false">
+      <% if !@princesse_de_cleves && @parent_presenter.use_hypothesis? %>
+        <%# Hypothesis appends its sidebar iframe to this host; the header stays outside the iframe so the reader owns its title and close control. %>
+        <div id="hypothesis-panel" class="hypothesis-panel" role="region" aria-labelledby="hypothesis-panel-title" aria-hidden="true">
+          <header class="modal__header">
+            <h3 id="hypothesis-panel-title" class="modal__title">Notes</h3>
+            <button type="button"
+                    class="modal__close"
+                    aria-label="Close Notes"
+                    aria-controls="hypothesis-panel"
+                    onclick="window.hypothesisBridge.close(); return false;"></button>
+          </header>
+        </div>
+      <% end %>
       <%= render "e_pubs/cozy_pdec_notes", presenter: @presenter, parent_presenter: @parent_presenter if @princesse_de_cleves %>
     </div>
 
@@ -106,9 +135,271 @@
 
     <script type="text/javascript">
         <% if !@princesse_de_cleves && @parent_presenter.use_hypothesis? %>
+        // Hypothesis sidebar bridge. The public host API is feature-detected so this
+        // remains compatible with the current proxy-trigger integration.
+        var hypothesisBridge = window.hypothesisBridge = {
+          annotationTool: null,
+          layoutState: false,
+          focusRequest: 0,
+          hypothesisBootstrapped: false,
+          contentDocuments: [],
+          lastContentClick: 0,
+          notesHint: null,
+          notesHintLive: null,
+          notesHintTimer: null,
+
+          // Opening the panel resizes the reader and epub.js then re-renders every
+          // content iframe, destroying the Hypothesis guest (and any unsaved draft
+          // annotation) in it. So annotating is only offered while the panel is
+          // already open: the selection menu is hidden in content documents otherwise.
+          // Both readers behave the same way for consistency.
+          watchContent: function(doc) {
+            if (!doc || this.contentDocuments.indexOf(doc) !== -1) {
+              return;
+            }
+            this.contentDocuments.push(doc);
+
+            var css = 'html:not([data-hypothesis-panel-open]) hypothesis-adder { display: none !important; }';
+            try {
+              // Constructable stylesheets are not subject to inline-style CSP rules.
+              var sheet = new doc.defaultView.CSSStyleSheet();
+              sheet.replaceSync(css);
+              doc.adoptedStyleSheets = Array.prototype.concat.call([], doc.adoptedStyleSheets, [sheet]);
+            } catch (error) {
+              var style = doc.createElement('style');
+              style.textContent = css;
+              (doc.head || doc.documentElement).appendChild(style);
+            }
+            this.syncContentDocuments();
+
+            // Offer the hint when text is selected, remove it when the selection goes.
+            var onSelectionEnd = function() {
+              setTimeout(function() {
+                var selection = doc.getSelection();
+                if (selection && !selection.isCollapsed && selection.toString().trim()) {
+                  this.showNotesHint();
+                } else {
+                  this.hideNotesHint();
+                }
+              }.bind(this), 0);
+            }.bind(this);
+            doc.addEventListener('mouseup', onSelectionEnd);
+            doc.addEventListener('keyup', onSelectionEnd);
+
+            // Clicking an existing annotation shows it in the sidebar, so reveal the panel.
+            // There is no draft to lose here. Capture phase: runs before Hypothesis' own
+            // handlers.
+            doc.addEventListener('click', function(event) {
+              this.lastContentClick = Date.now();
+              var path = event.composedPath ? event.composedPath() : [event.target];
+              var onHighlight = path.some(function(node) {
+                return node && node.tagName && node.tagName.toLowerCase() === 'hypothesis-highlight';
+              });
+              if (onHighlight) {
+                this.openFromHypothesis();
+              }
+            }.bind(this), true);
+          },
+
+          // Hypothesis hit-tests highlights by coordinates, so the click target is not
+          // always a <hypothesis-highlight> element (notably in the PDF viewer). It does
+          // always ask for the sidebar to open when a highlight is clicked, which arrives
+          // here. Hypothesis also re-reports "open" on window resize, so only honour it
+          // right after a click in the content.
+          hypothesisLayoutChanged: function(state) {
+            if (state && state.expanded && Date.now() - this.lastContentClick < 1000) {
+              this.openFromHypothesis();
+            }
+          },
+
+          // The selection menu is hidden while the panel is closed, so when text is
+          // selected then, point at the toolbar button that opens the panel.
+          showNotesHint: function() {
+            var button = this.annotationButton();
+            if (!button || this.layoutState) {
+              return;
+            }
+            var rect = button.getBoundingClientRect();
+            if (!rect.width) {
+              return;
+            }
+            if (!this.notesHint) {
+              this.notesHint = document.createElement('div');
+              this.notesHint.className = 'hypothesis-notes-hint';
+              this.notesHint.setAttribute('aria-hidden', 'true');
+              this.notesHint.textContent = 'Open me to take notes';
+              document.body.appendChild(this.notesHint);
+
+              // The balloon is visual only; announce the same advice to screen readers.
+              this.notesHintLive = document.createElement('div');
+              this.notesHintLive.className = 'sr-only';
+              this.notesHintLive.setAttribute('role', 'status');
+              document.body.appendChild(this.notesHintLive);
+            }
+            this.notesHint.style.left = (rect.right + 12) + 'px';
+            this.notesHint.style.top = (rect.top + rect.height / 2) + 'px';
+            this.notesHint.classList.add('is-visible');
+            this.notesHintLive.textContent = 'To take notes on the selected text, open the Notes panel.';
+            clearTimeout(this.notesHintTimer);
+            this.notesHintTimer = setTimeout(this.hideNotesHint.bind(this), 6000);
+          },
+
+          hideNotesHint: function() {
+            clearTimeout(this.notesHintTimer);
+            if (this.notesHint) {
+              this.notesHint.classList.remove('is-visible');
+            }
+            if (this.notesHintLive) {
+              this.notesHintLive.textContent = '';
+            }
+          },
+
+          syncContentDocuments: function() {
+            this.contentDocuments = this.contentDocuments.filter(function(doc) {
+              return doc.defaultView;
+            });
+            this.contentDocuments.forEach(function(doc) {
+              if (this.layoutState) {
+                doc.documentElement.setAttribute('data-hypothesis-panel-open', '');
+              } else {
+                doc.documentElement.removeAttribute('data-hypothesis-panel-open');
+              }
+            }, this);
+          },
+
+          openFromHypothesis: function() {
+            // Hypothesis is being used directly, so don't let the toolbar's proxy
+            // trigger fire on the next open().
+            this.hypothesisBootstrapped = true;
+            if (!this.layoutState) {
+              this.closeOtherModals();
+              this.setPanelState(true, { focus: false });
+            }
+          },
+
+          closeOtherModals: function() {
+            // Use each modal's close button so its normal cleanup and focus handling run.
+            document.querySelectorAll('.cozy-modal[aria-hidden="false"] button[data-modal-close]').forEach(function(button) {
+              button.click();
+            });
+          },
+
+          installPanelOrchestrator: function() {
+            var observerRoot = document.body;
+            if (!observerRoot || typeof MutationObserver === 'undefined') {
+              return;
+            }
+            // Cozy modals and the Hypothesis panel share one reader column; keep them mutually exclusive.
+            this.modalObserver = new MutationObserver(function() {
+              var hypothesisPanel = document.querySelector('#hypothesis-panel');
+              var hypothesisOpen = this.layoutState || (hypothesisPanel && hypothesisPanel.getAttribute('aria-hidden') === 'false');
+              if (hypothesisOpen && document.querySelector('.cozy-modal[aria-hidden="false"]')) {
+                this.close();
+              }
+            }.bind(this));
+            this.modalObserver.observe(observerRoot, {
+              subtree: true,
+              attributes: true,
+              attributeFilter: ['aria-hidden']
+            });
+          },
+
+          annotationButton: function() {
+            if (!this.annotationTool || !this.annotationTool.getContainer()) {
+              return null;
+            }
+            return this.annotationTool.getContainer().querySelector('button');
+          },
+
+          annotationCount: function() {
+            if (!this.annotationTool || !this.annotationTool.getContainer()) {
+              return null;
+            }
+            return this.annotationTool.getContainer().querySelector('[data-hypothesis-annotation-count]');
+          },
+
+          attachAnnotationTool: function(annotationTool) {
+            this.annotationTool = annotationTool;
+            annotationTool.state(this.layoutState ? 'open-annotator' : 'close-annotator');
+            var toolbarCount = this.annotationCount();
+            var initialCount = document.getElementById('hypothesisAnnotationCount');
+            if (toolbarCount && initialCount) {
+              toolbarCount.textContent = initialCount.textContent;
+            }
+          },
+
+          setPanelState: function(open, options) {
+            var moveFocus = !(options && options.focus === false);
+            var hypothesisPanel = document.querySelector('#hypothesis-panel');
+            var panels = document.querySelector('.nm--panels');
+            var readerContainer = document.querySelector('#epub.too');
+            var otherModalOpen = panels && panels.querySelector('.cozy-modal[aria-hidden="false"]');
+            if (!hypothesisPanel) {
+              return false;
+            }
+
+            var changed = this.layoutState !== open;
+            this.layoutState = open;
+            hypothesisPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+            this.syncContentDocuments();
+            if (open) {
+              this.hideNotesHint();
+            }
+            if (panels && (open || !otherModalOpen)) {
+              panels.setAttribute('data-modal-activated', open ? 'true' : 'false');
+              if (readerContainer) {
+                readerContainer.classList.toggle('panels-open', open);
+                // epub.js only re-measures on a window resize. Cozy modals dispatch one
+                // from Modal._setPanelState; do the same here, otherwise the book keeps
+                // its old width after the panel opens or closes. Repeat after the next
+                // frame so we measure the settled grid layout.
+                window.dispatchEvent(new Event('resize'));
+                requestAnimationFrame(function() {
+                  window.dispatchEvent(new Event('resize'));
+                });
+              }
+            }
+            if (changed && this.annotationTool) {
+              this.annotationTool.state(open ? 'open-annotator' : 'close-annotator');
+            }
+            if (open) {
+              // Ignore a queued focus callback from an earlier open/close transition.
+              var focusRequest = ++this.focusRequest;
+              var button = this.annotationButton();
+              if (button && moveFocus) {
+                requestAnimationFrame(function() {
+                  if (focusRequest === this.focusRequest && this.layoutState && button.isConnected) {
+                    button.focus();
+                  }
+                }.bind(this));
+              }
+            } else {
+              this.focusRequest++;
+            }
+            return true;
+          },
+
+          open: function() {
+            this.closeOtherModals();
+            this.setPanelState(true);
+            if (!this.hypothesisBootstrapped) {
+              var proxy = document.getElementById('hypothesisProxyTrigger');
+              if (proxy) {
+                this.hypothesisBootstrapped = true;
+                proxy.click();
+              }
+            }
+            return true;
+          },
+
+          close: function() {
+            return this.setPanelState(false);
+          }
+        };
+
         // hypothes.is integration
         var AnnotationTool = cozy.Control.Widget.Toggle.extend({
-          defaultTemplate: '<button data-hypothesis-trigger class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i></button><div class="annotation-count" data-hypothesis-annotation-count></div>',
+          defaultTemplate: '<button class="button--sm annotation" data-toggle="button" aria-label="Open Annotations"><i class="fa fa-pencil" title="Open annotation panel" aria-hidden="true"></i><span class="annotation-count" data-hypothesis-annotation-count></span></button>',
 
 
           initialize: function(options) {
@@ -121,6 +412,7 @@
             },
               {
                 stateName: 'open-annotator',
+                className: 'reader-panel-active',
                 onClick: this.closeAnnotator.bind(this)
               }];
           },
@@ -133,18 +425,19 @@
           },
 
           openAnnotator: function(self, reader) {
-            this.options.$panel.removeClass("annotator-collapsed");
+            hypothesisBridge.open();
             self.state('open-annotator');
           },
 
           closeAnnotator: function(self, reader) {
-            this.options.$panel.addClass("annotator-collapsed");
+            hypothesisBridge.close();
             self.state('close-annotator');
           },
 
           setupHook: function() {
             var reader = this._reader;
             reader.rendition.hooks.content.register(function(contents, view) {
+              hypothesisBridge.watchContent(contents.document);
               contents.window.addEventListener('scrolltorange', function (e) {
                 var range = e.detail;
                 var cfi = new reader.CFI(range, contents.cfiBase).toString();
@@ -153,7 +446,17 @@
                 }
                 e.preventDefault();
               });
-            })
+            });
+
+            // The hook above only runs for sections rendered after registration; catch
+            // any section that is already on screen.
+            try {
+              reader.rendition.getContents().forEach(function(contents) {
+                hypothesisBridge.watchContent(contents.document);
+              });
+            } catch (error) {
+              // getContents() is unavailable until a section has been rendered.
+            }
           }
         });
         <% end %>
@@ -197,6 +500,7 @@
             });
             annotation_tool.addTo(reader);
             moveControlToToolbar(annotation_tool);
+            hypothesisBridge.attachAnnotationTool(annotation_tool);
           }
 
           function checkForAnnotator() {
@@ -208,6 +512,7 @@
           }
 
           checkForAnnotator();
+          hypothesisBridge.installPanelOrchestrator();
         <% end %>
 
       <% if @princesse_de_cleves %>

@@ -56,7 +56,7 @@ export var Search = Control.extend({
           });
       }
       
-      self._modal.activate();
+      self._modal.activate(self._control);
     }, this)
 
     return container;
