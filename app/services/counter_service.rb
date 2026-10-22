@@ -43,6 +43,10 @@ class CounterService
     # Add a COUNT for each institution. Usually a request will only have a single
     # institution, but not always (for instance: U of M and LIT IP ranges means 2 institutions)
     @controller.current_institutions.each do |institution|
+      # FOPS-1244 Suppress World searches and landing-page investigations, but retain Requests and their Investigations.
+      next if institution.identifier == Settings.world_institution_identifier.to_s &&
+              (opts[:search] || (@controller.is_a?(MonographCatalogController) && !opts[:request]))
+
       cr = CounterReport.new(session: session,
                              institution: institution.identifier,
                              noid: @presenter&.id,
