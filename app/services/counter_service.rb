@@ -43,6 +43,9 @@ class CounterService
     # Add a COUNT for each institution. Usually a request will only have a single
     # institution, but not always (for instance: U of M and LIT IP ranges means 2 institutions)
     @controller.current_institutions.each do |institution|
+      world_institution = institution.identifier == Settings.world_institution_identifier.to_s
+      next if world_institution && (opts[:search] || (!opts[:request] && landing_page_controller?))
+
       cr = CounterReport.new(session: session,
                              institution: institution.identifier,
                              noid: @presenter&.id,
@@ -62,7 +65,7 @@ class CounterService
       cr.access_type = access_type if @press.blank?
       cr.access_type ||= 'Controlled'
 
-      cr.investigation = 1                  if !opts[:search]
+      cr.investigation = 1                  if !opts[:search] && !world_institution
       cr.section = opts[:section]           if opts[:section]
       cr.section_type = opts[:section_type] if opts[:section_type]
       cr.book_segment = opts[:book_segment] if opts[:book_segment]
@@ -183,6 +186,10 @@ class CounterService
       @controller = controller
       @presenter = presenter
       @press = press
+    end
+
+    def landing_page_controller?
+      @controller.is_a?(MonographCatalogController) || @controller.is_a?(Hyrax::FileSetsController)
     end
 end
 

@@ -370,6 +370,57 @@ RSpec.describe CounterService do
   end
 
   describe "#count" do
+    context "searches" do
+      let(:controller) { PressCatalogController.new }
+      let(:service) { described_class.for_press(controller, press) }
+      let(:institutions) { [] }
+      let(:institution) { Greensub::Institution.new(identifier: 1, name: "a") }
+      let!(:the_world_institution) { create(:institution, identifier: Settings.world_institution_identifier, name: "The World", display_name: "Unknown Institution") }
+
+      before do
+        allow(controller).to receive(:current_institutions).and_return(institutions)
+        allow(controller).to receive(:request).and_return(double("request", remote_ip: "99.99.99.99", user_agent: "Mozilla/5.0"))
+        allow(service).to receive(:robot?).and_return(false)
+      end
+
+      it "does not record a search for the World fallback" do
+        expect { service.count(search: 1) }.not_to change(CounterReport, :count)
+      end
+
+      context "with an explicit World institution" do
+        let(:institutions) { [the_world_institution] }
+
+        it "does not record a search" do
+          expect { service.count(search: 1) }.not_to change(CounterReport, :count)
+        end
+      end
+
+      context "with an identified institution" do
+        let(:institutions) { [institution] }
+
+        it "records the institution's search" do
+          expect { service.count(search: 1) }.to change(CounterReport, :count).by(1)
+
+          expect(CounterReport.last.institution).to eq 1
+          expect(CounterReport.last.press).to eq press.id
+          expect(CounterReport.last.search).to eq 1
+          expect(CounterReport.last.investigation).to be_nil
+          expect(CounterReport.last.request).to be_nil
+        end
+      end
+
+      context "with both the World and an identified institution" do
+        let(:institutions) { [the_world_institution, institution] }
+
+        it "records only the identified institution's search" do
+          expect { service.count(search: 1) }.to change(CounterReport, :count).by(1)
+
+          expect(CounterReport.last.institution).to eq 1
+          expect(CounterReport.last.search).to eq 1
+        end
+      end
+    end
+
     context "file_sets" do
       let(:request) { double("request") }
       let(:now) { double("now") }
@@ -392,10 +443,18 @@ RSpec.describe CounterService do
           allow(controller).to receive(:current_institutions).and_return([])
         end
 
-        it "adds an 'Unknown Institution' (aka: 'The World') COUNT" do
+        it "does not add an Investigation for the World fallback" do
           expect { described_class.from(controller, fs_presenter).count }
-            .to change(CounterReport, :count)
-            .by(1)
+            .not_to change(CounterReport, :count)
+        end
+
+        it "still counts an unknown institution's download as a Request" do
+          expect { described_class.from(controller, fs_presenter).count(request: 1) }
+            .to change(CounterReport, :count).by(1)
+
+          expect(CounterReport.last.institution).to eq Settings.world_institution_identifier.to_i
+          expect(CounterReport.last.request).to eq 1
+          expect(CounterReport.last.investigation).to be_nil
         end
       end
 
@@ -416,6 +475,15 @@ RSpec.describe CounterService do
       context "a user with an institution downloading an asset" do
         before do
           allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 495, name: "a")])
+        end
+
+        it "counts an Investigation for the institution" do
+          expect { described_class.from(controller, fs_presenter).count }
+            .to change(CounterReport, :count).by(1)
+
+          expect(CounterReport.last.institution).to eq 495
+          expect(CounterReport.last.investigation).to eq 1
+          expect(CounterReport.last.request).to be_nil
         end
 
         it "adds a COUNTER stat row" do
@@ -520,6 +588,51 @@ RSpec.describe CounterService do
         allow(now).to receive(:hour).and_return('13')
 
         allow(controller).to receive(:current_institutions).and_return([Greensub::Institution.new(identifier: 1, name: "a")])
+      end
+
+      context "with no identified institution" do
+        before do
+          allow(controller).to receive(:current_institutions).and_return([])
+          allow(Greensub::Component).to receive(:find_by).with(noid: mono_presenter.id).and_return(false)
+          allow_any_instance_of(described_class).to receive(:robot?).and_return(false)
+        end
+
+        it "does not save a landing-page Investigation for the World fallback" do
+          expect { described_class.from(controller, mono_presenter).count }
+            .not_to change(CounterReport, :count)
+        end
+
+        it "still saves a Request for the World without an Investigation" do
+          expect { described_class.from(controller, mono_presenter).count(request: 1) }
+            .to change(CounterReport, :count).by(1)
+
+          expect(CounterReport.last.institution).to eq Settings.world_institution_identifier.to_i
+          expect(CounterReport.last.request).to eq 1
+          expect(CounterReport.last.investigation).to be_nil
+        end
+      end
+
+      context "with the World already among the current institutions" do
+        before do
+          allow(controller).to receive(:current_institutions).and_return([the_world_institution])
+          allow(Greensub::Component).to receive(:find_by).with(noid: mono_presenter.id).and_return(false)
+        end
+
+        it "does not save a World-only landing-page Investigation" do
+          expect { described_class.from(controller, mono_presenter).count }
+            .not_to change(CounterReport, :count)
+        end
+
+        it "retains the identified institution's Investigation when the World is also present" do
+          controller.current_institutions.push(Greensub::Institution.new(identifier: 1, name: "a"))
+
+          expect { described_class.from(controller, mono_presenter).count }
+            .to change(CounterReport, :count).by(1)
+
+          expect(CounterReport.last.institution).to eq 1
+          expect(CounterReport.last.investigation).to eq 1
+          expect(CounterReport.last.request).to be_nil
+        end
       end
 
       context "if restricted" do
