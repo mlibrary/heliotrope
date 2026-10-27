@@ -222,7 +222,7 @@ export function __updateFocus(reader, location) {
     return isVisible;
   }
 
-  var startRange = new ePub.CFI(location.start.cfi).toRange(contents.document);
+  var startRange = new ePub.CFI(location.start.cfi).toRange(contents.document, 'hypothesis-highlight');
   var startNode = selfOrElement(startRange.startContainer);
 
   var _nodes = [];

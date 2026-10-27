@@ -92,10 +92,16 @@ class EPubsController < CheckpointController
         # 'no-cache' so Rails itself just removes the 'no-cache' part when both are present causing test failures.
         # So we'll just use 'no-store' here.
         response.headers['Cache-Control'] = 'no-store' if request.headers['Range'].present? && @noid != 'kw52jb973'
-        response.headers['Accept-Ranges'] = 'bytes'
-        pdf.gsub!(/releases\/\d+/, "current")
-        response.headers['X-Sendfile'] = pdf
-        send_file pdf
+        if Rails.env.development?
+          # range requests can cause issues in development mode, so we'll read the file and send it inline
+          response.headers['Accept-Ranges'] = 'none'
+          send_data File.binread(pdf), filename: File.basename(pdf), type: 'application/pdf', disposition: 'inline'
+        else
+          response.headers['Accept-Ranges'] = 'bytes'
+          pdf.gsub!(/releases\/\d+/, "current")
+          response.headers['X-Sendfile'] = pdf
+          send_file pdf
+        end
       else
         # This really should *never* happen, but might if the pdf wasn't unpacked right...
         # Consider this an error. We don't want to go through ActiveFedora for this.

@@ -42,7 +42,7 @@ export var BibliographicInformation = Control.extend({
     this._control = container.closest("[data-toggle=open]") || container.querySelector('[data-toggle="open"]');
     DomEvent.on(this._control, 'click', function(event) {
       event.preventDefault();
-      self._modal.activate();
+      self._modal.activate(self._control);
     }, this)
 
     return container;

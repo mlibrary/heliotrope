@@ -966,8 +966,14 @@ class EpubCFI {
 				}
 
 			} catch (e) {
-				missed = this.fixMiss(startSteps, start.terminal.offset, doc, needsIgnoring ? ignoreClass : null);
-				range.setStart(missed.container, missed.offset);
+				try {
+					missed = this.fixMiss(startSteps, start.terminal.offset, doc, needsIgnoring ? ignoreClass : null);
+					range.setStart(missed.container, missed.offset);
+				} catch (err) {
+					// Content was altered (e.g. nested annotation wrappers) so the CFI can't be resolved
+					console.warn("Could not resolve start of", this.toString(), err);
+					return null;
+				}
 			}
 		} else {
 			console.log("No startContainer found for", this.toString());
@@ -985,8 +991,13 @@ class EpubCFI {
 				}
 
 			} catch (e) {
-				missed = this.fixMiss(endSteps, cfi.end.terminal.offset, doc, needsIgnoring ? ignoreClass : null);
-				range.setEnd(missed.container, missed.offset);
+				try {
+					missed = this.fixMiss(endSteps, cfi.end.terminal.offset, doc, needsIgnoring ? ignoreClass : null);
+					range.setEnd(missed.container, missed.offset);
+				} catch (err) {
+					console.warn("Could not resolve end of", this.toString(), err);
+					return null;
+				}
 			}
 		}
 
