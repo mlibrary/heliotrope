@@ -28,6 +28,7 @@ be used by the jekyll site.
 %>
 <script src="/js/jquery.ihavecookies.js"></script>
 <link rel="stylesheet" href="/assets/css/ihavecookies.css">
+<%= render 'shared/monitoring' if local_assigns[:monitoring] %>
 <script type="text/javascript">
 function initCookieConsent() {
   function loadGTM(gtm_id) {
@@ -73,6 +74,10 @@ function initCookieConsent() {
 
 
   function loadAnalytics() {
+    <% if local_assigns[:monitoring] %>
+      loadSite24x7Monitoring();
+    <% end %>
+
     <% ap = ExternalAnalyticsPresenter.new(controller, press_presenter) %>
     <% press_ga4_ids = ap.press_ga4_ids.reject(&:blank?) %>
 
