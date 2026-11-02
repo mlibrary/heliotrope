@@ -34,8 +34,8 @@
       <%= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/url-search-params/0.10.0/url-search-params.js' %>
     <% end %>
 
-    <!-- Cookie Consent for Google, Hotjar, etc -->
-    <%= render 'shared/cookie_consent' %>
+    <!-- Cookie Consent for Google and Site24x7 -->
+    <%= render 'shared/cookie_consent', monitoring: Rails.env.production? %>
 
     <%# See comments in HELIO-3046. While working on HELIO-3162 this seemed to help system spec behavior locally %>
     <% if Rails.env.test? %>
@@ -87,6 +87,5 @@
     <%= content_for?(:body) ? yield(:body) : yield %>
 
     <%= render 'shared/blacklight_modal' %>
-    <%= render 'shared/monitoring' if Rails.env.production? %>
   <% end %>
 </html>
