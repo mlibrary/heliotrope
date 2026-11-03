@@ -198,6 +198,8 @@ RSpec.describe EPubsController, type: :controller do
             expect(response.body.empty?).to be false
             expect(response.header['Content-Type']).to include('application/xml')
             expect(response.header['X-Sendfile']).to include('META-INF/container.xml')
+            expect(response.header['Cache-Control']).to eq 'private'
+            expect(response.header['Vary'].split(', ')).to include('Sec-Fetch-Dest')
           end
 
           context 'access denied' do
@@ -206,6 +208,76 @@ RSpec.describe EPubsController, type: :controller do
             it do
               expect(response).to have_http_status(:no_content)
               expect(response.body.empty?).to be true
+            end
+          end
+        end
+
+        context 'browser navigation' do
+          it 'redirects a new-tab navigation to the chapter in the reader without sending a file' do
+            request.headers['Sec-Fetch-Site'] = 'none'
+            request.headers['Sec-Fetch-Dest'] = 'document'
+
+            get :file, params: { id: file_set.id, file: 'EPUB/chapter 1', format: 'xhtml' }
+
+            expect(response).to redirect_to("#{epub_path(file_set.id)}#/EPUB/chapter%201.xhtml")
+            expect(response.header['X-Sendfile']).to be_nil
+            expect(response.header['Content-Disposition']).to be_nil
+            expect(response.header['Cache-Control']).to eq 'no-store'
+            expect(response.header['Vary'].split(', ')).to include('Sec-Fetch-Dest')
+          end
+
+          it 'preserves share links when redirecting same-origin navigation' do
+            token = JsonWebToken.encode(data: monograph.id, exp: 1.day.from_now.to_i)
+            request.headers['Sec-Fetch-Site'] = 'same-origin'
+            request.headers['Sec-Fetch-Dest'] = 'document'
+
+            get :file, params: { id: file_set.id, file: 'EPUB/chapter', format: 'xhtml', share: token }
+
+            expect(response).to redirect_to("#{epub_path(file_set.id, share: token)}#/EPUB/chapter.xhtml")
+          end
+        end
+
+        context 'reader requests' do
+          it 'serves resource requests regardless of their origin or missing fetch metadata' do
+            [
+              ['same-origin', 'empty'],
+              ['same-origin', 'iframe'],
+              ['cross-site', 'empty'],
+              [nil, nil]
+            ].each do |site, destination|
+              request.headers['Sec-Fetch-Site'] = site
+              request.headers['Sec-Fetch-Dest'] = destination
+
+              get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' }
+
+              expect(response).to have_http_status(:ok)
+              expect(response.header['X-Sendfile']).to include('META-INF/container.xml')
+              expect(response.header['Cache-Control']).to eq 'private'
+            end
+          end
+
+          it 'preserves existing Vary fields' do
+            allow(controller).to receive(:vary_file_response).and_wrap_original do |original|
+              controller.response.headers['Vary'] = 'Accept-Encoding, Sec-Fetch-Dest'
+              original.call
+            end
+
+            get :file, params: { id: file_set.id, file: 'META-INF/container', format: 'xml' }
+
+            expect(response.header['Vary'].split(', ')).to eq(['Accept-Encoding', 'Sec-Fetch-Dest'])
+          end
+
+          it 'revalidates chapter files privately, leaving package manifests and other assets unchanged' do
+            epub = EPub::Publication.from_directory(UnpackService.root_path_from_noid(file_set.id, 'epub'))
+            allow(EPub::Publication).to receive(:from_directory).and_return(epub)
+            allow(epub).to receive(:file).and_return(epub.file('META-INF/container.xml'))
+
+            %w[opf xhtml XHTML html htm png jpg css woff2 xml].each do |extension|
+              get :file, params: { id: file_set.id, file: 'resource', format: extension }
+
+              expect(response).to have_http_status(:ok)
+              expected = %w[xhtml XHTML html htm].include?(extension) ? 'no-cache, private' : 'private'
+              expect(response.header['Cache-Control']).to eq expected
             end
           end
         end
@@ -223,6 +295,17 @@ RSpec.describe EPubsController, type: :controller do
           file_set.save!
         end
 
+        it 'redirects document navigation to the PDF reader' do
+          request.headers['Sec-Fetch-Dest'] = 'document'
+
+          get :file, params: { id: file_set.id, file: 'file' }
+
+          expect(response).to redirect_to(epub_path(file_set.id))
+          expect(response.header['X-Sendfile']).to be_nil
+          expect(response.header['Content-Disposition']).to be_nil
+          expect(response.header['Cache-Control']).to eq 'no-store'
+        end
+
         context 'pdf is not unpacked (exists only in fedora)' do
           before { get :file, params: { id: file_set.id, file: 'file' } }
 
@@ -231,6 +314,7 @@ RSpec.describe EPubsController, type: :controller do
             expect(response.body.empty?).to be false
             expect(response.header['X-Sendfile']).to be_nil
             expect(response.header['Accept-Ranges']).to be_nil
+            expect(response.header['Cache-Control']).to eq 'max-age=31536000, private'
           end
         end
 
