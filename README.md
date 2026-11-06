@@ -153,6 +153,21 @@ This starts the main development stack:
 - `fcrepo`
 - `redis`
 
+#### Shared file storage
+
+Both `app` and `resque` bind-mount the repository at `/app`. The development storage settings therefore already persist on the host and are shared between the web server and workers:
+
+| Setting | Container path | Host path |
+| --- | --- | --- |
+| `scratch_space_path` | `/app/tmp` | `./tmp` |
+| `derivatives_path` | `/app/tmp/derivatives` | `./tmp/derivatives` |
+| `uploads_path` | `/app/tmp/uploads` | `./tmp/uploads` |
+| `riiif_network_files_path` | `/app/tmp/network_files` | `./tmp/network_files` |
+
+No separate `/fulcrum/data` mounts are needed with these defaults. If you override these settings in `config/settings/development.local.yml` to use paths outside `/app`, mount the same storage at those paths in both services and ensure it is writable by the container's `app` user. Preserve the trailing slash when specifying a custom `uploads_path`.
+
+RIIIF downloads original images from Fedora into `riiif_network_files_path`. An error searching for `/app/tmp/<id>.{png,jpg,tif,tiff,jp2}` instead indicates that RIIIF is using its default filesystem resolver, not that the network cache needs a mount. Its HTTP resolver configuration must be applied through Rails' `to_prepare` callback so it survives development code reloads.
+
 ### 3. Create a platform admin (one time per database)
 ```
 bin/compose exec app bundle exec rails admin

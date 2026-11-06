@@ -3,6 +3,32 @@
 require 'rails_helper'
 
 RSpec.describe Riiif::Image do
+  describe "configuration after a development reload" do
+    it "configures the reloaded image class to use Fedora and the network cache" do
+      reloaded_image = Class.new do
+        class_attribute :file_resolver, :info_service
+      end
+      stub_const("Riiif::Image", reloaded_image)
+
+      expect(Rails.application.config).to receive(:to_prepare).and_yield
+      load Rails.root.join("config", "initializers", "riiif_initializer.rb")
+
+      resolver = Riiif::Image.file_resolver
+      expect(resolver).to be_a(Riiif::HttpFileResolver)
+      expect(resolver.cache_path).to eq Settings.riiif_network_files_path
+
+      allow(ActiveFedora::SolrService).to receive(:query).and_return(
+        [{ "original_file_id_ssi" => "111111111/files/original", "height_is" => 600, "width_is" => 400 }]
+      )
+      expect(resolver.id_to_uri.call("111111111")).to eq ActiveFedora::Base.id_to_uri("111111111/files/original")
+      expect(Riiif::Image.info_service.call("111111111", nil)).to eq(height: 600, width: 400)
+
+      file = Riiif::File.new(Rails.root.join("spec", "fixtures", "world.png").to_s)
+      allow(resolver).to receive(:find).with("111111111").and_return(file)
+      expect(Riiif::Image.cache_key("111111111", {})).to end_with(Digest::MD5.file(file.path).to_s)
+    end
+  end
+
   describe "#file_resolver.id_to_uri" do
     context "with original_file_id_ssi indexed" do
       let(:fs1) do
