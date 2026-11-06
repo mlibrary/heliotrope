@@ -27,21 +27,25 @@ module Webgl
         return null_object
       end
 
-      data_file = Pathname.glob(File.join(build_path, '*.data')).first
+      # The .unityweb suffix denotes gzip-compressed Unity build files.
+      data_file = Pathname.glob(File.join(build_path, '*.data')).first ||
+                  Pathname.glob(File.join(build_path, '*.data.unityweb')).first
       if data_file.blank?
-        ::Webgl.logger.info("#{build_path} is missing Unity *.data file")
+        ::Webgl.logger.info("#{build_path} is missing Unity *.data or *.data.unityweb file")
         return null_object
       end
 
-      framework_file = Pathname.glob(File.join(build_path, '*.framework.js')).first
+      framework_file = Pathname.glob(File.join(build_path, '*.framework.js')).first ||
+                       Pathname.glob(File.join(build_path, '*.framework.js.unityweb')).first
       if framework_file.blank?
-        ::Webgl.logger.info("#{build_path} is missing Unity *.framework.js file")
+        ::Webgl.logger.info("#{build_path} is missing Unity *.framework.js or *.framework.js.unityweb file")
         return null_object
       end
 
-      code_file = Pathname.glob(File.join(build_path, '*.wasm')).first
+      code_file = Pathname.glob(File.join(build_path, '*.wasm')).first ||
+                  Pathname.glob(File.join(build_path, '*.wasm.unityweb')).first
       if code_file.blank?
-        ::Webgl.logger.info("#{build_path} is missing Unity *.wasm file")
+        ::Webgl.logger.info("#{build_path} is missing Unity *.wasm or *.wasm.unityweb file")
         return null_object
       end
 

@@ -48,7 +48,10 @@ class WebglsController < ApplicationController
     file = file.to_s.sub(/releases\/\d+/, "current")
     response.headers['X-Sendfile'] = file
 
-    if params[:format] == 'wasm'
+    # Unity's gzip-compressed builds use a .unityweb suffix.
+    response.headers['Content-Encoding'] = 'gzip' if params[:format] == 'unityweb'
+
+    if file.end_with?('.wasm', '.wasm.unityweb')
       send_file(file, type: 'application/wasm')
     else
       send_file file

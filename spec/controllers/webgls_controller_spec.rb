@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'zlib'
 
 RSpec.describe WebglsController, type: :controller do
   after do
@@ -68,6 +69,7 @@ RSpec.describe WebglsController, type: :controller do
         get :file, params: { id: file_set.id, file: 'Build/blah.loader', format: 'js' }
         expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be false
+        expect(response.headers['Content-Encoding']).to be_nil
       end
 
       it "preserves the symlink path for X-Sendfile" do
@@ -89,6 +91,7 @@ RSpec.describe WebglsController, type: :controller do
         get :file, params: { id: file_set.id, file: 'Build/blah', format: 'data' }
         expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be false
+        expect(response.headers['Content-Encoding']).to be_nil
         expect(response.headers['Cache-Control']).to eq('public, max-age=0, must-revalidate')
         expect(response.headers['Accept-Ranges']).to eq('bytes')
         expect(response.headers['Last-Modified']).to be_present
@@ -99,12 +102,42 @@ RSpec.describe WebglsController, type: :controller do
         get :file, params: { id: file_set.id, file: 'Build/blah.framework', format: 'js' }
         expect(response).to have_http_status(:success)
         expect(response.body.empty?).to be false
+        expect(response.headers['Content-Encoding']).to be_nil
       end
 
       context "with a WASM file" do
         it "responds the file with correct type header for the file to be run as compiled code" do
           get :file, params: { id: file_set.id, file: 'Build/blah', format: 'wasm' }
           expect(response).to have_http_status(:success)
+          expect(response.headers['Content-Type']).to eq('application/wasm')
+          expect(response.headers['Content-Encoding']).to be_nil
+        end
+      end
+
+      context "with gzip-compressed unityweb files" do
+        before do
+          %w[data framework.js wasm].each do |extension|
+            file = File.join(UnpackService.root_path_from_noid(file_set.id, 'webgl'), 'Build', "blah.#{extension}")
+            File.binwrite("#{file}.unityweb", Zlib.gzip(File.binread(file)))
+            FileUtils.rm(file)
+          end
+        end
+
+        %w[data framework.js wasm].each do |extension|
+          it "serves the compressed #{extension} file with gzip encoding" do
+            get :file, params: { id: file_set.id, file: "Build/blah.#{extension}", format: 'unityweb' }
+
+            expect(response).to have_http_status(:success)
+            expect(response.headers['Content-Encoding']).to eq('gzip')
+            file = File.join(UnpackService.root_path_from_noid(file_set.id, 'webgl'), 'Build', "blah.#{extension}.unityweb")
+            expect(response.body.b).to eq(File.binread(file))
+            expect(response.headers['Cache-Control']).to eq('public, max-age=0, must-revalidate')
+          end
+        end
+
+        it "serves compressed WASM with the compiled code content type" do
+          get :file, params: { id: file_set.id, file: 'Build/blah.wasm', format: 'unityweb' }
+
           expect(response.headers['Content-Type']).to eq('application/wasm')
         end
       end

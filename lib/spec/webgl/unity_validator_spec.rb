@@ -27,6 +27,31 @@ RSpec.describe Webgl::UnityValidator do
         expect(subject.code).to eq 'validnoid/Build/blah.wasm'
       end
 
+      context "with unityweb build files" do
+        before do
+          %w[data framework.js wasm].each do |extension|
+            file = File.join(@root_path, 'Build', "blah.#{extension}")
+            FileUtils.mv(file, "#{file}.unityweb")
+          end
+        end
+
+        it "preserves the compressed filenames" do
+          expect(subject).to be_an_instance_of(described_class)
+          expect(subject.loader).to eq 'validnoid/Build/blah.loader.js'
+          expect(subject.data).to eq 'validnoid/Build/blah.data.unityweb'
+          expect(subject.framework).to eq 'validnoid/Build/blah.framework.js.unityweb'
+          expect(subject.code).to eq 'validnoid/Build/blah.wasm.unityweb'
+        end
+
+        %w[data framework.js wasm].each do |extension|
+          it "returns the null object with a missing #{extension}.unityweb file" do
+            FileUtils.rm(File.join(@root_path, 'Build', "blah.#{extension}.unityweb"))
+
+            expect(subject).to be_an_instance_of(Webgl::UnityValidatorNullObject)
+          end
+        end
+      end
+
       context "with a missing TemplateData folder" do
         it "returns the null object" do
           allow(Dir).to receive(:exist?).and_call_original
