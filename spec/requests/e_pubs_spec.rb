@@ -199,6 +199,42 @@ RSpec.describe "EPubs", type: :request do
             expect(response.body).to eq('present')
           end
         end
+
+        context 'top-level browser navigation' do
+          # Simulates a user typing the URL or opening a bookmark directly
+          subject do
+            get "/epubs/#{epub.id}/OEBPS/html/ch11.xhtml",
+                headers: {
+                  'HTTP_SEC_FETCH_SITE' => 'none',
+                  'HTTP_SEC_FETCH_DEST' => 'document'
+                }
+          end
+
+          before { allow(publication).to receive(:file).with('present.txt').and_return(File.join(fixture_path, 'present.txt')) }
+
+          it 'redirects to the reader view' do
+            subject
+            expect(response).to redirect_to("#{epub_path(epub.id)}#/OEBPS/html/ch11.xhtml")
+          end
+        end
+
+        context 'cross-site request' do
+          # Simulates a link clicked from an external site or a malicious embed attempt
+          subject do
+            get "/epubs/#{epub.id}/OEBPS/html/ch11.xhtml",
+                headers: {
+                  'HTTP_SEC_FETCH_SITE' => 'cross-site',
+                  'HTTP_SEC_FETCH_DEST' => 'document'
+                }
+          end
+
+          before { allow(publication).to receive(:file).with('present.txt').and_return(File.join(fixture_path, 'present.txt')) }
+
+          it 'intercepts the external traffic and redirects to the reader' do
+            subject
+            expect(response).to redirect_to("#{epub_path(epub.id)}#/OEBPS/html/ch11.xhtml")
+          end
+        end
       end
 
       describe 'GET /epubs_download_interval/:id' do

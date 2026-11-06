@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-class EPubsController < CheckpointController
+class EPubsController < CheckpointController # rubocop:disable Metrics/ClassLength
   include Watermark::Watermarkable
 
   protect_from_forgery except: :file
   before_action :setup
   before_action :wayfless_redirect_to_shib_login, only: %i[show]
+  before_action :vary_file_response, only: :file
+  before_action :redirect_file_navigation, only: :file
 
   def show # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     @parent_noid = @parent_presenter.id
@@ -81,6 +83,15 @@ class EPubsController < CheckpointController
       file = epub.file(filename)
       file = file.to_s.sub(/releases\/\d+/, "current")
       response.headers['X-Sendfile'] = file
+
+      # Revalidate EPUB chapters, These generally are a file download sent to epub.js, but we want to be able to
+      # redirect external requests for such files into the reader itself, which won't work if the browser has previously
+      # opened the EPUB in the reader and cached the chapter files as downloads. Hypothes.is stores EPUB chapter file
+      # URLs as annotation contexts, so that's a big use case for redirecting external links to those into the reader.
+      if %w[.xhtml .html .htm].include?(File.extname(filename).downcase)
+        # Rails drops the private directive alongside no-cache; extras preserves it during normalization.
+        response.cache_control.merge!(no_cache: true, extras: ['private'])
+      end
 
       send_file file
     elsif @entity.is_a?(Sighrax::PdfEbook)
@@ -224,6 +235,33 @@ class EPubsController < CheckpointController
       @monograph_assets_present = ActiveFedora::SolrService.query("#{assets_finding_clause} #{assets_visibility_clause}",
                                                                   fl: [:id],
                                                                   rows: 1).present?
+    end
+
+    def vary_file_response
+      # The same URL can serve reader resources (EPUB components, PDF file) as downloads to epub.js/pdf.js OR it can...
+      # redirect to top-level navigation in the reader itself.
+      # Always preserve other Vary fields so caches can distinguish those response variants.
+      response.headers['Vary'] = (response.headers['Vary'].to_s.split(/\s*,\s*/) + ['Sec-Fetch-Dest']).uniq.join(', ')
+    end
+
+    def redirect_file_navigation
+      # This is a navigation convenience, not authorization: reader fetches and
+      # iframe loads still need the endpoint, including through proxies. Clients
+      # without Fetch Metadata retain file access for backwards compatibility.
+      return unless request.headers['Sec-Fetch-Dest'] == 'document'
+
+      # Redirect before file delivery so this response never receives X-Sendfile.
+      response.headers['Cache-Control'] = 'no-store'
+      redirect_to file_navigation_path
+    end
+
+    def file_navigation_path
+      path = epub_path(@noid, share: @share_link)
+      return path unless @entity.is_a?(Sighrax::EpubEbook)
+
+      filename = [params[:file], params[:format]].compact.join('.')
+      file = ERB::Util.url_encode(filename).gsub('%2F', '/')
+      "#{path}#/#{file}"
     end
 
     # A user who can load the stats dashboard has a role of "analyst" or above, and so should be able to see draft...
