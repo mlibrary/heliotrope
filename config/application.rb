@@ -48,6 +48,11 @@ module Heliotrope
     config.autoload_paths << "#{config.root}/lib"
     config.autoload_paths << "#{config.root}/lib/devise"
 
+    # `lib/metadata_fields.rb` defines top-level constants (METADATA_FIELDS etc.)
+    # rather than a `MetadataFields` constant, so the Zeitwerk autoloader can't
+    # manage it. It is required explicitly in config/initializers/lib_dir.rb.
+    Rails.autoloaders.main.ignore("#{config.root}/lib/metadata_fields.rb")
+
     # For properly generating URLs and minting DOIs - the app may not by default
     # Outside of a request context the hostname needs to be provided.
     config.hostname = Settings.host
