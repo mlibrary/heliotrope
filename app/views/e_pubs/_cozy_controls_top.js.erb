@@ -30,6 +30,8 @@
           closePanel: false
         }).addTo(reader);
 
+        <%= render partial: 'e_pubs/initial_search', formats: [:js], locals: { search_control: 'controls.search' } %>
+
         // Bibliographic Information [Info Icon]
         cozy.control.bibliographicInformation({ container: document.querySelector('#action-info')}).addTo(reader);
 

@@ -1,0 +1,17 @@
+<section class="book-search-snippets" hidden
+         aria-label="<%= t('search_snippets.heading') %>"
+         data-snippets-url="<%= hits_path(q: params[:q], file_set_id: presenter.pdf_ebook_id) %>"
+         data-page-label="<%= t('search_snippets.page') %>"
+         data-error-message="<%= t('search_snippets.error') %>">
+  <h4 class="book-search-heading"><%= t('search_snippets.heading') %></h4>
+  <ul class="book-search-samples"></ul>
+  <p class="book-search-error" role="status" hidden></p>
+  <% if EbookReaderOperation.new(current_actor, Sighrax.from_solr_document(presenter.reader_ebook)).allowed? %>
+    <%= link_to t('search_snippets.search_inside'), epub_path(presenter.reader_ebook_id, q: params[:q]), class: 'book-search-link' %>
+  <% else %>
+    <p class="book-search-restricted">
+      <span class="fa fa-lock" aria-hidden="true"></span>
+      <%= t('search_snippets.restricted') %>
+    </p>
+  <% end %>
+</section>

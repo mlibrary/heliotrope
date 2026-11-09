@@ -164,6 +164,23 @@ RSpec.describe UnpackJob, type: :job do
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc)[8]['downloadable?']).to eq false
       end
 
+      it 'indexes PDF pages and replaces stale pages when unpacked again' do
+        create(:featured_representative, work_id: monograph.id, file_set_id: pdf_ebook.id, kind: 'pdf_ebook')
+        stale_id = "#{pdf_ebook.id}_999"
+        ActiveFedora::SolrService.add(id: stale_id, has_model_ssim: ['PdfPage'], file_set_id_ssi: pdf_ebook.id, page_content_tesiv: 'stale text')
+        ActiveFedora::SolrService.commit
+
+        described_class.perform_now(pdf_ebook.id, 'pdf_ebook')
+        ActiveFedora::SolrService.commit
+
+        pages = ActiveFedora::SolrService.query("has_model_ssim:PdfPage AND file_set_id_ssi:#{pdf_ebook.id}", rows: 100)
+        expect(pages).not_to be_empty
+        expect(pages.map(&:id)).not_to include(stale_id)
+        expect(pages.map { |page| page['monograph_id_ssi'] }).to all(eq(monograph.id))
+        expect(pages.map { |page| page['page_content_tesiv'] }).to include(a_string_matching(/Lorem ipsum/i))
+        expect(ActiveFedora::SolrService.query("id:#{monograph.id} AND all_text_teiv:ipsum", rows: 1).map(&:id)).to eq [monograph.id]
+      end
+
       context "missing PDF chapter files for PDFs with layered ToC's" do
         before do
           # this line is weirdly necessary https://github.com/chefspec/chefspec/issues/766#issuecomment-396631456

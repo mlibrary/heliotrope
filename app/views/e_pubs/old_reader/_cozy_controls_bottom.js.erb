@@ -49,7 +49,7 @@ cozy.control.citation({ region: 'top.toolbar.left',
 
 // Search widget
 <% if @parent_presenter.epub? %>
-cozy.control.search({
+var search = cozy.control.search({
   region: 'top.toolbar.left',
   searchUrl: "<%= @search_url %>"
 }).addTo(reader);
@@ -57,6 +57,8 @@ cozy.control.search({
 var search = new PDFSearch({ region: 'top.toolbar.left' });
 search.addTo(reader);
 <% end %>
+
+<%= render partial: 'e_pubs/initial_search', formats: [:js], locals: { search_control: 'search' } %>
 
 // Share widget
 cozy.control.widget.button({

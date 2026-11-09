@@ -32,6 +32,13 @@ RSpec.describe PressCatalogController, type: :controller do
       expect(controller.instance_variable_get(:@auth).return_location).to eq Rails.application.routes.url_helpers.press_catalog_path(press)
     end
 
+    it 'does not overwrite a gallery browsing preference during a BAR text search' do
+      bar = create(:press, subdomain: 'barpublishing')
+      session[:preferred_press_view] = 'gallery'
+      get :index, params: { press: bar.subdomain, q: 'stone', view: 'list' }
+      expect(session[:preferred_press_view]).to eq 'gallery'
+    end
+
     context '#search_ongoing' do
       it 'is false with no additional params' do
         get :index, params: { press: press }
@@ -152,7 +159,9 @@ RSpec.describe PressCatalogController, type: :controller do
         expect(assigns(:response).docs.map(&:id)).to contain_exactly(monograph_2[:id])
       end
 
-      it "will find a Monograph by matching one of its FileSet's extracted text" do
+      it "will find a Monograph by matching its indexed ebook text" do
+        ActiveFedora::SolrService.add(monograph_2.merge(all_text_teiv: 'yadda yadda'))
+        ActiveFedora::SolrService.commit
         get :index, params: { q: 'yadda yadda', press: 'barpublishing' }
         expect(assigns(:response).docs.map(&:id)).to contain_exactly(monograph_2[:id])
       end

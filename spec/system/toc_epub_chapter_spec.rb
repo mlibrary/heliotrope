@@ -19,6 +19,17 @@ RSpec.describe "Cozy Sun Bear", type: :system, browser: true do
     UnpackJob.perform_now(file_set.id, 'epub')
   end
 
+  [false, true].each do |new_reader|
+    it "opens a supplied EPUB query in the #{new_reader ? 'new' : 'old'} reader" do
+      allow(Flipflop).to receive(:use_new_reader_style_wherever_possible?).and_return(new_reader)
+      visit epub_path(id: file_set.id, q: 'communal')
+
+      expect(page).to have_css('.cozy-modal[aria-hidden="false"] .cozy-modal-search')
+      expect(page).to have_field('Search in this text', with: 'communal')
+      expect(page).to have_css('.cozy-modal-search .search-result', minimum: 1, wait: 30)
+    end
+  end
+
   it "clicking on a chapter link takes you to the correct chapter in CSB" do
     visit monograph_catalog_path(monograph, locale: 'en')
     expect(page).to have_current_path(hyrax_monograph_path(monograph, locale: 'en'))

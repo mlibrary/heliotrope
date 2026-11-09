@@ -39,6 +39,8 @@ class PressCatalogController < ApplicationCatalogController
   # session. This enables a user with a session to do subsequent searches and have
   # them default to the last used view.
   def store_preferred_view
+    return if @press&.subdomain == 'barpublishing' && params[:q].present?
+
     session[:preferred_press_view] = params[:view] if params[:view]
   end
 

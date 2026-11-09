@@ -255,7 +255,6 @@ Rails.application.routes.draw do
   patch 'concern/monographs/:id/reindex', controller: 'hyrax/monographs', action: :reindex, as: :monograph_reindex
   get 'monograph_catalog/facet/:id', controller: :monograph_catalog, action: :facet, as: :monograph_catalog_facet
 
-  get 'concern/monographs/:id/full_text', controller: :full_text_catalog, action: :index, as: :full_text_catalog
 
   curation_concerns_basic_routes
   concern :exportable, Blacklight::Routes::Exportable.new

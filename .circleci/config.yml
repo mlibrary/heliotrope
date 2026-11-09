@@ -261,8 +261,8 @@ jobs:
             sudo apt update
             sudo apt-get install -y pdftk
       - run:
-          name: install qpdf
-          command: sudo apt-get install -y qpdf
+          name: install PDF tools
+          command: sudo apt-get install -y qpdf poppler-utils
       - run:
           name: install imagemagick
           command: sudo apt-get install -y imagemagick

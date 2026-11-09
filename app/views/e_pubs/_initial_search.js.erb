@@ -1,0 +1,12 @@
+<% if params[:q].is_a?(String) && params[:q].present? %>
+reader.on('ready', function() {
+  var initialSearchControl = <%= search_control %>;
+  var query = <%= raw json_escape(params[:q].to_json) %>;
+  initialSearchControl._modal.activate(initialSearchControl._control);
+  initialSearchControl._modal._container.querySelector('input[type="text"]').value = query;
+  initialSearchControl.searchString = query;
+  initialSearchControl._processing = true;
+  initialSearchControl._article.textContent = <%= raw json_escape(t('search_snippets.searching').to_json) %>;
+  initialSearchControl.submitQuery();
+});
+<% end %>

@@ -17,6 +17,8 @@ module HyraxHelper
   # @param [Hash] query_params the query parameters to check
   # @return [Symbol]
   def document_index_view_type(query_params = params) # rubocop:disable Metrics/PerceivedComplexity
+    return :list if bar_text_search?(query_params)
+
     view_param = query_params[:view]
     view_param ||= if controller.is_a?(PressCatalogController)
                      session[:preferred_press_view]
@@ -30,5 +32,9 @@ module HyraxHelper
     else
       default_document_index_view_type
     end
+  end
+
+  def bar_text_search?(query_params = params)
+    controller.is_a?(PressCatalogController) && press.subdomain == 'barpublishing' && query_params[:q].present?
   end
 end

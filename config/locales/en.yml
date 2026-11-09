@@ -30,6 +30,13 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  search_snippets:
+    heading: "Matches inside this book"
+    page: "PDF page"
+    search_inside: "Search inside the book"
+    restricted: "Full-book access required to search inside."
+    error: "Text samples could not be loaded."
+    searching: "Searching inside this book..."
   acceptable_use_policy_message: |
     <span>Your use of this Platform is subject to the <a href="https://www.fulcrum.org/terms/">Fulcrum Terms of Service</a>.</span>
   access_levels:

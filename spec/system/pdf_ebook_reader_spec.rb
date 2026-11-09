@@ -42,6 +42,17 @@ RSpec.describe "PDF Ebook Reader", type: :system, browser: true do
   end
 
   context 'public OA monograph with pdf_ebook' do
+    [false, true].each do |new_reader|
+      it "opens a supplied search query in the #{new_reader ? 'new' : 'old'} reader" do
+        allow(Flipflop).to receive(:use_new_reader_style_wherever_possible?).and_return(new_reader)
+        visit epub_path(id: file_set.id, q: 'ipsum')
+
+        expect(page).to have_css('.cozy-modal[aria-hidden="false"] .cozy-modal-search')
+        expect(page).to have_field('Search in this text', with: 'ipsum')
+        expect(page).to have_css('.cozy-modal-search .search-result', minimum: 1, wait: 30)
+      end
+    end
+
     it 'renders the cozy-sun-bear reader chrome on the parent page' do
       visit epub_path(id: file_set.id)
 

@@ -28,6 +28,7 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   ghostscript \
   netpbm \
   qpdf \
+  poppler-utils \
   pdftk \
   clamav \
   clamav-daemon \

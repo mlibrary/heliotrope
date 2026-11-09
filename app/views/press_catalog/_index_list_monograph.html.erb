@@ -3,30 +3,31 @@
 <% counter = document_counter_with_offset(document_counter) %>
 
 <% # container for document in index list view -%>
-<%= link_to(search_state.url_for_document(document), document_link_params(document, counter: counter)) do %>
+<div class="book-list-result">
   <div class="col thumbnail">
-    <%= presenter.thumbnail_tag(145, class: "img-fluid", alt: "") %>
+    <%= link_to(search_state.url_for_document(document), document_link_params(document, counter: counter)) do %>
+      <%= presenter.thumbnail_tag(145, class: "img-fluid", alt: "") %>
+    <% end %>
   </div>
   <div class="col-10 caption">
-    <% if presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? %>
-      <%= presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_sm.html_safe %>
+    <%= link_to(search_state.url_for_document(document), document_link_params(document, counter: counter).merge(class: 'book-list-metadata')) do %>
+      <% if presenter.access_level(@actor_product_ids, @allow_read_product_ids).show? %>
+        <%= presenter.access_level(@actor_product_ids, @allow_read_product_ids).icon_sm.html_safe %>
+      <% end %>
+      <h3 class="index_title">
+        <%= render_markdown(document.title.first) %>
+      </h3>
+      <p class="authors"><%= render_markdown presenter.authors %></p>
+      <% if presenter.date_created.present? %>
+        <% pub_year = press.subdomain == 'barpublishing' ? "(#{presenter.date_created.first})" : presenter.date_created.first %>
+        <span class="pub-date"><%= pub_year %></span><% if presenter.edition_name.present? %><span class="edition-name"><%= sanitize presenter.edition_name %></span><% end %>
+      <% end %>
+      <% if presenter.bar_number&.length&.positive? %>
+        <span class="bar-number"><strong><%= t('bar_number') %>:</strong> <%= presenter.bar_number %></span>
+      <% end %>
     <% end %>
-    <h3 class="index_title">
-      <%= render_markdown(document.title.first) %>
-    </h3>
-    <p class="authors"><%= render_markdown presenter.authors %></p>
-    <% if presenter.date_created.present? %>
-      <% pub_year = press.subdomain == 'barpublishing' ? "(#{presenter.date_created.first})" : presenter.date_created.first %>
-      <span class="pub-date"><%= pub_year %></span><% if presenter.edition_name.present? %><span class="edition-name"><%= sanitize presenter.edition_name %></span><% end %>
-    <% end %>
-    <% if presenter.bar_number&.length&.positive? %>
-      <span class="bar-number"><strong><%= t('bar_number') %>:</strong> <%= presenter.bar_number %></span>
+    <% if Flipflop.search_snippets? && bar_text_search? && presenter.pdf_ebook? && !presenter.epub? %>
+      <%= render 'press_catalog/search_snippets', presenter: presenter %>
     <% end %>
   </div>
-<% end %>
-
-<div class="col-10">
-  <% if Flipflop.search_snippets? && params[:q].present? && press.subdomain == 'barpublishing' && presenter.pdf_ebook? %>
-    <span visibility="hidden" class="full-text-result" data-q="<%= params[:q] %>" data-press="<%= press.subdomain %>" data-monograph-id="<%= presenter.id %>" data-file-set-id="<%= presenter.pdf_ebook_id %>"></span>
-  <% end %>
 </div>
