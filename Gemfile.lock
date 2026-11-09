@@ -246,7 +246,7 @@ GEM
       term-ansicolor (~> 1.7)
       thor (~> 1.2)
       tins (~> 1.32)
-    crass (1.0.7)
+    crass (1.0.8)
     date (3.5.1)
     declarative (0.0.20)
     deep_merge (1.2.2)
