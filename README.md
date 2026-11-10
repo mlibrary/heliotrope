@@ -317,3 +317,5 @@ The Fulcrum Development Team have created a number of ancillary code repositorie
 
 # Acknowledgements
 Initial development has been supported by a generous grant from the [Andrew W. Mellon Foundation](https://mellon.org/) and implemented by the University of Michigan Library and Press working with partners from Indiana, Minnesota, Northwestern, and Penn State universities and [Data Curation Experts](https://curationexperts.com/).
+
+This project is tested with BrowserStack.
