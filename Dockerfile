@@ -32,7 +32,8 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   clamav \
   clamav-daemon \
   chromium \
-  chromium-driver
+  chromium-driver \
+  poppler-utils
 
 # update clamav (non-fatal: mirror failures should not break the build)
 RUN freshclam || true
