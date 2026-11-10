@@ -1143,7 +1143,7 @@
         this._pdfWindow = null;
 
         // Build viewer URL with PDF file
-        const pdfUrl = '/epubs/<%= @presenter.id %>/file';
+        const pdfUrl = '/epubs/<%= @presenter.id %>/file?<%= @presenter.browser_cache_breaker %>';
         const viewerUrl = new URL('/mozilla-pdf-viewer/web/viewer.html', window.location.origin);
         viewerUrl.searchParams.set('file', pdfUrl);
       <% if Rails.env.development? %>
