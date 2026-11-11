@@ -34,6 +34,14 @@ $base-color-footer-link-hover: #73d2f4;
 ///////////////////////////////////
 // UTILITY
 ///////////////////////////////////
+.logo-fixed-height {
+  width: auto;
+}
+
+.logo-fixed-width {
+  height: auto;
+}
+
 .u-screenreader {
   clip: rect(1px, 1px, 1px, 1px);
   position: absolute !important;
