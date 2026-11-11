@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class LogoPathUploader < CarrierWave::Uploader::Base
+  # Cache inspection even when Rails.cache is disabled in development.
+  DIMENSIONS_CACHE = ActiveSupport::Cache::MemoryStore.new(size: 1.megabyte)
+
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
@@ -23,6 +26,22 @@ class LogoPathUploader < CarrierWave::Uploader::Base
   # Provide a default URL as a default if there hasn't been a file uploaded:
   def default_url
     'fulcrum-white-50px.png'
+  end
+
+  def dimensions
+    path = file&.path || Rails.root.join('app', 'assets', 'images', default_url).to_s
+    stat = File.stat(path)
+    cache_key = [path, stat.size, stat.mtime.to_f, stat.ctime.to_f]
+
+    DIMENSIONS_CACHE.fetch(cache_key) do
+      image = MiniMagick::Image.new(path)
+      width, height = image.dimensions
+      width, height = height, width if %w[LeftTop RightTop RightBottom LeftBottom].include?(image['%[orientation]'])
+      { width: width, height: height }
+    end
+  rescue Errno::ENOENT, Errno::EACCES, MiniMagick::Error, MiniMagick::Invalid => error
+    Rails.logger.warn("Unable to read press logo dimensions for #{path}: #{error.message}")
+    {}
   end
 
   # Process files as they are uploaded:
