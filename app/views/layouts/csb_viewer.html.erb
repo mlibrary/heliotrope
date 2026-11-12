@@ -14,10 +14,8 @@
     <!-- Citation metadata for Google Scholar -->
     <%= render 'shared/metadata' %>
 
-  <% if press_presenter.present? %>
-    <!-- Typekit -->
-    <%= render 'shared/typekit' %>
-  <% end %>
+    <!-- Press and reader fonts -->
+    <%= render 'shared/press_fonts', reader: true %>
 
     <!-- CSS -->
     <%= stylesheet_link_tag 'application' %>
