@@ -8111,18 +8111,9 @@ $um-white: #fff;
 }
 
 @media(max-width: 976px) {
-  .michigan header {
-    height: 194px;
-  }
+  
   .michigan .container {
     overflow: unset;
-  }
-  .michigan header .row.justify-content-end .col-md-4.pt-3 {
-    flex-grow: 1;
-  }
-
-  .michigan header .row.justify-content-end .col-md-4.pt-3 form.navbar-form {
-    width: 80%;
   }
 
   .michigan header .row.justify-content-end {
@@ -8131,10 +8122,10 @@ $um-white: #fff;
     width: 95%;
   }
 
-  .michigan header .navbar-brand h1 {
-    font-size: 20px;
+  .michigan header .navbar-brand .press-title {
+    font-size: 2.1vw; // about 22px at 976px and 17.7px at 768px, so the title fits its column
+    line-height: 1.2;
     letter-spacing: 1px;
-    line-height: 28px;
   }
 
   .michigan header .nav-browse {
@@ -8162,6 +8153,123 @@ $um-white: #fff;
     justify-content: unset;
   }
 }
+
+// Side-by-side header layout (Bootstrap md columns): the title column flexes and wraps; the search column stays fixed
+@media(min-width: 768px) and (max-width: 976px) {
+  .michigan header .row.justify-content-end {
+    flex-wrap: nowrap;
+
+    .col-md-8 {
+      flex: 1 1 0;
+      max-width: none;
+      min-width: 0;
+    }
+
+    .col-md-4.pt-3 {
+      flex: 0 0 260px;
+      max-width: 260px;
+    }
+  }
+
+  .michigan header .navbar-brand {
+    display: flex;
+    align-items: center;
+    margin-right: 0;
+    white-space: normal;
+    text-decoration: none;
+  }
+
+  .michigan header .navbar-brand-logo {
+    flex: 0 0 auto;
+    margin-right: 16px;
+  }
+
+  .michigan header .navbar-brand .press-title {
+    min-width: 0;
+    margin-bottom: 0;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: .8px;
+  }
+
+  .michigan header {
+    height: 125px;
+  }
+}
+
+@media(max-width: 767px) {
+  .michigan header {
+    height: 194px;
+  }
+
+  .michigan header .row.justify-content-end .col-md-4.pt-3 {
+    flex-grow: 1;
+  }
+
+  .michigan header .row.justify-content-end .col-md-4.pt-3 form.navbar-form {
+    width: 80%;
+  }
+
+  .michigan header .nav-browse {
+    justify-content: flex-start;
+    margin-top: .8em;
+  }
+
+  .michigan header .navbar-brand .press-title {
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: .8px;
+  }
+}
+
+@media(max-width: 575px) {
+  .michigan header {
+    height: auto;
+
+    hgroup,
+    .container,
+    .row.justify-content-end {
+      height: auto;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      height: auto;
+      margin-right: 0;
+      white-space: normal; // allow the title to wrap instead of forcing page overflow
+      text-decoration: none;
+    }
+
+    .navbar-brand-logo {
+      flex: 0 0 auto;
+      margin-right: 12px;
+    }
+
+    .navbar-brand .press-title {
+      min-width: 0;
+      margin-bottom: 0;
+      font-size: 16px;
+      line-height: 20px;
+      letter-spacing: .5px;
+      overflow-wrap: anywhere;
+    }
+
+    .row.justify-content-end .col-md-4.pt-3 {
+      padding-top: 8px;
+
+      form.navbar-form {
+        width: 100%;
+      }
+    }
+
+    .nav-browse {
+      margin-bottom: 8px;
+    }
+  }
+}
+
+
 ///////////////////////////////////////////////
 // University of Michigan Press -
 // Michigan English Language Teaching
