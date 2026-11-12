@@ -4,7 +4,7 @@
   <div class="container">
     <% if press_presenter.logo && !press_presenter.press.new_record? %>
       <div class="logo pull-left">
-        <%= image_tag press_presenter.logo, alt: press_presenter.name %>
+        <%= image_tag press_presenter.logo, **press_presenter.logo_dimensions, alt: press_presenter.name %>
       </div>
     <% end %>
 

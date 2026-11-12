@@ -3,6 +3,26 @@
 require 'rails_helper'
 
 describe 'shared/_brand_press_jumbotron.html.erb' do
+  context 'logo dimensions' do
+    let(:press) { create(:press) }
+
+    before { assign(:press, press) }
+
+    it 'reserves space for the default logo' do
+      render
+
+      expect(rendered).to have_css('.jumbotron .logo img[width="180"][height="50"]')
+    end
+
+    it 'reserves space for an existing uploaded logo without changing its URL or alt text' do
+      fixture = Rails.root.join('spec', 'fixtures', 'csv', 'import', 'shipwreck.jpg')
+      press.update!(logo_path: Rack::Test::UploadedFile.new(fixture, 'image/jpeg'))
+      render
+
+      expect(rendered).to have_css(".jumbotron .logo img[src='#{press.logo_path_url}'][width='305'][height='240'][alt='#{press.name}']")
+    end
+  end
+
   context 'when a press has an Analytics URL' do
     let(:press) { create(:press, subdomain: 'na', name: 'No Agenda Press', google_analytics_url: 'https://www.example.com') }
     it 'renders link to statistics page' do

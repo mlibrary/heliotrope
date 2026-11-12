@@ -35,6 +35,10 @@ class PressPresenter < ApplicationPresenter
     @press&.logo_path_url.presence || 'fulcrum-white-50px.png'
   end
 
+  def logo_dimensions
+    @press.logo_path.dimensions
+  end
+
   def url
     @press&.press_url.presence || ''
   end
