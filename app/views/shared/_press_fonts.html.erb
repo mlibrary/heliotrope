@@ -1,0 +1,4 @@
+<%# Changing font sets must reload rather than retain a previous press's font faces in the Turbolinks head. %>
+<% press_font_stylesheets(reader: local_assigns.fetch(:reader, false)).each do |stylesheet| %>
+  <%= stylesheet_link_tag stylesheet, media: 'all', 'data-turbolinks-track': 'reload' %>
+<% end %>
