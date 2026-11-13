@@ -36,6 +36,57 @@ RSpec.describe UnpackJob, type: :job do
         end
       end
     end
+
+    context 'with restrictive ZIP permissions (e.g. 0000 or 0600)' do
+      let(:root_path) { File.join(@extraction_directory, 'unpacked') }
+
+      let(:bad_perms_epub) do
+        tmp = Tempfile.new(['bad_perms', '.epub'])
+        Zip::File.open(tmp.path, create: true) do |zipfile|
+          zipfile.get_output_stream('mimetype') { |f| f.write('application/epub+zip') }
+          zipfile.mkdir('OEBPS')
+          zipfile.get_output_stream('OEBPS/chapter1.xhtml') { |f| f.write('<html><body>Hello</body></html>') }
+
+          zipfile.find_entry('mimetype').unix_perms = 0o000
+          zipfile.find_entry('OEBPS').unix_perms = 0o000
+          zipfile.find_entry('OEBPS/chapter1.xhtml').unix_perms = 0o600
+        end
+        tmp
+      end
+
+      let(:bad_perms_js_app) do
+        tmp = Tempfile.new(['bad_perms_app', '.zip'])
+        Zip::File.open(tmp.path, create: true) do |zipfile|
+          zipfile.mkdir('top-dir')
+          zipfile.mkdir('top-dir/Build')
+          zipfile.get_output_stream('top-dir/Build/app.js') { |f| f.write('console.log("hi");') }
+
+          zipfile.find_entry('top-dir/Build').unix_perms = 0o000
+          zipfile.find_entry('top-dir/Build/app.js').unix_perms = 0o600
+        end
+        tmp
+      end
+
+      after do
+        bad_perms_epub.unlink
+        bad_perms_js_app.unlink
+      end
+
+      it 'normalizes extracted EPUB directory and file permissions' do
+        described_class.new.send(:unpack_epub, '123456789', root_path, bad_perms_epub)
+
+        expect(File.stat(File.join(root_path, 'OEBPS')).mode & 0o777).to eq(0o775)
+        expect(File.stat(File.join(root_path, 'mimetype')).mode & 0o777).to eq(0o664)
+        expect(File.stat(File.join(root_path, 'OEBPS', 'chapter1.xhtml')).mode & 0o777).to eq(0o664)
+      end
+
+      it 'normalizes extracted JS application directory and file permissions' do
+        described_class.new.send(:unpack_zipped_js_app, '123456789', 'webgl', root_path, bad_perms_js_app)
+
+        expect(File.stat(File.join(root_path, 'Build')).mode & 0o777).to eq(0o775)
+        expect(File.stat(File.join(root_path, 'Build', 'app.js')).mode & 0o777).to eq(0o664)
+      end
+    end
   end
 
   describe 'perform' do
@@ -110,6 +161,7 @@ RSpec.describe UnpackJob, type: :job do
       it 'makes the pdf_ebook, caches the ToC and makes the chapter files derivatives' do
         described_class.perform_now(pdf_ebook.id, 'pdf_ebook')
         expect(File.exist?("#{root_path}.pdf")).to be true
+        expect(File.stat("#{root_path}.pdf").mode & 0o777).to eq(0o664)
         expect(Dir.exist?(chapters_dir)).to be true
         expect(Dir.glob(File.join(chapters_dir, '**', '*')).select { |file| File.file?(file) }.count).to eq 7
         expect(JSON.parse(EbookTableOfContentsCache.find_by(noid: pdf_ebook.id).toc).length).to eq 9

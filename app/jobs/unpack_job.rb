@@ -192,7 +192,7 @@ class UnpackJob < ApplicationJob
       end
       # Because `file` was created with Tempfile.new, which defaults to 0600 permissions, the `#{root_path}.pdf` copy's
       # perms are -rw------- too. They need to be -rw-rw-r-- for X-Sendfile to work, so we'll chmod.
-      File.chmod 0664, "#{root_path}.pdf"
+      normalize_permissions("#{root_path}.pdf")
       "#{root_path}.pdf"
     end
 
@@ -230,6 +230,7 @@ class UnpackJob < ApplicationJob
         zip_file.each do |entry|
           make_path_entry(root_path, entry.name)
           entry.extract(destination_directory: root_path)
+          normalize_permissions(File.join(root_path, entry.name))
         end
       end
     rescue Zip::Error
@@ -243,8 +244,10 @@ class UnpackJob < ApplicationJob
           parts = entry.name.split(File::SEPARATOR)
           without_parent = parts.slice(1, parts.length).join(File::SEPARATOR)
           next if without_parent.empty?
+
           make_path_entry(root_path, without_parent)
           entry.extract(without_parent, destination_directory: root_path)
+          normalize_permissions(File.join(root_path, without_parent))
         end
       end
     rescue Zip::Error
@@ -263,6 +266,14 @@ class UnpackJob < ApplicationJob
       file_entry.split(File::SEPARATOR).each do |sub_dir|
         FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
         dir = File.join(dir, sub_dir)
+      end
+    end
+
+    def normalize_permissions(path)
+      if File.directory?(path)
+        File.chmod(0o775, path)
+      elsif File.file?(path)
+        File.chmod(0o664, path)
       end
     end
 end
