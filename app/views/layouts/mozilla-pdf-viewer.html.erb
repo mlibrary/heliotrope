@@ -5,6 +5,9 @@
     <!-- Citation metadata for Google Scholar -->
     <%= render 'shared/metadata' %>
 
+    <!-- Press and reader fonts -->
+    <%= render 'shared/press_fonts', reader: true %>
+
     <%= content_for?(:head) ? yield(:head) : yield %>
     <!-- CSS -->
     <%= stylesheet_link_tag 'mozilla-pdf-viewer' %>
