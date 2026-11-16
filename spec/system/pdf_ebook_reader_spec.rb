@@ -2,17 +2,19 @@
 
 require 'rails_helper'
 
-# System spec for the iframe-based PDF ebook reader (pdf.js 6.1.200).
+# System spec for the iframe-based PDF ebook reader (pdf.js 6.5.438).
 # Checks that:
 #   - The cozy-sun-bear chrome renders on the parent page
 #   - The stock pdf.js toolbar is NOT visible (hidden by cozy-iframe-overrides.css inside the iframe)
 #   - Both reader styles pass a cache-busted PDF file URL to the viewer iframe
 #   - Basic page navigation controls are available
+#   - The vendored module loads and renders a PDF page in both reader layouts
 #
 # NOTE: Full headless rendering (PDF pages painted inside the iframe) is impractical in CI
 # because the browser cannot serve range-requests to itself in the test environment.
 # These specs assert the parent-side cozy chrome and iframe presence; deep pdf.js internals
 # (actual page rendering, search results) require manual functional testing.
+
 RSpec.describe "PDF Ebook Reader", type: :system, browser: true do
   let(:press) { create(:press) }
   let(:monograph) { create(:public_monograph, press: press.subdomain, representative_id: cover.id) }
@@ -41,7 +43,7 @@ RSpec.describe "PDF Ebook Reader", type: :system, browser: true do
     false
   end
 
-  context 'public OA monograph with pdf_ebook' do
+  shared_examples 'public OA monograph with pdf_ebook' do
     it 'renders the cozy-sun-bear reader chrome on the parent page' do
       visit epub_path(id: file_set.id)
 
@@ -63,6 +65,47 @@ RSpec.describe "PDF Ebook Reader", type: :system, browser: true do
       end
     end
 
+    it 'loads the vendored PDF module and hides its stock chrome inside the iframe' do
+      visit epub_path(id: file_set.id)
+
+      within_frame('pdf-viewer-iframe') do
+        expect(page).to have_css('#viewer .page canvas', wait: 30)
+        expect(page.evaluate_script('window.pdfjsLib.version')).to eq('6.5.438')
+        expect(page).to have_css('link[href="cozy-iframe-overrides.css"]', visible: :all)
+        expect(page).to have_css('#outerContainer .toolbar', visible: :hidden)
+        expect(page).to have_css('#viewsManager', visible: :hidden)
+      end
+    end
+
+    it 'finds PDF text through the parent search controls' do
+      visit epub_path(id: file_set.id)
+
+      expect(page).to have_css('#cozy-search-string', visible: :all)
+      find('button[aria-label="Search"]', match: :first).click
+      fill_in 'Search in this text', with: 'ipsum'
+      find('.cozy-search button[type="submit"]').click
+
+      expect(page).to have_css('a.search-result', text: /ipsum/i)
+    end
+
+    it 'copies the outline and renders clickable page thumbnails' do
+      visit epub_path(id: file_set.id)
+
+      expect(page).to have_css('#cozy-search-string', visible: :all)
+      within_frame('pdf-viewer-iframe') do
+        expect(page).to have_css('#outlinesView a', visible: :all)
+      end
+      find('#sidebarToggle').click
+      expect(page).to have_css('#outlineView a')
+      click_button 'Page List'
+      expect(page).to have_css('#thumbnailView .thumbnail[page-number="2"] img[src^="data:image/jpeg"]')
+      find('#thumbnailView .thumbnail[page-number="2"]').click
+
+      within_frame('pdf-viewer-iframe') do
+        expect(page.evaluate_script('window.PDFViewerApplication.page')).to eq(2)
+      end
+    end
+
     it 'does not render the stock pdf.js toolbar in the parent page' do
       visit epub_path(id: file_set.id)
 
@@ -78,5 +121,17 @@ RSpec.describe "PDF Ebook Reader", type: :system, browser: true do
       # #pdfLoadingProgressBar is the parent-side screen-reader announcer
       expect(page).to have_css('#pdfLoadingProgressBar')
     end
+  end
+
+  context 'with the new reader layout' do
+    before { allow(Flipflop).to receive(:use_new_reader_style_wherever_possible?).and_return(true) }
+
+    it_behaves_like 'public OA monograph with pdf_ebook'
+  end
+
+  context 'with the old reader layout' do
+    before { allow(Flipflop).to receive(:use_new_reader_style_wherever_possible?).and_return(false) }
+
+    it_behaves_like 'public OA monograph with pdf_ebook'
   end
 end
