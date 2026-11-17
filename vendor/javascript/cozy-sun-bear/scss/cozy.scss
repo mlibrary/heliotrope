@@ -16,7 +16,7 @@
 ///////////////////////////////////
 
 // colors
-$brand-color:   #002c63;
+$brand-color:   #212B36;
 $accent-color:  #00afec;
 
 $white:         #fff;
@@ -130,13 +130,13 @@ $grid-padding:       1rem;
   }
 
   i[class^='icon-chevron-'] {
-    color: $dark-2;
+    color: $brand-color;
     font-size: 2rem;
     transition: 0.2s ease-in;
   }
 
   i[class^='icon-chevron-']:hover {
-    color: #8A96A1;
+    color: #06080A;
     transition: 0.2s ease-in;
   }
 
@@ -201,19 +201,19 @@ $grid-padding:       1rem;
     display: inline-block;
     border-bottom: none;
     border-radius: $radius;
-    color: $dark-2;
-    background: transparent;
+    color: #F7F8F9;
+    background-color: $brand-color;
     /* background-image: linear-gradient(to right, $brand-color 50%, $accent-color 50%); */
     /* background-position: -100%; */
     /* background-size: 201%; */
     /* background-repeat: no-repeat; */
     /* text-shadow: none; */
     text-decoration: none;
-    transition: 0.2s ease-in;
+    /* transition: 0.2s ease-in; */
     line-height: normal;
 
     &:hover, &:active {
-      color: $dark-1;
+      background-color: #06080A;
       /* background-position: 0; */
       transition: 0.2s ease-in;
     }
@@ -222,7 +222,8 @@ $grid-padding:       1rem;
       // background-position: 0;
       transition: 0.2s ease-in;
       outline: 0;
-      box-shadow: 0 0 0 6px rgba($brand-color, .25);
+      box-shadow: 0 0 0 6px rgba($accent-color, .75);
+      background-color: #06080A;
     }
 
     &:active {
@@ -262,6 +263,23 @@ $grid-padding:       1rem;
     @include button;
     padding: 0.75em 1.75em 0.825em 1.75em;
     display: inline;
+  }
+
+  .button--secondary {
+    @include button;
+    background-color: #F7F8F9;
+    color: #001324;
+
+    &:hover, &:active {
+      background-color: #E5E9ED;
+      /* background-position: 0; */
+      transition: 0.2s ease-in;
+    }
+
+    &:focus {
+      background-color: #E5E9ED;
+    }
+
   }
 
   [class*="button"] + [class*="button"] {
@@ -717,16 +735,19 @@ div.cozy-panel-footer {
 .cozy-control form.cozy-page-list-form {
   display: inline-flex;
   align-items: center;
-  margin: 0;
+  margin: .3em 2em 0 0;
 
   input[type=text] {
     width: 8em;
-    margin-right: 0.25em;
+    border-top: solid 1px #B2BEC9;
+    border-bottom: solid 1px #B2BEC9;
+    border-left: solid 1px #B2BEC9;
+    color: #000;
   }
 
   .button--sm {
-    padding-top: 0.625em;
-    padding-bottom: 0.625em;
+    padding-top: 0.59em;
+    padding-bottom: 0.55em;
   }
 
 }
@@ -928,22 +949,20 @@ div.cozy-panel-footer {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #999;
-    background-color: #f5f5f5;
+    background-color: $brand-color;
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
 
     &:hover {
-      background-color: #e0e0e0;
-      border-color: #666;
+      background-color: #06080A;
     }
 
     &:active {
-      background-color: #d0d0d0;
+      background-color: #06080A;
     }
 
     &:focus {
-      outline: 2px solid #0066cc;
+      outline: 2px solid $accent-color;
       outline-offset: 2px;
     }
 
@@ -1222,7 +1241,7 @@ div.cozy-panel-footer {
 // `.cozy-container` and therefore never reach `.nm--panels`, so give the
 // contents toolbar buttons a matching look here.
 .nm--panels .cozy-contents-toolbar {
-  gap: 1rem;
+  gap: .8rem;
   flex-wrap: wrap;
   min-width: 0;
   max-width: 100%;
@@ -1232,21 +1251,21 @@ div.cozy-panel-footer {
     max-width: 100%;
     cursor: pointer;
     border: 1px solid $brand-color;
-    background: $white;
-    color: $brand-color;
+    background: #F7F8F9;
+    color: #001324;
     border-radius: 3px;
-    padding: 0.55em 1.25em 0.65em;
+    padding: 0.55em 1em 0.65em;
     font-size: 0.95rem;
     transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 
     &:hover {
-      box-shadow: 0 0 0 4px rgba($brand-color, .25);
+      box-shadow: 0 0 0 4px rgba($brand-color, .75);
     }
 
     &.toggled {
       background: $brand-color;
-      color: $white;
-      box-shadow: 0 0 0 6px rgba($brand-color, .75);
+      color: #F7F8F9;
+      box-shadow: 0 0 0 6px rgba($accent-color, .75);
     }
   }
 }

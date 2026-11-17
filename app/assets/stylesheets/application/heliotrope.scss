@@ -2724,14 +2724,14 @@ body:has(> #epub.too) hypothesis-adder {
 }
 
 .too .cozy-container i[class^='icon-chevron-'] {
-  color: #31343b !important;
+  color: #212B36 !important;
   font-size: 2rem;
   transition: 0.2s ease-in;
 }
 
 /* Ditto above. Duplicated here because otherwise overridden by !important */
 .too .cozy-container i[class^='icon-chevron-']:hover {
-  color: #8A96A1 !important;
+  color: #06080A !important;
   transition: 0.2s ease-in;
 }
 
@@ -2751,6 +2751,7 @@ body:has(> #epub.too) hypothesis-adder {
 
   h4 {
     font-size: 1.2em;
+    font-weight: bold;
   }
 
   a {
