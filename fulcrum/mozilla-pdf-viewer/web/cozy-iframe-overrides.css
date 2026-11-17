@@ -1,13 +1,13 @@
 /*
  * HELIOTROPE: cozy-iframe-overrides.css
  *
- * Loaded inside the pdf.js 6.1.200 iframe via viewer.html <link> (after viewer.css).
+ * Loaded inside the pdf.js 6.5.438 iframe via viewer.html <link> (after viewer.css).
  * Two purposes:
  *   1. Hide the stock pdf.js chrome — cozy-sun-bear provides all controls on the parent page.
  *   2. Apply heliotrope's pdf.js-internal styles (textLayer, annotationLayer, page layout)
  *      that must live inside the iframe document now that the viewer runs in an iframe.
  *
- * CSP check (pdf.js 6.1.200 viewer.html):
+ * CSP check (pdf.js 6.5.438 viewer.html):
  *   style-src 'self'  (style-src-elem was dropped upstream in 6.1.200)
  *   A same-origin <link rel="stylesheet"> is permitted by style-src 'self'. ✓
  *
@@ -19,7 +19,7 @@
 /* ── 1. HIDE STOCK CHROME ─────────────────────────────────────────────────── */
 
 /*
- * pdf.js 6.1.200 viewer.html structure (verified against vendored source):
+ * pdf.js 6.5.438 viewer.html structure (verified against vendored source):
  *   #outerContainer > #mainContainer > .toolbar > #toolbarContainer
  *   The sidebar panel is now #viewsManager (inside the toolbar), replacing 5.x #sidebarContainer.
  *   NAMING COLLISION note: #outerContainer rules here only affect the iframe document.
@@ -80,7 +80,7 @@
   inset-block-start: 0 !important;
 }
 
-/* pdf.js 6.1.200 viewer.css sets `body { background-color: var(--body-bg-color); }`
+/* pdf.js 6.5.438 viewer.css sets `body { background-color: var(--body-bg-color); }`
    which resolves via light-dark() to a light-gray in light mode. Force white
    here so the iframe's page gutter matches Fulcrum's reader chrome.
    Also override the CSS variable itself in case any other rule references it. */
