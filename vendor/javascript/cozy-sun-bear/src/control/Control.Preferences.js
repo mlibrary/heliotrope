@@ -48,6 +48,7 @@ export var Preferences = Control.extend({
     if (this._reader.metadata.layout != 'pdf' && this._reader.metadata.layout != 'pre-paginated') {
       actions.push({
         label: 'Set Defaults',
+        className: 'button--secondary',
         callback: function(event) {
           self.resetPreferencesToDefault(event);
         }
