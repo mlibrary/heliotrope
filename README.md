@@ -153,6 +153,17 @@ This starts the main development stack:
 - `fcrepo`
 - `redis`
 
+To rebuild the app image and install updated gems from `Gemfile.lock` without restarting its dependencies:
+```
+bin/compose up -d --build --no-deps app
+```
+The app entrypoint runs `bundle install` at startup. The database, Solr, Redis, and Fedora services must already be running.
+
+To clear and rebuild precompiled assets in development:
+```
+bin/compose exec app bundle exec rails assets:clobber assets:precompile
+```
+
 #### Shared file storage
 
 Both `app` and `resque` bind-mount the repository at `/app`. The development storage settings therefore already persist on the host and are shared between the web server and workers:
