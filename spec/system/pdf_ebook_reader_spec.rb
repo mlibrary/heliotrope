@@ -6,7 +6,7 @@ require 'rails_helper'
 # Checks that:
 #   - The cozy-sun-bear chrome renders on the parent page
 #   - The stock pdf.js toolbar is NOT visible (hidden by cozy-iframe-overrides.css inside the iframe)
-#   - The PDF viewer iframe is present
+#   - Both reader styles pass a cache-busted PDF file URL to the viewer iframe
 #   - Basic page navigation controls are available
 #
 # NOTE: Full headless rendering (PDF pages painted inside the iframe) is impractical in CI
@@ -50,11 +50,17 @@ RSpec.describe "PDF Ebook Reader", type: :system, browser: true do
       expect(page).to have_css('#epub')
     end
 
-    it 'embeds the pdf.js viewer in an iframe' do
-      visit epub_path(id: file_set.id)
+    [true, false].each do |use_new_reader|
+      it "embeds the pdf.js viewer with a cache-busted file URL in the #{use_new_reader ? 'new' : 'old'} reader" do
+        allow(Flipflop).to receive(:use_new_reader_style_wherever_possible?).and_return(use_new_reader)
+        allow_any_instance_of(Hyrax::FileSetPresenter).to receive(:browser_cache_breaker).and_return('1700000000')
 
-      # The iframe carrying the pdf.js viewer must be present
-      expect(page).to have_css('iframe#pdf-viewer-iframe', visible: :all)
+        visit epub_path(id: file_set.id)
+
+        iframe = find('iframe#pdf-viewer-iframe', visible: :all)
+        viewer_params = URI.decode_www_form(URI.parse(iframe[:src]).query).to_h
+        expect(viewer_params.fetch('file')).to eq("/epubs/#{file_set.id}/file?1700000000")
+      end
     end
 
     it 'does not render the stock pdf.js toolbar in the parent page' do
