@@ -1,4 +1,4 @@
-ARG RUBY_VERSION=3.3.10
+ARG RUBY_VERSION=3.3.14
 ARG RUBY_SLIM="-slim-trixie"
 FROM ruby:${RUBY_VERSION}${RUBY_SLIM} AS fulcrum-dev
 
