@@ -60,8 +60,12 @@ RSpec.describe "PDF Ebook Reader", type: :system, browser: true do
         visit epub_path(id: file_set.id)
 
         iframe = find('iframe#pdf-viewer-iframe', visible: :all)
-        viewer_params = URI.decode_www_form(URI.parse(iframe[:src]).query).to_h
-        expect(viewer_params.fetch('file')).to eq("/epubs/#{file_set.id}/file?1700000000")
+        viewer_url = URI.parse(iframe[:src])
+        expect(viewer_url.path).to eq('/pdfjs-6.5.438/web/viewer.html')
+
+        viewer_params = URI.decode_www_form(viewer_url.query).to_h
+        expected_file_url = URI.join(page.current_url, "/epubs/#{file_set.id}/file?1700000000").to_s
+        expect(viewer_params.fetch('file')).to eq(expected_file_url)
       end
     end
 

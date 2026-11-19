@@ -137,7 +137,7 @@ body {
   top: 0;
   right: 0;
   bottom: 0;
-  background: url('/mozilla-pdf-viewer/web/images/loading-icon.gif') center no-repeat;
+  background: url('images/loading-icon.gif') center no-repeat;
 }
 
 /* Page layout */

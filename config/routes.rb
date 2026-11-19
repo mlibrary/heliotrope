@@ -305,10 +305,4 @@ Rails.application.routes.draw do
   get ':press/authentication', controller: :authentications, action: :show, as: :press_authentication
 
   root 'presses#index'
-
-  # Mozilla PDF viewer has annoying canonical paths in its js files. This hacky-looking thing is to keep it happy...
-  # and also somewhat tidy in its own version-named (and so cache-breaking, hopefully), Jekyll-deployed directory
-  pdf_viewer_version = '6.5.438'
-  get '/build(/*file)', to: redirect("/mozilla-pdf-viewer/build/%{file}?#{pdf_viewer_version}", status: 302), format: false
-  get '/web(/*file)', to: redirect("/mozilla-pdf-viewer/web/%{file}?#{pdf_viewer_version}", status: 302), format: false
 end

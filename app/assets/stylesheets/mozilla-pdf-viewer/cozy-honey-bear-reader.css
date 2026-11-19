@@ -1,7 +1,7 @@
 /*  Note that this file provides cozy-sun-bear chrome styles for the PDF viewer parent page.      */
 /*  Under the iframe model, rules targeting pdf.js internals (textLayer, annotationLayer,         */
 /*  .pdfViewer .page, viewerContainer centering, etc.) live in:                                   */
-/*  fulcrum/mozilla-pdf-viewer/web/cozy-iframe-overrides.css (inside the iframe document).        */
+/*  fulcrum/pdfjs-<version>/web/cozy-iframe-overrides.css (inside the iframe document).           */
 /*  Rules here apply only to the parent page — cozy chrome, badges, modals, sidebar clone.        */
 
 /* --- HELIOTROPE STYLES --- */
@@ -187,7 +187,7 @@ html, body {
 /* --- SIDEBAR CLONE RULES ---
    These style content cloned from the iframe into the parent cozy modal
    by _copySidebarFromIframe. Keep here on the parent so the modal renders correctly.
-   In 6.1.200 the iframe uses #outlinesView/#thumbnailsView; the modal creates its own
+   The iframe uses #outlinesView/#thumbnailsView; the modal creates its own
    local #outlineView/#thumbnailView containers for the cloned content. */
 
 /* FROM VIEWER.CSS */

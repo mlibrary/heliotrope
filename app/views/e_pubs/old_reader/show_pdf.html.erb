@@ -841,9 +841,9 @@
         this._pdfWindow = null;
 
         // Build viewer URL with PDF file
-        const pdfUrl = '/epubs/<%= @presenter.id %>/file?<%= @presenter.browser_cache_breaker %>';
-        const viewerUrl = new URL('/mozilla-pdf-viewer/web/viewer.html', window.location.origin);
-        viewerUrl.searchParams.set('file', pdfUrl);
+        const pdfUrl = new URL('/epubs/<%= @presenter.id %>/file?<%= @presenter.browser_cache_breaker %>', window.location.origin);
+        const viewerUrl = new URL('/pdfjs-6.5.438/web/viewer.html', window.location.origin);
+        viewerUrl.searchParams.set('file', pdfUrl.href);
 
         // Handle initial page from hash
         const initialHash = window.location.hash;
@@ -1031,7 +1031,7 @@
               // URL and title from the *iframe* document's metadata — its HTMLMetadata
               // strategy reads `<link rel="canonical">`, `document.title`, and
               // Highwire/DC `<meta>` tags. Without intervention, annotations get saved
-              // against `/mozilla-pdf-viewer/web/viewer.html` with the title
+              // against the iframe's viewer.html URL with the title
               // "PDF.js viewer". Inject the parent page's canonical URL and title into
               // the iframe head so annotations are attributed to the Fulcrum monograph
               // page instead.
