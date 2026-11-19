@@ -24,7 +24,7 @@ commands:
         type: string
       ruby_version:
         type: string
-        default: '3.3.10'
+        default: '3.3.14'
     steps:
     - restore_cache:
         keys:
@@ -45,7 +45,7 @@ commands:
           bundle config force_ruby_platform true
         name: Configure sqlite3 native build
     - run:
-        command: bundle check || bundle install
+        command: bundle check || bundle install --verbose
         name: Install dependencies
     - save_cache:
         key: v<< parameters.cache_version >>-bundle-{{ checksum "Gemfile" }}--{{ checksum
@@ -134,7 +134,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: '3.3.10'
+        default: '3.3.14'
       bundler_version:
         type: string
         default: '2.4.22'
@@ -144,7 +144,7 @@ jobs:
     executor:
       name: 'ruby'
       ruby_version: << parameters.ruby_version >>
-    resource_class: medium
+    resource_class: large
     environment:
       RAILS_VERSION: << parameters.rails_version >>
       NOKOGIRI_USE_SYSTEM_LIBRARIES: true
@@ -178,7 +178,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: '3.3.10'
+        default: '3.3.14'
       bundler_version:
         type: string
         default: '2.4.22'
@@ -216,7 +216,7 @@ jobs:
     parameters:
       ruby_version:
         type: string
-        default: '3.3.10'
+        default: '3.3.14'
       bundler_version:
         type: string
         default: '2.4.22'
@@ -312,7 +312,7 @@ executors:
     docker:
     - image: cimg/<< parameters.ruby_type >>:<< parameters.ruby_version >> # No -browsers here, we add our own node
     environment:
-      BUNDLE_JOBS: 4
+      BUNDLE_JOBS: 1
       BUNDLE_PATH: vendor/bundle
       BUNDLE_RETRY: 3
       RACK_ENV: test
@@ -324,7 +324,7 @@ executors:
         default: ruby
         type: string
       ruby_version:
-        default: '3.3.10'
+        default: '3.3.14'
         type: string
   ruby_fcrepo_solr_redis_mysql:
     description: Box running FCRepo, Solr, Ruby, Redis and MySQL.
@@ -362,7 +362,7 @@ executors:
         default: ruby
         type: string
       ruby_version:
-        default: '3.3.10'
+        default: '3.3.14'
         type: string
       solr_port:
         default: "8985"
@@ -376,15 +376,15 @@ workflows:
   ruby2-7rails6-1:
     jobs:
       - bundle:
-          ruby_version: '3.3.10'
+          ruby_version: '3.3.14'
           rails_version: '6.1.7.10'
       - build:
-          ruby_version: '3.3.10'
+          ruby_version: '3.3.14'
           rails_version: '6.1.7.10'
           requires:
             - bundle
       - test:
           name: "rails6-1"
-          ruby_version: '3.3.10'
+          ruby_version: '3.3.14'
           requires:
             - build
