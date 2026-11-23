@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_07_30_000001) do
+ActiveRecord::Schema.define(version: 2026_11_23_211000) do
 
   create_table "api_requests", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.integer "user_id"
@@ -129,14 +129,14 @@ ActiveRecord::Schema.define(version: 2026_07_30_000001) do
     t.string "monograph_noid", null: false
     t.integer "month", null: false
     t.integer "year", null: false
-    t.integer "total_item_requests_month", default: 0, null: false
-    t.integer "total_item_investigations_month", default: 0, null: false
-    t.integer "unique_item_requests_month", default: 0, null: false
-    t.integer "unique_item_investigations_month", default: 0, null: false
-    t.integer "total_item_requests_life", default: 0, null: false
-    t.integer "total_item_investigations_life", default: 0, null: false
-    t.integer "unique_item_requests_life", default: 0, null: false
-    t.integer "unique_item_investigations_life", default: 0, null: false
+    t.bigint "total_item_requests_month", default: 0, null: false
+    t.bigint "total_item_investigations_month", default: 0, null: false
+    t.bigint "unique_item_requests_month", default: 0, null: false
+    t.bigint "unique_item_investigations_month", default: 0, null: false
+    t.bigint "total_item_requests_life", default: 0, null: false
+    t.bigint "total_item_investigations_life", default: 0, null: false
+    t.bigint "unique_item_requests_life", default: 0, null: false
+    t.bigint "unique_item_investigations_life", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["monograph_noid", "month", "year"], name: "index_counter_summary_on_noid_month_year", unique: true

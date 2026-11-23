@@ -3,6 +3,19 @@
 require 'rails_helper'
 
 RSpec.describe CounterSummary, type: :model do
+  it 'persists metrics larger than a 32-bit integer' do
+    value = 2_401_095_534
+    metrics = %i[
+      total_item_requests_month total_item_investigations_month
+      unique_item_requests_month unique_item_investigations_month
+      total_item_requests_life total_item_investigations_life
+      unique_item_requests_life unique_item_investigations_life
+    ]
+    stat = create(:counter_summary, **metrics.index_with { value }).reload
+
+    expect(metrics.map { |metric| stat.public_send(metric) }).to all(eq(value))
+  end
+
   describe 'validations' do
     describe 'presence validations' do
       it 'requires monograph_noid' do
