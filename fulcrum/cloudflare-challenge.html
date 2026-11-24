@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Security check | Fulcrum</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #e9eef5;
+      color: #31343b;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+    }
+    header {
+      background: #fff;
+      border-bottom: 4px solid #00afec;
+      padding: 1.25rem 1.5rem;
+    }
+    .brand {
+      align-items: center;
+      color: #002c63;
+      display: flex;
+      font-size: 2rem;
+      font-weight: bold;
+      gap: .6rem;
+      line-height: 1;
+      margin: 0 auto;
+      max-width: 46rem;
+    }
+    main {
+      background: #fff;
+      border-radius: .5rem;
+      margin: 2rem auto;
+      max-width: 46rem;
+      padding: 2rem;
+      width: calc(100% - 2rem);
+    }
+    h1 { color: #002c63; line-height: 1.25; margin-top: 0; }
+    h2 { color: #002c63; font-size: 1.25rem; }
+    a { color: #0055a4; overflow-wrap: anywhere; }
+    a:focus-visible { outline: 3px solid #002c63; outline-offset: 3px; }
+    .challenge { margin: 1.5rem 0; }
+    .details {
+      background: #e9eef5;
+      border-left: 4px solid #002c63;
+      padding: 1rem;
+    }
+    .details p { margin: .25rem 0; overflow-wrap: anywhere; }
+    @media (max-width: 35rem) {
+      main { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <svg width="25" height="44" viewBox="0 0 25 44" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="fulcrum-gradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#00afec"></stop>
+            <stop offset="100%" stop-color="#002c63"></stop>
+          </linearGradient>
+        </defs>
+        <path fill="url(#fulcrum-gradient)" d="M0 0h25v10H0zM19 10a6 6 0 1 1 0 12 6 6 0 0 1 0-12zM0 22h25v10H0zM6 32a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"></path>
+      </svg>
+      <span>fulcrum</span>
+    </div>
+  </header>
+  <main>
+    <h1>Just a moment</h1>
+    <p>We're checking your connection to help protect Fulcrum from automated traffic. Please complete the security check below if prompted.</p>
+    <div class="challenge">::CF_WIDGET_BOX::</div>
+    <noscript><p>Please enable JavaScript and cookies to complete the security check.</p></noscript>
+
+    <h2>Having trouble getting through?</h2>
+    <p>We're sorry for the inconvenience. If you can't pass the security check or keep seeing it again, please email us at <a href="mailto:mpub-access@umich.edu">mpub-access@umich.edu</a>. This can sometimes happen when accessing Fulcrum through your institution's library proxy.</p>
+    <p>Please include the IP address and Ray ID shown below, along with the name of the institution you are accessing Fulcrum through. This information will help us investigate.</p>
+    <div class="details">
+      <p><strong>Request IP address:</strong> ::CLIENT_IP::</p>
+      <p><strong>Ray ID:</strong> ::RAY_ID::</p>
+    </div>
+    <p>Thank you for your patience.</p>
+  </main>
+</body>
+</html>
